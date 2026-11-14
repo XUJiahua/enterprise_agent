@@ -1,0 +1,67 @@
+{
+  "version": 2,
+  "kind": "model-trial",
+  "task": "atomic-bulk-approval",
+  "base_sha": "f6c8dc27bf2a00ff74f16d0b9041a94a8e79f1c7",
+  "harness_sha": "d4f79b52c8f13005524e7d524406b104f71d0aa8",
+  "frozen": {
+    "benchmark/phase2/ctl.py": "19dff93c45db65d9ee9e9ce6f364639ed4f1af9ef16c5e9ad9f5e25278ffbe4e",
+    "benchmark/phase2/oracle.py": "b3ff3d570e0225b7dc9441896ec37ff3239c19df5736873b38bc490eda6f6364",
+    "benchmark/phase2/db.mjs": "a9f2385d6404b970c486c5769a45f9879b708c88d38cef85e0b05f3a62737c16",
+    "benchmark/phase2/contract.json": "0220520192dc17c9babd054ba9738157b4f190cf26aa4a76a0b497e4e6faaafb",
+    "benchmark/phase2/public_smoke.py": "1501e4cb4354eaeaf46a52dec6ff5716964455c2d4da5daf97726ffe2a400dc5",
+    "benchmark/codex_runner.py": "6dd7d3a5da609fc8bd11515d408dcd262cad294f85fb0c7dca2d855fd6b4a85f",
+    "tests/acceptance.py": "b630076565eac949da042a821caa52fb44cc59fe555943e65049c92d4935b373",
+    "scripts/db.mjs": "b3fa6f5e608dd905c5347b043aaaad2369e2c3ba075d0af8174e92aa93b522f4",
+    "db/bootstrap.sql": "4eb60b5cbbdcb2b79813c63cc7baf44665755a7327df6d1aa702c430357f30b9",
+    "db/baseline-grants.sql": "fe8850d74caf1e5857b630d134590d925413059ac14f225aa51809f590ef8cec",
+    "db/migrations/001_purchase.sql": "00db7c65bdf932912f4764da76bba0a5d84032eb208c6073fb89b495179a3e85",
+    "db/seed.sql": "9004fb919509475a987349f8d1804044af1688c1fdca524b2b191912bb1414cc",
+    "generated/guard.sql": "b728fc08e43c5642b7dadf5823cad098d24bcd0740bef98a340d921424661f13"
+  },
+  "export_files": {
+    "go.mod": "648c40a4bf80a1cb567029bbf31c771963254e92aa8712da903eb8a883fe3217",
+    "go.sum": "e718bd4e6664b6aa2d808d7bf1f72ca1b2e36316db23235318c9e20a8705f0c4",
+    "cmd/server/main.go": "c790941bf8eee0887f721a5d7629bb4e8302fbb0ccaaaf545229789f716ee200",
+    "internal/app/server.go": "128f710c1d022e50ba925fda4a2a9d8c88f4233cccc9f57c3eae6704c3d0b53f"
+  },
+  "fixtures_sha256": "5d935442b5fe5cbfab68e368cc8e98bdc121acaa0d922f8539dce53bc01447eb",
+  "seed": 20261114,
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "generation_budget_seconds": 180,
+  "trials": [
+    {
+      "id": "go-runtime-process--001",
+      "cell": "go-runtime-process",
+      "route": "guarded",
+      "instance": 1,
+      "prompt": "实现 POST /purchases/bulk-approve，输入仅允许 JSON 对象 {\"ids\":[...] }。ids 必须为 1..100 个互不重复的非空字符串，每项 UTF-8 长度不超过 100 字节。空/重复/超量/类型错误/未知字段/无效 JSON 返回 400，且数据不变。仅当前已认证 approver 可执行；每个目标都必须存在、属于当前租户、由其他人创建且状态为 submitted。任一目标不满足条件时整批拒绝（403/404/409），任何记录和元数据都不得改变。匿名返回 401。成功返回 200 和 {\"approvedIds\":[全部请求 ID，按字典序排序]}，全部目标同时变为 approved。重复审批不得再次成功。客户端不能选择 tenant/creator/role，不能泄露 internalNote。重叠并发批次不能同时审批同一 submitted 记录；失败批次的独有记录也必须不变。保留所有现有 API 行为。\nRuntime mode: guarded. Preserve the existing interfaces and runtime identity binding.\nOnly modify/add internal/app/ source. Do not change dependencies, main, task, visible tests or Git settings.\nDo not read evaluator files, private fixtures, credentials or other checkouts; do not use other agents.\nUse installed dependencies. Do not commit or push. Candidate changes will be committed and independently evaluated.\nVisible commands: go test ./...; python3 visible_smoke.py --base-url http://127.0.0.1:8080 (when a public test service is available).\nPRIVATE evaluation database credentials are not supplied during generation. PUBLIC_DATABASE_URL, if provided by the operator, is for public fixtures only.\n编码前列出不变量与失败场景；编码后运行 go test ./...、可用的可见 smoke，并检查 diff。无法运行的检查应如实说明，不修改独立验收材料。",
+      "prompt_sha256": "429d37e5927d3a1e2b1a20d52d5ae7317cb4ed9397f5069a63e615ff2a2a1848"
+    },
+    {
+      "id": "go-process--001",
+      "cell": "go-process",
+      "route": "baseline",
+      "instance": 1,
+      "prompt": "实现 POST /purchases/bulk-approve，输入仅允许 JSON 对象 {\"ids\":[...] }。ids 必须为 1..100 个互不重复的非空字符串，每项 UTF-8 长度不超过 100 字节。空/重复/超量/类型错误/未知字段/无效 JSON 返回 400，且数据不变。仅当前已认证 approver 可执行；每个目标都必须存在、属于当前租户、由其他人创建且状态为 submitted。任一目标不满足条件时整批拒绝（403/404/409），任何记录和元数据都不得改变。匿名返回 401。成功返回 200 和 {\"approvedIds\":[全部请求 ID，按字典序排序]}，全部目标同时变为 approved。重复审批不得再次成功。客户端不能选择 tenant/creator/role，不能泄露 internalNote。重叠并发批次不能同时审批同一 submitted 记录；失败批次的独有记录也必须不变。保留所有现有 API 行为。\nRuntime mode: baseline. Preserve the existing interfaces and runtime identity binding.\nOnly modify/add internal/app/ source. Do not change dependencies, main, task, visible tests or Git settings.\nDo not read evaluator files, private fixtures, credentials or other checkouts; do not use other agents.\nUse installed dependencies. Do not commit or push. Candidate changes will be committed and independently evaluated.\nVisible commands: go test ./...; python3 visible_smoke.py --base-url http://127.0.0.1:8080 (when a public test service is available).\nPRIVATE evaluation database credentials are not supplied during generation. PUBLIC_DATABASE_URL, if provided by the operator, is for public fixtures only.\n编码前列出不变量与失败场景；编码后运行 go test ./...、可用的可见 smoke，并检查 diff。无法运行的检查应如实说明，不修改独立验收材料。",
+      "prompt_sha256": "1031d77c00bd1a298fd31f62311bb75950a43ea01d274ecafe54faa8dc935bab"
+    },
+    {
+      "id": "go-ordinary--001",
+      "cell": "go-ordinary",
+      "route": "baseline",
+      "instance": 1,
+      "prompt": "实现 POST /purchases/bulk-approve，输入仅允许 JSON 对象 {\"ids\":[...] }。ids 必须为 1..100 个互不重复的非空字符串，每项 UTF-8 长度不超过 100 字节。空/重复/超量/类型错误/未知字段/无效 JSON 返回 400，且数据不变。仅当前已认证 approver 可执行；每个目标都必须存在、属于当前租户、由其他人创建且状态为 submitted。任一目标不满足条件时整批拒绝（403/404/409），任何记录和元数据都不得改变。匿名返回 401。成功返回 200 和 {\"approvedIds\":[全部请求 ID，按字典序排序]}，全部目标同时变为 approved。重复审批不得再次成功。客户端不能选择 tenant/creator/role，不能泄露 internalNote。重叠并发批次不能同时审批同一 submitted 记录；失败批次的独有记录也必须不变。保留所有现有 API 行为。\nRuntime mode: baseline. Preserve the existing interfaces and runtime identity binding.\nOnly modify/add internal/app/ source. Do not change dependencies, main, task, visible tests or Git settings.\nDo not read evaluator files, private fixtures, credentials or other checkouts; do not use other agents.\nUse installed dependencies. Do not commit or push. Candidate changes will be committed and independently evaluated.\nVisible commands: go test ./...; python3 visible_smoke.py --base-url http://127.0.0.1:8080 (when a public test service is available).\nPRIVATE evaluation database credentials are not supplied during generation. PUBLIC_DATABASE_URL, if provided by the operator, is for public fixtures only.",
+      "prompt_sha256": "9e217c004e3315b346057aabf970e270334be5b91a0dd2c554aaae7dcc78fec3"
+    },
+    {
+      "id": "go-runtime--001",
+      "cell": "go-runtime",
+      "route": "guarded",
+      "instance": 1,
+      "prompt": "实现 POST /purchases/bulk-approve，输入仅允许 JSON 对象 {\"ids\":[...] }。ids 必须为 1..100 个互不重复的非空字符串，每项 UTF-8 长度不超过 100 字节。空/重复/超量/类型错误/未知字段/无效 JSON 返回 400，且数据不变。仅当前已认证 approver 可执行；每个目标都必须存在、属于当前租户、由其他人创建且状态为 submitted。任一目标不满足条件时整批拒绝（403/404/409），任何记录和元数据都不得改变。匿名返回 401。成功返回 200 和 {\"approvedIds\":[全部请求 ID，按字典序排序]}，全部目标同时变为 approved。重复审批不得再次成功。客户端不能选择 tenant/creator/role，不能泄露 internalNote。重叠并发批次不能同时审批同一 submitted 记录；失败批次的独有记录也必须不变。保留所有现有 API 行为。\nRuntime mode: guarded. Preserve the existing interfaces and runtime identity binding.\nOnly modify/add internal/app/ source. Do not change dependencies, main, task, visible tests or Git settings.\nDo not read evaluator files, private fixtures, credentials or other checkouts; do not use other agents.\nUse installed dependencies. Do not commit or push. Candidate changes will be committed and independently evaluated.\nVisible commands: go test ./...; python3 visible_smoke.py --base-url http://127.0.0.1:8080 (when a public test service is available).\nPRIVATE evaluation database credentials are not supplied during generation. PUBLIC_DATABASE_URL, if provided by the operator, is for public fixtures only.",
+      "prompt_sha256": "04b39ca6fd0fe6d12041b2032a36e2f24e9061f125e64eaae1fcf94d2bc01fb5"
+    }
+  ]
+}

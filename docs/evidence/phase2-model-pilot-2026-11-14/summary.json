@@ -1,0 +1,39 @@
+{
+  "version": 2,
+  "kind": "model-trial",
+  "rows": [
+    {
+      "cell": "go-ordinary",
+      "planned": 1,
+      "observed": 1,
+      "passed": 1,
+      "unmeasured": 0,
+      "first_pass_rate": 1.0
+    },
+    {
+      "cell": "go-process",
+      "planned": 1,
+      "observed": 1,
+      "passed": 1,
+      "unmeasured": 0,
+      "first_pass_rate": 1.0
+    },
+    {
+      "cell": "go-runtime",
+      "planned": 1,
+      "observed": 1,
+      "passed": 1,
+      "unmeasured": 0,
+      "first_pass_rate": 1.0
+    },
+    {
+      "cell": "go-runtime-process",
+      "planned": 1,
+      "observed": 1,
+      "passed": 1,
+      "unmeasured": 0,
+      "first_pass_rate": 1.0
+    }
+  ],
+  "note": "Synthetic controls are not model samples; missing/infrastructure trials remain unmeasured."
+}

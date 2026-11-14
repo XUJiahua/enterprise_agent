@@ -1,0 +1,273 @@
+diff --git a/internal/app/bulk_approve.go b/internal/app/bulk_approve.go
+new file mode 100644
+index 0000000..ea76740
+--- /dev/null
++++ b/internal/app/bulk_approve.go
+@@ -0,0 +1,105 @@
++package app
++
++import (
++	"bytes"
++	"encoding/json"
++	"fmt"
++	"io"
++	"net/http"
++	"sort"
++	"strings"
++	"unicode/utf8"
++
++	"github.com/jackc/pgx/v5"
++)
++
++// Decode the envelope explicitly so duplicate fields, null, and trailing JSON
++// cannot silently change the meaning of the request.
++func bulkApprovalIDs(body io.Reader) ([]string, error) {
++	b, err := io.ReadAll(http.MaxBytesReader(nil, io.NopCloser(body), 65536))
++	if err != nil {
++		return nil, err
++	}
++	if !utf8.Valid(b) {
++		return nil, fmt.Errorf("invalid UTF-8")
++	}
++	d := json.NewDecoder(bytes.NewReader(b))
++	token, err := d.Token()
++	if err != nil || token != json.Delim('{') || !d.More() {
++		return nil, fmt.Errorf("expected ids object")
++	}
++	key, err := d.Token()
++	if err != nil || key != "ids" {
++		return nil, fmt.Errorf("expected ids field")
++	}
++	var ids []string
++	if err = d.Decode(&ids); err != nil {
++		return nil, err
++	}
++	if d.More() {
++		return nil, fmt.Errorf("unexpected field")
++	}
++	if token, err = d.Token(); err != nil || token != json.Delim('}') {
++		return nil, fmt.Errorf("expected end of object")
++	}
++	if _, err = d.Token(); err != io.EOF {
++		return nil, fmt.Errorf("unexpected trailing data")
++	}
++	if len(ids) < 1 || len(ids) > 100 {
++		return nil, fmt.Errorf("expected 1 to 100 ids")
++	}
++	seen := make(map[string]bool, len(ids))
++	for _, id := range ids {
++		if id == "" || len(id) > 100 || seen[id] {
++			return nil, fmt.Errorf("invalid or duplicate id")
++		}
++		seen[id] = true
++	}
++	sort.Strings(ids)
++	return ids, nil
++}
++
++func (s *Server) bulkApprove(r *http.Request, tx pgx.Tx, u Identity) (any, int, error) {
++	ids, err := bulkApprovalIDs(r.Body)
++	if err != nil {
++		return nil, http.StatusBadRequest, nil
++	}
++	if u.Role != "approver" {
++		return nil, http.StatusForbidden, nil
++	}
++	ctx := r.Context()
++	// Lock in a consistent order across batches. A concurrent approval must
++	// finish before we inspect its row, so it cannot pass the submitted check
++	// twice. Do not write anything until every target passes validation.
++	for _, id := range ids {
++		// PostgreSQL text IDs cannot contain NUL, so such a target cannot exist.
++		if strings.IndexByte(id, 0) >= 0 {
++			return nil, http.StatusNotFound, nil
++		}
++		var creator, status string
++		err = tx.QueryRow(ctx, `SELECT "createdBy",status FROM "Purchase"
++			WHERE id=$1 AND "tenantId"=$2 FOR UPDATE`, id, u.Tenant).Scan(&creator, &status)
++		if err != nil {
++			return nil, 0, err
++		}
++		if creator == u.User {
++			return nil, http.StatusForbidden, nil
++		}
++		if status != "submitted" {
++			return nil, http.StatusConflict, nil
++		}
++	}
++	result, err := tx.Exec(ctx, `UPDATE "Purchase" SET status='approved'
++		WHERE id=ANY($1::text[]) AND "tenantId"=$2
++		AND "createdBy"<>$3 AND status='submitted'`, ids, u.Tenant, u.User)
++	if err != nil {
++		return nil, 0, err
++	}
++	if result.RowsAffected() != int64(len(ids)) {
++		// The caller rolls back every non-success result, including any updates.
++		return nil, http.StatusConflict, nil
++	}
++	return struct {
++		ApprovedIDs []string `json:"approvedIds"`
++	}{ids}, http.StatusOK, nil
++}
+diff --git a/internal/app/bulk_approve_test.go b/internal/app/bulk_approve_test.go
+new file mode 100644
+index 0000000..1467f36
+--- /dev/null
++++ b/internal/app/bulk_approve_test.go
+@@ -0,0 +1,142 @@
++package app
++
++import (
++	"context"
++	"encoding/json"
++	"net/http/httptest"
++	"reflect"
++	"strconv"
++	"strings"
++	"testing"
++
++	"github.com/jackc/pgx/v5"
++	"github.com/jackc/pgx/v5/pgconn"
++)
++
++func TestBulkApprovalIDs(t *testing.T) {
++	for _, body := range []string{
++		``, `null`, `[]`, `{}`, `{"ids":null}`, `{"ids":[]}`,
++		`{"ids":"a"}`, `{"ids":{}}`, `{"ids":[1]}`, `{"ids":[true]}`,
++		`{"ids":[null]}`, `{"ids":[""]}`, `{"ids":["a","a"]}`,
++		`{"ids":["a"],"tenantId":"other"}`, `{"ids":["a"],"creator":"bob"}`,
++		`{"ids":["a"],"role":"approver"}`, `{"ids":["a"],"internalNote":"x"}`,
++		`{"ids":["a"],"ids":["b"]}`, `{"IDS":["a"]}`,
++		`{"ids":["a"]} {}`, `{"ids":["a"]} garbage`, `{"ids":["a"`,
++		`{"ids":["` + strings.Repeat("a", 101) + `"]}`,
++		`{"ids":["` + strings.Repeat("界", 34) + `"]}`,
++		"{\"ids\":[\"\xff\"]}",
++	} {
++		t.Run(body, func(t *testing.T) {
++			if ids, err := bulkApprovalIDs(strings.NewReader(body)); err == nil {
++				t.Fatalf("accepted invalid body: %q", ids)
++			}
++		})
++	}
++	ids := make([]string, 101)
++	for i := range ids {
++		ids[i] = strconv.Itoa(i)
++	}
++	b, _ := json.Marshal(map[string]any{"ids": ids})
++	if _, err := bulkApprovalIDs(strings.NewReader(string(b))); err == nil {
++		t.Fatal("accepted 101 ids")
++	}
++	b, _ = json.Marshal(map[string]any{"ids": ids[:100]})
++	if got, err := bulkApprovalIDs(strings.NewReader(string(b))); err != nil || len(got) != 100 {
++		t.Fatalf("rejected 100 valid ids: %v", err)
++	}
++	want := []string{"a", "z", strings.Repeat("界", 33) + "a"}
++	b, _ = json.Marshal(map[string]any{"ids": []string{want[2], "z", "a"}})
++	if got, err := bulkApprovalIDs(strings.NewReader(string(b))); err != nil || !reflect.DeepEqual(got, want) {
++		t.Fatalf("got %q, %v; want %q", got, err, want)
++	}
++}
++
++type bulkRow struct {
++	creator, status string
++	err             error
++}
++
++func (r bulkRow) Scan(dest ...any) error {
++	if r.err != nil {
++		return r.err
++	}
++	*dest[0].(*string) = r.creator
++	*dest[1].(*string) = r.status
++	return nil
++}
++
++type bulkTx struct {
++	pgx.Tx
++	rows   map[string]bulkRow
++	locked []string
++	writes int
++}
++
++func (tx *bulkTx) QueryRow(_ context.Context, query string, args ...any) pgx.Row {
++	if !strings.Contains(query, "FOR UPDATE") || !strings.Contains(query, `"tenantId"=$2`) || args[1] != "tenant-a" {
++		panic("missing lock or tenant scope")
++	}
++	id := args[0].(string)
++	tx.locked = append(tx.locked, id)
++	row, ok := tx.rows[id]
++	if !ok {
++		return bulkRow{err: pgx.ErrNoRows}
++	}
++	return row
++}
++
++func (tx *bulkTx) Exec(_ context.Context, _ string, args ...any) (pgconn.CommandTag, error) {
++	tx.writes++
++	if !reflect.DeepEqual(args, []any{[]string{"a", "b"}, "tenant-a", "bob"}) {
++		panic("incorrect update scope")
++	}
++	return pgconn.NewCommandTag("UPDATE 2"), nil
++}
++
++func TestBulkApprovalValidationBeforeWrites(t *testing.T) {
++	for _, tc := range []struct {
++		name string
++		row  bulkRow
++		code int
++	}{
++		{"own", bulkRow{creator: "bob", status: "submitted"}, 403},
++		{"approved", bulkRow{creator: "alice", status: "approved"}, 409},
++		{"missing", bulkRow{err: pgx.ErrNoRows}, 0},
++		{"success", bulkRow{creator: "alice", status: "submitted"}, 200},
++	} {
++		t.Run(tc.name, func(t *testing.T) {
++			tx := &bulkTx{rows: map[string]bulkRow{
++				"a": {creator: "alice", status: "submitted"}, "b": tc.row,
++			}}
++			r := httptest.NewRequest("POST", "/purchases/bulk-approve", strings.NewReader(`{"ids":["b","a"]}`))
++			result, code, err := (&Server{}).handle(r, tx, identities["demo_bob"])
++			if code != tc.code || (err != nil) != (tc.name == "missing") {
++				t.Fatalf("code=%d err=%v", code, err)
++			}
++			if !reflect.DeepEqual(tx.locked, []string{"a", "b"}) {
++				t.Fatalf("unexpected lock order: %q", tx.locked)
++			}
++			if tc.code == 200 {
++				b, _ := json.Marshal(result)
++				if string(b) != `{"approvedIds":["a","b"]}` || tx.writes != 1 {
++					t.Fatalf("unexpected result %s; writes=%d", b, tx.writes)
++				}
++			} else if tx.writes != 0 {
++				t.Fatal("failed batch mutated data")
++			}
++		})
++	}
++}
++
++func TestBulkApprovalRequiresIdentityAndRole(t *testing.T) {
++	r := httptest.NewRequest("POST", "/purchases/bulk-approve", strings.NewReader(`{"ids":["a"]}`))
++	w := httptest.NewRecorder()
++	(&Server{}).ServeHTTP(w, r)
++	if w.Code != 401 {
++		t.Fatalf("anonymous request: %d", w.Code)
++	}
++	_, code, err := (&Server{}).handle(r, nil, identities["demo_alice"])
++	if code != 403 || err != nil {
++		t.Fatalf("requester: code=%d err=%v", code, err)
++	}
++}
+diff --git a/internal/app/server.go b/internal/app/server.go
+index 56fe4d2..6524e7e 100644
+--- a/internal/app/server.go
++++ b/internal/app/server.go
+@@ -156,6 +156,9 @@ func (s *Server) fail(w http.ResponseWriter, e error) {
+ }
+ func (s *Server) handle(r *http.Request, tx pgx.Tx, u Identity) (any, int, error) {
+ 	ctx := r.Context()
++	if r.Method == http.MethodPost && r.URL.Path == "/purchases/bulk-approve" {
++		return s.bulkApprove(r, tx, u)
++	}
+ 	parts := strings.Split(strings.Trim(r.URL.Path, "/"), "/")
+ 	if r.Method == "GET" && (len(parts) == 1 || len(parts) == 2) {
+ 		cols := projection
