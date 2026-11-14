@@ -208,6 +208,15 @@ def run(args):
                             experiment['base_sha']], check=True, capture_output=True)
             if trial['route'] == 'zenstack':
                 shutil.copytree(ROOT / 'apps/zenstack/node_modules', candidate / 'apps/zenstack/node_modules', symlinks=True)
+                # Ignored generated schemas are absent in a fresh worktree. Prepare
+                # them before the model budget starts, just as in the trusted checkout.
+                preparation = out / 'preparation'
+                preparation.mkdir(exist_ok=True)
+                with (preparation / (trial['id'] + '.log')).open('x') as stream:
+                    subprocess.run([str(candidate / 'apps/zenstack/node_modules/.bin/zen'), 'generate'],
+                                   cwd=candidate / 'apps/zenstack', check=True,
+                                   timeout=experiment['build_timeout_seconds'],
+                                   stdout=stream, stderr=subprocess.STDOUT)
             directory = out / 'generation' / trial['id']
             invocation = invoke(binary, experiment['model'], effort, candidate, prompt_for(trial),
                                 directory, experiment['generation_budget_seconds'], 'workspace-write')

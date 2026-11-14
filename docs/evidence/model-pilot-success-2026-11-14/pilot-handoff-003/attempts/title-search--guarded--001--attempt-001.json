@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "plan_sha256": "17574522b5403691c0eb429b9e8e497e7e00a0d644d3ec0dcb174f54cd3bd51a",
+  "trial": {
+    "id": "title-search--guarded--001",
+    "task": "title-search",
+    "route": "guarded",
+    "repetition": 1,
+    "prompt": "为 GET /purchases 增加可选 title 参数，按标题做不区分大小写的字面子串检索；省略或空字符串保持现有列表行为。百分号、下划线和引号必须作为普通字符处理。检索不能突破租户权限，不修改其他 API 行为，不修改验收测试。"
+  },
+  "attempt": 1,
+  "kind": "model-trial",
+  "model": "gpt-6.1-sol",
+  "candidate_sha": "c15f2dfdd57ab2ada9f7f8ea38a77fe5add99b0c",
+  "base_sha": "70fb44504af2e711a19ccd82c1c67636ce253cfe",
+  "harness_sha": "4b65cb6ce8441432aec88d68215bab5d15606db8",
+  "evaluated_at": "2026-11-14T11:39:27.848207+00:00",
+  "cases": [
+    {
+      "group": "task",
+      "case": "case insensitive",
+      "passed": true
+    },
+    {
+      "group": "task",
+      "case": "tenant isolation",
+      "passed": true
+    },
+    {
+      "group": "task",
+      "case": "literal %",
+      "passed": true
+    },
+    {
+      "group": "task",
+      "case": "literal _",
+      "passed": true
+    },
+    {
+      "group": "task",
+      "case": "literal ' OR 1=1 --",
+      "passed": true
+    },
+    {
+      "group": "task",
+      "case": "empty search",
+      "passed": true
+    },
+    {
+      "group": "task",
+      "case": "anonymous rejected",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "anonymous",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "forged_headers",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "tenant_list",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "tenant_detail",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "field_hidden",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "requester_cannot_approve",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "approver_cannot_self_approve",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "cross_tenant_approval",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "valid_create",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "approver_cannot_create",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "valid_approval",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "concurrent_approval",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "mass_assignment",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "bypass_action",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "invalid_amount",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "alternating_context",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "outcome": "passed",
+  "evaluation_seconds": 1.009
+}

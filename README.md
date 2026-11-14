@@ -45,8 +45,15 @@ python3 scripts/browser.py --route baseline
 python3 scripts/browser.py --route zenstack
 python3 scripts/browser.py --route guarded
 python3 benchmark/smoke.py | tee reports/benchmark-smoke.json
+python3 benchmark/runner_smoke.py | tee reports/runner-smoke.json
+python3 -m unittest discover -s benchmark/tests -v
+python3 scripts/model_access.py
 python3 scripts/report.py reports
 ```
+
+`model_access.py` 的本地默认值为 `null`，报告显示 unknown，表示未检查 CI Secret；不会把本地状态伪装成 CI 未配置。输出不可覆盖，重复运行 smoke 请使用新 checkout。
+
+如默认端口被占用，可将 Docker 映射改为 `127.0.0.1:55434:5432`，同步修改两个数据库 URL，并设置 `export POC_HTTP_PORT=18084`。Go、ZenStack、独立 Oracle、浏览器健康检查和 UI 代理使用同一端口，仍只连接 loopback。
 
 `db.mjs reset` 会删除测试表并重建，只接受数据库名以 `_poc` 结尾且显式 `POC_DB_RESET=1` 的环境。不要指向有业务数据的数据库。各路径顺序运行，共用 127.0.0.1:8080；三个路径不能共用同一数据库同时运行。
 
@@ -93,7 +100,7 @@ bin/appctl verify --base origin/main
 
 CI、Policy、测试目前位于同仓库，拥有仓库写权限的人可以修改它们。生产发布必须另设独立可信验证器、受保护规则与审批；本 POC 不声称已经实现该治理边界。
 
-当前已有共享 Next.js UI 和三路径真实浏览器验收，另提供可复现的真实模型试验计划及独立候选代码验收器。尚无真实 AI Coding 首次通过率、性能或成本统计，不能把人工注入和 synthetic-smoke 结果替代模型可靠性结论。
+当前已有共享 Next.js UI 和三路径真实浏览器验收，另提供可复现的真实模型试验计划及独立候选代码验收器。现已有真实 AI Coding 小样本 pilot，见 [真实结果报告](docs/model-pilot-results.md)；尚不能推断总体首次通过率或性能/成本优势。人工注入和 synthetic-smoke 结果不替代模型可靠性结论。
 
 ## 第二阶段：共享界面与模型试验工具
 
@@ -107,4 +114,4 @@ CI、Policy、测试目前位于同仓库，拥有仓库写权限的人可以修
 
 PR CI 仅运行不调用模型的协议测试和 synthetic 驱动正反控制。真实 trial 必须在能正常执行 `codex exec` 的环境运行；运行环境、服务或凭据阻塞保留为未测量，不计为模型代码失败。
 
-本次已实际启动九个 trial 的 pilot，运行在预检阶段因 CLI 初始化的只读文件系统错误阻塞，仍为零个模型样本。冻结计划、批次 JSON 与原始诊断见 [实际运行记录](docs/model-pilot-status.md)。
+接手环境已通过真实预检并完成三路径 pilot；完整结果、原始模型事件、候选 bundle 和独立验收见 [真实结果报告](docs/model-pilot-results.md)。前一环境的九项预检阻塞仍单独保存在 [历史运行记录](docs/model-pilot-status.md)，保持未测量状态。

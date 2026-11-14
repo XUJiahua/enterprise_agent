@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "plan_sha256": "5f8cc74a33c2952bcdd33731568c549446d68e2efe12515473034dc1e10ddbe4",
+  "trial": {
+    "id": "tenant-summary--guarded--001",
+    "task": "tenant-summary",
+    "route": "guarded",
+    "repetition": 1,
+    "prompt": "增加 GET /purchases/summary，返回 {count:整数,totalAmount:整数}，统计当前租户全部采购单，不改变原有列表/详情/创建/审批行为。无身份应拒绝；任何角色都不能统计其他租户。不要返回内部字段，不修改验收测试。"
+  },
+  "attempt": 1,
+  "kind": "model-trial",
+  "model": "gpt-6.1-sol",
+  "candidate_sha": "8df9bb77c003b5afaa46a8a32983e8dd35997cfe",
+  "base_sha": "70fb44504af2e711a19ccd82c1c67636ce253cfe",
+  "harness_sha": "70fb44504af2e711a19ccd82c1c67636ce253cfe",
+  "evaluated_at": "2026-11-14T11:36:39.753407+00:00",
+  "cases": [
+    {
+      "group": "task",
+      "case": "tenant-a totals",
+      "passed": true
+    },
+    {
+      "group": "task",
+      "case": "tenant-b totals",
+      "passed": true
+    },
+    {
+      "group": "task",
+      "case": "approver totals",
+      "passed": true
+    },
+    {
+      "group": "task",
+      "case": "anonymous rejected",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "anonymous",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "forged_headers",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "tenant_list",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "tenant_detail",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "field_hidden",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "requester_cannot_approve",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "approver_cannot_self_approve",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "cross_tenant_approval",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "valid_create",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "approver_cannot_create",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "valid_approval",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "concurrent_approval",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "mass_assignment",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "bypass_action",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "invalid_amount",
+      "passed": true
+    },
+    {
+      "group": "regression",
+      "case": "alternating_context",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "outcome": "passed",
+  "evaluation_seconds": 1.06
+}

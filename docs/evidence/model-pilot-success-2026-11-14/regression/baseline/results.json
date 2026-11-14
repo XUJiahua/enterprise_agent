@@ -1,0 +1,148 @@
+{
+  "route": "baseline",
+  "experiment": "controlled-fault-injection-v1",
+  "results": [
+    {
+      "mutation": "control",
+      "cases": [
+        {
+          "case": "anonymous",
+          "passed": true
+        },
+        {
+          "case": "forged_headers",
+          "passed": true
+        },
+        {
+          "case": "tenant_list",
+          "passed": true
+        },
+        {
+          "case": "tenant_detail",
+          "passed": true
+        },
+        {
+          "case": "field_hidden",
+          "passed": true
+        },
+        {
+          "case": "requester_cannot_approve",
+          "passed": true
+        },
+        {
+          "case": "approver_cannot_self_approve",
+          "passed": true
+        },
+        {
+          "case": "cross_tenant_approval",
+          "passed": true
+        },
+        {
+          "case": "valid_create",
+          "passed": true
+        },
+        {
+          "case": "approver_cannot_create",
+          "passed": true
+        },
+        {
+          "case": "valid_approval",
+          "passed": true
+        },
+        {
+          "case": "concurrent_approval",
+          "passed": true
+        },
+        {
+          "case": "mass_assignment",
+          "passed": true
+        },
+        {
+          "case": "bypass_action",
+          "passed": true
+        },
+        {
+          "case": "invalid_amount",
+          "passed": true
+        },
+        {
+          "case": "alternating_context",
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "mutation": "omit-tenant",
+      "cases": [
+        {
+          "case": "tenant_list",
+          "passed": false,
+          "error": "(200, [{'id': 'a-done', 'tenantId': 'tenant-a', 'createdBy': 'bob', 'title': 'Approved laptop', 'amount': 300, 'status': 'approved'}, {'id': 'a-other', 'tenantId': 'tenant-a', 'createdBy': 'bob', 'title': 'Bob laptop', 'amount': 200, 'status': 'submitted'}, {'id': 'a-own', 'tenantId': 'tenant-a', 'createdBy': 'alice', 'title': 'Alice laptop', 'amount': 100, 'status': 'submitted'}, {'id': 'a-self', 'tenantId': 'tenant-a', 'createdBy': 'bob', 'title': 'Self approval fixture', 'amount': 200, 'status': 'submitted'}, {'id': 'b-other', 'tenantId': 'tenant-b', 'createdBy': 'dave', 'title': 'Dave laptop', 'amount': 400, 'status': 'submitted'}])",
+          "kind": "invariant_failed"
+        },
+        {
+          "case": "tenant_detail",
+          "passed": false,
+          "error": "(200, {'id': 'b-other', 'tenantId': 'tenant-b', 'createdBy': 'dave', 'title': 'Dave laptop', 'amount': 400, 'status': 'submitted'})",
+          "kind": "invariant_failed"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "mutation": "skip-approval-check",
+      "cases": [
+        {
+          "case": "requester_cannot_approve",
+          "passed": false,
+          "error": "(200, {'id': 'a-other', 'tenantId': 'tenant-a', 'createdBy': 'bob', 'title': 'Bob laptop', 'amount': 200, 'status': 'approved'})",
+          "kind": "invariant_failed"
+        },
+        {
+          "case": "approver_cannot_self_approve",
+          "passed": false,
+          "error": "(200, {'id': 'a-self', 'tenantId': 'tenant-a', 'createdBy': 'bob', 'title': 'Self approval fixture', 'amount': 200, 'status': 'approved'})",
+          "kind": "invariant_failed"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "mutation": "leak-field",
+      "cases": [
+        {
+          "case": "field_hidden",
+          "passed": false,
+          "error": "{'id': 'a-own', 'tenantId': 'tenant-a', 'createdBy': 'alice', 'title': 'Alice laptop', 'amount': 100, 'status': 'submitted', 'internalNote': 'supplier-bank-account'}",
+          "kind": "invariant_failed"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "mutation": "mass-assignment",
+      "cases": [
+        {
+          "case": "mass_assignment",
+          "passed": false,
+          "error": "(201, {'id': 'forged', 'tenantId': 'tenant-b', 'createdBy': 'dave', 'title': 'Laptop', 'amount': 1, 'status': 'approved'})",
+          "kind": "invariant_failed"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "mutation": "bypass-action",
+      "cases": [
+        {
+          "case": "bypass_action",
+          "passed": false,
+          "error": "(200, {'id': 'a-other', 'tenantId': 'tenant-a', 'createdBy': 'bob', 'title': 'Bob laptop', 'amount': 200, 'status': 'approved'})",
+          "kind": "invariant_failed"
+        }
+      ],
+      "passed": false
+    }
+  ]
+}

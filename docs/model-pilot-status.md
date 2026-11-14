@@ -1,5 +1,9 @@
 # 模型 Pilot 实际运行状态 — 2026-11-14
 
+接手环境的 CLI 0.166.0 已实际通过 READY 预检，并完成 tenant-summary 三路径真实 pilot，3/3 通过、0 未测量。完整九项试验与限制见 [真实模型 pilot 报告](model-pilot-results.md)。以下保留前一环境的原始阻塞记录，不改写历史未测量状态。
+
+## 前一环境的阻塞记录
+
 已在提交 `80dbb504fae1ddc78a7c92b8ca976c68f106b1f7` 的干净可信 checkout 上冻结并启动真实 Codex pilot。候选基准为第二阶段提交 `c39c26f765a4a6f62cafe196567d797a11631a41`，计划三个任务 × 三条路径，各一次，共九个 trial。
 
 | 项目 | 实际值 |

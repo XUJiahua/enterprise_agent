@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "kind": "model-trial",
+  "plan_sha256": "5f8cc74a33c2952bcdd33731568c549446d68e2efe12515473034dc1e10ddbe4",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "planned_trials": 3,
+  "selected_trials": 3,
+  "status": "completed",
+  "trials": [
+    {
+      "trial_id": "tenant-summary--zenstack--001",
+      "route": "zenstack",
+      "generation_status": "completed",
+      "usage": {
+        "input_tokens": 140368,
+        "cached_input_tokens": 122112,
+        "output_tokens": 2086,
+        "reasoning_output_tokens": 243
+      },
+      "generation_seconds": 64.465,
+      "candidate_sha": "98d6dd74cd11f1001cf0d3cbc83722d06de3382e",
+      "status": "passed"
+    },
+    {
+      "trial_id": "tenant-summary--guarded--001",
+      "route": "guarded",
+      "generation_status": "completed",
+      "usage": {
+        "input_tokens": 94500,
+        "cached_input_tokens": 80256,
+        "output_tokens": 1028,
+        "reasoning_output_tokens": 133
+      },
+      "generation_seconds": 32.651,
+      "candidate_sha": "8df9bb77c003b5afaa46a8a32983e8dd35997cfe",
+      "status": "passed"
+    },
+    {
+      "trial_id": "tenant-summary--baseline--001",
+      "route": "baseline",
+      "generation_status": "completed",
+      "usage": {
+        "input_tokens": 121397,
+        "cached_input_tokens": 110976,
+        "output_tokens": 921,
+        "reasoning_output_tokens": 68
+      },
+      "generation_seconds": 32.892,
+      "candidate_sha": "6c7431bf65d8e01265eba0a09aaa3b690d1223cd",
+      "status": "passed"
+    }
+  ],
+  "cli_version": "codex-cli 0.166.0",
+  "observed_trials": 3,
+  "passed_trials": 3,
+  "unmeasured_trials": 0,
+  "first_pass_rate": 1.0,
+  "finished_at": "2026-11-14T11:37:15.186631+00:00"
+}

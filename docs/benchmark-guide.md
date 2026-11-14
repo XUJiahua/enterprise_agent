@@ -1,6 +1,6 @@
 # 真实 AI Coding 对照实验：任务与独立验收
 
-本轮交付可执行的试验计划和候选代码验收器，还没有真实模型试验数据。`benchctl` 不调用模型；开发者选择的 Agent 在独立 candidate worktree 中执行任务，验收始终从可信 harness checkout 运行。
+这里说明可执行的试验计划和候选代码验收器；现已通过独立 Codex driver 获得 [真实 pilot 数据](model-pilot-results.md)。`benchctl` 不调用模型；开发者选择的 Agent 在独立 candidate worktree 中执行任务，验收始终从可信 harness checkout 运行。
 
 ## 已支持的任务
 

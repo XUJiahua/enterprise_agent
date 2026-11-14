@@ -1,0 +1,1 @@
+{"ok": true, "kind": "synthetic-smoke", "evaluations": 4, "controls": ["seed reproducibility", "missing denominators", "real failing candidates", "real repaired candidate", "append-only attempts", "evaluator drift refusal"]}

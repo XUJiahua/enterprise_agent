@@ -1,0 +1,49 @@
+{
+  "ok": true,
+  "results": [
+    {
+      "probe": "safe control",
+      "passed": true,
+      "findings": []
+    },
+    {
+      "probe": "role expansion survives regenerated SQL",
+      "passed": true,
+      "findings": [
+        "POLICY_EXPANSION"
+      ]
+    },
+    {
+      "probe": "rewritten manifest cannot authorize changed history",
+      "passed": true,
+      "findings": [
+        "PUBLISHED_MIGRATION_CHANGED"
+      ]
+    },
+    {
+      "probe": "new destructive migration with matching checksum",
+      "passed": true,
+      "findings": [
+        "MIGRATION_REVIEW_REQUIRED"
+      ]
+    },
+    {
+      "probe": "RLS tamper",
+      "passed": true,
+      "findings": [
+        "GENERATED_DRIFT"
+      ]
+    },
+    {
+      "probe": "self-approval policy weakening",
+      "passed": true,
+      "findings": [
+        "POLICY_INVALID"
+      ]
+    },
+    {
+      "probe": "invalid trusted baseline fails closed",
+      "passed": true
+    }
+  ]
+}

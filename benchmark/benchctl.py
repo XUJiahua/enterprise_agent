@@ -66,7 +66,7 @@ def evaluate(args):
     if result_path.exists():raise ValueError('result already exists; attempts are append-only')
     import socket
     with socket.socket() as probe:
-        if probe.connect_ex(('127.0.0.1',8080))==0:raise ValueError('port 8080 already in use; refuse ambiguous evaluation')
+        if probe.connect_ex(('127.0.0.1',int(os.environ.get('POC_HTTP_PORT','8080'))))==0:raise ValueError('POC HTTP port already in use; refuse ambiguous evaluation')
     # Exactly one source controls fixture and Oracle, outside the candidate checkout.
     subprocess.run(['node',str(ROOT/'scripts/db.mjs'),'reset',trial['route']],cwd=ROOT,check=True)
     started=time.monotonic();server=None
@@ -83,12 +83,12 @@ def evaluate(args):
                 binary=out/f"server-{trial['id']}-{args.attempt}"
                 subprocess.run(['go','build','-buildvcs=false','-o',str(binary),'./cmd/server'],cwd=candidate,check=True,timeout=budget,stdout=stream,stderr=subprocess.STDOUT)
                 command=[str(binary),'--mode',trial['route']];cwd=candidate
-            env={k:os.environ[k] for k in ('PATH','HOME','LANG','LC_ALL','TMPDIR','DATABASE_URL','NODE_EXTRA_CA_CERTS') if k in os.environ}
+            env={k:os.environ[k] for k in ('PATH','HOME','LANG','LC_ALL','TMPDIR','DATABASE_URL','NODE_EXTRA_CA_CERTS','POC_HTTP_PORT') if k in os.environ}
             server=subprocess.Popen(command,cwd=cwd,env=env,stdout=stream,stderr=subprocess.STDOUT,start_new_session=True)
             for _ in range(100):
                 if server.poll() is not None:raise RuntimeError('candidate exited before readiness')
                 try:
-                    with urllib.request.urlopen('http://127.0.0.1:8080/health',timeout=1) as response:
+                    with urllib.request.urlopen('http://127.0.0.1:'+os.environ.get('POC_HTTP_PORT','8080')+'/health',timeout=1) as response:
                         if response.status==200:break
                 except OSError:time.sleep(.1)
             else:raise RuntimeError('candidate readiness timeout')

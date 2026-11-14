@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "kind": "model-trial",
+  "plan_sha256": "17574522b5403691c0eb429b9e8e497e7e00a0d644d3ec0dcb174f54cd3bd51a",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "planned_trials": 9,
+  "selected_trials": 9,
+  "status": "completed",
+  "trials": [
+    {
+      "trial_id": "tenant-summary--guarded--001",
+      "route": "guarded",
+      "generation_status": "completed",
+      "usage": {
+        "input_tokens": 186499,
+        "cached_input_tokens": 175488,
+        "output_tokens": 1140,
+        "reasoning_output_tokens": 83
+      },
+      "generation_seconds": 48.044,
+      "candidate_sha": "0ff254be004e7d21584f5a77a351aa4d40f696ef",
+      "status": "passed"
+    },
+    {
+      "trial_id": "tenant-summary--baseline--001",
+      "route": "baseline",
+      "generation_status": "completed",
+      "usage": {
+        "input_tokens": 103615,
+        "cached_input_tokens": 87040,
+        "output_tokens": 994,
+        "reasoning_output_tokens": 94
+      },
+      "generation_seconds": 34.26,
+      "candidate_sha": "82fd912c81a6b895e733b853adda4e837596f451",
+      "status": "passed"
+    },
+    {
+      "trial_id": "title-search--guarded--001",
+      "route": "guarded",
+      "generation_status": "completed",
+      "usage": {
+        "input_tokens": 97947,
+        "cached_input_tokens": 88576,
+        "output_tokens": 819,
+        "reasoning_output_tokens": 67
+      },
+      "generation_seconds": 30.442,
+      "candidate_sha": "c15f2dfdd57ab2ada9f7f8ea38a77fe5add99b0c",
+      "status": "passed"
+    },
+    {
+      "trial_id": "status-filter--guarded--001",
+      "route": "guarded",
+      "generation_status": "completed",
+      "usage": {
+        "input_tokens": 164690,
+        "cached_input_tokens": 144768,
+        "output_tokens": 1277,
+        "reasoning_output_tokens": 192
+      },
+      "generation_seconds": 50.967,
+      "candidate_sha": "e7a0ede13167439fcedb0be8c198bac89877d73f",
+      "status": "passed"
+    },
+    {
+      "trial_id": "status-filter--zenstack--001",
+      "route": "zenstack",
+      "generation_status": "completed",
+      "usage": {
+        "input_tokens": 100424,
+        "cached_input_tokens": 85120,
+        "output_tokens": 1934,
+        "reasoning_output_tokens": 634
+      },
+      "generation_seconds": 60.609,
+      "candidate_sha": "c1e04e866ba49fe6ae87fd6ac8ba6e86fbfe3274",
+      "status": "passed"
+    },
+    {
+      "trial_id": "status-filter--baseline--001",
+      "route": "baseline",
+      "generation_status": "completed",
+      "usage": {
+        "input_tokens": 118380,
+        "cached_input_tokens": 98432,
+        "output_tokens": 951,
+        "reasoning_output_tokens": 160
+      },
+      "generation_seconds": 40.212,
+      "candidate_sha": "d6b31b72f851c8cadc05027c452d63fa0a1c3184",
+      "status": "passed"
+    },
+    {
+      "trial_id": "title-search--zenstack--001",
+      "route": "zenstack",
+      "generation_status": "completed",
+      "usage": {
+        "input_tokens": 119121,
+        "cached_input_tokens": 100736,
+        "output_tokens": 1293,
+        "reasoning_output_tokens": 304
+      },
+      "generation_seconds": 56.451,
+      "candidate_sha": "c3bb7b47447c467269a67c31a9aa659db423fb92",
+      "status": "passed"
+    },
+    {
+      "trial_id": "title-search--baseline--001",
+      "route": "baseline",
+      "generation_status": "completed",
+      "usage": {
+        "input_tokens": 124952,
+        "cached_input_tokens": 114560,
+        "output_tokens": 946,
+        "reasoning_output_tokens": 71
+      },
+      "generation_seconds": 35.949,
+      "candidate_sha": "80bb8ca8009fcc2e3dcfb68bc5c635257deb7e8b",
+      "status": "passed"
+    },
+    {
+      "trial_id": "tenant-summary--zenstack--001",
+      "route": "zenstack",
+      "generation_status": "completed",
+      "usage": {
+        "input_tokens": 99642,
+        "cached_input_tokens": 84992,
+        "output_tokens": 1584,
+        "reasoning_output_tokens": 125
+      },
+      "generation_seconds": 48.882,
+      "candidate_sha": "5c0628ecb2412fc7bece2c1f8ebdf8eaca4056ee",
+      "status": "passed"
+    }
+  ],
+  "cli_version": "codex-cli 0.166.0",
+  "observed_trials": 9,
+  "passed_trials": 9,
+  "unmeasured_trials": 0,
+  "first_pass_rate": 1.0,
+  "finished_at": "2026-11-14T11:44:55.842842+00:00"
+}

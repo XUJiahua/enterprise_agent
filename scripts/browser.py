@@ -23,7 +23,7 @@ with (out/'backend.log').open('w') as stream:
         for _ in range(100):
             if server.poll() is not None:raise RuntimeError('backend exited before readiness')
             try:
-                with urllib.request.urlopen('http://127.0.0.1:8080/health',timeout=1) as response:
+                with urllib.request.urlopen('http://127.0.0.1:'+os.environ.get('POC_HTTP_PORT','8080')+'/health',timeout=1) as response:
                     if response.status==200:break
             except OSError:time.sleep(.1)
         else:raise RuntimeError('backend readiness timeout')

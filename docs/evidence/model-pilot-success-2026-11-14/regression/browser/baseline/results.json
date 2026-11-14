@@ -1,0 +1,306 @@
+{
+  "config": {
+    "configFile": "/home/jiahua/workspace/ai-factory/enterprise_agent/apps/web/playwright.config.ts",
+    "rootDir": "/home/jiahua/workspace/ai-factory/enterprise_agent/apps/web/tests",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 180000,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/home/jiahua/workspace/ai-factory/enterprise_agent/reports/browser/baseline/results.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "/home/jiahua/workspace/ai-factory/enterprise_agent/reports/browser/baseline/html",
+          "open": "never"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/home/jiahua/workspace/ai-factory/enterprise_agent/reports/browser/baseline/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/jiahua/workspace/ai-factory/enterprise_agent/apps/web/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.1",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run start",
+      "url": "http://127.0.0.1:3000",
+      "reuseExistingServer": false,
+      "timeout": 60000
+    }
+  },
+  "suites": [
+    {
+      "title": "purchases.spec.ts",
+      "file": "purchases.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "申请人可创建采购单，不能审批",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 764,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-14T11:38:22.380Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8e6a4a141a13fc9e7c90-e5759c00a0558c04f40f",
+          "file": "purchases.spec.ts",
+          "line": 12,
+          "column": 5
+        },
+        {
+          "title": "审批人不能自审批，其他审批人可以批准",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 669,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-14T11:38:24.919Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8e6a4a141a13fc9e7c90-2e0140c568a925c00656",
+          "file": "purchases.spec.ts",
+          "line": 29,
+          "column": 5
+        },
+        {
+          "title": "切换租户后清除旧记录且不泄露内部字段",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 498,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-14T11:38:25.606Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8e6a4a141a13fc9e7c90-2f425324c950bbde977a",
+          "file": "purchases.spec.ts",
+          "line": 46,
+          "column": 5
+        },
+        {
+          "title": "代理拒绝未知路径和身份，不转发伪造权限",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 64,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-14T11:38:26.123Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8e6a4a141a13fc9e7c90-6bb70870299cd8c90a68",
+          "file": "purchases.spec.ts",
+          "line": 61,
+          "column": 5
+        },
+        {
+          "title": "桌面工作台截图",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 473,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-14T11:38:26.198Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "desktop",
+                      "contentType": "image/png",
+                      "path": "/home/jiahua/workspace/ai-factory/enterprise_agent/reports/browser/baseline/artifacts/purchases-桌面工作台截图/attachments/desktop-86a6a646d0ff1de21c6d0e279d2245cf763cd469.png"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8e6a4a141a13fc9e7c90-79ddea72455076b1bceb",
+          "file": "purchases.spec.ts",
+          "line": 84,
+          "column": 5
+        },
+        {
+          "title": "移动端可创建且页面无横向溢出",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 665,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-14T11:38:26.685Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "mobile",
+                      "contentType": "image/png",
+                      "path": "/home/jiahua/workspace/ai-factory/enterprise_agent/reports/browser/baseline/artifacts/purchases-移动端可创建且页面无横向溢出/attachments/mobile-952688e758fb2dabfd9221bf09726376e577b37d.png"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8e6a4a141a13fc9e7c90-dbfeedf705728c329eee",
+          "file": "purchases.spec.ts",
+          "line": 100,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-14T11:38:20.642Z",
+    "duration": 6808.917,
+    "expected": 6,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

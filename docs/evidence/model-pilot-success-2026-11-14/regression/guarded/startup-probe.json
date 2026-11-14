@@ -1,0 +1,10 @@
+[
+  {
+    "probe": "unprotected database",
+    "passed": true
+  },
+  {
+    "probe": "privileged database role",
+    "passed": true
+  }
+]

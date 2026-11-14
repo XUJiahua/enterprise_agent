@@ -31,6 +31,8 @@ python3 benchmark/codex_runner.py run \
 
 删除 `--task tenant-summary` 可得到三个任务 × 三条路径，共九个 trial。默认 10 次重复的 90-trial 计划仍可用于独立验收，但本执行器不会自动消耗这么大的生成批次。可用 `--trial <exact-id>` 只执行一个指定 trial。
 
+ZenStack 候选 worktree 会先使用已安装 CLI 生成被 Git 忽略的 schema，准备日志保存在 `preparation/`，这一步发生在模型预算开始前。环境可用 `POC_HTTP_PORT` 选择非默认后端端口，服务与独立验收必须使用同一值。
+
 模型生成统一使用 `workspace-write` 和计划中的 reasoning effort。只允许 Go 路径修改 `internal/app/`，ZenStack 路径修改 `apps/zenstack/src/`，因为当前三个任务都是现有资源的读取扩展，不要求改动全局策略、迁移或依赖。修改验收器、CI、受保护规则等文件会被独立判定为范围违规。
 
 运行目录不可覆盖。每个 candidate 保留独立 Git worktree；原始源码不直接推送到远端。

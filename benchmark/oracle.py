@@ -1,4 +1,5 @@
 """Task-specific HTTP assertions. This file runs from the trusted harness checkout."""
+import os
 import json
 import urllib.error
 import urllib.parse
@@ -8,7 +9,7 @@ import urllib.request
 def request(path,user='alice'):
     headers={} if user is None else {'Authorization':'Bearer demo_'+user}
     try:
-        with urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:8080'+path,headers=headers),timeout=10) as response:
+        with urllib.request.urlopen(urllib.request.Request(('http://127.0.0.1:'+str(int(os.environ.get('POC_HTTP_PORT','8080'))))+path,headers=headers),timeout=10) as response:
             return response.status,json.load(response)
     except urllib.error.HTTPError as error:
         return error.code,json.load(error)

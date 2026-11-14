@@ -1,0 +1,18 @@
+diff --git a/internal/app/server.go b/internal/app/server.go
+index 56fe4d2..3e4b519 100644
+--- a/internal/app/server.go
++++ b/internal/app/server.go
+@@ -172,6 +172,13 @@ func (s *Server) handle(r *http.Request, tx pgx.Tx, u Identity) (any, int, error
+ 			args = append(args, parts[1])
+ 			query += fmt.Sprintf(` AND id=$%d`, len(args))
+ 		}
++		if len(parts) == 1 {
++			if title := r.URL.Query().Get("title"); title != "" {
++				args = append(args, title)
++				// Search literally so SQL pattern characters have no special meaning.
++				query += fmt.Sprintf(` AND strpos(lower(title), lower($%d)) > 0`, len(args))
++			}
++		}
+ 		query += ` ORDER BY id`
+ 		rows, e := tx.Query(ctx, query, args...)
+ 		if e != nil {
