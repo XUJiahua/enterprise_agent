@@ -25,9 +25,12 @@ for route in ['baseline','zenstack','guarded']:
 smoke=json.loads((root/'benchmark-smoke.json').read_text());assert smoke['ok'] and smoke['kind']=='synthetic-smoke' and smoke['evaluations']==4
 benchmark=json.loads((root/'benchmark/summary.json').read_text());assert benchmark['kind']=='synthetic-smoke' and len(benchmark['rows'])==3
 assert all(row['missing']==0 and row['evaluated']==1 and row['first_pass']==0 for row in benchmark['rows'])
+runner=json.loads((root/'runner-smoke.json').read_text());assert runner['ok'] and runner['kind']=='synthetic-smoke' and runner['evaluations']==1
+access=json.loads((root/'model-access.json').read_text());assert access['model_execution_attempted'] is False
 verifier=json.loads((root/'verifier.json').read_text());assert verifier['ok'] and len(verifier['results'])==7
 text='# Controlled POC results\n\n| Path | Healthy acceptance | Faults blocked |\n|---|---:|---:|\n'
 for route,acceptance,blocked in rows:text+=f'| {route} | {acceptance} | {blocked} |\n'
-text+='\nVerifier adversarial probes: 7/7. Direct SQL probes: 6/6. Startup configuration probes: 2/2. Shared browser acceptance: 18/18. Synthetic evaluator controls: 4 committed-candidate evaluations (not AI measurements).\n\nThese are hand-authored fault injections, not measured AI defect rates or first-pass productivity. A guarded field over-fetch fails closed with 403; ZenStack nullifies the denied field. Disabling the ZenStack policy client is an expected escaping boundary control.\n'
+text+='\nVerifier adversarial probes: 7/7. Direct SQL probes: 6/6. Startup configuration probes: 2/2. Shared browser acceptance: 18/18. Synthetic evaluator controls: 4 committed-candidate evaluations plus 1 driver end-to-end control (not AI measurements).\n\nThese are hand-authored fault injections, not measured AI defect rates or first-pass productivity. A guarded field over-fetch fails closed with 403; ZenStack nullifies the denied field. Disabling the ZenStack policy client is an expected escaping boundary control.\n'
+text+='\nPublic CI model key configured for this run: '+str(access['openai_api_key_configured_for_run'])+'. Model execution is not enabled by PR checks.\n'
 (root/'comparison.md').write_text(text)
 print(text)

@@ -23,6 +23,15 @@ jobs:
           cache: true
       - run: go test -race ./...
       - run: go vet ./...
+      - name: Driver protocol and failure classification
+        run: python3 -m unittest discover -s benchmark/tests -v
+      - name: Record optional public CI model credential readiness
+        env:
+          MODEL_API_CONFIGURED: ${{ secrets.OPENAI_API_KEY != '' }}
+        run: |
+          mkdir -p reports
+          python3 -c 'import json,os; from pathlib import Path; Path("reports/model-access.json").write_text(json.dumps({"openai_api_key_configured_for_run": os.environ["MODEL_API_CONFIGURED"] == "true", "model_execution_attempted": False}))'
+
       - run: mkdir -p bin reports && go build -o bin/appctl ./cmd/appctl
       - name: Check policy, compiled RLS, and locked migrations
         run: |
@@ -89,6 +98,10 @@ jobs:
       - name: Benchmark evaluator smoke controls (synthetic only)
         if: matrix.route == 'baseline'
         run: python3 benchmark/smoke.py | tee reports/benchmark-smoke.json
+        shell: bash
+      - name: Model runner end-to-end controls (synthetic only)
+        if: matrix.route == 'baseline'
+        run: python3 benchmark/runner_smoke.py | tee reports/runner-smoke.json
         shell: bash
       - name: Shared Next.js production UI and browser acceptance
         run: python3 scripts/browser.py --route '${{ matrix.route }}'
