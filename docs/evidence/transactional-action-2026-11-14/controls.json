@@ -1,0 +1,288 @@
+{
+  "kind": "synthetic-mechanism-control",
+  "new_model_generations": 0,
+  "evaluations": 6,
+  "cases_per_evaluation": 66,
+  "reference_passed": true,
+  "negative_controls_detected": 5,
+  "controls": [
+    {
+      "mode": "reference",
+      "passed": true,
+      "groups": {
+        "functional": {
+          "passed": 6,
+          "total": 6
+        },
+        "authorization": {
+          "passed": 5,
+          "total": 5
+        },
+        "atomicity": {
+          "passed": 4,
+          "total": 4
+        },
+        "input": {
+          "passed": 24,
+          "total": 24
+        },
+        "idempotency": {
+          "passed": 6,
+          "total": 6
+        },
+        "concurrency": {
+          "passed": 3,
+          "total": 3
+        },
+        "failure-rollback": {
+          "passed": 2,
+          "total": 2
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        }
+      }
+    },
+    {
+      "mode": "omit-audit",
+      "passed": false,
+      "groups": {
+        "functional": {
+          "passed": 0,
+          "total": 6
+        },
+        "authorization": {
+          "passed": 5,
+          "total": 5
+        },
+        "atomicity": {
+          "passed": 4,
+          "total": 4
+        },
+        "input": {
+          "passed": 22,
+          "total": 24
+        },
+        "idempotency": {
+          "passed": 0,
+          "total": 6
+        },
+        "concurrency": {
+          "passed": 0,
+          "total": 3
+        },
+        "failure-rollback": {
+          "passed": 0,
+          "total": 2
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        }
+      }
+    },
+    {
+      "mode": "commit-before-audit",
+      "passed": false,
+      "groups": {
+        "functional": {
+          "passed": 6,
+          "total": 6
+        },
+        "authorization": {
+          "passed": 5,
+          "total": 5
+        },
+        "atomicity": {
+          "passed": 4,
+          "total": 4
+        },
+        "input": {
+          "passed": 24,
+          "total": 24
+        },
+        "idempotency": {
+          "passed": 6,
+          "total": 6
+        },
+        "concurrency": {
+          "passed": 3,
+          "total": 3
+        },
+        "failure-rollback": {
+          "passed": 0,
+          "total": 2
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        }
+      }
+    },
+    {
+      "mode": "skip-replay",
+      "passed": false,
+      "groups": {
+        "functional": {
+          "passed": 6,
+          "total": 6
+        },
+        "authorization": {
+          "passed": 5,
+          "total": 5
+        },
+        "atomicity": {
+          "passed": 4,
+          "total": 4
+        },
+        "input": {
+          "passed": 24,
+          "total": 24
+        },
+        "idempotency": {
+          "passed": 5,
+          "total": 6
+        },
+        "concurrency": {
+          "passed": 2,
+          "total": 3
+        },
+        "failure-rollback": {
+          "passed": 2,
+          "total": 2
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        }
+      }
+    },
+    {
+      "mode": "skip-completeness",
+      "passed": false,
+      "groups": {
+        "functional": {
+          "passed": 6,
+          "total": 6
+        },
+        "authorization": {
+          "passed": 5,
+          "total": 5
+        },
+        "atomicity": {
+          "passed": 0,
+          "total": 4
+        },
+        "input": {
+          "passed": 24,
+          "total": 24
+        },
+        "idempotency": {
+          "passed": 6,
+          "total": 6
+        },
+        "concurrency": {
+          "passed": 2,
+          "total": 3
+        },
+        "failure-rollback": {
+          "passed": 2,
+          "total": 2
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        }
+      }
+    },
+    {
+      "mode": "reject-all",
+      "passed": false,
+      "groups": {
+        "functional": {
+          "passed": 0,
+          "total": 6
+        },
+        "authorization": {
+          "passed": 5,
+          "total": 5
+        },
+        "atomicity": {
+          "passed": 4,
+          "total": 4
+        },
+        "input": {
+          "passed": 22,
+          "total": 24
+        },
+        "idempotency": {
+          "passed": 0,
+          "total": 6
+        },
+        "concurrency": {
+          "passed": 0,
+          "total": 3
+        },
+        "failure-rollback": {
+          "passed": 0,
+          "total": 2
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        }
+      }
+    }
+  ],
+  "direct_metadata_checks": 10,
+  "startup_probes": [
+    {
+      "probe": "unguarded-purchase",
+      "passed": true
+    },
+    {
+      "probe": "unguarded-audit",
+      "passed": true
+    },
+    {
+      "probe": "mutable-request",
+      "passed": true
+    },
+    {
+      "probe": "mutation-gate",
+      "passed": true
+    },
+    {
+      "probe": "unknown-mutation",
+      "passed": true
+    }
+  ],
+  "source_parent_commit": "bf02e7118fe52dcb5e9fa21f255ee5153f3c2aea",
+  "source_checkout_dirty": true,
+  "source_sha256": {
+    "internal/action/approval.go": "7bf15cfddbe63e485adce6d09b59f4bf8856d872277fdcd398d6f7b10092c92d",
+    "internal/action/http.go": "beb3c14c742ac806d3b6eb1a870b9fba5d7896017d9ae3451ad60e24736a3c3f",
+    "cmd/action-server/main.go": "4560d3898c762429b272408faedac47622ffaf7b4c7fc6caefeae572ce8c9d5d",
+    "internal/app/demo_identity.go": "1b49e429ba1a98236fea3bc84a626a4698d276dc6d55758462c0e40a97eda2fb",
+    "poc/transactional-action/schema.sql": "9e8a6b49a8da58ee75cf1d0258dc9c13807f1ac455de8e3e23d573da2c69a662",
+    "benchmark/phase3/contract.json": "b7e01893108a87ef002de470f8451215837e907269318f664deb8de9ad52a35d",
+    "benchmark/phase3/oracle.py": "b9cb0e762e48fc1c84366aefb4155aa561d62982827caecc3b0ed313603ec303",
+    "benchmark/phase3/db.mjs": "2045333d7f03d34cf74dc149cde6ac604eb064026239902f82ed81845212e12a",
+    "benchmark/phase3/smoke.py": "4bb8a8d89b9f23499e63ce9cce899d256ad196a6b8fc2e5762665383639a75ff",
+    "tests/acceptance.py": "b630076565eac949da042a821caa52fb44cc59fe555943e65049c92d4935b373",
+    "db/bootstrap.sql": "4eb60b5cbbdcb2b79813c63cc7baf44665755a7327df6d1aa702c430357f30b9",
+    "db/migrations/001_purchase.sql": "00db7c65bdf932912f4764da76bba0a5d84032eb208c6073fb89b495179a3e85",
+    "db/seed.sql": "9004fb919509475a987349f8d1804044af1688c1fdca524b2b191912bb1414cc",
+    "generated/guard.sql": "b728fc08e43c5642b7dadf5823cad098d24bcd0740bef98a340d921424661f13",
+    "internal/app/server.go": "128f710c1d022e50ba925fda4a2a9d8c88f4233cccc9f57c3eae6704c3d0b53f",
+    "go.mod": "648c40a4bf80a1cb567029bbf31c771963254e92aa8712da903eb8a883fe3217",
+    "go.sum": "e718bd4e6664b6aa2d808d7bf1f72ca1b2e36316db23235318c9e20a8705f0c4"
+  },
+  "note": "Typed Action mechanism controls only. Not a model comparison, general workflow engine, or production exactly-once guarantee.",
+  "environment": {
+    "postgres": "postgres (PostgreSQL) 18.6",
+    "go": "go version go1.25.4 linux/amd64",
+    "fixture_kind": "public synthetic mechanism controls"
+  }
+}
