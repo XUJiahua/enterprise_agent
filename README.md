@@ -45,8 +45,15 @@ python3 scripts/browser.py --route baseline
 python3 scripts/browser.py --route zenstack
 python3 scripts/browser.py --route guarded
 python3 benchmark/smoke.py | tee reports/benchmark-smoke.json
+python3 benchmark/runner_smoke.py | tee reports/runner-smoke.json
+python3 -m unittest discover -s benchmark/tests -v
+python3 scripts/model_access.py
 python3 scripts/report.py reports
 ```
+
+`model_access.py` 的本地默认值为 `null`，报告显示 unknown，表示未检查 CI Secret；不会把本地状态伪装成 CI 未配置。输出不可覆盖，重复运行 smoke 请使用新 checkout。
+
+如默认端口被占用，可将 Docker 映射改为 `127.0.0.1:55434:5432`，同步修改两个数据库 URL，并设置 `export POC_HTTP_PORT=18084`。Go、ZenStack、独立 Oracle、浏览器健康检查和 UI 代理使用同一端口，仍只连接 loopback。
 
 `db.mjs reset` 会删除测试表并重建，只接受数据库名以 `_poc` 结尾且显式 `POC_DB_RESET=1` 的环境。不要指向有业务数据的数据库。各路径顺序运行，共用 127.0.0.1:8080；三个路径不能共用同一数据库同时运行。
 

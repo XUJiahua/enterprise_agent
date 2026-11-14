@@ -30,7 +30,7 @@ jobs:
           MODEL_API_CONFIGURED: ${{ secrets.OPENAI_API_KEY != '' }}
         run: |
           mkdir -p reports
-          python3 -c 'import json,os; from pathlib import Path; Path("reports/model-access.json").write_text(json.dumps({"openai_api_key_configured_for_run": os.environ["MODEL_API_CONFIGURED"] == "true", "model_execution_attempted": False}))'
+          python3 scripts/model_access.py --ci
 
       - run: mkdir -p bin reports && go build -o bin/appctl ./cmd/appctl
       - name: Check policy, compiled RLS, and locked migrations

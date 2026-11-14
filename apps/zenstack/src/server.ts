@@ -5,6 +5,8 @@ import { PolicyPlugin } from '@zenstackhq/plugin-policy';
 import { Pool } from 'pg';
 import { schema } from '../zenstack/schema.ts';
 
+const port = Number(process.env.POC_HTTP_PORT ?? '8080');
+if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('invalid POC_HTTP_PORT');
 const mutation = process.env.POC_MUTATION ?? '';
 if (mutation && process.env.POC_ALLOW_MUTATIONS !== '1') throw new Error('fault injection is opt-in');
 if (!['', 'omit-tenant', 'skip-approval-check', 'leak-field', 'mass-assignment', 'bypass-action', 'disable-policy'].includes(mutation)) throw new Error('unknown mutation');
@@ -76,4 +78,4 @@ createServer(async(req,res)=>{
   if(e.code==='23505'){deny(res,409);return;}
   console.error(error);deny(res,500);
  }
-}).listen(8080,'127.0.0.1',()=>console.log('ZenStack POC listening on 127.0.0.1:8080'));
+}).listen(port,'127.0.0.1',()=>console.log(`ZenStack POC listening on 127.0.0.1:${port}`));

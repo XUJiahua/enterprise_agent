@@ -2,12 +2,13 @@
 Fixed fixture expectations are intentionally authored separately from generated rules.
 """
 import concurrent.futures
+import os
 import json
 import urllib.error
 import urllib.request
 import uuid
 
-BASE = 'http://127.0.0.1:8080'
+BASE = ('http://127.0.0.1:'+str(int(os.environ.get('POC_HTTP_PORT','8080'))))
 DENIED = (400, 401, 403, 404, 409)
 
 def request(method, path, user='alice', data=None, headers=None):

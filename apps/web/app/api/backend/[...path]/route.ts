@@ -24,8 +24,10 @@ async function proxy(
     return NextResponse.json({ error: "接口不存在" }, { status: 404 });
   if (!["GET", "POST", "PATCH"].includes(req.method))
     return NextResponse.json({ error: "不支持该操作" }, { status: 405 });
-  // Backend origin is fixed. Browser input cannot choose a URL or forward auth/tenant/role.
-  const url = "http://127.0.0.1:8080/" + path.map(encodeURIComponent).join("/");
+  // Backend origin stays on loopback; only the trusted environment selects the port. Browser input cannot choose a URL or forward auth/tenant/role.
+  const port = Number(process.env.POC_HTTP_PORT ?? "8080");
+  if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error("invalid POC_HTTP_PORT");
+  const url = `http://127.0.0.1:${port}/` + path.map(encodeURIComponent).join("/");
   const headers = {
     "Content-Type": "application/json",
     Authorization: "Bearer demo_" + actor,
