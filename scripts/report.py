@@ -17,10 +17,11 @@ for route in ['baseline','zenstack','guarded']:
     assert blocked==(0 if route=='baseline' else 5)
     if route=='zenstack':assert any(r['mutation']=='disable-policy' and not r['passed'] for r in results)
     rows.append((route,f"{sum(c['passed'] for c in control['cases'])}/16",f'{blocked}/5'))
+startup=json.loads((root/'guarded/startup-probe.json').read_text());assert len(startup)==2 and all(p['passed'] for p in startup)
 probe=json.loads((root/'guarded/db-probe.json').read_text());assert probe['ok'] and probe['checks']==6
 verifier=json.loads((root/'verifier.json').read_text());assert verifier['ok'] and len(verifier['results'])==7
 text='# Controlled POC results\n\n| Path | Healthy acceptance | Faults blocked |\n|---|---:|---:|\n'
 for route,acceptance,blocked in rows:text+=f'| {route} | {acceptance} | {blocked} |\n'
-text+='\nVerifier adversarial probes: 7/7.\n\nThese are hand-authored fault injections, not measured AI defect rates or first-pass productivity. A guarded field over-fetch fails closed with 403; ZenStack nullifies the denied field. Disabling the ZenStack policy client is an expected escaping boundary control.\n'
+text+='\nVerifier adversarial probes: 7/7. Direct SQL probes: 6/6. Startup configuration probes: 2/2.\n\nThese are hand-authored fault injections, not measured AI defect rates or first-pass productivity. A guarded field over-fetch fails closed with 403; ZenStack nullifies the denied field. Disabling the ZenStack policy client is an expected escaping boundary control.\n'
 (root/'comparison.md').write_text(text)
 print(text)

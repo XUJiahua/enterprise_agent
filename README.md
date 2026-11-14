@@ -8,7 +8,7 @@
 | zenstack | ZenStack **3.10.2** + PostgreSQL | ZModel + PolicyPlugin |
 | guarded | 与 baseline 共用 Go HTTP 实现，启用最小 Policy 编译器 | PostgreSQL RLS + 列权限；Go 绑定可信上下文 |
 
-三条路径执行同一份独立 HTTP 验收：**16 个用例**，包含两租户、角色、字段、身份伪造、创建、审批、状态检查、8 请求并发审批和 60 次并发身份切换。另有 **5 类运行时缺陷注入**、ZenStack 禁用插件的边界对照、Go 路径的直接 SQL 探针和 **7 组 Verifier 对抗探针**。
+三条路径执行同一份独立 HTTP 验收：**16 个用例**，包含两租户、角色、字段、身份伪造、创建、审批、状态检查、8 请求并发审批和 60 次并发身份切换。另有 **5 类运行时缺陷注入**、ZenStack 禁用插件的边界对照、Go 路径的直接 SQL 探针与两组启动配置探针和 **7 组 Verifier 对抗探针**。
 
 ## 在 public CI 查看结果
 
@@ -80,7 +80,7 @@ bin/appctl verify --base origin/main
 - `internal/policy`、`cmd/appctl`：闭合 Policy 语法、RLS 编译、语义变更及迁移检查。
 - `scripts/db.mjs`：隔离数据库初始化和不经过 API 的 RLS/列权限探针。
 - `tests/verifier.py`：实际修改文件与 Git 历史，尝试绕过验证器。
-- [业务约定](docs/business-contract.md)、[实验设计和限制](docs/experiment-design.md)。
+- [首轮结果](docs/poc-results.md)、[业务约定](docs/business-contract.md)、[实验设计和限制](docs/experiment-design.md)。
 
 ## 信任边界
 

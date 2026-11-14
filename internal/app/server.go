@@ -63,6 +63,19 @@ func New(ctx context.Context, url, mode, mutation string) (*Server, error) {
 		pool.Close()
 		return nil, fmt.Errorf("runtime must use a non-owner, non-superuser, non-bypassrls role: %v", e)
 	}
+	if mode == "guarded" {
+		var configured bool
+		e = pool.QueryRow(ctx, `SELECT relrowsecurity AND relforcerowsecurity
+          AND NOT has_column_privilege(current_user,c.oid,'internalNote','SELECT')
+          AND NOT has_column_privilege(current_user,c.oid,'tenantId','UPDATE')
+          AND NOT has_column_privilege(current_user,c.oid,'createdBy','UPDATE')
+          AND (SELECT count(*)=3 FROM pg_policy p WHERE p.polrelid=c.oid)
+          FROM pg_class c WHERE c.oid='"Purchase"'::regclass`).Scan(&configured)
+		if e != nil || !configured {
+			pool.Close()
+			return nil, fmt.Errorf("guarded runtime requires configured RLS and column privileges: %v", e)
+		}
+	}
 	return &Server{pool, mode == "guarded", mutation}, nil
 }
 func write(w http.ResponseWriter, status int, v any) {

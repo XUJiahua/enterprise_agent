@@ -41,11 +41,22 @@ def execute(route,mutation,out):
 
 parser=argparse.ArgumentParser();parser.add_argument('--route',choices=['baseline','guarded','zenstack'],required=True);parser.add_argument('--out',default='reports');args=parser.parse_args()
 out=Path(args.out).resolve()/args.route;out.mkdir(parents=True,exist_ok=True)
+for stale in ['results.json','failure.json','db-probe.json','startup-probe.json']:
+    (out/stale).unlink(missing_ok=True)
 experiments=[]
 try:
     for mutation in ['',*list(oracle.FAULTS)[:5],*(['disable-policy'] if args.route=='zenstack' else [])]:
         result=execute(args.route,mutation,out);experiments.append(result);print(json.dumps(result),flush=True)
     if args.route=='guarded':
+        startup=[]
+        subprocess.run(['node','scripts/db.mjs','reset','baseline'],check=True)
+        for name,url,expected_error in [
+            ('unprotected database',os.environ['DATABASE_URL'],'guarded runtime requires configured RLS'),
+            ('privileged database role',os.environ['ADMIN_DATABASE_URL'],'runtime must use a non-owner')]:
+            p=subprocess.run([str(ROOT/'bin/server'),'--mode','guarded'],env={**os.environ,'DATABASE_URL':url},capture_output=True,text=True,timeout=5)
+            assert p.returncode!=0 and expected_error in p.stderr,(name,p.stdout,p.stderr)
+            startup.append({'probe':name,'passed':True})
+        (out/'startup-probe.json').write_text(json.dumps(startup,indent=2)+'\n')
         subprocess.run(['node','scripts/db.mjs','reset','guarded'],check=True)
         probe=subprocess.run(['node','scripts/db.mjs','probe'],check=True,capture_output=True,text=True)
         (out/'db-probe.json').write_text(probe.stdout)
