@@ -73,6 +73,7 @@
 | v2 原子批量审批 | 额外流程指导 × RLS Runtime，四组各一次 | 4/4；每份 46/46 | 无人工修复/候选重试，未观察到首次正确性差异 |
 | v3 业务演进 | 手写事务 vs 平台 Action | **0，尚未注册/执行真实队列** | 仅控制通过，真实 CLI 预检阻塞 |
 | v3 Kiro 队列（2026-11-15） | 同上，引擎 kiro-cli 3.3.0 / claude-opus-5.5 | 2 个；manual 50/66 失败，action 66/66 | manual 失败全部来自契约未规定的 requestHash 公式；放宽该项的诊断两组均 66/66。见 [Kiro pilot](phase3-kiro-pilot-results.md) |
+| v3 Kiro 队列 002（2026-11-15） | 契约写明 requestHash；Seatbelt 文件隔离；10 块 | 20 个；manual 10/10，action 10/10，每份 66/66 | 正确性无差异；action 耗时与 credit 约为一半，范围不重叠。见 [队列 002](phase3-kiro-cohort-002-results.md) |
 
 已完成真实生成合计为 3 + 9 + 4 = 16 个候选；条件不同，**不能合并计算成一个统一处理条件的成功率**。早期 9 个 trial 的环境阻塞计划仍保留为未测量，不是 0/9 通过。
 
@@ -347,7 +348,7 @@ python3 benchmark/phase3/ctl.py summarize \
 
 #5/#6 尚未全部完成，不能仅因新增一个控制或 pilot 就关闭。下一项最有价值的交付是新的真实 v3 证据，或在缺少 Codex 的情况下完成有验证的 Kiro 适配，不是再写一轮平台愿景。
 
-**2026-11-15 更新：** Kiro 后端已实现（`plan --engine kiro` + worker），并完成第一块 v3 真实 pilot，见 [phase3-kiro-pilot-results.md](phase3-kiro-pilot-results.md)。下一步 P0：在 v3 契约中写明 requestHash 指纹公式，或让 Oracle 只检查 Schema 约束加行为，然后提交新 harness、注册新队列并增加重复次数；隔离部署仍然待做。本次本地环境使用 PostgreSQL 17.11，不是 17.6。
+**2026-11-15 更新：** Kiro 后端已实现（`plan --engine kiro` + worker）。pilot 001 暴露了 Oracle 依赖未写入契约的 requestHash 公式；修正契约后注册的队列 002（10 块 × 2 组，Seatbelt 文件隔离）全部 20 个候选 66/66 通过，见 [队列 002](phase3-kiro-cohort-002-results.md)。仍待：网络与宿主级隔离（VM/容器）、更难的任务以区分两组、多模型重复、P1 各项。本次本地 PostgreSQL 为 17.11（17.6 镜像拉取阻塞）。
 
 ## 11. 下一次交付的验收清单
 

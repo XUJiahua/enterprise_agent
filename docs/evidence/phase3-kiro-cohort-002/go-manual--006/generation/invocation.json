@@ -1,0 +1,37 @@
+{
+  "status": "completed",
+  "usage": {
+    "credits": 2.4604172504145936
+  },
+  "turn_started": true,
+  "run_finished": true,
+  "reported_model": "claude-opus-5.5",
+  "event_count": 449,
+  "agent_messages": [
+    "I added audit logging and scoped idempotency to the batch approval, all in one transaction in `internal/candidate/approval.go`. It builds and the unit tests pass, but I haven't run it against a real database. No public test service was provided, so `visible_smoke.py` wasn't run, and the RLS, concurrency and rollback behaviour is designed but untested.\n\nHow a request is processed, inside one transaction:\n\n1. **Identity:** the transaction-scoped settings for tenant, user and role come only from the authenticated identity. Client-supplied context headers are ignored.\n2. **Claim the key:** it inserts the `ActionRequest` row first, with the request hash and the response. If another request already holds the same key in the same scope, this insert waits until that one commits or rolls back.\n   - If the other request rolled back, the insert goes through, so a confirmed failure doesn't use up the key.\n   - If the key was already committed with the same hash, it returns the stored response with `replayed=true` and writes nothing new.\n   - If the hash differs, it returns 409.\n3. **Lock and approve:** it locks the target purchases (`FOR UPDATE`) and checks they are all `submitted` in this tenant and created by someone else. If any target fails, the whole batch returns 409 and everything rolls back, so `Purchase`, `ApprovalAudit` and `ActionRequest` stay unchanged. If all pass, it sets them to `approved`.\n4. **Audit:** it inserts one `ApprovalAudit` row per approved target, then commits.\n\n- **Overlapping batches with different keys:** the row locks plus the re-check of `status='submitted'` mean only one batch succeeds. The loser gets 409 and its other targets stay unchanged. The `ApprovalAudit` primary key on (tenant, purchase) is a second guard; a duplicate there also maps to 409.\n- **Hash and response:** IDs are sorted by UTF-8 byte order. The hash is SHA-256 of `bulk-approve.v3\\n` followed by `<length>:<id>` for each ID. The response is `{\"approvedIds\":[\u2026]}`, and replays decode the stored copy, so they return the same bytes.\n- **Rare edge case:** if the key insert conflicts but the existing row can't then be read, the request returns 503 so the client can retry with the same key.\n- **Unchanged:** the NUL-character \u2192 404 behaviour, the old single-approval API and the shared HTTP layer.\n\nI also added `internal/candidate/approval_test.go`, which checks the hash format."
+  ],
+  "errors": [],
+  "engine": "kiro",
+  "generation_seconds": 66.287,
+  "requested_model": "claude-opus-5.5",
+  "reasoning_effort": "medium",
+  "sandbox": "workspace-write",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "claude-opus-5.5",
+    "--effort",
+    "medium",
+    "--trust-all-tools"
+  ],
+  "returncode": 0,
+  "timed_out": false
+}

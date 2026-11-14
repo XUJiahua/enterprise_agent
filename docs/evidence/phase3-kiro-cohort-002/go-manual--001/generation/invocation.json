@@ -1,0 +1,37 @@
+{
+  "status": "completed",
+  "usage": {
+    "credits": 2.543441493532338
+  },
+  "turn_started": true,
+  "run_finished": true,
+  "reported_model": "claude-opus-5.5",
+  "event_count": 589,
+  "agent_messages": [
+    "I added the audit log and scoped idempotency to the batch approval. It builds, `go vet` is clean, and `go test ./...` passes. I couldn't run any of it against a real database, because no credentials or public test service were available, so `visible_smoke.py` hasn't been run and the concurrency and rollback guarantees are untested.\n\nAll changes are in `internal/candidate/`: I rewrote `approval.go` and added `approval_test.go`. Each request runs as one transaction under the authenticated identity's RLS context:\n\n1. **Claim the key first.** It inserts the `ActionRequest` row (scope operation + tenant + actor + key, plus `requestHash` and the `{\"approvedIds\":[...]}` response) with `ON CONFLICT DO NOTHING`.\n   - A concurrent request with the same scope waits on the primary key until the first one commits or rolls back. So the same key and same set gives 200 twice with one commit, and the same key with a different set gives one 200 and one 409.\n   - If a committed row already exists: a matching hash returns the stored response with `replayed=true` and writes nothing. A different hash returns 409.\n2. **Lock the targets.** It takes `SELECT ... FOR UPDATE` in sorted order on rows in the caller's tenant, created by someone else, still `submitted`. If fewer rows come back than were requested, it returns 409 and rolls back everything. When two different keys overlap, the later request re-checks after the lock is released, sees the rows are already approved, and fails. Its own targets stay unchanged.\n3. **Write.** It updates the purchases to `approved` and inserts one `ApprovalAudit` row per target. The row counts must match exactly or the whole thing rolls back.\n4. **Commit.** If anything fails or rolls back, the `ActionRequest` row goes too, so the key stays free for a retry.\n\nKept as before: IDs containing a NUL character return 404, and ineligible targets return 409. The identity comes only from the authenticated user, so client headers can't override it. The old single-approve and other APIs still go through the fallback handler unchanged.\n\n`approval_test.go` is a unit test that checks `requestHash` against a hand-built input with a multi-byte ID. It's a new file; I didn't touch any existing tests."
+  ],
+  "errors": [],
+  "engine": "kiro",
+  "generation_seconds": 74.327,
+  "requested_model": "claude-opus-5.5",
+  "reasoning_effort": "medium",
+  "sandbox": "workspace-write",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "claude-opus-5.5",
+    "--effort",
+    "medium",
+    "--trust-all-tools"
+  ],
+  "returncode": 0,
+  "timed_out": false
+}

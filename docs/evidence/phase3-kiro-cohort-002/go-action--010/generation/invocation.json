@@ -1,0 +1,37 @@
+{
+  "status": "completed",
+  "usage": {
+    "credits": 1.2523393893864012
+  },
+  "turn_started": true,
+  "run_finished": true,
+  "reported_model": "claude-opus-5.5",
+  "event_count": 252,
+  "agent_messages": [
+    "I rewrote `internal/candidate/approval.go` so batch approval now goes through the protected `internal/action` Executor. The code builds, but I haven't run it against a database: there are no database credentials and no public test service, so I didn't run `visible_smoke.py`.\n\n`go vet ./...`, `go build ./...` and `go test ./...` all pass, but no package has test files, so the tests checked nothing. No other files changed.\n\nHow it works:\n- **Startup:** `candidate.New` calls `action.New(ctx, pool, \"\")`. If `Purchase`, `ActionRequest` or `ApprovalAudit` are missing the row-level security or append-only permissions, the server refuses to start and returns that error.\n- **Each request:** it calls `Executor.BulkApprove`. Its rejection type becomes `protocol.Rejection` with the same status code, so the shared HTTP layer picks the response status. Other errors are passed through unchanged. Its result becomes `protocol.Result`, and the `replayed` flag is returned as is.\n- **Order of checks:** the shared HTTP layer still runs first and is unchanged. It checks login (401) and role (403) before the body size (413), the request body (400) and `Idempotency-Key` (400).\n\nThe other rules come from code I read in `internal/action`, not from running it:\n- **One transaction:** the purchase status change, one audit row per approved ID and one `ActionRequest` row all commit together or not at all.\n- **Requests with the same key:** each operation + tenant + actor + key is locked while it runs. A request with the same key and the same IDs gets the saved response back with `Idempotency-Replayed=true`. Different IDs under that key return 409.\n- **Overlapping batches with different keys:** the target rows are locked during approval. The losing request sees approved records and gets 409, so its other targets stay unchanged.\n- **Failures:** the `ActionRequest` row is only written on success, so a rolled-back failure doesn't use up the key and the same key can be retried."
+  ],
+  "errors": [],
+  "engine": "kiro",
+  "generation_seconds": 32.951,
+  "requested_model": "claude-opus-5.5",
+  "reasoning_effort": "medium",
+  "sandbox": "workspace-write",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "claude-opus-5.5",
+    "--effort",
+    "medium",
+    "--trust-all-tools"
+  ],
+  "returncode": 0,
+  "timed_out": false
+}

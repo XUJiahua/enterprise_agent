@@ -117,4 +117,4 @@ Public CI 在 baseline job 顺序执行这些控制，最终 report 缺失证据
 
 `plan --engine kiro` 注册 Kiro 条件，并把引擎写入计划与 `job.json`。worker 用 `kiro-cli chat --no-interactive --output-format stream-json` 运行，按 ACP 事件判定：`turn_start` 算作开始，唯一的 `runFinished status=success` 算作完成，`runError` 或非零退出算作 provider/runtime 错误；超时在开始前算 runtime-blocked，开始后算 budget-exceeded。usage 记录的是 Kiro 计量 credit，token 未知。每次调用使用全新 `KIRO_HOME` 和内置的最小 agent，避免加载用户的全局 steering 和 MCP。Kiro 条件只走 `prepare` + `worker.py` 路径，同宿主 `generate` 仍只支持 Codex。单元测试覆盖事件缺失、重复完成、非 JSON、非零退出、超时前后和缺失 usage；driver smoke 另用假 kiro-cli 跑通了 kit→worker→restore→66 项验收。
 
-首个真实 Kiro 两组 pilot 的结果见 [phase3-kiro-pilot-results.md](phase3-kiro-pilot-results.md)。它暴露了 Oracle 检查契约未声明的 requestHash 公式这一 harness 缺陷。
+首个真实 Kiro 两组 pilot 的结果见 [phase3-kiro-pilot-results.md](phase3-kiro-pilot-results.md)。它暴露了 Oracle 检查契约未声明的 requestHash 公式这一 harness 缺陷。修正后的契约与 `isolate.py`（macOS Seatbelt 文件隔离，`isolation_control.py` 为正反控制）用于 [队列 002](phase3-kiro-cohort-002-results.md)。

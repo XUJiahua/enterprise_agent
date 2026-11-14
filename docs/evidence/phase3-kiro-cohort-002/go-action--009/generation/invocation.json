@@ -1,0 +1,37 @@
+{
+  "status": "completed",
+  "usage": {
+    "credits": 1.5563635777777778
+  },
+  "turn_started": true,
+  "run_finished": true,
+  "reported_model": "claude-opus-5.5",
+  "event_count": 304,
+  "agent_messages": [
+    "The protected `internal/action` package already implements the full audit + scoped-idempotency transaction; the candidate just needs to delegate to it and adapt types at the boundary.\nBatch approval now records an audit log in the same transaction and supports scoped idempotency. I didn't write the transaction logic myself: `candidate.New` now creates the protected executor with `action.New(ctx, pool, \"\")` and sends `POST /purchases/bulk-approve` to `Executor.BulkApprove`. `go vet`, `go build` and `go test ./...` all pass. Nothing has been run against a real database, because no credentials or independent test service were available, so `visible_smoke.py` was not run.\n\n**Why it's built this way:** the `internal/action` package already does everything the spec asks for in one transaction. That covers the eligibility and all-or-nothing checks, one `ApprovalAudit` per approved target, and one completed `ActionRequest` per operation+tenant+actor+key. It also computes the specified `requestHash`, serializes same-key requests with a lock, and stores a result only on success, so a rolled-back failure doesn't use up the key. Writing a second version in `candidate` would only add a chance of drift.\n\n**What `candidate` does:**\n- `action.Result` becomes `protocol.Result`, and the `replayed` flag is passed through as-is.\n- `action.Rejection` (wrapped errors included) becomes a `protocol.Rejection` with the same status.\n- Database and network errors pass through unchanged. The shared HTTP layer turns a unique-key violation into 409 and anything else, including a lost commit confirmation, into 503. The client then retries with the same key to read the committed result.\n- Identity comes only from the authenticated user in the shared HTTP layer, so client context headers can't override it.\n- `New` keeps its signature, and all other requests still go to the original server unchanged.\n\n**Concurrency:** I worked out these cases from reading the executor's code, not by testing them on a database.\n- **Same key, same set:** the second request waits for the lock, then finds the committed result and replays it.\n- **Same key, different set:** the second request gets 409.\n- **Different keys, overlapping IDs:** the loser re-checks the rows after the winner commits, finds some no longer submitted, and gets 409 with nothing written.\n\nI only changed `internal/candidate/approval.go` and added `internal/candidate/approval_test.go`, which tests the success, replay, rejection and error mapping without a database. Nothing was committed."
+  ],
+  "errors": [],
+  "engine": "kiro",
+  "generation_seconds": 43.253,
+  "requested_model": "claude-opus-5.5",
+  "reasoning_effort": "medium",
+  "sandbox": "workspace-write",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "claude-opus-5.5",
+    "--effort",
+    "medium",
+    "--trust-all-tools"
+  ],
+  "returncode": 0,
+  "timed_out": false
+}
