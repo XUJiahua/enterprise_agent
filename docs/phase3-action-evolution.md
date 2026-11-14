@@ -112,3 +112,9 @@ driver smoke 使用真实 PostgreSQL，执行两组 × 三个人工候选（完�
 Public CI 在 baseline job 顺序执行这些控制，最终 report 缺失证据即失败，不调用模型。原有各阶段回归继续保留。尚未产生 v3 AI 正确性或成本收益结论；正式比较还需要可用模型环境、实际隔离部署及足够的重复样本，Issue #5/#6 仍未全部完成。
 
 本地 [控制摘要与源码 hash](evidence/phase3-cohort-controls-2026-11-14/controls.json) 记录了 6 次人工控制、3 次驱动/交接验收、27 个源码文件及 PostgreSQL 17.6 / Go 1.25.4 环境。本次另做 [真实 CLI 预检](evidence/phase3-cohort-controls-2026-11-14/model-preflight.json)：Codex CLI 0.167.0-alpha.4 初始化返回 `failed to initialize in-process app-server client: Read-only file system (os error 30)`，未进入模型回合。没有注册或执行真实 v3 cohort，因此不报告模型首次通过率。
+
+## Kiro CLI 引擎
+
+`plan --engine kiro` 注册 Kiro 条件，并把引擎写入计划与 `job.json`。worker 用 `kiro-cli chat --no-interactive --output-format stream-json` 运行，按 ACP 事件判定：`turn_start` 算作开始，唯一的 `runFinished status=success` 算作完成，`runError` 或非零退出算作 provider/runtime 错误；超时在开始前算 runtime-blocked，开始后算 budget-exceeded。usage 记录的是 Kiro 计量 credit，token 未知。每次调用使用全新 `KIRO_HOME` 和内置的最小 agent，避免加载用户的全局 steering 和 MCP。Kiro 条件只走 `prepare` + `worker.py` 路径，同宿主 `generate` 仍只支持 Codex。单元测试覆盖事件缺失、重复完成、非 JSON、非零退出、超时前后和缺失 usage；driver smoke 另用假 kiro-cli 跑通了 kit→worker→restore→66 项验收。
+
+首个真实 Kiro 两组 pilot 的结果见 [phase3-kiro-pilot-results.md](phase3-kiro-pilot-results.md)。它暴露了 Oracle 检查契约未声明的 requestHash 公式这一 harness 缺陷。

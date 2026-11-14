@@ -1,0 +1,46 @@
+{
+  "version": 3,
+  "kind": "model-trial",
+  "plan_sha256": "414d9d06f439bc937ce3312db19906aff8b4172ba8da65cf2c8369b5b793a9ae",
+  "rows": [
+    {
+      "cell": "go-manual",
+      "planned": 1,
+      "observed": 1,
+      "passed": 0,
+      "unmeasured": 0,
+      "first_pass_rate": 0.0,
+      "outcomes": {
+        "acceptance-failed": 1
+      },
+      "usage": [
+        {
+          "trial": "go-manual--001",
+          "usage": {
+            "credits": 2.1996621668325043
+          }
+        }
+      ]
+    },
+    {
+      "cell": "go-action",
+      "planned": 1,
+      "observed": 1,
+      "passed": 1,
+      "unmeasured": 0,
+      "first_pass_rate": 1.0,
+      "outcomes": {
+        "passed": 1
+      },
+      "usage": [
+        {
+          "trial": "go-action--001",
+          "usage": {
+            "credits": 1.2703707791044776
+          }
+        }
+      ]
+    }
+  ],
+  "note": "No inference of model benefit from synthetic controls. Missing/infrastructure trials remain unmeasured; absent usage is unknown."
+}
