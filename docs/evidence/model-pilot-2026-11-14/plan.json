@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "kind": "model-trial",
+  "base_sha": "c39c26f765a4a6f62cafe196567d797a11631a41",
+  "harness_sha": "80dbb504fae1ddc78a7c92b8ca976c68f106b1f7",
+  "dirty_harness": false,
+  "frozen": {
+    "benchmark/codex_runner.py": "9a01715aae97faa48a56321dcea9ca43b3045dc60bf99a71df248c1081ea766f",
+    "benchmark/benchctl.py": "378614e0c5a3c236ba14e4d103f70e5955b17eaad37cb734649c1004abd59440",
+    "benchmark/tasks.json": "cd0dc078cda3e8259e0c4b1bc71d1940d10ef24abe98bb4d74e62cf7ab8ae0a9",
+    "benchmark/oracle.py": "4ecd7355ecf9af43a19e21eeb7cd240f448ffe443c99ad20c1227c91afd8cdd3",
+    "tests/acceptance.py": "94ce2270fe2ac02aa03a1f153df4ff23e84b3dc0e739725c82e21b15f1c2c3f0",
+    "scripts/db.mjs": "b3fa6f5e608dd905c5347b043aaaad2369e2c3ba075d0af8174e92aa93b522f4",
+    "db/bootstrap.sql": "4eb60b5cbbdcb2b79813c63cc7baf44665755a7327df6d1aa702c430357f30b9",
+    "db/baseline-grants.sql": "fe8850d74caf1e5857b630d134590d925413059ac14f225aa51809f590ef8cec",
+    "db/seed.sql": "9004fb919509475a987349f8d1804044af1688c1fdca524b2b191912bb1414cc",
+    "db/migrations/001_purchase.sql": "00db7c65bdf932912f4764da76bba0a5d84032eb208c6073fb89b495179a3e85",
+    "generated/guard.sql": "b728fc08e43c5642b7dadf5823cad098d24bcd0740bef98a340d921424661f13"
+  },
+  "seed": 20261114,
+  "model": "gpt-6.1-sol",
+  "generation_reasoning_effort": "medium",
+  "generation_budget_seconds": 120,
+  "build_timeout_seconds": 120,
+  "trials": [
+    {
+      "id": "tenant-summary--guarded--001",
+      "task": "tenant-summary",
+      "route": "guarded",
+      "repetition": 1,
+      "prompt": "增加 GET /purchases/summary，返回 {count:整数,totalAmount:整数}，统计当前租户全部采购单，不改变原有列表/详情/创建/审批行为。无身份应拒绝；任何角色都不能统计其他租户。不要返回内部字段，不修改验收测试。"
+    },
+    {
+      "id": "tenant-summary--baseline--001",
+      "task": "tenant-summary",
+      "route": "baseline",
+      "repetition": 1,
+      "prompt": "增加 GET /purchases/summary，返回 {count:整数,totalAmount:整数}，统计当前租户全部采购单，不改变原有列表/详情/创建/审批行为。无身份应拒绝；任何角色都不能统计其他租户。不要返回内部字段，不修改验收测试。"
+    },
+    {
+      "id": "title-search--guarded--001",
+      "task": "title-search",
+      "route": "guarded",
+      "repetition": 1,
+      "prompt": "为 GET /purchases 增加可选 title 参数，按标题做不区分大小写的字面子串检索；省略或空字符串保持现有列表行为。百分号、下划线和引号必须作为普通字符处理。检索不能突破租户权限，不修改其他 API 行为，不修改验收测试。"
+    },
+    {
+      "id": "status-filter--guarded--001",
+      "task": "status-filter",
+      "route": "guarded",
+      "repetition": 1,
+      "prompt": "为 GET /purchases 增加可选 status 参数，允许 submitted 或 approved，返回当前租户该状态记录。省略参数保持现有列表行为；未知值和空字符串返回 400。不能突破租户边界，不改变创建/审批行为，不修改验收测试。"
+    },
+    {
+      "id": "status-filter--zenstack--001",
+      "task": "status-filter",
+      "route": "zenstack",
+      "repetition": 1,
+      "prompt": "为 GET /purchases 增加可选 status 参数，允许 submitted 或 approved，返回当前租户该状态记录。省略参数保持现有列表行为；未知值和空字符串返回 400。不能突破租户边界，不改变创建/审批行为，不修改验收测试。"
+    },
+    {
+      "id": "status-filter--baseline--001",
+      "task": "status-filter",
+      "route": "baseline",
+      "repetition": 1,
+      "prompt": "为 GET /purchases 增加可选 status 参数，允许 submitted 或 approved，返回当前租户该状态记录。省略参数保持现有列表行为；未知值和空字符串返回 400。不能突破租户边界，不改变创建/审批行为，不修改验收测试。"
+    },
+    {
+      "id": "title-search--zenstack--001",
+      "task": "title-search",
+      "route": "zenstack",
+      "repetition": 1,
+      "prompt": "为 GET /purchases 增加可选 title 参数，按标题做不区分大小写的字面子串检索；省略或空字符串保持现有列表行为。百分号、下划线和引号必须作为普通字符处理。检索不能突破租户权限，不修改其他 API 行为，不修改验收测试。"
+    },
+    {
+      "id": "title-search--baseline--001",
+      "task": "title-search",
+      "route": "baseline",
+      "repetition": 1,
+      "prompt": "为 GET /purchases 增加可选 title 参数，按标题做不区分大小写的字面子串检索；省略或空字符串保持现有列表行为。百分号、下划线和引号必须作为普通字符处理。检索不能突破租户权限，不修改其他 API 行为，不修改验收测试。"
+    },
+    {
+      "id": "tenant-summary--zenstack--001",
+      "task": "tenant-summary",
+      "route": "zenstack",
+      "repetition": 1,
+      "prompt": "增加 GET /purchases/summary，返回 {count:整数,totalAmount:整数}，统计当前租户全部采购单，不改变原有列表/详情/创建/审批行为。无身份应拒绝；任何角色都不能统计其他租户。不要返回内部字段，不修改验收测试。"
+    }
+  ]
+}

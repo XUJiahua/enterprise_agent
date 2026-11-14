@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "kind": "model-trial",
+  "plan_sha256": "3d2d96f8c9936d69aa4a4d45f393931e0760cba9d6d75b2e52acd04aab20f6a3",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "planned_trials": 9,
+  "selected_trials": 9,
+  "status": "blocked",
+  "trials": [],
+  "blocked_stage": "preflight",
+  "observed_trials": 0,
+  "passed_trials": 0,
+  "unmeasured_trials": 9,
+  "first_pass_rate": null,
+  "finished_at": "2026-11-14T11:11:36.930862+00:00"
+}

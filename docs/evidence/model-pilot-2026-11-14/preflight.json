@@ -1,0 +1,39 @@
+{
+  "kind": "model-runtime-preflight",
+  "ready": false,
+  "cli_version": "codex-cli 0.167.0-alpha.4",
+  "checked_at": "2026-11-14T11:11:36.930343+00:00",
+  "codex_home_writable": false,
+  "invocation": {
+    "status": "runtime-blocked",
+    "turn_started": false,
+    "turn_completed": false,
+    "usage": null,
+    "event_count": 0,
+    "returncode": 1,
+    "timed_out": false,
+    "agent_messages": [],
+    "diagnostic": "Error: failed to initialize in-process app-server client: Read-only file system (os error 30)\n",
+    "generation_seconds": 7.394,
+    "requested_model": "gpt-6.1-sol",
+    "reasoning_effort": "medium",
+    "sandbox": "read-only",
+    "command": [
+      "codex",
+      "exec",
+      "--json",
+      "--ephemeral",
+      "--color",
+      "never",
+      "--sandbox",
+      "read-only",
+      "--model",
+      "gpt-6.1-sol",
+      "-C",
+      "/workspace/scratch/be68c6f4f833/enterprise_agent-model",
+      "-c",
+      "model_reasoning_effort=\"medium\"",
+      "-"
+    ]
+  }
+}
