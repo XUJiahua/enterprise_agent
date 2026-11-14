@@ -50,6 +50,8 @@ python3 -m unittest discover -s benchmark/tests -v
 python3 scripts/model_access.py
 python3 research/audit_pilot.py
 python3 research/replay_followup.py
+python3 benchmark/phase2/smoke.py
+python3 benchmark/phase2/driver_smoke.py
 python3 scripts/report.py reports
 ```
 
@@ -121,3 +123,9 @@ PR CI 仅运行不调用模型的协议测试和 synthetic 驱动正反控制。
 ## PR #7 后续研究
 
 [研究结论与复现实验](docs/research-followup.md)：九个真实候选全部重放、195 项冻结验收和 45 项追加验收通过；人工移除新接口租户条件后，普通 Go 泄露而策略路径保持隔离。另通过实际数据库探针明确了 RLS 与批量业务全批成功的边界，并给出流程 × Runtime 的下一轮实验草案。本轮没有新增模型样本。
+
+## 原子批量审批实验 v2
+
+[四组 Go 实验与操作指南](docs/phase2-atomic-bulk.md) 将额外流程指导 × RLS Runtime 拆为 2×2 对照。每个候选接受 30 项新业务验收和原有 16 项回归，检查授权功能、逐行权限、全批回滚、输入和并发。模型候选仅获得新的最小源码仓库，原 Git 历史与 evaluator 文件不随导出；同宿主读取与公开参考实现的边界仍需独立隔离环境解决。
+
+CI 执行 12 次人工正反候选控制和一次假 CLI 链路控制，不调用模型、不计入真实 AI 样本。原应用暂不添加批量审批接口，以便后续由真实模型完成该任务；参考答案只用于验证评分器。v1 计划与 PR #7 归档保持原样。

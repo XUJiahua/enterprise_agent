@@ -1,0 +1,6 @@
+{
+  "kind": "synthetic-smoke",
+  "model_calls": 0,
+  "driver_evaluations": 1,
+  "passed": true
+}
