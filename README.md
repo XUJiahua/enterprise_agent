@@ -40,6 +40,11 @@ export DATABASE_URL=postgres://app_runtime:poc-only@127.0.0.1:5432/enterprise_ag
 export POC_DB_RESET=1
 make deps test
 make experiment
+make web-deps
+python3 scripts/browser.py --route baseline
+python3 scripts/browser.py --route zenstack
+python3 scripts/browser.py --route guarded
+python3 benchmark/smoke.py | tee reports/benchmark-smoke.json
 python3 scripts/report.py reports
 ```
 
