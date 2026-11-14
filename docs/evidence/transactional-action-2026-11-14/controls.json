@@ -235,7 +235,7 @@
       }
     }
   ],
-  "direct_metadata_checks": 10,
+  "direct_metadata_checks": 12,
   "startup_probes": [
     {
       "probe": "unguarded-purchase",
@@ -250,6 +250,14 @@
       "passed": true
     },
     {
+      "probe": "column-mutable-request",
+      "passed": true
+    },
+    {
+      "probe": "truncatable-request",
+      "passed": true
+    },
+    {
       "probe": "mutation-gate",
       "passed": true
     },
@@ -258,18 +266,18 @@
       "passed": true
     }
   ],
-  "source_parent_commit": "bf02e7118fe52dcb5e9fa21f255ee5153f3c2aea",
+  "source_parent_commit": "427c7e4fc8c6fad99733220ac343cf6eac0a457e",
   "source_checkout_dirty": true,
   "source_sha256": {
-    "internal/action/approval.go": "7bf15cfddbe63e485adce6d09b59f4bf8856d872277fdcd398d6f7b10092c92d",
+    "internal/action/approval.go": "c83de0ca587200034b5021e432a2959d1a0ffbd13d74a1e7c34d633a84a48337",
     "internal/action/http.go": "beb3c14c742ac806d3b6eb1a870b9fba5d7896017d9ae3451ad60e24736a3c3f",
     "cmd/action-server/main.go": "4560d3898c762429b272408faedac47622ffaf7b4c7fc6caefeae572ce8c9d5d",
     "internal/app/demo_identity.go": "1b49e429ba1a98236fea3bc84a626a4698d276dc6d55758462c0e40a97eda2fb",
     "poc/transactional-action/schema.sql": "9e8a6b49a8da58ee75cf1d0258dc9c13807f1ac455de8e3e23d573da2c69a662",
     "benchmark/phase3/contract.json": "b7e01893108a87ef002de470f8451215837e907269318f664deb8de9ad52a35d",
     "benchmark/phase3/oracle.py": "b9cb0e762e48fc1c84366aefb4155aa561d62982827caecc3b0ed313603ec303",
-    "benchmark/phase3/db.mjs": "2045333d7f03d34cf74dc149cde6ac604eb064026239902f82ed81845212e12a",
-    "benchmark/phase3/smoke.py": "4bb8a8d89b9f23499e63ce9cce899d256ad196a6b8fc2e5762665383639a75ff",
+    "benchmark/phase3/db.mjs": "080de585ff605f8721fc00515e97c81c93004a43e508adb828d09a9fb64767a7",
+    "benchmark/phase3/smoke.py": "c9cf07135f3ce055da807a7a41bcd8cf2e4f0c58e6eea327faf69870db554a65",
     "tests/acceptance.py": "b630076565eac949da042a821caa52fb44cc59fe555943e65049c92d4935b373",
     "db/bootstrap.sql": "4eb60b5cbbdcb2b79813c63cc7baf44665755a7327df6d1aa702c430357f30b9",
     "db/migrations/001_purchase.sql": "00db7c65bdf932912f4764da76bba0a5d84032eb208c6073fb89b495179a3e85",

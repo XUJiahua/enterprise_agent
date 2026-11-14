@@ -42,7 +42,7 @@ try{
     }
     console.log(JSON.stringify({ok:true}));
    }else if(input.op==='misconfigure'){
-    const statements={purchase:'ALTER TABLE "Purchase" DISABLE ROW LEVEL SECURITY',audit:'ALTER TABLE "ApprovalAudit" DISABLE ROW LEVEL SECURITY',writable:'GRANT UPDATE ON "ActionRequest" TO app_runtime'};
+    const statements={purchase:'ALTER TABLE "Purchase" DISABLE ROW LEVEL SECURITY',audit:'ALTER TABLE "ApprovalAudit" DISABLE ROW LEVEL SECURITY',writable:'GRANT UPDATE ON "ActionRequest" TO app_runtime',column:'GRANT UPDATE(response) ON "ActionRequest" TO app_runtime',truncate:'GRANT TRUNCATE ON "ActionRequest" TO app_runtime'};
     if(!statements[input.target])throw new Error('unknown misconfiguration');await db.query(statements[input.target]);console.log(JSON.stringify({ok:true}));
    }else if(input.op==='probe'){
     // Direct runtime SQL checks cover the two new table boundaries, without HTTP.
@@ -50,9 +50,9 @@ try{
     try{
      for(const table of ['ActionRequest','ApprovalAudit']){
       const result=await app.query(`SELECT * FROM "${table}"`);if(result.rowCount)throw new Error('metadata visible without context');checks++;
-      for(const operation of ['UPDATE','DELETE']){
+      for(const operation of ['UPDATE','DELETE','TRUNCATE']){
        let denied=false;
-       try{await app.query(operation==='UPDATE'?`UPDATE "${table}" SET operation=operation`:`DELETE FROM "${table}"`);}catch(e){if(e.code!=='42501')throw e;denied=true;}
+       try{await app.query(operation==='UPDATE'?`UPDATE "${table}" SET operation=operation`:operation==='DELETE'?`DELETE FROM "${table}"`:`TRUNCATE "${table}" CASCADE`);}catch(e){if(e.code!=='42501')throw e;denied=true;}
        if(!denied)throw new Error('metadata not append-only');checks++;
       }
      }

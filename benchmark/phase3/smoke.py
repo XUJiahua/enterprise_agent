@@ -60,7 +60,7 @@ def main():
                         cases=run(db)
                         if mode=='reference':
                             populated=db.call('snapshot');assert len(populated['audits'])==2 and len(populated['requests'])==1
-                            direct=db.call('probe');assert direct=={'checks':10}
+                            direct=db.call('probe');assert direct=={'checks':12}
                         cases += [{'group':'original-regression',**c} for c in original.run()]
                         counts={group:sum(c['group']==group for c in cases) for group in EXPECTED}
                         assert counts==EXPECTED,(counts,EXPECTED)
@@ -80,7 +80,7 @@ def main():
                     finally:stop(server)
             # Fail closed on missing RLS, mutable completed requests, or ungated probes.
             for name,target,mutation,allow in [('unguarded-purchase','purchase',None,False),
-                ('unguarded-audit','audit',None,False),('mutable-request','writable',None,False),
+                ('unguarded-audit','audit',None,False),('mutable-request','writable',None,False),('column-mutable-request','column',None,False),('truncatable-request','truncate',None,False),
                 ('mutation-gate',None,'omit-audit',False),('unknown-mutation',None,'unknown',True)]:
                 db.call('init')
                 if target:db.call('misconfigure',target=target)

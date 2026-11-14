@@ -47,9 +47,9 @@ flowchart TD
 
 ## 数据库约束与边界
 
-Purchase 继续使用原 Policy 编译的 RLS/列权限。新增两表使用 [独立 POC SQL](../poc/transactional-action/schema.sql)：强制 RLS、非所有者运行账号、仅 SELECT/INSERT 权限；运行账号不能更新/删除已完成结果和日志。ActionRequest 限制到当前 tenant+actor，ApprovalAudit 对当前租户审批人可读。审计表以 tenant+purchase 唯一，外键绑定目标租户，并通过延迟外键绑定本事务的完成请求。
+Purchase 继续使用原 Policy 编译的 RLS/列权限。新增两表使用 [独立 POC SQL](../poc/transactional-action/schema.sql)：强制 RLS、非所有者运行账号、仅 SELECT/INSERT 权限；运行账号不能更新/删除/清空已完成结果和日志。启动检查也覆盖列级 UPDATE 授权，避免只检查表级权限时漏掉单列修改能力。ActionRequest 限制到当前 tenant+actor，ApprovalAudit 对当前租户审批人可读。审计表以 tenant+purchase 唯一，外键绑定目标租户，并通过延迟外键绑定本事务的完成请求。
 
-两张新表的策略是手写 SQL，**尚未接入原 Policy 编译器和语义变更审批管线**。本阶段通过直接数据库探针和启动检查验证所列边界，不把 CI 通过等同于通用策略证明。
+两张新表的策略是手写 SQL，**尚未接入原 Policy 编译器和语义变更审批管线**。本阶段通过直接数据库探针和启动检查验证所列边界，不把 CI 通过等同于通用策略证明。表级与列级权限查询的区别参见 [PostgreSQL 权限查询文档](https://www.postgresql.org/docs/17/functions-info.html#FUNCTIONS-INFO-ACCESS-TABLE)。
 
 启动时检查 Purchase 与新表的 RLS、运行角色、非所有者和追加权限。`Executor` 不向调用者暴露事务句柄，常规调用者无法提前提交。仍采用可信应用代码与固定 demo 身份；任意持有数据库凭据的恶意代码、宿主隔离、OIDC 与生产身份吊销不在已实现范围。
 
@@ -82,7 +82,7 @@ Oracle 只通过 HTTP 和管理员三表快照判断结果，不调用实现中�
 | skip-completeness | 普通功能可通过，混合批次部分提交 |
 | reject-all | 无法完成授权业务操作 |
 
-六次实际服务运行、每次 66 项检查，参考全部通过，五个负控制均被识别。另有 **10 项直接 SQL 探针**（无上下文/跨租户读取、追加权限、伪造插入）及 **5 项启动探针**（Purchase/Audit 未启用 RLS、完成结果可修改、未授权启用负控制、未知负控制）。
+六次实际服务运行、每次 66 项检查，参考全部通过，五个负控制均被识别。另有 **12 项直接 SQL 探针**（无上下文/跨租户读取、追加权限、伪造插入）及 **7 项启动探针**（Purchase/Audit 未启用 RLS、完成结果存在表级/列级 UPDATE 或 TRUNCATE 授权、未授权启用负控制、未知负控制）。
 
 负控制开关仅在显式 `POC_ALLOW_MUTATIONS=1` 时允许，不能通过 HTTP 请求选择。它们是人工故障，不是模型输出。源码 hash、本地环境与分组结果见 [机制证据](evidence/transactional-action-2026-11-14/controls.json)。CI 会在 PostgreSQL 17.6 再运行全部控制，不调用模型。
 

@@ -49,7 +49,7 @@ action=json.loads((root/'action-controls/summary.json').read_text())
 assert action['kind']=='synthetic-mechanism-control' and action['new_model_generations']==0
 assert action['evaluations']==6 and action['cases_per_evaluation']==66 and action['reference_passed'] is True
 assert action['negative_controls_detected']==5 and len(action['controls'])==6
-assert action['direct_metadata_checks']==10 and len(action['startup_probes'])==5 and all(p['passed'] for p in action['startup_probes'])
+assert action['direct_metadata_checks']==12 and len(action['startup_probes'])==7 and all(p['passed'] for p in action['startup_probes'])
 verifier=json.loads((root/'verifier.json').read_text());assert verifier['ok'] and len(verifier['results'])==7
 text='# Controlled POC results\n\n| Path | Healthy acceptance | Faults blocked |\n|---|---:|---:|\n'
 for route,acceptance,blocked in rows:text+=f'| {route} | {acceptance} | {blocked} |\n'
@@ -58,6 +58,6 @@ text+='\nPublic CI model key configured for this run: '+('unknown (local, CI Sec
 text+='\nPR 7 archived replay: 9 candidates / 195 frozen cases; 45 post-hoc cases. Manual interventions and business-contract probes are separate from model first-pass rates.\n'
 text+='\nPhase 2 atomic bulk approval: 12 human-authored candidate evaluations, 46 cases each; 4 correct references pass, 8 negative controls are detected. One additional synthetic driver control exercises export, generation protocol, bundle, and evaluation. Zero new model samples. Candidate exports omit evaluator files and prior Git history; this is not a same-host security sandbox.\n'
 text+='\nPR 10 audit: 50 archived files and four candidate bundles verified. New public fixtures: 184 replay cases plus 28 additional checks pass; four candidate-authored Go test suites pass. Four request-capacity observations remain separate from first-pass scoring. Original private seed was not used. No new model generations.\n'
-text+='\nTyped Action mechanism POC: reference passes 66/66; five negative controls detected, each evaluated against 66 cases. Purchase state, audit rows and completed idempotency response commit in one PostgreSQL transaction. Metadata SQL probes: 10/10; startup checks: 5/5. No new model samples or general workflow-engine claim.\n'
+text+='\nTyped Action mechanism POC: reference passes 66/66; five negative controls detected, each evaluated against 66 cases. Purchase state, audit rows and completed idempotency response commit in one PostgreSQL transaction. Metadata SQL probes: 12/12; startup checks: 7/7. No new model samples or general workflow-engine claim.\n'
 (root/'comparison.md').write_text(text)
 print(text)
