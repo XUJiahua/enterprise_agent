@@ -1,0 +1,403 @@
+{
+  "kind": "synthetic-smoke",
+  "model_calls": 0,
+  "evaluations": 12,
+  "cases_per_evaluation": 46,
+  "correct_reference_passes": 4,
+  "controls": [
+    {
+      "mode": "correct-reference",
+      "cell": "go-runtime-process",
+      "groups": {
+        "row-authorization": {
+          "passed": 5,
+          "total": 5
+        },
+        "concurrency": {
+          "passed": 1,
+          "total": 1
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        },
+        "batch-all-or-nothing": {
+          "passed": 5,
+          "total": 5
+        },
+        "authorized-functional": {
+          "passed": 4,
+          "total": 4
+        },
+        "input-validation": {
+          "passed": 15,
+          "total": 15
+        }
+      },
+      "passed": true
+    },
+    {
+      "mode": "correct-reference",
+      "cell": "go-process",
+      "groups": {
+        "input-validation": {
+          "passed": 15,
+          "total": 15
+        },
+        "batch-all-or-nothing": {
+          "passed": 5,
+          "total": 5
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        },
+        "row-authorization": {
+          "passed": 5,
+          "total": 5
+        },
+        "concurrency": {
+          "passed": 1,
+          "total": 1
+        },
+        "authorized-functional": {
+          "passed": 4,
+          "total": 4
+        }
+      },
+      "passed": true
+    },
+    {
+      "mode": "correct-reference",
+      "cell": "go-ordinary",
+      "groups": {
+        "concurrency": {
+          "passed": 1,
+          "total": 1
+        },
+        "row-authorization": {
+          "passed": 5,
+          "total": 5
+        },
+        "authorized-functional": {
+          "passed": 4,
+          "total": 4
+        },
+        "input-validation": {
+          "passed": 15,
+          "total": 15
+        },
+        "batch-all-or-nothing": {
+          "passed": 5,
+          "total": 5
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        }
+      },
+      "passed": true
+    },
+    {
+      "mode": "correct-reference",
+      "cell": "go-runtime",
+      "groups": {
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        },
+        "concurrency": {
+          "passed": 1,
+          "total": 1
+        },
+        "input-validation": {
+          "passed": 15,
+          "total": 15
+        },
+        "authorized-functional": {
+          "passed": 4,
+          "total": 4
+        },
+        "row-authorization": {
+          "passed": 5,
+          "total": 5
+        },
+        "batch-all-or-nothing": {
+          "passed": 5,
+          "total": 5
+        }
+      },
+      "passed": true
+    },
+    {
+      "mode": "eligible-subset",
+      "cell": "go-runtime-process",
+      "groups": {
+        "row-authorization": {
+          "passed": 5,
+          "total": 5
+        },
+        "authorized-functional": {
+          "passed": 4,
+          "total": 4
+        },
+        "input-validation": {
+          "passed": 15,
+          "total": 15
+        },
+        "concurrency": {
+          "passed": 0,
+          "total": 1
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        },
+        "batch-all-or-nothing": {
+          "passed": 1,
+          "total": 5
+        }
+      },
+      "passed": false
+    },
+    {
+      "mode": "eligible-subset",
+      "cell": "go-process",
+      "groups": {
+        "concurrency": {
+          "passed": 0,
+          "total": 1
+        },
+        "input-validation": {
+          "passed": 15,
+          "total": 15
+        },
+        "batch-all-or-nothing": {
+          "passed": 1,
+          "total": 5
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        },
+        "row-authorization": {
+          "passed": 5,
+          "total": 5
+        },
+        "authorized-functional": {
+          "passed": 4,
+          "total": 4
+        }
+      },
+      "passed": false
+    },
+    {
+      "mode": "eligible-subset",
+      "cell": "go-ordinary",
+      "groups": {
+        "concurrency": {
+          "passed": 0,
+          "total": 1
+        },
+        "authorized-functional": {
+          "passed": 4,
+          "total": 4
+        },
+        "batch-all-or-nothing": {
+          "passed": 1,
+          "total": 5
+        },
+        "row-authorization": {
+          "passed": 5,
+          "total": 5
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        },
+        "input-validation": {
+          "passed": 15,
+          "total": 15
+        }
+      },
+      "passed": false
+    },
+    {
+      "mode": "eligible-subset",
+      "cell": "go-runtime",
+      "groups": {
+        "row-authorization": {
+          "passed": 5,
+          "total": 5
+        },
+        "concurrency": {
+          "passed": 0,
+          "total": 1
+        },
+        "input-validation": {
+          "passed": 15,
+          "total": 15
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        },
+        "authorized-functional": {
+          "passed": 4,
+          "total": 4
+        },
+        "batch-all-or-nothing": {
+          "passed": 1,
+          "total": 5
+        }
+      },
+      "passed": false
+    },
+    {
+      "mode": "reject-all",
+      "cell": "go-runtime-process",
+      "groups": {
+        "row-authorization": {
+          "passed": 5,
+          "total": 5
+        },
+        "concurrency": {
+          "passed": 0,
+          "total": 1
+        },
+        "batch-all-or-nothing": {
+          "passed": 4,
+          "total": 5
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        },
+        "input-validation": {
+          "passed": 0,
+          "total": 15
+        },
+        "authorized-functional": {
+          "passed": 0,
+          "total": 4
+        }
+      },
+      "passed": false
+    },
+    {
+      "mode": "reject-all",
+      "cell": "go-process",
+      "groups": {
+        "concurrency": {
+          "passed": 0,
+          "total": 1
+        },
+        "authorized-functional": {
+          "passed": 0,
+          "total": 4
+        },
+        "batch-all-or-nothing": {
+          "passed": 4,
+          "total": 5
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        },
+        "input-validation": {
+          "passed": 0,
+          "total": 15
+        },
+        "row-authorization": {
+          "passed": 5,
+          "total": 5
+        }
+      },
+      "passed": false
+    },
+    {
+      "mode": "reject-all",
+      "cell": "go-ordinary",
+      "groups": {
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        },
+        "input-validation": {
+          "passed": 0,
+          "total": 15
+        },
+        "concurrency": {
+          "passed": 0,
+          "total": 1
+        },
+        "authorized-functional": {
+          "passed": 0,
+          "total": 4
+        },
+        "batch-all-or-nothing": {
+          "passed": 4,
+          "total": 5
+        },
+        "row-authorization": {
+          "passed": 5,
+          "total": 5
+        }
+      },
+      "passed": false
+    },
+    {
+      "mode": "reject-all",
+      "cell": "go-runtime",
+      "groups": {
+        "concurrency": {
+          "passed": 0,
+          "total": 1
+        },
+        "input-validation": {
+          "passed": 0,
+          "total": 15
+        },
+        "batch-all-or-nothing": {
+          "passed": 4,
+          "total": 5
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        },
+        "authorized-functional": {
+          "passed": 0,
+          "total": 4
+        },
+        "row-authorization": {
+          "passed": 5,
+          "total": 5
+        }
+      },
+      "passed": false
+    }
+  ],
+  "export_same_source_all_cells": true,
+  "evaluator_absent_from_candidate_history": true,
+  "environment": "local trusted synthetic controls",
+  "postgres": "postgres (PostgreSQL) 18.6",
+  "go": "go version go1.25.4 linux/amd64",
+  "source_base_sha": "f6c8dc27bf2a00ff74f16d0b9041a94a8e79f1c7",
+  "frozen_files": {
+    "benchmark/phase2/ctl.py": "19dff93c45db65d9ee9e9ce6f364639ed4f1af9ef16c5e9ad9f5e25278ffbe4e",
+    "benchmark/phase2/oracle.py": "b3ff3d570e0225b7dc9441896ec37ff3239c19df5736873b38bc490eda6f6364",
+    "benchmark/phase2/db.mjs": "a9f2385d6404b970c486c5769a45f9879b708c88d38cef85e0b05f3a62737c16",
+    "benchmark/phase2/contract.json": "0220520192dc17c9babd054ba9738157b4f190cf26aa4a76a0b497e4e6faaafb",
+    "benchmark/phase2/public_smoke.py": "1501e4cb4354eaeaf46a52dec6ff5716964455c2d4da5daf97726ffe2a400dc5",
+    "benchmark/codex_runner.py": "6dd7d3a5da609fc8bd11515d408dcd262cad294f85fb0c7dca2d855fd6b4a85f",
+    "tests/acceptance.py": "b630076565eac949da042a821caa52fb44cc59fe555943e65049c92d4935b373",
+    "scripts/db.mjs": "b3fa6f5e608dd905c5347b043aaaad2369e2c3ba075d0af8174e92aa93b522f4",
+    "db/bootstrap.sql": "4eb60b5cbbdcb2b79813c63cc7baf44665755a7327df6d1aa702c430357f30b9",
+    "db/baseline-grants.sql": "fe8850d74caf1e5857b630d134590d925413059ac14f225aa51809f590ef8cec",
+    "db/migrations/001_purchase.sql": "00db7c65bdf932912f4764da76bba0a5d84032eb208c6073fb89b495179a3e85",
+    "db/seed.sql": "9004fb919509475a987349f8d1804044af1688c1fdca524b2b191912bb1414cc",
+    "generated/guard.sql": "b728fc08e43c5642b7dadf5823cad098d24bcd0740bef98a340d921424661f13"
+  },
+  "note": "Human-authored controls only. Not model samples or evidence of hidden/sandboxed evaluation. CI reruns independently."
+}

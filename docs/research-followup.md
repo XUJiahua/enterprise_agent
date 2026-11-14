@@ -132,3 +132,7 @@ python3 research/replay_followup.py
 如已有同名研究输出，使用 `--out reports/research-another-run`。端口沿用 POC_HTTP_PORT，默认 8080。研究 runner 会从归档 bundle 恢复候选，临时 worktree 在结束时清理；原始证据不会覆盖。
 
 Public CI 在 baseline job 中运行本研究的全部路径，然后打包原始重放日志、精确人工修改 patch 及研究 JSON。这里的 baseline 是运行该研究任务的 CI job 名称，研究本身覆盖三条技术路径。
+
+## 后续实现入口
+
+上述第 5 节保留 PR #8 时的草案状态。后续 [原子批量审批实验 v2](phase2-atomic-bulk.md) 已实现四个 Go cell、提示词/源码/验收冻结、最小源码导出、独立 46 项验收、人工正反控制和分批汇总。ZenStack 参考、严格隐藏验收隔离及真实模型新队列仍未完成；v2 不将草案中的第五组误报为已支持。

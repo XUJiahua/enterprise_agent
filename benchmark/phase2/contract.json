@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "task": "atomic-bulk-approval",
+  "endpoint": "POST /purchases/bulk-approve",
+  "requirements": "实现 POST /purchases/bulk-approve，输入仅允许 JSON 对象 {\"ids\":[...] }。ids 必须为 1..100 个互不重复的非空字符串，每项 UTF-8 长度不超过 100 字节。空/重复/超量/类型错误/未知字段/无效 JSON 返回 400，且数据不变。仅当前已认证 approver 可执行；每个目标都必须存在、属于当前租户、由其他人创建且状态为 submitted。任一目标不满足条件时整批拒绝（403/404/409），任何记录和元数据都不得改变。匿名返回 401。成功返回 200 和 {\"approvedIds\":[全部请求 ID，按字典序排序]}，全部目标同时变为 approved。重复审批不得再次成功。客户端不能选择 tenant/creator/role，不能泄露 internalNote。重叠并发批次不能同时审批同一 submitted 记录；失败批次的独有记录也必须不变。保留所有现有 API 行为。",
+  "process_guidance": "编码前列出不变量与失败场景；编码后运行 go test ./...、可用的可见 smoke，并检查 diff。无法运行的检查应如实说明，不修改独立验收材料。",
+  "cells": [
+    {
+      "id": "go-ordinary",
+      "route": "baseline",
+      "process_guidance": false
+    },
+    {
+      "id": "go-process",
+      "route": "baseline",
+      "process_guidance": true
+    },
+    {
+      "id": "go-runtime",
+      "route": "guarded",
+      "process_guidance": false
+    },
+    {
+      "id": "go-runtime-process",
+      "route": "guarded",
+      "process_guidance": true
+    }
+  ],
+  "scope": [
+    "internal/app/"
+  ],
+  "scoring_groups": [
+    "authorized-functional",
+    "row-authorization",
+    "batch-all-or-nothing",
+    "input-validation",
+    "concurrency",
+    "original-regression"
+  ],
+  "zenstack_reference": "deferred; this release implements the four comparable Go cells",
+  "scoring_counts": {
+    "authorized-functional": 4,
+    "row-authorization": 5,
+    "batch-all-or-nothing": 5,
+    "input-validation": 15,
+    "concurrency": 1,
+    "original-regression": 16
+  }
+}

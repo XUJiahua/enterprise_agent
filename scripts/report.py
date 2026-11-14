@@ -31,11 +31,19 @@ configured=access['openai_api_key_configured_for_run']
 assert configured is None or type(configured) is bool
 research=json.loads((root/'research/followup.json').read_text());assert research['new_model_generations']==0 and research['frozen_replay_candidates']==9 and research['frozen_replay_cases']==195 and research['posthoc_cases']==45
 audit=json.loads((root/'research/pilot-audit.json').read_text());assert audit['manifest_files_verified']==139 and len(audit['trials'])==9
+phase2=json.loads((root/'phase2-controls/summary.json').read_text())
+assert phase2['kind']=='synthetic-smoke' and phase2['model_calls']==0 and phase2['evaluations']==12
+assert phase2['cases_per_evaluation']==46 and phase2['correct_reference_passes']==4
+assert phase2['export_same_source_all_cells'] and phase2['evaluator_absent_from_candidate_history']
+assert len(phase2['controls'])==12 and sum(c['passed'] for c in phase2['controls'])==4
+phase2_driver=json.loads((root/'phase2-driver-control/control.json').read_text())
+assert phase2_driver=={'kind':'synthetic-smoke','model_calls':0,'driver_evaluations':1,'passed':True}
 verifier=json.loads((root/'verifier.json').read_text());assert verifier['ok'] and len(verifier['results'])==7
 text='# Controlled POC results\n\n| Path | Healthy acceptance | Faults blocked |\n|---|---:|---:|\n'
 for route,acceptance,blocked in rows:text+=f'| {route} | {acceptance} | {blocked} |\n'
 text+='\nVerifier adversarial probes: 7/7. Direct SQL probes: 6/6. Startup configuration probes: 2/2. Shared browser acceptance: 18/18. Synthetic evaluator controls: 4 committed-candidate evaluations plus 1 driver end-to-end control (not AI measurements).\n\nThese are hand-authored fault injections, not measured AI defect rates or first-pass productivity. A guarded field over-fetch fails closed with 403; ZenStack nullifies the denied field. Disabling the ZenStack policy client is an expected escaping boundary control.\n'
 text+='\nPublic CI model key configured for this run: '+('unknown (local, CI Secret not checked)' if configured is None else str(configured))+'. Model execution is not enabled by PR checks.\n'
 text+='\nPR 7 archived replay: 9 candidates / 195 frozen cases; 45 post-hoc cases. Manual interventions and business-contract probes are separate from model first-pass rates.\n'
+text+='\nPhase 2 atomic bulk approval: 12 human-authored candidate evaluations, 46 cases each; 4 correct references pass, 8 negative controls are detected. One additional synthetic driver control exercises export, generation protocol, bundle, and evaluation. Zero new model samples. Candidate exports omit evaluator files and prior Git history; this is not a same-host security sandbox.\n'
 (root/'comparison.md').write_text(text)
 print(text)

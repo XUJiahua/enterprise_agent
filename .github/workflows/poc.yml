@@ -110,6 +110,11 @@ jobs:
         run: |
           python3 research/audit_pilot.py
           python3 research/replay_followup.py
+      - name: Four-cell atomic bulk approval controls (no model calls)
+        if: matrix.route == 'baseline'
+        run: |
+          python3 benchmark/phase2/smoke.py
+          python3 benchmark/phase2/driver_smoke.py
       - name: Shared Next.js production UI and browser acceptance
         run: python3 scripts/browser.py --route '${{ matrix.route }}'
         env:
