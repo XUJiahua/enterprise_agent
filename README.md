@@ -48,6 +48,8 @@ python3 benchmark/smoke.py | tee reports/benchmark-smoke.json
 python3 benchmark/runner_smoke.py | tee reports/runner-smoke.json
 python3 -m unittest discover -s benchmark/tests -v
 python3 scripts/model_access.py
+python3 research/audit_pilot.py
+python3 research/replay_followup.py
 python3 scripts/report.py reports
 ```
 
@@ -115,3 +117,7 @@ CI、Policy、测试目前位于同仓库，拥有仓库写权限的人可以修
 PR CI 仅运行不调用模型的协议测试和 synthetic 驱动正反控制。真实 trial 必须在能正常执行 `codex exec` 的环境运行；运行环境、服务或凭据阻塞保留为未测量，不计为模型代码失败。
 
 接手环境已通过真实预检并完成三路径 pilot；完整结果、原始模型事件、候选 bundle 和独立验收见 [真实结果报告](docs/model-pilot-results.md)。前一环境的九项预检阻塞仍单独保存在 [历史运行记录](docs/model-pilot-status.md)，保持未测量状态。
+
+## PR #7 后续研究
+
+[研究结论与复现实验](docs/research-followup.md)：九个真实候选全部重放、195 项冻结验收和 45 项追加验收通过；人工移除新接口租户条件后，普通 Go 泄露而策略路径保持隔离。另通过实际数据库探针明确了 RLS 与批量业务全批成功的边界，并给出流程 × Runtime 的下一轮实验草案。本轮没有新增模型样本。

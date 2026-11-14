@@ -1,0 +1,594 @@
+{
+  "kind": "archived-replay-posthoc-and-manual-intervention",
+  "source_pr": 7,
+  "plan_sha256": "17574522b5403691c0eb429b9e8e497e7e00a0d644d3ec0dcb174f54cd3bd51a",
+  "new_model_generations": 0,
+  "database_version": "PostgreSQL 18.6 on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0, 64-bit",
+  "research_sources_sha256": {
+    "research/replay_followup.py": "ab494cfa2cc30900cce0489d9ad7af290de9fa734c758d5071e61f494bc4db49",
+    "research/sql.mjs": "4583fd121784c0fc1b84d00e75bdb38171eb6a07c6b0a4d9fadf80b4465e6db0"
+  },
+  "frozen_replay_candidates": 9,
+  "frozen_replay_cases": 195,
+  "posthoc_cases": 45,
+  "replays": [
+    {
+      "trial_id": "tenant-summary--guarded--001",
+      "candidate_sha": "0ff254be004e7d21584f5a77a351aa4d40f696ef",
+      "route": "guarded",
+      "original_oracle_cases": 20,
+      "original_oracle_passed": true,
+      "posthoc_cases": [
+        {
+          "case": "initial tenant-a",
+          "passed": true,
+          "response": {
+            "count": 4,
+            "totalAmount": 800
+          }
+        },
+        {
+          "case": "other tenant growth does not change tenant-a",
+          "passed": true,
+          "response": {
+            "count": 4,
+            "totalAmount": 800
+          }
+        },
+        {
+          "case": "same-tenant approver sees the same aggregate",
+          "passed": true,
+          "response": {
+            "count": 4,
+            "totalAmount": 800
+          }
+        },
+        {
+          "case": "tenant-b growth included only in tenant-b",
+          "passed": true,
+          "response": {
+            "count": 51,
+            "totalAmount": 750
+          }
+        },
+        {
+          "case": "empty tenant aggregate",
+          "passed": true,
+          "response": {
+            "count": 0,
+            "totalAmount": 0
+          }
+        }
+      ],
+      "counts_as_new_model_sample": false
+    },
+    {
+      "trial_id": "tenant-summary--baseline--001",
+      "candidate_sha": "82fd912c81a6b895e733b853adda4e837596f451",
+      "route": "baseline",
+      "original_oracle_cases": 20,
+      "original_oracle_passed": true,
+      "posthoc_cases": [
+        {
+          "case": "initial tenant-a",
+          "passed": true,
+          "response": {
+            "count": 4,
+            "totalAmount": 800
+          }
+        },
+        {
+          "case": "other tenant growth does not change tenant-a",
+          "passed": true,
+          "response": {
+            "count": 4,
+            "totalAmount": 800
+          }
+        },
+        {
+          "case": "same-tenant approver sees the same aggregate",
+          "passed": true,
+          "response": {
+            "count": 4,
+            "totalAmount": 800
+          }
+        },
+        {
+          "case": "tenant-b growth included only in tenant-b",
+          "passed": true,
+          "response": {
+            "count": 51,
+            "totalAmount": 750
+          }
+        },
+        {
+          "case": "empty tenant aggregate",
+          "passed": true,
+          "response": {
+            "count": 0,
+            "totalAmount": 0
+          }
+        }
+      ],
+      "counts_as_new_model_sample": false
+    },
+    {
+      "trial_id": "title-search--guarded--001",
+      "candidate_sha": "c15f2dfdd57ab2ada9f7f8ea38a77fe5add99b0c",
+      "route": "guarded",
+      "original_oracle_cases": 23,
+      "original_oracle_passed": true,
+      "posthoc_cases": [
+        {
+          "case": "positive literal %",
+          "passed": true,
+          "ids": [
+            "special-a"
+          ]
+        },
+        {
+          "case": "positive literal _",
+          "passed": true,
+          "ids": [
+            "special-a"
+          ]
+        },
+        {
+          "case": "positive literal O'Reilly",
+          "passed": true,
+          "ids": [
+            "special-a"
+          ]
+        },
+        {
+          "case": "positive literal \\",
+          "passed": true,
+          "ids": [
+            "special-a"
+          ]
+        },
+        {
+          "case": "case insensitive with extra row",
+          "passed": true,
+          "ids": [
+            "a-done",
+            "a-other",
+            "a-own",
+            "special-a"
+          ]
+        },
+        {
+          "case": "same literal in another tenant",
+          "passed": true,
+          "ids": [
+            "special-b"
+          ]
+        }
+      ],
+      "counts_as_new_model_sample": false
+    },
+    {
+      "trial_id": "status-filter--guarded--001",
+      "candidate_sha": "e7a0ede13167439fcedb0be8c198bac89877d73f",
+      "route": "guarded",
+      "original_oracle_cases": 22,
+      "original_oracle_passed": true,
+      "posthoc_cases": [
+        {
+          "case": "new approved in tenant-a",
+          "passed": true,
+          "ids": [
+            "a-done",
+            "new-a-approved"
+          ]
+        },
+        {
+          "case": "new approved in tenant-b",
+          "passed": true,
+          "ids": [
+            "new-b-approved"
+          ]
+        },
+        {
+          "case": "submitted excludes new approved",
+          "passed": true,
+          "ids": [
+            "a-other",
+            "a-own",
+            "a-self"
+          ]
+        },
+        {
+          "case": "approver remains in tenant-a",
+          "passed": true,
+          "ids": [
+            "a-done",
+            "new-a-approved"
+          ]
+        }
+      ],
+      "counts_as_new_model_sample": false
+    },
+    {
+      "trial_id": "status-filter--zenstack--001",
+      "candidate_sha": "c1e04e866ba49fe6ae87fd6ac8ba6e86fbfe3274",
+      "route": "zenstack",
+      "original_oracle_cases": 22,
+      "original_oracle_passed": true,
+      "posthoc_cases": [
+        {
+          "case": "new approved in tenant-a",
+          "passed": true,
+          "ids": [
+            "a-done",
+            "new-a-approved"
+          ]
+        },
+        {
+          "case": "new approved in tenant-b",
+          "passed": true,
+          "ids": [
+            "new-b-approved"
+          ]
+        },
+        {
+          "case": "submitted excludes new approved",
+          "passed": true,
+          "ids": [
+            "a-other",
+            "a-own",
+            "a-self"
+          ]
+        },
+        {
+          "case": "approver remains in tenant-a",
+          "passed": true,
+          "ids": [
+            "a-done",
+            "new-a-approved"
+          ]
+        }
+      ],
+      "counts_as_new_model_sample": false
+    },
+    {
+      "trial_id": "status-filter--baseline--001",
+      "candidate_sha": "d6b31b72f851c8cadc05027c452d63fa0a1c3184",
+      "route": "baseline",
+      "original_oracle_cases": 22,
+      "original_oracle_passed": true,
+      "posthoc_cases": [
+        {
+          "case": "new approved in tenant-a",
+          "passed": true,
+          "ids": [
+            "a-done",
+            "new-a-approved"
+          ]
+        },
+        {
+          "case": "new approved in tenant-b",
+          "passed": true,
+          "ids": [
+            "new-b-approved"
+          ]
+        },
+        {
+          "case": "submitted excludes new approved",
+          "passed": true,
+          "ids": [
+            "a-other",
+            "a-own",
+            "a-self"
+          ]
+        },
+        {
+          "case": "approver remains in tenant-a",
+          "passed": true,
+          "ids": [
+            "a-done",
+            "new-a-approved"
+          ]
+        }
+      ],
+      "counts_as_new_model_sample": false
+    },
+    {
+      "trial_id": "title-search--zenstack--001",
+      "candidate_sha": "c3bb7b47447c467269a67c31a9aa659db423fb92",
+      "route": "zenstack",
+      "original_oracle_cases": 23,
+      "original_oracle_passed": true,
+      "posthoc_cases": [
+        {
+          "case": "positive literal %",
+          "passed": true,
+          "ids": [
+            "special-a"
+          ]
+        },
+        {
+          "case": "positive literal _",
+          "passed": true,
+          "ids": [
+            "special-a"
+          ]
+        },
+        {
+          "case": "positive literal O'Reilly",
+          "passed": true,
+          "ids": [
+            "special-a"
+          ]
+        },
+        {
+          "case": "positive literal \\",
+          "passed": true,
+          "ids": [
+            "special-a"
+          ]
+        },
+        {
+          "case": "case insensitive with extra row",
+          "passed": true,
+          "ids": [
+            "a-done",
+            "a-other",
+            "a-own",
+            "special-a"
+          ]
+        },
+        {
+          "case": "same literal in another tenant",
+          "passed": true,
+          "ids": [
+            "special-b"
+          ]
+        }
+      ],
+      "counts_as_new_model_sample": false
+    },
+    {
+      "trial_id": "title-search--baseline--001",
+      "candidate_sha": "80bb8ca8009fcc2e3dcfb68bc5c635257deb7e8b",
+      "route": "baseline",
+      "original_oracle_cases": 23,
+      "original_oracle_passed": true,
+      "posthoc_cases": [
+        {
+          "case": "positive literal %",
+          "passed": true,
+          "ids": [
+            "special-a"
+          ]
+        },
+        {
+          "case": "positive literal _",
+          "passed": true,
+          "ids": [
+            "special-a"
+          ]
+        },
+        {
+          "case": "positive literal O'Reilly",
+          "passed": true,
+          "ids": [
+            "special-a"
+          ]
+        },
+        {
+          "case": "positive literal \\",
+          "passed": true,
+          "ids": [
+            "special-a"
+          ]
+        },
+        {
+          "case": "case insensitive with extra row",
+          "passed": true,
+          "ids": [
+            "a-done",
+            "a-other",
+            "a-own",
+            "special-a"
+          ]
+        },
+        {
+          "case": "same literal in another tenant",
+          "passed": true,
+          "ids": [
+            "special-b"
+          ]
+        }
+      ],
+      "counts_as_new_model_sample": false
+    },
+    {
+      "trial_id": "tenant-summary--zenstack--001",
+      "candidate_sha": "5c0628ecb2412fc7bece2c1f8ebdf8eaca4056ee",
+      "route": "zenstack",
+      "original_oracle_cases": 20,
+      "original_oracle_passed": true,
+      "posthoc_cases": [
+        {
+          "case": "initial tenant-a",
+          "passed": true,
+          "response": {
+            "count": 4,
+            "totalAmount": 800
+          }
+        },
+        {
+          "case": "other tenant growth does not change tenant-a",
+          "passed": true,
+          "response": {
+            "count": 4,
+            "totalAmount": 800
+          }
+        },
+        {
+          "case": "same-tenant approver sees the same aggregate",
+          "passed": true,
+          "response": {
+            "count": 4,
+            "totalAmount": 800
+          }
+        },
+        {
+          "case": "tenant-b growth included only in tenant-b",
+          "passed": true,
+          "response": {
+            "count": 51,
+            "totalAmount": 750
+          }
+        },
+        {
+          "case": "empty tenant aggregate",
+          "passed": true,
+          "response": {
+            "count": 0,
+            "totalAmount": 0
+          }
+        }
+      ],
+      "counts_as_new_model_sample": false
+    }
+  ],
+  "manual_tenant_filter_removal": [
+    {
+      "trial_id": "tenant-summary--guarded--001",
+      "route": "guarded",
+      "kind": "manual-remove-new-summary-tenant-filter",
+      "patch_sha256": "d2a07684a74a2b8f54c275af9f5045631fff488357ad10394d10b21c6c8d656d",
+      "availability_preserved": true,
+      "checks": [
+        {
+          "user": "alice",
+          "response": {
+            "count": 4,
+            "totalAmount": 800
+          },
+          "tenant_invariant_preserved": true
+        },
+        {
+          "user": "dave",
+          "response": {
+            "count": 1,
+            "totalAmount": 400
+          },
+          "tenant_invariant_preserved": true
+        },
+        {
+          "user": "carol",
+          "response": {
+            "count": 4,
+            "totalAmount": 800
+          },
+          "tenant_invariant_preserved": true
+        }
+      ]
+    },
+    {
+      "trial_id": "tenant-summary--baseline--001",
+      "route": "baseline",
+      "kind": "manual-remove-new-summary-tenant-filter",
+      "patch_sha256": "1aa2818897466fcc53e49c13b95978216c174c8f9b7fcead245e637a741cdda2",
+      "availability_preserved": true,
+      "checks": [
+        {
+          "user": "alice",
+          "response": {
+            "count": 5,
+            "totalAmount": 1200
+          },
+          "tenant_invariant_preserved": false
+        },
+        {
+          "user": "dave",
+          "response": {
+            "count": 5,
+            "totalAmount": 1200
+          },
+          "tenant_invariant_preserved": false
+        },
+        {
+          "user": "carol",
+          "response": {
+            "count": 5,
+            "totalAmount": 1200
+          },
+          "tenant_invariant_preserved": false
+        }
+      ]
+    },
+    {
+      "trial_id": "tenant-summary--zenstack--001",
+      "route": "zenstack",
+      "kind": "manual-remove-new-summary-tenant-filter",
+      "patch_sha256": "c0582e9898d3ca49b8140dfaf329154b56716e8495aabe9aa23b50a45f22bfe1",
+      "availability_preserved": true,
+      "checks": [
+        {
+          "user": "alice",
+          "response": {
+            "count": 4,
+            "totalAmount": 800
+          },
+          "tenant_invariant_preserved": true
+        },
+        {
+          "user": "dave",
+          "response": {
+            "count": 1,
+            "totalAmount": 400
+          },
+          "tenant_invariant_preserved": true
+        },
+        {
+          "user": "carol",
+          "response": {
+            "count": 4,
+            "totalAmount": 800
+          },
+          "tenant_invariant_preserved": true
+        }
+      ]
+    }
+  ],
+  "business_contract_probe": {
+    "kind": "manual-business-contract-probe",
+    "new_model_generations": 0,
+    "outcomes": [
+      {
+        "mode": "row-policy-only",
+        "affected": 1,
+        "rolled_back": false,
+        "rows": [
+          {
+            "id": "a-other",
+            "status": "approved"
+          },
+          {
+            "id": "b-other",
+            "status": "submitted"
+          }
+        ]
+      },
+      {
+        "mode": "affected-count-checked",
+        "affected": 1,
+        "rolled_back": true,
+        "rows": [
+          {
+            "id": "a-other",
+            "status": "submitted"
+          },
+          {
+            "id": "b-other",
+            "status": "submitted"
+          }
+        ]
+      }
+    ]
+  }
+}

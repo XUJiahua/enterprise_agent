@@ -1,0 +1,11 @@
+--- apps/zenstack/src/server.ts
++++ apps/zenstack/src/server.ts
+@@ -41,7 +41,7 @@
+   const parts=path.split('/').filter(Boolean);
+   if(parts[0]!=='purchases'){deny(res,404);return;}
+   if(req.method==='GET' && parts.length===2 && parts[1]==='summary'){
+-   const rows=await db.purchase.findMany({where:{tenantId:user.tenantId},select:{amount:true}});
++   const rows=await db.purchase.findMany({select:{amount:true}});
+    send(res,200,{count:rows.length,totalAmount:rows.reduce((total,row)=>total+row.amount,0)});return;
+   }
+   if(req.method==='GET' && parts.length<=2){

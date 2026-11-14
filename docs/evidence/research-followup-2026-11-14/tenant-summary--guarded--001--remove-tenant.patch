@@ -1,0 +1,11 @@
+--- internal/app/server.go
++++ internal/app/server.go
+@@ -162,7 +162,7 @@
+ 			Count       int64 `json:"count"`
+ 			TotalAmount int64 `json:"totalAmount"`
+ 		}
+-		e := tx.QueryRow(ctx, `SELECT count(*), COALESCE(sum(amount), 0) FROM "Purchase" WHERE "tenantId"=$1`, u.Tenant).Scan(&result.Count, &result.TotalAmount)
++		e := tx.QueryRow(ctx, `SELECT count(*), COALESCE(sum(amount), 0) FROM "Purchase"`).Scan(&result.Count, &result.TotalAmount)
+ 		return result, 200, e
+ 	}
+ 	if r.Method == "GET" && (len(parts) == 1 || len(parts) == 2) {
