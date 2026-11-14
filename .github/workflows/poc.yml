@@ -115,6 +115,11 @@ jobs:
         run: |
           python3 benchmark/phase2/smoke.py
           python3 benchmark/phase2/driver_smoke.py
+      - name: Audit PR 10 archive and replay four candidates on new fixtures
+        if: matrix.route == 'baseline'
+        run: |
+          python3 research/audit_atomic_pilot.py
+          python3 research/replay_atomic_pilot.py
       - name: Shared Next.js production UI and browser acceptance
         run: python3 scripts/browser.py --route '${{ matrix.route }}'
         env:

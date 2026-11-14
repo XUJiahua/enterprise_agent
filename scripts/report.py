@@ -38,6 +38,13 @@ assert phase2['export_same_source_all_cells'] and phase2['evaluator_absent_from_
 assert len(phase2['controls'])==12 and sum(c['passed'] for c in phase2['controls'])==4
 phase2_driver=json.loads((root/'phase2-driver-control/control.json').read_text())
 assert phase2_driver=={'kind':'synthetic-smoke','model_calls':0,'driver_evaluations':1,'passed':True}
+atomic_audit=json.loads((root/'atomic-followup/audit.json').read_text())
+assert atomic_audit['archive_files_verified']==50 and atomic_audit['new_model_generations']==0 and len(atomic_audit['trials'])==4
+atomic_replay=json.loads((root/'atomic-followup/replay/summary.json').read_text())
+assert atomic_replay['new_model_generations']==0 and atomic_replay['exact_original_fixture_replay'] is False
+assert atomic_replay['candidate_count']==4 and atomic_replay['replayed_cases_passed']==184 and atomic_replay['additional_cases_passed']==28
+assert atomic_replay['candidate_authored_go_tests_passed']==4 and len(atomic_replay['capacity_probes'])==4
+assert all(p['state_consistent_with_status'] and p['scored_in_original_cohort'] is False for p in atomic_replay['capacity_probes'])
 verifier=json.loads((root/'verifier.json').read_text());assert verifier['ok'] and len(verifier['results'])==7
 text='# Controlled POC results\n\n| Path | Healthy acceptance | Faults blocked |\n|---|---:|---:|\n'
 for route,acceptance,blocked in rows:text+=f'| {route} | {acceptance} | {blocked} |\n'
@@ -45,5 +52,6 @@ text+='\nVerifier adversarial probes: 7/7. Direct SQL probes: 6/6. Startup confi
 text+='\nPublic CI model key configured for this run: '+('unknown (local, CI Secret not checked)' if configured is None else str(configured))+'. Model execution is not enabled by PR checks.\n'
 text+='\nPR 7 archived replay: 9 candidates / 195 frozen cases; 45 post-hoc cases. Manual interventions and business-contract probes are separate from model first-pass rates.\n'
 text+='\nPhase 2 atomic bulk approval: 12 human-authored candidate evaluations, 46 cases each; 4 correct references pass, 8 negative controls are detected. One additional synthetic driver control exercises export, generation protocol, bundle, and evaluation. Zero new model samples. Candidate exports omit evaluator files and prior Git history; this is not a same-host security sandbox.\n'
+text+='\nPR 10 audit: 50 archived files and four candidate bundles verified. New public fixtures: 184 replay cases plus 28 additional checks pass; four candidate-authored Go test suites pass. Four request-capacity observations remain separate from first-pass scoring. Original private seed was not used. No new model generations.\n'
 (root/'comparison.md').write_text(text)
 print(text)
