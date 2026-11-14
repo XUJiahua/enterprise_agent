@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "trial_id": "go-process--001",
+  "plan_sha256": "ead4739deb3bf9f20bba62fe53083b35d350a507a4659ea55b5ca4fc8a1d132c",
+  "initial_sha": "cc5afd7c544d8c434874571af2251d5450d098ec",
+  "source_base_sha": "f6c8dc27bf2a00ff74f16d0b9041a94a8e79f1c7",
+  "files": {
+    "go.mod": "648c40a4bf80a1cb567029bbf31c771963254e92aa8712da903eb8a883fe3217",
+    "go.sum": "e718bd4e6664b6aa2d808d7bf1f72ca1b2e36316db23235318c9e20a8705f0c4",
+    "cmd/server/main.go": "c790941bf8eee0887f721a5d7629bb4e8302fbb0ccaaaf545229789f716ee200",
+    "internal/app/server.go": "128f710c1d022e50ba925fda4a2a9d8c88f4233cccc9f57c3eae6704c3d0b53f",
+    "TASK.md": "1902e480110ef2db4744a06ba7427298cd9c9c25b814ee332dc3016b1ac96f1e",
+    "visible_smoke.py": "1501e4cb4354eaeaf46a52dec6ff5716964455c2d4da5daf97726ffe2a400dc5",
+    ".gitignore": "21aa65755b85bad0fea1311838fce09b1838eda8b6d94712d0771560dde71a64"
+  }
+}

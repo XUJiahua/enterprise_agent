@@ -1,0 +1,194 @@
+diff --git a/internal/app/bulk_approve.go b/internal/app/bulk_approve.go
+new file mode 100644
+index 0000000..08bf6e6
+--- /dev/null
++++ b/internal/app/bulk_approve.go
+@@ -0,0 +1,117 @@
++package app
++
++import (
++	"bytes"
++	"encoding/json"
++	"errors"
++	"io"
++	"net/http"
++	"sort"
++	"strings"
++	"unicode/utf8"
++
++	"github.com/jackc/pgx/v5"
++)
++
++var errInvalidBatch = errors.New("invalid approval batch")
++
++// Decode the object explicitly so duplicate keys, unknown keys, and trailing
++// JSON values cannot silently change the requested batch.
++func bulkApprovalIDs(body io.Reader) ([]string, error) {
++	b, err := io.ReadAll(body)
++	if err != nil || !utf8.Valid(b) {
++		return nil, errInvalidBatch
++	}
++	d := json.NewDecoder(bytes.NewReader(b))
++	token, err := d.Token()
++	if err != nil || token != json.Delim('{') {
++		return nil, errInvalidBatch
++	}
++	var ids []string
++	seenField := false
++	for d.More() {
++		key, err := d.Token()
++		if err != nil || key != "ids" || seenField {
++			return nil, errInvalidBatch
++		}
++		seenField = true
++		if err := d.Decode(&ids); err != nil {
++			return nil, errInvalidBatch
++		}
++	}
++	if token, err = d.Token(); err != nil || token != json.Delim('}') {
++		return nil, errInvalidBatch
++	}
++	if _, err = d.Token(); err != io.EOF || len(ids) < 1 || len(ids) > 100 {
++		return nil, errInvalidBatch
++	}
++	seen := make(map[string]bool, len(ids))
++	for _, id := range ids {
++		if id == "" || len(id) > 100 || seen[id] {
++			return nil, errInvalidBatch
++		}
++		seen[id] = true
++	}
++	sort.Strings(ids)
++	return ids, nil
++}
++
++func (s *Server) bulkApprove(r *http.Request, tx pgx.Tx, u Identity) (any, int, error) {
++	ids, err := bulkApprovalIDs(r.Body)
++	if err != nil {
++		return nil, http.StatusBadRequest, nil
++	}
++	if u.Role != "approver" {
++		return nil, http.StatusForbidden, nil
++	}
++	for _, id := range ids {
++		// PostgreSQL text cannot contain NUL, so such an ID cannot exist.
++		if strings.ContainsRune(id, 0) {
++			return nil, http.StatusNotFound, nil
++		}
++	}
++	ctx := r.Context()
++	// Lock in a consistent database order before any writes. Under READ COMMITTED,
++	// a waiter sees the updated status after a concurrent approver commits.
++	rows, err := tx.Query(ctx, `SELECT id,"createdBy",status FROM "Purchase"
++		WHERE "tenantId"=$1 AND id=ANY($2::text[]) ORDER BY id FOR UPDATE`, u.Tenant, ids)
++	if err != nil {
++		return nil, 0, err
++	}
++	count, status := 0, http.StatusOK
++	for rows.Next() {
++		var id, creator, state string
++		if err := rows.Scan(&id, &creator, &state); err != nil {
++			rows.Close()
++			return nil, 0, err
++		}
++		count++
++		if creator == u.User {
++			status = http.StatusForbidden
++		} else if state != "submitted" && status == http.StatusOK {
++			status = http.StatusConflict
++		}
++	}
++	err = rows.Err()
++	rows.Close()
++	if err != nil {
++		return nil, 0, err
++	}
++	if count != len(ids) {
++		return nil, http.StatusNotFound, nil
++	}
++	if status != http.StatusOK {
++		return nil, status, nil
++	}
++	result, err := tx.Exec(ctx, `UPDATE "Purchase" SET status='approved'
++		WHERE "tenantId"=$1 AND id=ANY($2::text[]) AND "createdBy"<>$3 AND status='submitted'`, u.Tenant, ids, u.User)
++	if err != nil {
++		return nil, 0, err
++	}
++	if result.RowsAffected() != int64(len(ids)) {
++		// ServeHTTP rolls back every error response, including any updates already
++		// made by this statement and any associated transactional metadata.
++		return nil, http.StatusConflict, nil
++	}
++	return map[string][]string{"approvedIds": ids}, http.StatusOK, nil
++}
+diff --git a/internal/app/bulk_approve_test.go b/internal/app/bulk_approve_test.go
+new file mode 100644
+index 0000000..e9e9b92
+--- /dev/null
++++ b/internal/app/bulk_approve_test.go
+@@ -0,0 +1,51 @@
++package app
++
++import (
++	"encoding/json"
++	"fmt"
++	"reflect"
++	"strings"
++	"testing"
++)
++
++func TestBulkApprovalIDs(t *testing.T) {
++	for _, body := range []string{
++		``, `null`, `[]`, `"ids"`, `{}`, `{"ids":null}`, `{"ids":[]}`,
++		`{"ids":"a"}`, `{"ids":{}}`, `{"ids":[1]}`, `{"ids":[true]}`,
++		`{"ids":[null]}`, `{"ids":[""]}`, `{"ids":["a","a"]}`,
++		`{"ids":["a"],"role":"approver"}`, `{"ids":["a"],"tenantId":"tenant-a"}`,
++		`{"ids":["a"],"createdBy":"alice"}`, `{"ids":["a"],"internalNote":"x"}`,
++		`{"ids":["a"],"ids":["b"]}`, `{"Ids":["a"]}`,
++		`{"ids":["a"]} {}`, `{"ids":["a"]} null`, `{"ids":["a"],}`,
++		`{"ids":["` + strings.Repeat("x", 101) + `"]}`,
++		`{"ids":["` + strings.Repeat("界", 34) + `"]}`,
++		"{\"ids\":[\"\xff\"]}",
++	} {
++		t.Run(body, func(t *testing.T) {
++			if ids, err := bulkApprovalIDs(strings.NewReader(body)); err == nil {
++				t.Fatalf("accepted invalid body, ids=%q", ids)
++			}
++		})
++	}
++	ids, err := bulkApprovalIDs(strings.NewReader(`{"ids":["z","a","界"]}`))
++	if err != nil || !reflect.DeepEqual(ids, []string{"a", "z", "界"}) {
++		t.Fatalf("unexpected sorted IDs: %q, %v", ids, err)
++	}
++	for _, count := range []int{1, 100, 101} {
++		ids := make([]string, count)
++		for i := range ids {
++			ids[i] = fmt.Sprintf("%03d", i) + strings.Repeat("x", 97)
++		}
++		body, err := json.Marshal(map[string][]string{"ids": ids})
++		if err != nil {
++			t.Fatal(err)
++		}
++		got, err := bulkApprovalIDs(strings.NewReader(string(body)))
++		if count <= 100 && (err != nil || !reflect.DeepEqual(got, ids)) {
++			t.Fatalf("rejected valid %d-item batch: %v", count, err)
++		}
++		if count > 100 && err == nil {
++			t.Fatal("accepted more than 100 IDs")
++		}
++	}
++}
+diff --git a/internal/app/server.go b/internal/app/server.go
+index 56fe4d2..911e93b 100644
+--- a/internal/app/server.go
++++ b/internal/app/server.go
+@@ -157,6 +157,9 @@ func (s *Server) fail(w http.ResponseWriter, e error) {
+ func (s *Server) handle(r *http.Request, tx pgx.Tx, u Identity) (any, int, error) {
+ 	ctx := r.Context()
+ 	parts := strings.Split(strings.Trim(r.URL.Path, "/"), "/")
++	if r.Method == "POST" && r.URL.Path == "/purchases/bulk-approve" {
++		return s.bulkApprove(r, tx, u)
++	}
+ 	if r.Method == "GET" && (len(parts) == 1 || len(parts) == 2) {
+ 		cols := projection
+ 		if s.Mutation == "leak-field" {

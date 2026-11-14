@@ -1,0 +1,280 @@
+diff --git a/internal/app/bulk_approve.go b/internal/app/bulk_approve.go
+new file mode 100644
+index 0000000..0d1cd6e
+--- /dev/null
++++ b/internal/app/bulk_approve.go
+@@ -0,0 +1,112 @@
++package app
++
++import (
++	"bytes"
++	"encoding/json"
++	"io"
++	"net/http"
++	"sort"
++	"strings"
++	"unicode/utf8"
++
++	"github.com/jackc/pgx/v5"
++)
++
++// Decode the exact request shape, including rejecting duplicate object keys and
++// null array elements (which encoding/json otherwise accepts as string values).
++func bulkIDs(body io.Reader) ([]string, bool) {
++	b, err := io.ReadAll(http.MaxBytesReader(nil, io.NopCloser(body), 65536))
++	if err != nil || !utf8.Valid(b) {
++		return nil, false
++	}
++	d := json.NewDecoder(bytes.NewReader(b))
++	if token, err := d.Token(); err != nil || token != json.Delim('{') {
++		return nil, false
++	}
++	if key, err := d.Token(); err != nil || key != "ids" {
++		return nil, false
++	}
++	var values []json.RawMessage
++	if d.Decode(&values) != nil || len(values) < 1 || len(values) > 100 {
++		return nil, false
++	}
++	if token, err := d.Token(); err != nil || token != json.Delim('}') {
++		return nil, false
++	}
++	if d.Decode(new(any)) != io.EOF {
++		return nil, false
++	}
++	ids := make([]string, 0, len(values))
++	seen := make(map[string]bool, len(values))
++	for _, raw := range values {
++		var id string
++		if len(raw) == 0 || raw[0] != '"' || json.Unmarshal(raw, &id) != nil || len(id) == 0 || len(id) > 100 || seen[id] {
++			return nil, false
++		}
++		seen[id] = true
++		ids = append(ids, id)
++	}
++	sort.Strings(ids)
++	return ids, true
++}
++
++func (s *Server) bulkApprove(r *http.Request, tx pgx.Tx, u Identity) (any, int, error) {
++	ids, valid := bulkIDs(r.Body)
++	if !valid {
++		return nil, http.StatusBadRequest, nil
++	}
++	if u.Role != "approver" {
++		return nil, http.StatusForbidden, nil
++	}
++	for _, id := range ids {
++		// PostgreSQL text cannot contain NUL, so such a valid JSON string
++		// cannot identify an existing purchase. Avoid a text encoding error.
++		if strings.ContainsRune(id, 0) {
++			return nil, http.StatusNotFound, nil
++		}
++	}
++	ctx := r.Context()
++	// Lock the whole batch in a consistent order before any write. A competing
++	// batch waits here and sees the committed status before it can approve.
++	rows, err := tx.Query(ctx, `SELECT id,"createdBy",status FROM "Purchase"
++		WHERE id=ANY($1::text[]) AND "tenantId"=$2 ORDER BY id FOR UPDATE`, ids, u.Tenant)
++	if err != nil {
++		return nil, 0, err
++	}
++	count, status := 0, http.StatusOK
++	for rows.Next() {
++		var id, creator, state string
++		if err = rows.Scan(&id, &creator, &state); err != nil {
++			rows.Close()
++			return nil, 0, err
++		}
++		count++
++		if creator == u.User {
++			status = http.StatusForbidden
++		} else if state != "submitted" && status == http.StatusOK {
++			status = http.StatusConflict
++		}
++	}
++	err = rows.Err()
++	rows.Close()
++	if err != nil {
++		return nil, 0, err
++	}
++	if count != len(ids) {
++		return nil, http.StatusNotFound, nil
++	}
++	if status != http.StatusOK {
++		return nil, status, nil
++	}
++	result, err := tx.Exec(ctx, `UPDATE "Purchase" SET status='approved'
++		WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'`, ids, u.Tenant, u.User)
++	if err != nil {
++		return nil, 0, err
++	}
++	// RLS may filter writes independently of reads. A partial update must cause
++	// ServeHTTP to roll back the entire transaction, including trigger changes.
++	if result.RowsAffected() != int64(len(ids)) {
++		return nil, http.StatusConflict, nil
++	}
++	return map[string][]string{"approvedIds": ids}, http.StatusOK, nil
++}
+diff --git a/internal/app/bulk_approve_test.go b/internal/app/bulk_approve_test.go
+new file mode 100644
+index 0000000..fe0d330
+--- /dev/null
++++ b/internal/app/bulk_approve_test.go
+@@ -0,0 +1,142 @@
++package app
++
++import (
++	"context"
++	"encoding/json"
++	"errors"
++	"net/http/httptest"
++	"reflect"
++	"strconv"
++	"strings"
++	"testing"
++
++	"github.com/jackc/pgx/v5"
++	"github.com/jackc/pgx/v5/pgconn"
++)
++
++func TestBulkIDs(t *testing.T) {
++	for _, body := range []string{
++		``, `{`, `null`, `[]`, `{}`, `{"ids":null}`, `{"ids":[]}`,
++		`{"ids":"a"}`, `{"ids":[null]}`, `{"ids":[1]}`, `{"ids":[true]}`,
++		`{"ids":[{}]}`, `{"ids":[[]]}`, `{"ids":[""]}`, `{"ids":["a","a"]}`,
++		`{"ids":["a","\u0061"]}`, `{"ids":["a"],"tenantId":"tenant-b"}`,
++		`{"ids":["a"],"createdBy":"alice"}`, `{"ids":["a"],"role":"approver"}`,
++		`{"ids":["a"],"ids":["b"]}`, `{"IDS":["a"]}`,
++		`{"ids":["a"]} {}`, `{"ids":["a"]} garbage`,
++		`{"ids":["` + strings.Repeat("a", 101) + `"]}`,
++		`{"ids":["` + strings.Repeat("界", 34) + `"]}`,
++		"{\"ids\":[\"\xff\"]}",
++	} {
++		t.Run(body, func(t *testing.T) {
++			if ids, ok := bulkIDs(strings.NewReader(body)); ok {
++				t.Fatalf("accepted invalid body: %q", ids)
++			}
++		})
++	}
++	for _, n := range []int{100, 101} {
++		ids := make([]string, n)
++		for i := range ids {
++			ids[i] = strconv.Itoa(i)
++		}
++		body, _ := json.Marshal(map[string][]string{"ids": ids})
++		if _, ok := bulkIDs(strings.NewReader(string(body))); ok != (n == 100) {
++			t.Fatalf("incorrect acceptance for %d IDs", n)
++		}
++	}
++	for _, id := range []string{strings.Repeat("a", 100), strings.Repeat("界", 33) + "a"} {
++		body, _ := json.Marshal(map[string][]string{"ids": {"z", id, "a"}})
++		ids, ok := bulkIDs(strings.NewReader(string(body)))
++		if !ok || ids[0] != "a" || len(ids) != 3 {
++			t.Fatalf("valid boundary/sorted IDs rejected: %v, %v", ids, ok)
++		}
++	}
++}
++
++type bulkTestRows struct {
++	pgx.Rows
++	items [][3]string
++	index int
++	err   error
++}
++
++func (r *bulkTestRows) Next() bool { r.index++; return r.index <= len(r.items) }
++func (r *bulkTestRows) Close()     {}
++func (r *bulkTestRows) Err() error { return r.err }
++func (r *bulkTestRows) Scan(dest ...any) error {
++	for i, value := range r.items[r.index-1] {
++		*dest[i].(*string) = value
++	}
++	return nil
++}
++
++type bulkTestTx struct {
++	pgx.Tx
++	rows    *bulkTestRows
++	updated int64
++	queries int
++	writes  int
++}
++
++func (tx *bulkTestTx) Query(_ context.Context, _ string, _ ...any) (pgx.Rows, error) {
++	tx.queries++
++	return tx.rows, nil
++}
++func (tx *bulkTestTx) Exec(_ context.Context, _ string, _ ...any) (pgconn.CommandTag, error) {
++	tx.writes++
++	if tx.updated == 2 {
++		return pgconn.NewCommandTag("UPDATE 2"), nil
++	}
++	return pgconn.NewCommandTag("UPDATE 1"), nil
++}
++
++func TestBulkApproveValidationBeforeWriting(t *testing.T) {
++	for _, tc := range []struct {
++		name    string
++		role    string
++		items   [][3]string
++		rowErr  error
++		updated int64
++		status  int
++		writes  int
++	}{
++		{name: "role", role: "requester", status: 403},
++		{name: "missing", role: "approver", items: [][3]string{{"a", "alice", "submitted"}}, status: 404},
++		{name: "own", role: "approver", items: [][3]string{{"a", "alice", "submitted"}, {"b", "bob", "submitted"}}, status: 403},
++		{name: "repeat", role: "approver", items: [][3]string{{"a", "alice", "submitted"}, {"b", "alice", "approved"}}, status: 409},
++		{name: "read error", role: "approver", rowErr: errors.New("read failed")},
++		{name: "partial write requires rollback", role: "approver", items: [][3]string{{"a", "alice", "submitted"}, {"b", "alice", "submitted"}}, updated: 1, status: 409, writes: 1},
++		{name: "success", role: "approver", items: [][3]string{{"a", "alice", "submitted"}, {"b", "alice", "submitted"}}, updated: 2, status: 200, writes: 1},
++	} {
++		t.Run(tc.name, func(t *testing.T) {
++			tx := &bulkTestTx{rows: &bulkTestRows{items: tc.items, err: tc.rowErr}, updated: tc.updated}
++			r := httptest.NewRequest("POST", "/purchases/bulk-approve", strings.NewReader(`{"ids":["b","a"]}`))
++			result, status, err := (&Server{Guarded: true}).handle(r, tx, Identity{"bob", "tenant-a", tc.role})
++			if status != tc.status || tx.writes != tc.writes || !errors.Is(err, tc.rowErr) {
++				t.Fatalf("status=%d writes=%d err=%v", status, tx.writes, err)
++			}
++			if tc.role != "approver" && tx.queries != 0 {
++				t.Fatal("non-approver queried purchases")
++			}
++			if status == 200 && !reflect.DeepEqual(result, map[string][]string{"approvedIds": {"a", "b"}}) {
++				t.Fatalf("incorrect response: %v", result)
++			}
++		})
++	}
++}
++
++func TestBulkApproveAnonymous(t *testing.T) {
++	w := httptest.NewRecorder()
++	(&Server{Guarded: true}).ServeHTTP(w, httptest.NewRequest("POST", "/purchases/bulk-approve", strings.NewReader(`{"ids":["a"]}`)))
++	if w.Code != 401 {
++		t.Fatalf("anonymous status: %d", w.Code)
++	}
++}
++
++func TestBulkApproveNULIsMissing(t *testing.T) {
++	tx := &bulkTestTx{}
++	r := httptest.NewRequest("POST", "/purchases/bulk-approve", strings.NewReader(`{"ids":["\u0000"]}`))
++	_, status, err := (&Server{Guarded: true}).handle(r, tx, Identity{"bob", "tenant-a", "approver"})
++	if err != nil || status != 404 || tx.queries != 0 || tx.writes != 0 {
++		t.Fatalf("status=%d err=%v queries=%d writes=%d", status, err, tx.queries, tx.writes)
++	}
++}
+diff --git a/internal/app/server.go b/internal/app/server.go
+index 56fe4d2..911e93b 100644
+--- a/internal/app/server.go
++++ b/internal/app/server.go
+@@ -157,6 +157,9 @@ func (s *Server) fail(w http.ResponseWriter, e error) {
+ func (s *Server) handle(r *http.Request, tx pgx.Tx, u Identity) (any, int, error) {
+ 	ctx := r.Context()
+ 	parts := strings.Split(strings.Trim(r.URL.Path, "/"), "/")
++	if r.Method == "POST" && r.URL.Path == "/purchases/bulk-approve" {
++		return s.bulkApprove(r, tx, u)
++	}
+ 	if r.Method == "GET" && (len(parts) == 1 || len(parts) == 2) {
+ 		cols := projection
+ 		if s.Mutation == "leak-field" {

@@ -1,0 +1,46 @@
+{
+  "kind": "model-runtime-preflight",
+  "ready": true,
+  "cli_version": "codex-cli 0.166.0",
+  "checked_at": "2026-11-14T12:49:06.447819+00:00",
+  "codex_home_writable": true,
+  "invocation": {
+    "status": "completed",
+    "turn_started": true,
+    "turn_completed": true,
+    "usage": {
+      "input_tokens": 17632,
+      "cached_input_tokens": 12288,
+      "output_tokens": 5,
+      "reasoning_output_tokens": 0
+    },
+    "event_count": 4,
+    "returncode": 0,
+    "timed_out": false,
+    "agent_messages": [
+      "READY"
+    ],
+    "diagnostic": "",
+    "generation_seconds": 5.78,
+    "requested_model": "gpt-6.1-sol",
+    "reasoning_effort": "medium",
+    "sandbox": "read-only",
+    "command": [
+      "codex",
+      "exec",
+      "--json",
+      "--ephemeral",
+      "--color",
+      "never",
+      "--sandbox",
+      "read-only",
+      "--model",
+      "gpt-6.1-sol",
+      "-C",
+      "/home/jiahua/workspace/ai-factory/enterprise_agent",
+      "-c",
+      "model_reasoning_effort=\"medium\"",
+      "-"
+    ]
+  }
+}

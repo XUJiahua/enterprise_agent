@@ -1,0 +1,276 @@
+{
+  "version": 2,
+  "kind": "model-trial",
+  "plan_sha256": "ead4739deb3bf9f20bba62fe53083b35d350a507a4659ea55b5ca4fc8a1d132c",
+  "trial": {
+    "id": "go-process--001",
+    "cell": "go-process",
+    "route": "baseline",
+    "instance": 1,
+    "prompt": "实现 POST /purchases/bulk-approve，输入仅允许 JSON 对象 {\"ids\":[...] }。ids 必须为 1..100 个互不重复的非空字符串，每项 UTF-8 长度不超过 100 字节。空/重复/超量/类型错误/未知字段/无效 JSON 返回 400，且数据不变。仅当前已认证 approver 可执行；每个目标都必须存在、属于当前租户、由其他人创建且状态为 submitted。任一目标不满足条件时整批拒绝（403/404/409），任何记录和元数据都不得改变。匿名返回 401。成功返回 200 和 {\"approvedIds\":[全部请求 ID，按字典序排序]}，全部目标同时变为 approved。重复审批不得再次成功。客户端不能选择 tenant/creator/role，不能泄露 internalNote。重叠并发批次不能同时审批同一 submitted 记录；失败批次的独有记录也必须不变。保留所有现有 API 行为。\nRuntime mode: baseline. Preserve the existing interfaces and runtime identity binding.\nOnly modify/add internal/app/ source. Do not change dependencies, main, task, visible tests or Git settings.\nDo not read evaluator files, private fixtures, credentials or other checkouts; do not use other agents.\nUse installed dependencies. Do not commit or push. Candidate changes will be committed and independently evaluated.\nVisible commands: go test ./...; python3 visible_smoke.py --base-url http://127.0.0.1:8080 (when a public test service is available).\nPRIVATE evaluation database credentials are not supplied during generation. PUBLIC_DATABASE_URL, if provided by the operator, is for public fixtures only.\n编码前列出不变量与失败场景；编码后运行 go test ./...、可用的可见 smoke，并检查 diff。无法运行的检查应如实说明，不修改独立验收材料。",
+    "prompt_sha256": "1031d77c00bd1a298fd31f62311bb75950a43ea01d274ecafe54faa8dc935bab"
+  },
+  "candidate_sha": "076d26f8d4a60f5fec0ab0b21ad65ad140ea44ee",
+  "manifest_sha256": "4a0b4dcff34b585d580efe3cd73ff3c15b78a0ce36a8325318d1914b1561c257",
+  "cases": [
+    {
+      "case": "two eligible targets",
+      "group": "authorized-functional",
+      "passed": true
+    },
+    {
+      "case": "maximum 100 targets",
+      "group": "authorized-functional",
+      "passed": true
+    },
+    {
+      "case": "identifier with quote and backslash",
+      "group": "authorized-functional",
+      "passed": true
+    },
+    {
+      "case": "another approver",
+      "group": "authorized-functional",
+      "passed": true
+    },
+    {
+      "case": "requester forbidden",
+      "group": "row-authorization",
+      "passed": true
+    },
+    {
+      "case": "anonymous forbidden",
+      "group": "row-authorization",
+      "passed": true
+    },
+    {
+      "case": "cross tenant forbidden",
+      "group": "row-authorization",
+      "passed": true
+    },
+    {
+      "case": "self approval forbidden",
+      "group": "row-authorization",
+      "passed": true
+    },
+    {
+      "case": "forged context headers",
+      "group": "row-authorization",
+      "passed": true
+    },
+    {
+      "case": "mixed eligible and cross",
+      "group": "batch-all-or-nothing",
+      "passed": true
+    },
+    {
+      "case": "mixed eligible and self",
+      "group": "batch-all-or-nothing",
+      "passed": true
+    },
+    {
+      "case": "mixed eligible and done",
+      "group": "batch-all-or-nothing",
+      "passed": true
+    },
+    {
+      "case": "mixed eligible and missing",
+      "group": "batch-all-or-nothing",
+      "passed": true
+    },
+    {
+      "case": "repeat must not succeed again",
+      "group": "batch-all-or-nothing",
+      "passed": true
+    },
+    {
+      "case": "duplicate IDs",
+      "group": "input-validation",
+      "passed": true
+    },
+    {
+      "case": "empty list",
+      "group": "input-validation",
+      "passed": true
+    },
+    {
+      "case": "101 targets",
+      "group": "input-validation",
+      "passed": true
+    },
+    {
+      "case": "string instead of list",
+      "group": "input-validation",
+      "passed": true
+    },
+    {
+      "case": "null IDs",
+      "group": "input-validation",
+      "passed": true
+    },
+    {
+      "case": "missing IDs",
+      "group": "input-validation",
+      "passed": true
+    },
+    {
+      "case": "number ID",
+      "group": "input-validation",
+      "passed": true
+    },
+    {
+      "case": "boolean ID",
+      "group": "input-validation",
+      "passed": true
+    },
+    {
+      "case": "empty ID",
+      "group": "input-validation",
+      "passed": true
+    },
+    {
+      "case": "oversized ID",
+      "group": "input-validation",
+      "passed": true
+    },
+    {
+      "case": "unknown tenant field",
+      "group": "input-validation",
+      "passed": true
+    },
+    {
+      "case": "unknown status field",
+      "group": "input-validation",
+      "passed": true
+    },
+    {
+      "case": "array root",
+      "group": "input-validation",
+      "passed": true
+    },
+    {
+      "case": "null root",
+      "group": "input-validation",
+      "passed": true
+    },
+    {
+      "case": "malformed JSON",
+      "group": "input-validation",
+      "passed": true
+    },
+    {
+      "case": "overlapping concurrent batches",
+      "group": "concurrency",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "anonymous",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "forged_headers",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "tenant_list",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "tenant_detail",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "field_hidden",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "requester_cannot_approve",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "approver_cannot_self_approve",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "cross_tenant_approval",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "valid_create",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "approver_cannot_create",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "valid_approval",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "concurrent_approval",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "mass_assignment",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "bypass_action",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "invalid_amount",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "alternating_context",
+      "passed": true
+    }
+  ],
+  "groups": {
+    "concurrency": {
+      "passed": 1,
+      "total": 1
+    },
+    "input-validation": {
+      "passed": 15,
+      "total": 15
+    },
+    "authorized-functional": {
+      "passed": 4,
+      "total": 4
+    },
+    "row-authorization": {
+      "passed": 5,
+      "total": 5
+    },
+    "original-regression": {
+      "passed": 16,
+      "total": 16
+    },
+    "batch-all-or-nothing": {
+      "passed": 5,
+      "total": 5
+    }
+  },
+  "passed": true,
+  "outcome": "passed",
+  "evaluation_seconds": 1.909
+}

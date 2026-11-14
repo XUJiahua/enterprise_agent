@@ -1,0 +1,48 @@
+{
+  "date": "2026-11-14",
+  "timezone": "Asia/Shanghai",
+  "cli_version": "codex-cli 0.166.0",
+  "go_version": "go version go1.25.7 linux/amd64",
+  "python_version": "3.12.3",
+  "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+  "model_requested": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "generation_budget_seconds": 180,
+  "base_sha": "f6c8dc27bf2a00ff74f16d0b9041a94a8e79f1c7",
+  "harness_sha": "d4f79b52c8f13005524e7d524406b104f71d0aa8",
+  "cli_config_fingerprints": {
+    "/home/jiahua/.codex/config.toml": {
+      "exists": true,
+      "sha256": "725896fc7f85c5d9a13d9e5a4a5cb38789519b51c03893152f26f989d9457f92"
+    },
+    "/home/jiahua/workspace/ai-factory/enterprise_agent/.codex/config.toml": {
+      "exists": false,
+      "sha256": null
+    }
+  },
+  "config_contents_exported": false,
+  "immutable_server_model_snapshot": null,
+  "billing_cost": null,
+  "database": "dedicated Docker postgres:17.6, enterprise_agent_phase2_poc, host loopback 55434",
+  "evaluation_http_port": 18084,
+  "public_test_service_provided": false,
+  "PUBLIC_DATABASE_URL_provided": false,
+  "authentication": "existing login; HOME and CODEX_HOME unchanged; credentials not copied",
+  "isolation": "trusted-code engineering pilot; candidates outside evaluator with new history; same-host same-user is not strict isolation",
+  "trial_order": [
+    "go-runtime-process--001",
+    "go-process--001",
+    "go-ordinary--001",
+    "go-runtime--001"
+  ],
+  "predecessor_validation": {
+    "pr": 9,
+    "ci_run": 43596087849,
+    "checks": "five successful",
+    "controls_repeated_locally": false
+  },
+  "local_validation": {
+    "command": "python3 -m unittest discover -s benchmark/tests -v",
+    "passed": 18
+  }
+}

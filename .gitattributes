@@ -1,2 +1,3 @@
 # Unified diff evidence preserves context prefixes before original Go tabs.
 docs/evidence/research-followup-2026-11-14/*.patch -whitespace
+docs/evidence/phase2-model-pilot-2026-11-14/**/*.patch -whitespace
