@@ -1,0 +1,45 @@
+{
+  "kind": "posthoc-existing-candidate-replay",
+  "new_model_generations": 0,
+  "fixture_seed": "posthoc-pr10-public-fixture-2026-11-14",
+  "exact_original_fixture_replay": false,
+  "candidate_count": 4,
+  "replayed_cases_passed": 184,
+  "additional_cases_passed": 28,
+  "candidate_authored_go_tests_passed": 4,
+  "capacity_probes": [
+    {
+      "cell": "go-runtime-process",
+      "name": "valid JSON with 70 KiB leading whitespace",
+      "request_bytes": 71719,
+      "status": 400,
+      "state_consistent_with_status": true,
+      "scored_in_original_cohort": false
+    },
+    {
+      "cell": "go-process",
+      "name": "valid JSON with 70 KiB leading whitespace",
+      "request_bytes": 71719,
+      "status": 400,
+      "state_consistent_with_status": true,
+      "scored_in_original_cohort": false
+    },
+    {
+      "cell": "go-ordinary",
+      "name": "valid JSON with 70 KiB leading whitespace",
+      "request_bytes": 71719,
+      "status": 200,
+      "state_consistent_with_status": true,
+      "scored_in_original_cohort": false
+    },
+    {
+      "cell": "go-runtime",
+      "name": "valid JSON with 70 KiB leading whitespace",
+      "request_bytes": 71719,
+      "status": 200,
+      "state_consistent_with_status": true,
+      "scored_in_original_cohort": false
+    }
+  ],
+  "note": "Capacity behavior is observational. Original plan, fixtures checksum and first-pass results are unchanged."
+}

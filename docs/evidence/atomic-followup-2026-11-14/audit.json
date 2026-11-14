@@ -1,0 +1,116 @@
+{
+  "kind": "archived-model-evidence-audit",
+  "new_model_generations": 0,
+  "archive_files_verified": 50,
+  "frozen_harness_files_verified": 13,
+  "plan_sha256": "ead4739deb3bf9f20bba62fe53083b35d350a507a4659ea55b5ca4fc8a1d132c",
+  "base_sha": "f6c8dc27bf2a00ff74f16d0b9041a94a8e79f1c7",
+  "harness_sha": "d4f79b52c8f13005524e7d524406b104f71d0aa8",
+  "trials": [
+    {
+      "cell": "go-runtime-process",
+      "trial_id": "go-runtime-process--001",
+      "candidate_sha": "c5303c41cfc72043a67f0d5f5277e1e00a293c99",
+      "original_cases": 46,
+      "original_passed": true,
+      "generation_seconds": 178.048,
+      "usage": {
+        "input_tokens": 280563,
+        "cached_input_tokens": 260992,
+        "output_tokens": 5987,
+        "reasoning_output_tokens": 923
+      },
+      "noncached_input_tokens": 19571,
+      "extra_reported_usage": {
+        "cache_write_input_tokens": 0
+      },
+      "successful_go_test_commands": 2,
+      "outside_candidate_agent_inventory_observed": true,
+      "query_shape": "set-lock-select",
+      "static_lock_selects_for_100_ids": 1,
+      "static_update_statements_for_100_ids": 1,
+      "explicit_body_limit_bytes": 65536,
+      "candidate_authored_test_files": 1
+    },
+    {
+      "cell": "go-process",
+      "trial_id": "go-process--001",
+      "candidate_sha": "076d26f8d4a60f5fec0ab0b21ad65ad140ea44ee",
+      "original_cases": 46,
+      "original_passed": true,
+      "generation_seconds": 148.288,
+      "usage": {
+        "input_tokens": 225108,
+        "cached_input_tokens": 192000,
+        "output_tokens": 5538,
+        "reasoning_output_tokens": 846
+      },
+      "noncached_input_tokens": 33108,
+      "extra_reported_usage": {
+        "cache_write_input_tokens": 0
+      },
+      "successful_go_test_commands": 2,
+      "outside_candidate_agent_inventory_observed": true,
+      "query_shape": "per-id-lock-select",
+      "static_lock_selects_for_100_ids": 100,
+      "static_update_statements_for_100_ids": 1,
+      "explicit_body_limit_bytes": 65536,
+      "candidate_authored_test_files": 1
+    },
+    {
+      "cell": "go-ordinary",
+      "trial_id": "go-ordinary--001",
+      "candidate_sha": "5d8b060010c6567c5b7be9162f93b96845b9897f",
+      "original_cases": 46,
+      "original_passed": true,
+      "generation_seconds": 142.179,
+      "usage": {
+        "input_tokens": 187652,
+        "cached_input_tokens": 153984,
+        "output_tokens": 4553,
+        "reasoning_output_tokens": 1074
+      },
+      "noncached_input_tokens": 33668,
+      "extra_reported_usage": {
+        "cache_write_input_tokens": 0
+      },
+      "successful_go_test_commands": 2,
+      "outside_candidate_agent_inventory_observed": false,
+      "query_shape": "set-lock-select",
+      "static_lock_selects_for_100_ids": 1,
+      "static_update_statements_for_100_ids": 1,
+      "explicit_body_limit_bytes": null,
+      "candidate_authored_test_files": 1
+    },
+    {
+      "cell": "go-runtime",
+      "trial_id": "go-runtime--001",
+      "candidate_sha": "581d7c9b2f3322ba3fc99ae82c5fbdd32bc5a9a4",
+      "original_cases": 46,
+      "original_passed": true,
+      "generation_seconds": 117.189,
+      "usage": {
+        "input_tokens": 233480,
+        "cached_input_tokens": 221696,
+        "output_tokens": 4525,
+        "reasoning_output_tokens": 1075
+      },
+      "noncached_input_tokens": 11784,
+      "extra_reported_usage": {
+        "cache_write_input_tokens": 0
+      },
+      "successful_go_test_commands": 2,
+      "outside_candidate_agent_inventory_observed": false,
+      "query_shape": "set-lock-select",
+      "static_lock_selects_for_100_ids": 1,
+      "static_update_statements_for_100_ids": 1,
+      "explicit_body_limit_bytes": null,
+      "candidate_authored_test_files": 1
+    }
+  ],
+  "original_planned": 4,
+  "original_observed": 4,
+  "original_unmeasured": 0,
+  "source_exports_identical": true,
+  "note": "Static query counts describe these four code paths; no latency or framework-effect estimate. Original private fixture seed is unavailable here."
+}
