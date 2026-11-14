@@ -97,9 +97,44 @@ print(json.dumps({'type':'turn.completed','usage':{'input_tokens':101,'output_to
         call('evaluate','--plan',plan,'--trial','go-action--001','--candidate',restored,'--manifest',kit/'manifest.json',
              '--receipt',worker_out/'receipt.json','--fixtures',private,'--output',out/'standalone-evaluation')
         # The third evaluation is a second synthetic transport test, not a new trial.
+        # Fourth: the same transport through the Kiro engine with a fake kiro-cli (ACP stream-json).
+        kplan=out/'kiro-plan.json'
+        call('plan','--base','d8a5c576cc3c293ee2da884f5c618958df407b51','--model','synthetic-v3-control','--engine','kiro',
+             '--fixtures',private,'--output',kplan,'--synthetic','--allow-dirty-harness')
+        fake_kiro=temp/'fake-kiro'
+        fake_kiro.write_text('''#!/usr/bin/env python3
+import json,os,sys
+from pathlib import Path
+if '--version' in sys.argv: print('synthetic-v3-kiro');sys.exit(0)
+assert (Path(os.environ['KIRO_HOME'])/'agents/poc-v3-generator.json').exists() and 'DATABASE_URL' not in os.environ
+sys.stdin.read();root=Path.cwd()
+def emit(t,d): print(json.dumps({'type':t,'data':d}))
+emit('runStarted',{'engine':'v3'})
+emit('sessionUpdate',{'update':{'sessionUpdate':'session_info_update','_meta':{'kiro':{'kind':'turn_start'}}}})
+if '--trust-tools=' in sys.argv: text='READY'
+else:
+ cell='go-action' if (root/'internal/action/approval.go').exists() else 'go-manual'
+ for name,value in '''+repr(replacements)+'''[cell].items(): (root/name).write_text(value)
+ text='Synthetic v3 Kiro control only'
+emit('sessionUpdate',{'update':{'sessionUpdate':'session_info_update','_meta':{'kiro':{'kind':'session_usage','credits':[{'usage':0.25,'unit':'credit'}]}}}})
+emit('runFinished',{'status':'success','stopReason':'end_turn','finalText':text})
+''');fake_kiro.chmod(0o755)
+        kkit=temp/'kiro-kit';kout=out/'kiro-worker'
+        call('prepare','--plan',kplan,'--trial','go-manual--001','--output',kkit)
+        process=subprocess.run([sys.executable,'-I',str(kkit/'worker.py'),'--output',str(kout),
+            '--synthetic-test-driver',str(fake_kiro)],cwd=kkit,capture_output=True,text=True)
+        assert process.returncode==0,(process.stdout,process.stderr)
+        receipt=json.loads((kout/'receipt.json').read_text())
+        assert receipt['generation']['engine']=='kiro' and receipt['generation']['usage']=={'credits':0.25},receipt
+        restored=temp/'kiro-restored'
+        call('restore','--plan',kplan,'--trial','go-manual--001','--bundle',kout/'candidate.bundle',
+             '--receipt',kout/'receipt.json','--manifest',kkit/'manifest.json','--candidate',restored)
+        call('evaluate','--plan',kplan,'--trial','go-manual--001','--candidate',restored,'--manifest',kkit/'manifest.json',
+             '--receipt',kout/'receipt.json','--fixtures',private,'--output',out/'kiro-evaluation')
+        assert json.loads((out/'kiro-evaluation/result.json').read_text())['passed']
     report={'kind':'synthetic-v3-cohort-control','new_model_generations':0,
             'human_evaluations':6,'reference_passed':2,'negative_controls_detected':4,
-            'driver_evaluations':3,'cases_per_evaluation':66,'bundle_replays':3,'standalone_worker_passed':True,
+            'driver_evaluations':4,'kiro_driver_evaluations':1,'cases_per_evaluation':66,'bundle_replays':4,'standalone_worker_passed':True,
             'partial_denominator_checked':True,'duplicate_rejected':True,'controls':evaluations}
     report['source_parent_commit']=ctl.git(ctl.ROOT,'rev-parse','HEAD')
     report['source_checkout_dirty']=bool(ctl.git(ctl.ROOT,'status','--porcelain'))
