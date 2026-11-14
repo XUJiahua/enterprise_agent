@@ -18,3 +18,11 @@ experiment: build deps
 	python3 scripts/experiment.py --route baseline
 	python3 scripts/experiment.py --route zenstack
 	python3 scripts/experiment.py --route guarded
+web-deps:
+	npm ci --prefix apps/web
+	npm run build --prefix apps/web
+	apps/web/node_modules/.bin/playwright install chromium
+browser:
+	python3 scripts/browser.py --route $(ROUTE)
+benchmark-smoke:
+	python3 benchmark/smoke.py
