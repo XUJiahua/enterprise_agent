@@ -1,0 +1,134 @@
+{
+  "route": "guarded",
+  "experiment": "controlled-fault-injection-v1",
+  "results": [
+    {
+      "mutation": "control",
+      "cases": [
+        {
+          "case": "anonymous",
+          "passed": true
+        },
+        {
+          "case": "forged_headers",
+          "passed": true
+        },
+        {
+          "case": "tenant_list",
+          "passed": true
+        },
+        {
+          "case": "tenant_detail",
+          "passed": true
+        },
+        {
+          "case": "field_hidden",
+          "passed": true
+        },
+        {
+          "case": "requester_cannot_approve",
+          "passed": true
+        },
+        {
+          "case": "approver_cannot_self_approve",
+          "passed": true
+        },
+        {
+          "case": "cross_tenant_approval",
+          "passed": true
+        },
+        {
+          "case": "valid_create",
+          "passed": true
+        },
+        {
+          "case": "approver_cannot_create",
+          "passed": true
+        },
+        {
+          "case": "valid_approval",
+          "passed": true
+        },
+        {
+          "case": "concurrent_approval",
+          "passed": true
+        },
+        {
+          "case": "mass_assignment",
+          "passed": true
+        },
+        {
+          "case": "bypass_action",
+          "passed": true
+        },
+        {
+          "case": "invalid_amount",
+          "passed": true
+        },
+        {
+          "case": "alternating_context",
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "mutation": "omit-tenant",
+      "cases": [
+        {
+          "case": "tenant_list",
+          "passed": true
+        },
+        {
+          "case": "tenant_detail",
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "mutation": "skip-approval-check",
+      "cases": [
+        {
+          "case": "requester_cannot_approve",
+          "passed": true
+        },
+        {
+          "case": "approver_cannot_self_approve",
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "mutation": "leak-field",
+      "cases": [
+        {
+          "case": "field_hidden",
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "mutation": "mass-assignment",
+      "cases": [
+        {
+          "case": "mass_assignment",
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "mutation": "bypass-action",
+      "cases": [
+        {
+          "case": "bypass_action",
+          "passed": true
+        }
+      ],
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+diff --git a/internal/app/server.go b/internal/app/server.go
+index 56fe4d2..6446256 100644
+--- a/internal/app/server.go
++++ b/internal/app/server.go
+@@ -157,6 +157,14 @@ func (s *Server) fail(w http.ResponseWriter, e error) {
+ func (s *Server) handle(r *http.Request, tx pgx.Tx, u Identity) (any, int, error) {
+ 	ctx := r.Context()
+ 	parts := strings.Split(strings.Trim(r.URL.Path, "/"), "/")
++	if r.Method == "GET" && len(parts) == 2 && parts[1] == "summary" {
++		var result struct {
++			Count       int64 `json:"count"`
++			TotalAmount int64 `json:"totalAmount"`
++		}
++		e := tx.QueryRow(ctx, `SELECT count(*), COALESCE(sum(amount), 0) FROM "Purchase" WHERE "tenantId"=$1`, u.Tenant).Scan(&result.Count, &result.TotalAmount)
++		return result, 200, e
++	}
+ 	if r.Method == "GET" && (len(parts) == 1 || len(parts) == 2) {
+ 		cols := projection
+ 		if s.Mutation == "leak-field" {

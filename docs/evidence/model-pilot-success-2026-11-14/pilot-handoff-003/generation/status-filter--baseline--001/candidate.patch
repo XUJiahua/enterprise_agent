@@ -1,0 +1,32 @@
+diff --git a/internal/app/server.go b/internal/app/server.go
+index 56fe4d2..4eeab3b 100644
+--- a/internal/app/server.go
++++ b/internal/app/server.go
+@@ -158,6 +158,16 @@ func (s *Server) handle(r *http.Request, tx pgx.Tx, u Identity) (any, int, error
+ 	ctx := r.Context()
+ 	parts := strings.Split(strings.Trim(r.URL.Path, "/"), "/")
+ 	if r.Method == "GET" && (len(parts) == 1 || len(parts) == 2) {
++		statusFilter := ""
++		if len(parts) == 1 {
++			params := r.URL.Query()
++			if params.Has("status") {
++				statusFilter = params.Get("status")
++				if statusFilter != "submitted" && statusFilter != "approved" {
++					return nil, 400, nil
++				}
++			}
++		}
+ 		cols := projection
+ 		if s.Mutation == "leak-field" {
+ 			cols += `,"internalNote"`
+@@ -168,6 +178,10 @@ func (s *Server) handle(r *http.Request, tx pgx.Tx, u Identity) (any, int, error
+ 			args = append(args, u.Tenant)
+ 			query += fmt.Sprintf(` AND "tenantId"=$%d`, len(args))
+ 		}
++		if statusFilter != "" {
++			args = append(args, statusFilter)
++			query += fmt.Sprintf(` AND status=$%d`, len(args))
++		}
+ 		if len(parts) == 2 {
+ 			args = append(args, parts[1])
+ 			query += fmt.Sprintf(` AND id=$%d`, len(args))

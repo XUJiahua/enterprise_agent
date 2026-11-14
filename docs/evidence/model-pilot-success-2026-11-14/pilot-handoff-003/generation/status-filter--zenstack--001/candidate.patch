@@ -1,0 +1,16 @@
+diff --git a/apps/zenstack/src/server.ts b/apps/zenstack/src/server.ts
+index e8c3c41..80969d2 100644
+--- a/apps/zenstack/src/server.ts
++++ b/apps/zenstack/src/server.ts
+@@ -41,8 +41,10 @@ createServer(async(req,res)=>{
+   const parts=path.split('/').filter(Boolean);
+   if(parts[0]!=='purchases'){deny(res,404);return;}
+   if(req.method==='GET' && parts.length<=2){
++   const status=parts.length===1?new URLSearchParams((req.url??'').split('?').slice(1).join('?')).get('status'):null;
++   if(status!==null&&status!=='submitted'&&status!=='approved'){deny(res,400);return;}
+    // omit-tenant deliberately removes the ordinary query filter. Policy still applies.
+-   const where={...(mutation==='omit-tenant'||mutation==='disable-policy'?{}:{tenantId:user.tenantId}),...(parts[1]?{id:parts[1]}:{})};
++   const where={...(mutation==='omit-tenant'||mutation==='disable-policy'?{}:{tenantId:user.tenantId}),...(parts[1]?{id:parts[1]}:{}),...(status!==null?{status}:{})};
+    const rows=await db.purchase.findMany({where,select:mutation==='leak-field'?{...select,internalNote:true}:select,orderBy:{id:'asc'}});
+    if(parts.length===2){if(!rows.length){deny(res,404);return;}send(res,200,rows[0]);}else send(res,200,rows);
+    return;

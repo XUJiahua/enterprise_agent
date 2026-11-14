@@ -1,0 +1,18 @@
+diff --git a/apps/zenstack/src/server.ts b/apps/zenstack/src/server.ts
+index e8c3c41..76a604f 100644
+--- a/apps/zenstack/src/server.ts
++++ b/apps/zenstack/src/server.ts
+@@ -44,7 +44,12 @@ createServer(async(req,res)=>{
+    // omit-tenant deliberately removes the ordinary query filter. Policy still applies.
+    const where={...(mutation==='omit-tenant'||mutation==='disable-policy'?{}:{tenantId:user.tenantId}),...(parts[1]?{id:parts[1]}:{})};
+    const rows=await db.purchase.findMany({where,select:mutation==='leak-field'?{...select,internalNote:true}:select,orderBy:{id:'asc'}});
+-   if(parts.length===2){if(!rows.length){deny(res,404);return;}send(res,200,rows[0]);}else send(res,200,rows);
++   if(parts.length===2){if(!rows.length){deny(res,404);return;}send(res,200,rows[0]);}else {
++    const title=new URLSearchParams((req.url??'').split('?').slice(1).join('?')).get('title');
++    // Filter only policy-visible rows; includes treats SQL wildcard characters literally.
++    const search=title?.toLowerCase();
++    send(res,200,search?rows.filter(row=>row.title.toLowerCase().includes(search)):rows);
++   }
+    return;
+   }
+   if(req.method==='POST' && parts.length===1){

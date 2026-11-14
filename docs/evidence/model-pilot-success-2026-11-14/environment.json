@@ -1,0 +1,15 @@
+{
+  "date": "2026-11-14",
+  "timezone": "Asia/Shanghai",
+  "cli_version": "codex-cli 0.166.0",
+  "requested_model": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "generation_budget_seconds": 120,
+  "database": "isolated Docker postgres:17.6, enterprise_agent_poc, host loopback port 55434",
+  "POC_HTTP_PORT": 18084,
+  "generation_sandbox_requested": "workspace-write",
+  "preflight_sandbox_requested": "read-only",
+  "authentication": "existing CLI login; authentication files and HOME/CODEX_HOME unchanged",
+  "server_model_snapshot": null,
+  "billing_cost": null
+}

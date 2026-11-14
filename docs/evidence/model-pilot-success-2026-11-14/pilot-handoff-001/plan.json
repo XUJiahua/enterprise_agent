@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "kind": "model-trial",
+  "base_sha": "70fb44504af2e711a19ccd82c1c67636ce253cfe",
+  "harness_sha": "70fb44504af2e711a19ccd82c1c67636ce253cfe",
+  "dirty_harness": false,
+  "frozen": {
+    "benchmark/codex_runner.py": "9a01715aae97faa48a56321dcea9ca43b3045dc60bf99a71df248c1081ea766f",
+    "benchmark/benchctl.py": "1ba4cba300d1b911b0007e9a491c3e8c68064bba2497da734c799eb87885eb3a",
+    "benchmark/tasks.json": "cd0dc078cda3e8259e0c4b1bc71d1940d10ef24abe98bb4d74e62cf7ab8ae0a9",
+    "benchmark/oracle.py": "eea5e627a1575b477e539616f395ebf7d965e9f9139184128bf09f71530361cc",
+    "tests/acceptance.py": "b630076565eac949da042a821caa52fb44cc59fe555943e65049c92d4935b373",
+    "scripts/db.mjs": "b3fa6f5e608dd905c5347b043aaaad2369e2c3ba075d0af8174e92aa93b522f4",
+    "db/bootstrap.sql": "4eb60b5cbbdcb2b79813c63cc7baf44665755a7327df6d1aa702c430357f30b9",
+    "db/baseline-grants.sql": "fe8850d74caf1e5857b630d134590d925413059ac14f225aa51809f590ef8cec",
+    "db/seed.sql": "9004fb919509475a987349f8d1804044af1688c1fdca524b2b191912bb1414cc",
+    "db/migrations/001_purchase.sql": "00db7c65bdf932912f4764da76bba0a5d84032eb208c6073fb89b495179a3e85",
+    "generated/guard.sql": "b728fc08e43c5642b7dadf5823cad098d24bcd0740bef98a340d921424661f13"
+  },
+  "seed": 20261114,
+  "model": "gpt-6.1-sol",
+  "generation_reasoning_effort": "medium",
+  "generation_budget_seconds": 120,
+  "build_timeout_seconds": 120,
+  "trials": [
+    {
+      "id": "tenant-summary--zenstack--001",
+      "task": "tenant-summary",
+      "route": "zenstack",
+      "repetition": 1,
+      "prompt": "增加 GET /purchases/summary，返回 {count:整数,totalAmount:整数}，统计当前租户全部采购单，不改变原有列表/详情/创建/审批行为。无身份应拒绝；任何角色都不能统计其他租户。不要返回内部字段，不修改验收测试。"
+    },
+    {
+      "id": "tenant-summary--guarded--001",
+      "task": "tenant-summary",
+      "route": "guarded",
+      "repetition": 1,
+      "prompt": "增加 GET /purchases/summary，返回 {count:整数,totalAmount:整数}，统计当前租户全部采购单，不改变原有列表/详情/创建/审批行为。无身份应拒绝；任何角色都不能统计其他租户。不要返回内部字段，不修改验收测试。"
+    },
+    {
+      "id": "tenant-summary--baseline--001",
+      "task": "tenant-summary",
+      "route": "baseline",
+      "repetition": 1,
+      "prompt": "增加 GET /purchases/summary，返回 {count:整数,totalAmount:整数}，统计当前租户全部采购单，不改变原有列表/详情/创建/审批行为。无身份应拒绝；任何角色都不能统计其他租户。不要返回内部字段，不修改验收测试。"
+    }
+  ]
+}

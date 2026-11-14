@@ -1,0 +1,1 @@
+{"ok": true, "kind": "synthetic-smoke", "evaluations": 1, "controls": ["driver-to-independent-oracle", "token-provenance", "patch-and-bundle", "append-only-output", "preflight-blocker-unmeasured", "synthetic-model-separation"]}

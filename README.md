@@ -100,7 +100,7 @@ bin/appctl verify --base origin/main
 
 CI、Policy、测试目前位于同仓库，拥有仓库写权限的人可以修改它们。生产发布必须另设独立可信验证器、受保护规则与审批；本 POC 不声称已经实现该治理边界。
 
-当前已有共享 Next.js UI 和三路径真实浏览器验收，另提供可复现的真实模型试验计划及独立候选代码验收器。尚无真实 AI Coding 首次通过率、性能或成本统计，不能把人工注入和 synthetic-smoke 结果替代模型可靠性结论。
+当前已有共享 Next.js UI 和三路径真实浏览器验收，另提供可复现的真实模型试验计划及独立候选代码验收器。现已有真实 AI Coding 小样本 pilot，见 [真实结果报告](docs/model-pilot-results.md)；尚不能推断总体首次通过率或性能/成本优势。人工注入和 synthetic-smoke 结果不替代模型可靠性结论。
 
 ## 第二阶段：共享界面与模型试验工具
 
@@ -114,4 +114,4 @@ CI、Policy、测试目前位于同仓库，拥有仓库写权限的人可以修
 
 PR CI 仅运行不调用模型的协议测试和 synthetic 驱动正反控制。真实 trial 必须在能正常执行 `codex exec` 的环境运行；运行环境、服务或凭据阻塞保留为未测量，不计为模型代码失败。
 
-本次已实际启动九个 trial 的 pilot，运行在预检阶段因 CLI 初始化的只读文件系统错误阻塞，仍为零个模型样本。冻结计划、批次 JSON 与原始诊断见 [实际运行记录](docs/model-pilot-status.md)。
+接手环境已通过真实预检并完成三路径 pilot；完整结果、原始模型事件、候选 bundle 和独立验收见 [真实结果报告](docs/model-pilot-results.md)。前一环境的九项预检阻塞仍单独保存在 [历史运行记录](docs/model-pilot-status.md)，保持未测量状态。
