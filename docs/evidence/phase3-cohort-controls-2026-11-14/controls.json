@@ -1,0 +1,285 @@
+{
+  "kind": "synthetic-v3-cohort-control",
+  "new_model_generations": 0,
+  "human_evaluations": 6,
+  "reference_passed": 2,
+  "negative_controls_detected": 4,
+  "driver_evaluations": 3,
+  "cases_per_evaluation": 66,
+  "bundle_replays": 3,
+  "standalone_worker_passed": true,
+  "partial_denominator_checked": true,
+  "duplicate_rejected": true,
+  "controls": [
+    {
+      "cell": "go-manual",
+      "mode": "correct",
+      "passed": true,
+      "groups": {
+        "functional": {
+          "passed": 6,
+          "total": 6
+        },
+        "authorization": {
+          "passed": 5,
+          "total": 5
+        },
+        "atomicity": {
+          "passed": 4,
+          "total": 4
+        },
+        "input": {
+          "passed": 24,
+          "total": 24
+        },
+        "idempotency": {
+          "passed": 6,
+          "total": 6
+        },
+        "concurrency": {
+          "passed": 3,
+          "total": 3
+        },
+        "failure-rollback": {
+          "passed": 2,
+          "total": 2
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        }
+      }
+    },
+    {
+      "cell": "go-manual",
+      "mode": "unchanged",
+      "passed": false,
+      "groups": {
+        "functional": {
+          "passed": 0,
+          "total": 6
+        },
+        "authorization": {
+          "passed": 5,
+          "total": 5
+        },
+        "atomicity": {
+          "passed": 4,
+          "total": 4
+        },
+        "input": {
+          "passed": 22,
+          "total": 24
+        },
+        "idempotency": {
+          "passed": 0,
+          "total": 6
+        },
+        "concurrency": {
+          "passed": 0,
+          "total": 3
+        },
+        "failure-rollback": {
+          "passed": 0,
+          "total": 2
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        }
+      }
+    },
+    {
+      "cell": "go-manual",
+      "mode": "reject-all",
+      "passed": false,
+      "groups": {
+        "functional": {
+          "passed": 0,
+          "total": 6
+        },
+        "authorization": {
+          "passed": 5,
+          "total": 5
+        },
+        "atomicity": {
+          "passed": 4,
+          "total": 4
+        },
+        "input": {
+          "passed": 22,
+          "total": 24
+        },
+        "idempotency": {
+          "passed": 0,
+          "total": 6
+        },
+        "concurrency": {
+          "passed": 0,
+          "total": 3
+        },
+        "failure-rollback": {
+          "passed": 0,
+          "total": 2
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        }
+      }
+    },
+    {
+      "cell": "go-action",
+      "mode": "correct",
+      "passed": true,
+      "groups": {
+        "functional": {
+          "passed": 6,
+          "total": 6
+        },
+        "authorization": {
+          "passed": 5,
+          "total": 5
+        },
+        "atomicity": {
+          "passed": 4,
+          "total": 4
+        },
+        "input": {
+          "passed": 24,
+          "total": 24
+        },
+        "idempotency": {
+          "passed": 6,
+          "total": 6
+        },
+        "concurrency": {
+          "passed": 3,
+          "total": 3
+        },
+        "failure-rollback": {
+          "passed": 2,
+          "total": 2
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        }
+      }
+    },
+    {
+      "cell": "go-action",
+      "mode": "unchanged",
+      "passed": false,
+      "groups": {
+        "functional": {
+          "passed": 0,
+          "total": 6
+        },
+        "authorization": {
+          "passed": 5,
+          "total": 5
+        },
+        "atomicity": {
+          "passed": 4,
+          "total": 4
+        },
+        "input": {
+          "passed": 22,
+          "total": 24
+        },
+        "idempotency": {
+          "passed": 0,
+          "total": 6
+        },
+        "concurrency": {
+          "passed": 0,
+          "total": 3
+        },
+        "failure-rollback": {
+          "passed": 0,
+          "total": 2
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        }
+      }
+    },
+    {
+      "cell": "go-action",
+      "mode": "reject-all",
+      "passed": false,
+      "groups": {
+        "functional": {
+          "passed": 0,
+          "total": 6
+        },
+        "authorization": {
+          "passed": 5,
+          "total": 5
+        },
+        "atomicity": {
+          "passed": 4,
+          "total": 4
+        },
+        "input": {
+          "passed": 22,
+          "total": 24
+        },
+        "idempotency": {
+          "passed": 0,
+          "total": 6
+        },
+        "concurrency": {
+          "passed": 0,
+          "total": 3
+        },
+        "failure-rollback": {
+          "passed": 0,
+          "total": 2
+        },
+        "original-regression": {
+          "passed": 16,
+          "total": 16
+        }
+      }
+    }
+  ],
+  "source_parent_commit": "d8a5c576cc3c293ee2da884f5c618958df407b51",
+  "source_checkout_dirty": true,
+  "source_sha256": {
+    "go.mod": "648c40a4bf80a1cb567029bbf31c771963254e92aa8712da903eb8a883fe3217",
+    "go.sum": "e718bd4e6664b6aa2d808d7bf1f72ca1b2e36316db23235318c9e20a8705f0c4",
+    "internal/app/server.go": "128f710c1d022e50ba925fda4a2a9d8c88f4233cccc9f57c3eae6704c3d0b53f",
+    "internal/app/demo_identity.go": "1b49e429ba1a98236fea3bc84a626a4698d276dc6d55758462c0e40a97eda2fb",
+    "internal/action/approval.go": "c83de0ca587200034b5021e432a2959d1a0ffbd13d74a1e7c34d633a84a48337",
+    "benchmark/phase3/ctl.py": "757a83b728d83a95f5da9dc87d17ff720ba71bb471b941c1c1ebcc569a6aabb2",
+    "benchmark/phase3/cohort.json": "ddcf9a0676a1482b39c2083057c9af240599ba8b4ab544a5e16654f0dff0ee68",
+    "benchmark/phase3/cohort_oracle.py": "79e5caa74f15b6aa5fc351a91cddbe53eb09d4480d6d949b16933b2c832978d2",
+    "benchmark/phase3/oracle.py": "b9cb0e762e48fc1c84366aefb4155aa561d62982827caecc3b0ed313603ec303",
+    "benchmark/phase3/db.mjs": "080de585ff605f8721fc00515e97c81c93004a43e508adb828d09a9fb64767a7",
+    "benchmark/phase3/generation_worker.py": "6d535219c7d6d8744df92ba04565af6ae9598dac733fe699a9e7d347a84ea735",
+    "benchmark/phase3/contract.json": "b7e01893108a87ef002de470f8451215837e907269318f664deb8de9ad52a35d",
+    "benchmark/phase3/visible_smoke.py": "54b1105ac61534fb6450e9fb7fd717c9ca7d83c161f99026bc13e2cf90cee232",
+    "benchmark/codex_runner.py": "6dd7d3a5da609fc8bd11515d408dcd262cad294f85fb0c7dca2d855fd6b4a85f",
+    "benchmark/benchctl.py": "1ba4cba300d1b911b0007e9a491c3e8c68064bba2497da734c799eb87885eb3a",
+    "tests/acceptance.py": "b630076565eac949da042a821caa52fb44cc59fe555943e65049c92d4935b373",
+    "db/bootstrap.sql": "4eb60b5cbbdcb2b79813c63cc7baf44665755a7327df6d1aa702c430357f30b9",
+    "db/migrations/001_purchase.sql": "00db7c65bdf932912f4764da76bba0a5d84032eb208c6073fb89b495179a3e85",
+    "db/seed.sql": "9004fb919509475a987349f8d1804044af1688c1fdca524b2b191912bb1414cc",
+    "generated/guard.sql": "b728fc08e43c5642b7dadf5823cad098d24bcd0740bef98a340d921424661f13",
+    "poc/transactional-action/schema.sql": "9e8a6b49a8da58ee75cf1d0258dc9c13807f1ac455de8e3e23d573da2c69a662",
+    "benchmark/phase3/source/main.go.txt": "cec57aacd74de3bb2a95d3aa504abcf8cde3661fa38fc1f8421728b47ab04e14",
+    "benchmark/phase3/source/protocol.go.txt": "ab8242a89deb18e2e5a0b0e4f7a1df154357e41ad2a03a76b10785572e5a9efd",
+    "benchmark/phase3/source/candidate.go.txt": "8b1a034d7f428c3093228545a5fc9594f40e3dbc08db429af30486c4ae215769",
+    "benchmark/phase3/controls.py": "5a7f572c377db2fdec2cbb93fd0759cc4665262428b7bace68867fa27318bf19",
+    "benchmark/phase3/driver_smoke.py": "f52c543101ee5d8d7249ea00289d89bae037631ebd55959945504dbaff6d4af2",
+    "benchmark/tests/test_phase3.py": "a7147e9e918a31241f386e1757cdd3260b65b6e9797b8da7362e375cbabed12d"
+  },
+  "environment": {
+    "postgres": "PostgreSQL 17.6 (embedded binary)",
+    "go": "go version go1.25.4 linux/amd64",
+    "node": "v24.22.1"
+  }
+}
