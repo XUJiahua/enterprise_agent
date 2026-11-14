@@ -100,3 +100,9 @@ CI、Policy、测试目前位于同仓库，拥有仓库写权限的人可以修
 - [共享 UI 启动与浏览器验收](docs/shared-ui.md)：三路径使用同一个 Next.js production UI，每条六个 Chromium 用例，提供桌面和移动截图。
 - [模型试验操作指南](docs/benchmark-guide.md)：三个独立任务、随机可复现计划、固定提交/Oracle、追加式 attempt 和完整分母。
 - CI 另外执行四次真实候选提交的 synthetic-smoke 验收，验证验收器本身可区分未完成任务和正确修复；这些不是模型测量。
+
+## 第三阶段：真实模型运行入口
+
+[模型执行器](docs/model-runner.md) 支持真实 Codex 预检、固定推理参数、生成预算、候选源码范围检查、Git 快照与独立验收。预检会实际发起 READY 请求，避免只凭“已登录”就认定可运行。
+
+PR CI 仅运行不调用模型的协议测试和 synthetic 驱动正反控制。真实 trial 必须在能正常执行 `codex exec` 的环境运行；运行环境、服务或凭据阻塞保留为未测量，不计为模型代码失败。

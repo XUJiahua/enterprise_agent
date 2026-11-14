@@ -18,7 +18,7 @@ import urllib.request
 
 ROOT=Path(__file__).resolve().parents[1]
 ROUTES=('baseline','zenstack','guarded')
-FROZEN=('benchmark/benchctl.py','benchmark/tasks.json','benchmark/oracle.py','tests/acceptance.py','scripts/db.mjs','db/bootstrap.sql','db/baseline-grants.sql','db/seed.sql','db/migrations/001_purchase.sql','generated/guard.sql')
+FROZEN=('benchmark/codex_runner.py','benchmark/benchctl.py','benchmark/tasks.json','benchmark/oracle.py','tests/acceptance.py','scripts/db.mjs','db/bootstrap.sql','db/baseline-grants.sql','db/seed.sql','db/migrations/001_purchase.sql','generated/guard.sql')
 
 def git(root,*args):return subprocess.check_output(['git','-C',str(root),*args],text=True).strip()
 def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -43,7 +43,7 @@ def plan(args):
             for repetition in range(1,args.repetitions+1):
                 trials.append({'id':f"{task['id']}--{route}--{repetition:03d}",'task':task['id'],'route':route,'repetition':repetition,'prompt':task['prompt']})
     random.Random(args.seed).shuffle(trials)
-    value={'version':1,'kind':'synthetic-smoke' if args.synthetic else 'model-trial','base_sha':base,'harness_sha':git(ROOT,'rev-parse','HEAD'),'dirty_harness':dirty,'frozen':{p:digest(ROOT/p) for p in FROZEN},'seed':args.seed,'model':args.model,'generation_budget_seconds':args.time_budget,'build_timeout_seconds':120,'trials':trials}
+    value={'version':1,'kind':'synthetic-smoke' if args.synthetic else 'model-trial','base_sha':base,'harness_sha':git(ROOT,'rev-parse','HEAD'),'dirty_harness':dirty,'frozen':{p:digest(ROOT/p) for p in FROZEN},'seed':args.seed,'model':args.model,'generation_reasoning_effort':args.reasoning_effort,'generation_budget_seconds':args.time_budget,'build_timeout_seconds':120,'trials':trials}
     save(args.output,value);print(json.dumps({'trials':len(trials),'base_sha':base,'kind':value['kind']}))
 
 def validate(plan):
@@ -134,7 +134,7 @@ def summarize(args):
 
 def main():
     parser=argparse.ArgumentParser();sub=parser.add_subparsers(dest='command',required=True)
-    p=sub.add_parser('plan');p.add_argument('--base',required=True);p.add_argument('--model',required=True);p.add_argument('--repetitions',type=int,default=10);p.add_argument('--seed',type=int,default=20261114);p.add_argument('--time-budget',type=int,default=300);p.add_argument('--task');p.add_argument('--synthetic',action='store_true');p.add_argument('--allow-dirty-harness',action='store_true');p.add_argument('--output',required=True)
+    p=sub.add_parser('plan');p.add_argument('--base',required=True);p.add_argument('--model',required=True);p.add_argument('--repetitions',type=int,default=10);p.add_argument('--seed',type=int,default=20261114);p.add_argument('--time-budget',type=int,default=300);p.add_argument('--reasoning-effort',choices=['low','medium','high'],default='medium');p.add_argument('--task');p.add_argument('--synthetic',action='store_true');p.add_argument('--allow-dirty-harness',action='store_true');p.add_argument('--output',required=True)
     e=sub.add_parser('evaluate');e.add_argument('--plan',required=True);e.add_argument('--trial',required=True);e.add_argument('--candidate',required=True);e.add_argument('--attempt',type=int,required=True);e.add_argument('--output',required=True)
     s=sub.add_parser('summarize');s.add_argument('--plan',required=True);s.add_argument('--results',required=True);s.add_argument('--output')
     args=parser.parse_args()
