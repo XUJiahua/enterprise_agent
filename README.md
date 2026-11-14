@@ -88,4 +88,10 @@ bin/appctl verify --base origin/main
 
 CI、Policy、测试目前位于同仓库，拥有仓库写权限的人可以修改它们。生产发布必须另设独立可信验证器、受保护规则与审批；本 POC 不声称已经实现该治理边界。
 
-当前里程碑是后端机制验证，无 Next.js UI、性能比较或真实 AI Coding 首次通过率统计。后续按固定模型、固定预算和独立任务开展重复试验，不能把人工注入结果替代 AI Coding 可靠性结论。
+当前已有共享 Next.js UI 和三路径真实浏览器验收，另提供可复现的真实模型试验计划及独立候选代码验收器。尚无真实 AI Coding 首次通过率、性能或成本统计，不能把人工注入和 synthetic-smoke 结果替代模型可靠性结论。
+
+## 第二阶段：共享界面与模型试验工具
+
+- [共享 UI 启动与浏览器验收](docs/shared-ui.md)：三路径使用同一个 Next.js production UI，每条六个 Chromium 用例，提供桌面和移动截图。
+- [模型试验操作指南](docs/benchmark-guide.md)：三个独立任务、随机可复现计划、固定提交/Oracle、追加式 attempt 和完整分母。
+- CI 另外执行四次真实候选提交的 synthetic-smoke 验收，验证验收器本身可区分未完成任务和正确修复；这些不是模型测量。

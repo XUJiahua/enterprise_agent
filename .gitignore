@@ -1,7 +1,12 @@
-node_modules/
+node_modules
 reports/
 bin/
 *.log
 apps/zenstack/zenstack/*.ts
 __pycache__/
 *.pyc
+.next/
+*.tsbuildinfo
+playwright-report/
+test-results/
+benchmark-results/

@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "tasks": [
+    {"id":"tenant-summary","prompt":"增加 GET /purchases/summary，返回 {count:整数,totalAmount:整数}，统计当前租户全部采购单，不改变原有列表/详情/创建/审批行为。无身份应拒绝；任何角色都不能统计其他租户。不要返回内部字段，不修改验收测试。"},
+    {"id":"title-search","prompt":"为 GET /purchases 增加可选 title 参数，按标题做不区分大小写的字面子串检索；省略或空字符串保持现有列表行为。百分号、下划线和引号必须作为普通字符处理。检索不能突破租户权限，不修改其他 API 行为，不修改验收测试。"},
+    {"id":"status-filter","prompt":"为 GET /purchases 增加可选 status 参数，允许 submitted 或 approved，返回当前租户该状态记录。省略参数保持现有列表行为；未知值和空字符串返回 400。不能突破租户边界，不改变创建/审批行为，不修改验收测试。"}
+  ]
+}
