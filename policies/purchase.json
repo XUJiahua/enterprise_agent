@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "resource": "Purchase",
+  "tenantField": "tenantId",
+  "readRoles": ["requester", "approver"],
+  "createRoles": ["requester"],
+  "approveRoles": ["approver"],
+  "protectedFields": ["tenantId", "createdBy", "internalNote"],
+  "approval": {"from": "submitted", "to": "approved", "disallowSelf": true}
+}

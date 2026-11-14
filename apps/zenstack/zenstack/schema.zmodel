@@ -1,0 +1,28 @@
+datasource db {
+    provider = 'postgresql'
+    url = env('DATABASE_URL')
+}
+plugin policy {
+    provider = '@zenstackhq/plugin-policy'
+}
+type Auth {
+    id String
+    tenantId String
+    role String
+    @@auth
+}
+model Purchase {
+    id String @id @deny('update', true)
+    tenantId String @deny('update', true)
+    createdBy String @deny('update', true)
+    title String @deny('update', true)
+    amount Int @deny('update', true)
+    status String @default('submitted')
+    internalNote String @default('supplier-bank-account') @deny('read,update', true)
+
+    @@deny('all', auth() == null || tenantId != auth().tenantId)
+    @@allow('read', auth().role == 'requester' || auth().role == 'approver')
+    @@allow('create', auth().role == 'requester' && createdBy == auth().id && status == 'submitted')
+    @@allow('update', auth().role == 'approver' && createdBy != auth().id && status == 'submitted')
+    @@allow('post-update', status == 'approved' && tenantId == before().tenantId && createdBy == before().createdBy)
+}

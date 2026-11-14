@@ -1,0 +1,102 @@
+name: POC verification
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: poc-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verifier:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - run: go test -race ./...
+      - run: go vet ./...
+      - run: mkdir -p bin reports && go build -o bin/appctl ./cmd/appctl
+      - name: Check policy, compiled RLS, and locked migrations
+        run: |
+          if [ "${{ github.event_name }}" = pull_request ]; then
+            bin/appctl verify --base '${{ github.event.pull_request.base.sha }}'
+          else
+            bin/appctl verify
+          fi
+      - name: Adversarial verifier probes
+        run: python3 tests/verifier.py | tee reports/verifier.json
+        shell: bash
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: verifier-results
+          path: reports/
+  runtime:
+    strategy:
+      fail-fast: false
+      matrix:
+        route: [baseline, guarded, zenstack]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17.6
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: enterprise_agent_poc
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      ADMIN_DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/enterprise_agent_poc
+      DATABASE_URL: postgres://app_runtime:poc-only@127.0.0.1:5432/enterprise_agent_poc
+      POC_DB_RESET: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.11.1'
+          cache: npm
+          cache-dependency-path: apps/zenstack/package-lock.json
+      - run: npm ci --prefix apps/zenstack
+      - run: npm run generate --prefix apps/zenstack && npm run typecheck --prefix apps/zenstack
+      - run: mkdir -p bin && go build -o bin/server ./cmd/server
+      - name: Shared acceptance and controlled fault injection
+        run: python3 scripts/experiment.py --route '${{ matrix.route }}'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: runtime-${{ matrix.route }}
+          path: reports/
+  report:
+    if: always()
+    needs: [verifier, runtime]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: reports
+          merge-multiple: true
+      - run: python3 scripts/report.py reports | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: poc-comparison
+          path: reports/

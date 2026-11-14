@@ -1,0 +1,1 @@
+GRANT SELECT, INSERT, UPDATE, DELETE ON "Purchase" TO app_runtime;
