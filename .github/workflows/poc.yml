@@ -74,6 +74,8 @@ jobs:
       POC_DB_RESET: '1'
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
@@ -103,6 +105,11 @@ jobs:
         if: matrix.route == 'baseline'
         run: python3 benchmark/runner_smoke.py | tee reports/runner-smoke.json
         shell: bash
+      - name: Audit PR 7 archive and replay generated candidates (no model calls)
+        if: matrix.route == 'baseline'
+        run: |
+          python3 research/audit_pilot.py
+          python3 research/replay_followup.py
       - name: Shared Next.js production UI and browser acceptance
         run: python3 scripts/browser.py --route '${{ matrix.route }}'
         env:

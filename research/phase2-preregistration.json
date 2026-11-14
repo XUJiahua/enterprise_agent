@@ -1,0 +1,62 @@
+{
+  "kind": "proposed-research-protocol",
+  "version": 1,
+  "status": "design-only-not-a-benchctl-v1-plan",
+  "question": "Separate process guidance, runtime authorization, and transaction business invariants in AI-generated enterprise actions.",
+  "source_pilot": "PR 7 pilot-handoff-003",
+  "model_request": "gpt-6.1-sol",
+  "served_snapshot": null,
+  "reasoning_effort": "medium",
+  "cells": [
+    {"id":"go-ordinary", "implementation":"Go", "runtime":"baseline", "process_guidance":false},
+    {"id":"go-process", "implementation":"Go", "runtime":"baseline", "process_guidance":true},
+    {"id":"go-runtime", "implementation":"Go", "runtime":"guarded", "process_guidance":false},
+    {"id":"go-runtime-process", "implementation":"Go", "runtime":"guarded", "process_guidance":true},
+    {"id":"zenstack-reference", "implementation":"ZenStack V3", "runtime":"policy-plugin", "process_guidance":false}
+  ],
+  "first_task": {
+    "id":"atomic-bulk-approval",
+    "endpoint":"POST /purchases/bulk-approve",
+    "request":{"ids":"1..100 nonempty distinct string IDs; each length <= 100"},
+    "success":{"status":200,"body":{"approvedIds":"all requested IDs, lexicographically sorted"}},
+    "invariants":[
+      "only an authenticated approver can execute",
+      "every target must belong to the current tenant",
+      "every target must be submitted and created by a different user",
+      "all requested IDs must exist and be eligible, otherwise no row changes",
+      "duplicates, empty/oversized lists, unknown input fields and invalid types are rejected",
+      "client input cannot choose tenant, creator or role",
+      "overlapping concurrent batches cannot both approve the same submitted record",
+      "a failed overlapping batch leaves its exclusive records unchanged",
+      "all original 16 regressions remain valid"
+    ],
+    "scoring_groups":["authorized-functional", "row-authorization", "batch-all-or-nothing", "concurrency", "original-regression"],
+    "manual_controls":["row-policy-only commits one allowed target from a mixed-tenant request", "affected-count check rolls the same request back"]
+  },
+  "process_guidance": {
+    "shared_semantics":"All cells receive the same complete business requirements and time/tool budget.",
+    "added_process":"Before coding, enumerate invariants and failure cases; after coding run visible tests and inspect the diff. No hidden Oracle content is exposed."
+  },
+  "sampling": {
+    "pilot":"Use a small balanced queue to estimate task discrimination before scaling repetitions.",
+    "unit":"One fresh generation for a task instance and cell; retries and repairs are separate attempts.",
+    "blocking":"Match task instance and fixture seed across Go cells; randomize cell execution order.",
+    "confirmatory":"Freeze tasks, hidden fixtures, scoring, budgets and sampling rule before a separate confirmatory cohort.",
+    "power":"Choose confirmatory sample size from a declared detectable effect and pilot variance; ten repetitions alone do not establish significance."
+  },
+  "reporting": {
+    "keep_denominators":true,
+    "report_infrastructure_separately":true,
+    "report_preparation_generation_and_evaluation_separately":true,
+    "http_5xx_is_not_successful_authorization":true,
+    "billed_cost":null,
+    "do_not_pool_synthetic_or_manual_probes_with_model_trials":true,
+    "no_new_model_generations_in_this_followup":true
+  },
+  "execution_prerequisites":[
+    "Implement and validate the new task Oracle outside candidate writable/readable access before model trials.",
+    "Prepare the same Go codebase/capabilities and fixture contract for all four Go cells.",
+    "Extend the driver with explicit cell, process-prompt hash and hidden-evaluator provenance.",
+    "Record CLI version, environment, global instruction/configuration effects and requested model; served snapshot remains unknown unless reported."
+  ]
+}

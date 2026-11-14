@@ -1,0 +1,222 @@
+{
+  "kind": "existing-evidence-audit",
+  "source_pr": 7,
+  "source_head": "5ab6856c7750722910471b5a5bd19a4ac1b1b079",
+  "cohort": "pilot-handoff-003",
+  "manifest_files_verified": 139,
+  "harness_sha": "4b65cb6ce8441432aec88d68215bab5d15606db8",
+  "base_sha": "70fb44504af2e711a19ccd82c1c67636ce253cfe",
+  "plan_sha256": "17574522b5403691c0eb429b9e8e497e7e00a0d644d3ec0dcb174f54cd3bd51a",
+  "trials": [
+    {
+      "trial_id": "tenant-summary--guarded--001",
+      "task": "tenant-summary",
+      "route": "guarded",
+      "candidate_sha": "0ff254be004e7d21584f5a77a351aa4d40f696ef",
+      "passed": true,
+      "cases": 20,
+      "all_cases_passed": true,
+      "generation_seconds": 48.044,
+      "evaluation_seconds": 1.019,
+      "input_tokens": 186499,
+      "cached_input_tokens": 175488,
+      "noncached_input_tokens": 11011,
+      "output_tokens": 1140,
+      "command_count": 5,
+      "extra_reported_usage": {
+        "cache_write_input_tokens": 0
+      }
+    },
+    {
+      "trial_id": "tenant-summary--baseline--001",
+      "task": "tenant-summary",
+      "route": "baseline",
+      "candidate_sha": "82fd912c81a6b895e733b853adda4e837596f451",
+      "passed": true,
+      "cases": 20,
+      "all_cases_passed": true,
+      "generation_seconds": 34.26,
+      "evaluation_seconds": 0.999,
+      "input_tokens": 103615,
+      "cached_input_tokens": 87040,
+      "noncached_input_tokens": 16575,
+      "output_tokens": 994,
+      "command_count": 6,
+      "extra_reported_usage": {
+        "cache_write_input_tokens": 0
+      }
+    },
+    {
+      "trial_id": "title-search--guarded--001",
+      "task": "title-search",
+      "route": "guarded",
+      "candidate_sha": "c15f2dfdd57ab2ada9f7f8ea38a77fe5add99b0c",
+      "passed": true,
+      "cases": 23,
+      "all_cases_passed": true,
+      "generation_seconds": 30.442,
+      "evaluation_seconds": 1.009,
+      "input_tokens": 97947,
+      "cached_input_tokens": 88576,
+      "noncached_input_tokens": 9371,
+      "output_tokens": 819,
+      "command_count": 5,
+      "extra_reported_usage": {
+        "cache_write_input_tokens": 0
+      }
+    },
+    {
+      "trial_id": "status-filter--guarded--001",
+      "task": "status-filter",
+      "route": "guarded",
+      "candidate_sha": "e7a0ede13167439fcedb0be8c198bac89877d73f",
+      "passed": true,
+      "cases": 22,
+      "all_cases_passed": true,
+      "generation_seconds": 50.967,
+      "evaluation_seconds": 1.102,
+      "input_tokens": 164690,
+      "cached_input_tokens": 144768,
+      "noncached_input_tokens": 19922,
+      "output_tokens": 1277,
+      "command_count": 6,
+      "extra_reported_usage": {
+        "cache_write_input_tokens": 0
+      }
+    },
+    {
+      "trial_id": "status-filter--zenstack--001",
+      "task": "status-filter",
+      "route": "zenstack",
+      "candidate_sha": "c1e04e866ba49fe6ae87fd6ac8ba6e86fbfe3274",
+      "passed": true,
+      "cases": 22,
+      "all_cases_passed": true,
+      "generation_seconds": 60.609,
+      "evaluation_seconds": 4.562,
+      "input_tokens": 100424,
+      "cached_input_tokens": 85120,
+      "noncached_input_tokens": 15304,
+      "output_tokens": 1934,
+      "command_count": 4,
+      "extra_reported_usage": {
+        "cache_write_input_tokens": 0
+      }
+    },
+    {
+      "trial_id": "status-filter--baseline--001",
+      "task": "status-filter",
+      "route": "baseline",
+      "candidate_sha": "d6b31b72f851c8cadc05027c452d63fa0a1c3184",
+      "passed": true,
+      "cases": 22,
+      "all_cases_passed": true,
+      "generation_seconds": 40.212,
+      "evaluation_seconds": 1.143,
+      "input_tokens": 118380,
+      "cached_input_tokens": 98432,
+      "noncached_input_tokens": 19948,
+      "output_tokens": 951,
+      "command_count": 5,
+      "extra_reported_usage": {
+        "cache_write_input_tokens": 0
+      }
+    },
+    {
+      "trial_id": "title-search--zenstack--001",
+      "task": "title-search",
+      "route": "zenstack",
+      "candidate_sha": "c3bb7b47447c467269a67c31a9aa659db423fb92",
+      "passed": true,
+      "cases": 23,
+      "all_cases_passed": true,
+      "generation_seconds": 56.451,
+      "evaluation_seconds": 5.605,
+      "input_tokens": 119121,
+      "cached_input_tokens": 100736,
+      "noncached_input_tokens": 18385,
+      "output_tokens": 1293,
+      "command_count": 5,
+      "extra_reported_usage": {
+        "cache_write_input_tokens": 0
+      }
+    },
+    {
+      "trial_id": "title-search--baseline--001",
+      "task": "title-search",
+      "route": "baseline",
+      "candidate_sha": "80bb8ca8009fcc2e3dcfb68bc5c635257deb7e8b",
+      "passed": true,
+      "cases": 23,
+      "all_cases_passed": true,
+      "generation_seconds": 35.949,
+      "evaluation_seconds": 1.046,
+      "input_tokens": 124952,
+      "cached_input_tokens": 114560,
+      "noncached_input_tokens": 10392,
+      "output_tokens": 946,
+      "command_count": 5,
+      "extra_reported_usage": {
+        "cache_write_input_tokens": 0
+      }
+    },
+    {
+      "trial_id": "tenant-summary--zenstack--001",
+      "task": "tenant-summary",
+      "route": "zenstack",
+      "candidate_sha": "5c0628ecb2412fc7bece2c1f8ebdf8eaca4056ee",
+      "passed": true,
+      "cases": 20,
+      "all_cases_passed": true,
+      "generation_seconds": 48.882,
+      "evaluation_seconds": 4.7,
+      "input_tokens": 99642,
+      "cached_input_tokens": 84992,
+      "noncached_input_tokens": 14650,
+      "output_tokens": 1584,
+      "command_count": 4,
+      "extra_reported_usage": {
+        "cache_write_input_tokens": 0
+      }
+    }
+  ],
+  "routes": [
+    {
+      "route": "baseline",
+      "planned": 3,
+      "passed": 3,
+      "generation_mean_seconds": 36.807,
+      "generation_median_seconds": 35.949,
+      "input_tokens": 346947,
+      "cached_input_tokens": 300032,
+      "noncached_input_tokens": 46915,
+      "output_tokens": 2891
+    },
+    {
+      "route": "guarded",
+      "planned": 3,
+      "passed": 3,
+      "generation_mean_seconds": 43.151,
+      "generation_median_seconds": 48.044,
+      "input_tokens": 449136,
+      "cached_input_tokens": 408832,
+      "noncached_input_tokens": 40304,
+      "output_tokens": 3236
+    },
+    {
+      "route": "zenstack",
+      "planned": 3,
+      "passed": 3,
+      "generation_mean_seconds": 55.314,
+      "generation_median_seconds": 56.451,
+      "input_tokens": 319187,
+      "cached_input_tokens": 270848,
+      "noncached_input_tokens": 48339,
+      "output_tokens": 4811
+    }
+  ],
+  "new_model_generations": 0,
+  "cost": null,
+  "audit_script_sha256": "253ef49601f3337a3d9457139d9f6b406fb4496084b84489ed0b02fabfd4b44d",
+  "interpretation": "Descriptive statistics for nine existing trials; no population inference or billed cost."
+}
