@@ -399,3 +399,5 @@ Codex 工具；如果只有 Kiro，先实现经过正反控制验证的新后端
 未测量，同时推进不依赖该阻塞的隔离、后端适配或恢复工程。每阶段提交
 代码、操作说明、实测证据及剩余待办。未经明确授权不要直接 push main。
 ```
+
+**2026-11-15 更新（v4）：** 新增“隐含约定”实验 harness（`benchmark/phase4/`）：在既有 Action 上新增批量驳回，四条只存在于导出代码中的约定（审计、幂等作用域含 operation、requestHash 指纹、不合格目标统一 409）与显式契约分开计分，共 108 项（显式 95 + 隐含 13）。人工/假 CLI 控制通过，真实模型样本为 0。见 [phase4-implicit-convention.md](phase4-implicit-convention.md)。

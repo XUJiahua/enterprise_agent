@@ -1,0 +1,62 @@
+{
+  "version": 4,
+  "kind": "synthetic-smoke",
+  "plan_sha256": "51640c0c8ef67015ed0d38a53362af236b551ce894c57fa2b89336fc6943fabf",
+  "rows": [
+    {
+      "cell": "go-manual",
+      "planned": 1,
+      "observed": 1,
+      "unmeasured": 0,
+      "passed_all": 1,
+      "passed_explicit": 1,
+      "conventions_followed": {
+        "implicit-audit": 1,
+        "implicit-operation-scope": 1,
+        "implicit-request-hash": 1,
+        "implicit-uniform-409": 1
+      },
+      "first_pass_rate": 1.0,
+      "explicit_pass_rate": 1.0,
+      "outcomes": {
+        "passed": 1
+      },
+      "usage": [
+        {
+          "trial": "go-manual--001",
+          "usage": {
+            "credits": 0.25
+          }
+        }
+      ]
+    },
+    {
+      "cell": "go-action",
+      "planned": 1,
+      "observed": 1,
+      "unmeasured": 0,
+      "passed_all": 1,
+      "passed_explicit": 1,
+      "conventions_followed": {
+        "implicit-audit": 1,
+        "implicit-operation-scope": 1,
+        "implicit-request-hash": 1,
+        "implicit-uniform-409": 1
+      },
+      "first_pass_rate": 1.0,
+      "explicit_pass_rate": 1.0,
+      "outcomes": {
+        "passed": 1
+      },
+      "usage": [
+        {
+          "trial": "go-action--001",
+          "usage": {
+            "credits": 0.25
+          }
+        }
+      ]
+    }
+  ],
+  "note": "Explicit contract and implicit conventions are reported separately. Synthetic controls are not model evidence. Missing/infrastructure trials remain unmeasured; absent usage is unknown."
+}
