@@ -74,3 +74,8 @@ v3–v5b 的探索性结果显示，平台内核带来的正确性收益只覆�
 - T3：`benchmark/phase6b/ctl.py`
 
 生成使用 `benchmark/phase3/run_kiro_cohort_net.sh`。12 个通道（3 任务 × 4 模型）各有独立的数据库与端口，最多 6 个通道并行。每个通道内严格按计划顺序执行；每块的两组在同一通道中先后运行，承受相近的负载。
+
+### 附录 C（2026-11-15 14:12；生成已开始，尚未查看任何验收结果，也未做任何分析）：两处补充说明
+
+1. **T1 的约定分类。** phase5b 的 cohort.json 没有 `action_enforcement` 字段。按照 v5、v5b 报告中已经写明的分类：audit、request-hash、uniform-denial 由内核实现（kernel），outbox 由作者声明（declared）。这只是把已有分类写明，没有做新的选择。
+2. **`network-denied` 标记。** 每个 trial 的网络日志里，都会有 Kiro 遥测主机被拒绝的记录：`telemetry.eu-central-1.kiro.dev`、`client-telemetry.us-east-1.amazonaws.com`。这两个主机在[网络隔离](network-isolation.md)文档中已被认定为遥测，因此不计入 `network-denied`。`network-denied` 只统计对其他主机的拒绝。这个标记仅用于描述，不影响主分析，也不影响敏感性分析。
