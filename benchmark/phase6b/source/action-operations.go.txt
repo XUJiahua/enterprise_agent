@@ -1,0 +1,13 @@
+package candidate
+
+import "github.com/XUJiahua/enterprise_agent/internal/action"
+
+// Operations of the purchase service, executed by the platform Action kernel.
+var (
+	approveOp = action.Operation{Name: "bulk-approve.v3", Role: "approver", Own: false,
+		From: "submitted", To: "approved", Field: "approvedIds", Event: action.NoEvent}
+	rejectOp = action.Operation{Name: "bulk-reject.v4", Role: "approver", Own: false,
+		From: "submitted", To: "rejected", Field: "rejectedIds", Event: "purchase.rejected"}
+	reopenOp = action.Operation{Name: "reopen.v5", Role: "requester", Own: true,
+		From: "rejected", To: "submitted", Event: "purchase.reopened"}
+)

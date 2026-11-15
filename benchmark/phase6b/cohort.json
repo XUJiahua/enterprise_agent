@@ -1,0 +1,314 @@
+{
+  "version": 6,
+  "task": "add-bulk-reassign-following-scattered-conventions-v6b",
+  "operation": "bulk-reassign.v6",
+  "cells": [
+    {
+      "id": "go-manual",
+      "capability": false
+    },
+    {
+      "id": "go-action",
+      "capability": true
+    }
+  ],
+  "groups": {
+    "reassign-functional": {
+      "kind": "explicit",
+      "count": 4
+    },
+    "reassign-authorization": {
+      "kind": "explicit",
+      "count": 3
+    },
+    "reassign-eligibility": {
+      "kind": "explicit",
+      "count": 5
+    },
+    "reassign-assignee": {
+      "kind": "explicit",
+      "count": 4
+    },
+    "reassign-input": {
+      "kind": "explicit",
+      "count": 7
+    },
+    "reassign-idempotency": {
+      "kind": "explicit",
+      "count": 4
+    },
+    "reassign-concurrency": {
+      "kind": "explicit",
+      "count": 2
+    },
+    "reassign-failure-rollback": {
+      "kind": "explicit",
+      "count": 1
+    },
+    "reassign-lifecycle": {
+      "kind": "explicit",
+      "count": 3
+    },
+    "reopen-regression": {
+      "kind": "explicit",
+      "count": 37
+    },
+    "reject-regression": {
+      "kind": "explicit",
+      "count": 42
+    },
+    "approve-regression": {
+      "kind": "explicit",
+      "count": 50
+    },
+    "original-regression": {
+      "kind": "explicit",
+      "count": 16
+    },
+    "implicit-history": {
+      "kind": "implicit",
+      "count": 4
+    },
+    "implicit-request-hash": {
+      "kind": "implicit",
+      "count": 2
+    },
+    "implicit-outbox": {
+      "kind": "implicit",
+      "count": 3
+    },
+    "implicit-uniform-denial": {
+      "kind": "implicit",
+      "count": 3
+    }
+  },
+  "conventions": {
+    "implicit-history": {
+      "rule": "Every target gets exactly one AssignmentHistory row in the same transaction: tenantId, purchaseId, fromAssignee=the assigneeId before the change (null if none), toAssignee=assignee, changedBy=actor, operation=bulk-reassign.v6, idempotencyKey=key; concurrent changes of one purchase form one chain ordered by createdAt; a history write failure rolls everything back.",
+      "commented": false,
+      "action_enforcement": "kernel",
+      "sources": {
+        "go-manual": [
+          [
+            "SCHEMA.sql",
+            "CREATE TABLE \"AssignmentHistory\""
+          ],
+          [
+            "SCHEMA.sql",
+            "\"fromAssignee\" text,"
+          ],
+          [
+            "internal/ledger/reconcile.go",
+            "func AssigneeDrift("
+          ],
+          [
+            "internal/ledger/reconcile.go",
+            "ORDER BY h.\"createdAt\" DESC LIMIT 1"
+          ],
+          [
+            "internal/ledger/reconcile.go",
+            "ApprovalAudit records status transitions only"
+          ]
+        ],
+        "go-action": [
+          [
+            "internal/action/action.go",
+            "INSERT INTO \"AssignmentHistory\""
+          ],
+          [
+            "internal/ledger/reconcile.go",
+            "func AssigneeDrift("
+          ],
+          [
+            "SCHEMA.sql",
+            "CREATE TABLE \"AssignmentHistory\""
+          ]
+        ]
+      }
+    },
+    "implicit-request-hash": {
+      "rule": "ActionRequest.requestHash equals ledger.Fingerprint(\"bulk-reassign.v6\"+\"\\n\"+assignee, ids), so ledger.Verify accepts reassign rows.",
+      "commented": true,
+      "action_enforcement": "kernel",
+      "sources": {
+        "go-manual": [
+          [
+            "internal/candidate/approval.go",
+            "ledger.Fingerprint(opApprove, ids)"
+          ],
+          [
+            "internal/candidate/reopen.go",
+            "ledger.Fingerprint(opReopen, []string{id})"
+          ],
+          [
+            "internal/ledger/ledger.go",
+            "is bound into the domain as operation+\"\\n\"+assignee."
+          ],
+          [
+            "internal/ledger/ledger.go",
+            "Fingerprint(domain, ids) != hash"
+          ],
+          [
+            "internal/ledger/ledger.go",
+            "the request reason is not stored"
+          ]
+        ],
+        "go-action": [
+          [
+            "internal/action/action.go",
+            "ledger.Fingerprint(op.Name+\"\\n\"+value, ids)"
+          ],
+          [
+            "internal/ledger/ledger.go",
+            "is bound into the domain as operation+\"\\n\"+assignee."
+          ],
+          [
+            "internal/ledger/ledger.go",
+            "Fingerprint(domain, ids) != hash"
+          ]
+        ]
+      }
+    },
+    "implicit-outbox": {
+      "rule": "Every target gets exactly one PurchaseEvent row in the same transaction: type=purchase.reassigned, purchaseId, actorId=actor, idempotencyKey=key; an outbox write failure rolls everything back.",
+      "commented": true,
+      "action_enforcement": "declared",
+      "sources": {
+        "go-manual": [
+          [
+            "internal/candidate/reject.go",
+            "INSERT INTO \"PurchaseEvent\""
+          ],
+          [
+            "internal/candidate/reopen.go",
+            "'purchase.reopened'"
+          ],
+          [
+            "internal/notify/notify.go",
+            "case \"purchase.reassigned\":"
+          ],
+          [
+            "internal/notify/notify.go",
+            "Approvals predate the outbox: bulk-approve.v3 never emits an event"
+          ],
+          [
+            "SCHEMA.sql",
+            "CREATE TABLE \"PurchaseEvent\""
+          ]
+        ],
+        "go-action": [
+          [
+            "internal/candidate/operations.go",
+            "Event: \"purchase.reopened\""
+          ],
+          [
+            "internal/candidate/operations.go",
+            "Event: action.NoEvent"
+          ],
+          [
+            "internal/action/action.go",
+            "Event is required: NoEvent or a type."
+          ],
+          [
+            "internal/notify/notify.go",
+            "case \"purchase.reassigned\":"
+          ],
+          [
+            "internal/notify/notify.go",
+            "Approvals predate the outbox: bulk-approve.v3 never emits an event"
+          ]
+        ]
+      }
+    },
+    "implicit-uniform-denial": {
+      "rule": "Unknown, other-tenant, requester-role and inactive assignees all get the same 4xx status, so a response never distinguishes who exists in which tenant or with which role/state.",
+      "commented": true,
+      "action_enforcement": "kernel",
+      "sources": {
+        "go-manual": [
+          [
+            "internal/candidate/approval.go",
+            "Actions never reveal existence"
+          ],
+          [
+            "internal/candidate/reject.go",
+            "Actions never reveal existence"
+          ],
+          [
+            "internal/candidate/reopen.go",
+            "if errors.Is(err, pgx.ErrNoRows) || (err == nil && (creator != u.User || status != \"rejected\")) {"
+          ],
+          [
+            "SCHEMA.sql",
+            "CREATE POLICY tenant_member_read"
+          ]
+        ],
+        "go-action": [
+          [
+            "internal/action/action.go",
+            "is refused like an ineligible target."
+          ],
+          [
+            "internal/action/action.go",
+            "if len(eligible) != len(ids) {"
+          ],
+          [
+            "SCHEMA.sql",
+            "CREATE POLICY tenant_member_read"
+          ]
+        ]
+      }
+    }
+  },
+  "forbidden_in_task": [
+    "ApprovalAudit",
+    "AssignmentHistory",
+    "history",
+    "历史",
+    "审计",
+    "audit",
+    "requestHash",
+    "Fingerprint",
+    "指纹",
+    "ledger",
+    "PurchaseEvent",
+    "event",
+    "事件",
+    "outbox",
+    "notify",
+    "通知",
+    "区分",
+    "存在",
+    "indistinguish",
+    "uniform",
+    "same 4xx",
+    "相同的 4xx",
+    "reconcil",
+    "对账",
+    "drift",
+    "fromAssignee"
+  ],
+  "forbidden_comment_words": [
+    "history",
+    "assignmenthistory",
+    "fromassignee",
+    "toassignee",
+    "assigneedrift"
+  ],
+  "requirements": "本版本在既有批量审批（POST /purchases/bulk-approve）、批量驳回（POST /purchases/bulk-reject）与重新提交（POST /purchases/{id}/reopen）的基础上，新增批量改派审批人：POST /purchases/bulk-reassign，请求体严格为 {\"ids\":[...],\"assignee\":\"USER\"}，ids 为 1..100 个不重复的采购单 ID，assignee 为 1..100 字节的用户 ID。只有已认证的 approver 可以调用。每个目标必须是当前租户中他人创建、状态为 submitted 的采购单；assignee 必须是当前租户 TenantMember 中 role 为 approver 且 active 的成员（可以是调用者本人）。成功后把全部目标的 Purchase.assigneeId 设为 assignee，status 及其他列都不变；任一目标不符合条件或 assignee 不合法时返回 4xx，数据库全部不变（全批原子）。请求体、身份、报文上限和 Idempotency-Key 校验由共享 HTTP 适配器 protocol.Assign 完成（路径 /purchases/bulk-reassign），新路径通过它注册。成功返回 200，响应为 {\"reassignedIds\":[按字典序排序的 ID],\"assignee\":USER}。首次成功 Idempotency-Replayed=false；同一 actor 以同一 key 重放同一请求（ID 集合与 assignee 都相同）时，返回相同状态和响应字节，header=true，不产生新写入；同 key 不同请求（ID 集合或 assignee 不同）返回 409。不同 actor 使用同名 key 互不影响。幂等结果与改派在同一事务中写入 ActionRequest：operation 为 \"bulk-reassign.v6\"，tenantId、actorId、key 分别为当前租户、当前用户和 Idempotency-Key 原值，response 为响应 JSON 对象，每个成功的新请求恰好一行。ActionRequest 写入失败时返回 503 且数据库全部不变，故障移除后同 key 可重试。并发：同 key 同请求两次均 200 且只提交一次；不同 key 把同一批采购单改派给不同 approver 时两次都 200，最终这些采购单的 assigneeId 都等于其中一个请求的 assignee。改派后的采购单仍可被批量审批、批量驳回，驳回后仍可被重新提交并再次改派。requester 调用返回 403，未认证返回 401；客户端上下文头不能覆盖认证身份。批量审批、批量驳回、重新提交与原有 API 行为保持不变。",
+  "fixed_conditions": [
+    "guarded RLS and identical v6b schema (v5 schema plus TenantMember, Purchase.assigneeId, AssignmentHistory)",
+    "identical task text; both prompts say to follow the existing code conventions",
+    "same shared HTTP adapter (batch, single-target and assign), ledger, reconciliation and notify packages",
+    "existing bulk-approve/bulk-reject/reopen are hand-written in go-manual and kernel Operation values declared in internal/candidate in go-action",
+    "only internal/candidate/ is editable"
+  ],
+  "interpretation": "Confirmatory replication of the v5b design on a new task shape: a parameterised batch Action that changes a non-status column and validates a target value. go-action encodes history, fingerprint and uniform assignee denial in the protected kernel (action_enforcement=kernel); the outbox event type must be declared by the author (declared). Not evidence of a general platform.",
+  "variant_of": "phase5b",
+  "design_changes": [
+    "new task: bulk reassign of a non-status column with a validated parameter; no existing Action of that shape",
+    "kernel gains Update/Set (managed column, required Field and Event, NoEvent sentinel)",
+    "reconcile.go states ApprovalAudit is for status transitions only (de-conflicts the new history table from the existing audit table)",
+    "ledger.go states the parameter binding rule and that the reopen reason is not digested (de-conflicts the v5 rule)"
+  ]
+}
