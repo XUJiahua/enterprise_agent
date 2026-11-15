@@ -76,6 +76,8 @@
 | v3 Kiro 队列 002（2026-11-15） | 契约写明 requestHash；Seatbelt 文件隔离；10 块 | 20 个；manual 10/10，action 10/10，每份 66/66 | 正确性无差异；action 耗时与 credit 约为一半，范围不重叠。见 [队列 002](phase3-kiro-cohort-002-results.md) |
 | v3 Kiro 队列 003（2026-11-15） | 同 002，换 haiku-4.5 / gpt-5.6-luna / qwen3-coder-next，各 10 块并行 | 60 个；manual 5/10、3/10、1/10，action 8/10、10/10、6/10（qwen 各 1 未测量） | **首次出现正确性差异**，集中在幂等/并发；失败均为拒绝过度、无越权写。配对检验为事后探索性。见 [队列 003](phase3-kiro-cohort-003-results.md) |
 | v4 Kiro 队列 001（2026-11-15） | 隐含约定 bulk-reject；opus/haiku/luna/qwen 各 10 块 | 80 个；manual 10、10、9、9/10，action 10、**0**、10、**0**/10 | manual 照抄既有实现几乎都遵守约定（仅 1 次自然违反 hash）；haiku/qwen action 20/20 把 Transition 写进受保护内核而越界，事后移位诊断 20/20 行为正确。见 [v4 队列 001](phase4-kiro-cohort-001-results.md) |
+| v4b Kiro 队列（2026-11-15） | 扩展点提示 | haiku/qwen action 7/10、6/10（v4 为 0/10） | 见 PR #19 / docs/phase4b-kiro-cohort-001-results.md |
+| v5 Kiro 队列 001（2026-11-15） | 分散约定 reopen；四模型各 10 块 | 80 个；全过 manual 0/2/3/3，action 10/2/0/0（opus/haiku/luna/qwen） | 内核封装的约定 action 117/117 遵守、manual 有自然违反；未封装的 outbox（可省略 Event 字段）action 弱模型 2/29。见 [v5 队列 001](phase5-kiro-cohort-001-results.md) |
 
 已完成真实生成合计为 3 + 9 + 4 = 16 个候选；条件不同，**不能合并计算成一个统一处理条件的成功率**。早期 9 个 trial 的环境阻塞计划仍保留为未测量，不是 0/9 通过。
 

@@ -1,0 +1,112 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index 08823f8..1b9dcdb 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -106,5 +106,7 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		}
+ 		return result, false, nil
+ 	}
+-	return protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve, "/purchases/bulk-reject": newReject(pool)}, fallback), nil
++	batchHandler := protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve, "/purchases/bulk-reject": newReject(pool)}, fallback)
++	reopenHandler := protocol.Item("reopen", "requester", newReopen(pool), batchHandler)
++	return reopenHandler, nil
+ }
+diff --git a/internal/candidate/reopen.go b/internal/candidate/reopen.go
+new file mode 100644
+index 0000000..416bebd
+--- /dev/null
++++ b/internal/candidate/reopen.go
+@@ -0,0 +1,93 @@
++package candidate
++
++import (
++	"context"
++	"encoding/json"
++	"errors"
++
++	"github.com/XUJiahua/enterprise_agent/internal/app"
++	"github.com/XUJiahua/enterprise_agent/internal/ledger"
++	"github.com/XUJiahua/enterprise_agent/internal/protocol"
++	"github.com/jackc/pgx/v5"
++	"github.com/jackc/pgx/v5/pgxpool"
++)
++
++const opReopen = "reopen.v5"
++
++func newReopen(pool *pgxpool.Pool) protocol.ItemHandler {
++	return func(ctx context.Context, u app.Identity, key, id, reason string) (protocol.ItemResult, bool, error) {
++		tx, err := pool.Begin(ctx)
++		if err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		defer tx.Rollback(ctx)
++		if _, err = tx.Exec(ctx, `SELECT set_config('app.tenant',$1,true),set_config('app.user',$2,true),set_config('app.role',$3,true)`, u.Tenant, u.User, u.Role); err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		lock, _ := json.Marshal([]string{opReopen, u.Tenant, u.User, key})
++		if _, err = tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1,0))`, string(lock)); err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		// Fingerprint only includes the purchase ID
++		hash := ledger.Fingerprint(opReopen, []string{id})
++		var savedHash string
++		var saved []byte
++		err = tx.QueryRow(ctx, `SELECT "requestHash",response FROM "ActionRequest" WHERE "tenantId"=$1 AND "actorId"=$2 AND operation=$3 AND key=$4`,
++			u.Tenant, u.User, opReopen, key).Scan(&savedHash, &saved)
++		switch {
++		case err == nil && savedHash != hash:
++			return protocol.ItemResult{}, false, &protocol.Rejection{Status: 409}
++		case err == nil:
++			var body protocol.ItemResult
++			if err = json.Unmarshal(saved, &body); err != nil {
++				return protocol.ItemResult{}, false, err
++			}
++			return body, true, tx.Commit(ctx)
++		case !errors.Is(err, pgx.ErrNoRows):
++			return protocol.ItemResult{}, false, err
++		}
++		// Check that the purchase exists, belongs to the requester, is in rejected status, and is in the same tenant
++		var status string
++		err = tx.QueryRow(ctx, `SELECT status FROM "Purchase" WHERE id=$1 AND "tenantId"=$2 AND "createdBy"=$3`, id, u.Tenant, u.User).Scan(&status)
++		if err != nil {
++			if errors.Is(err, pgx.ErrNoRows) {
++				return protocol.ItemResult{}, false, &protocol.Rejection{Status: 404}
++			}
++			return protocol.ItemResult{}, false, err
++		}
++		if status != "rejected" {
++			return protocol.ItemResult{}, false, &protocol.Rejection{Status: 409}
++		}
++		// Update the purchase status to submitted
++		_, err = tx.Exec(ctx, `UPDATE "Purchase" SET status='submitted' WHERE id=$1 AND "tenantId"=$2 AND "createdBy"=$3 AND status='rejected'`, id, u.Tenant, u.User)
++		if err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		// Insert audit record
++		_, err = tx.Exec(ctx, `INSERT INTO "ApprovalAudit" ("tenantId","purchaseId","approvedBy",operation,"idempotencyKey","fromStatus","toStatus",reason) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
++			u.Tenant, id, u.User, opReopen, key, "rejected", "submitted", reason)
++		if err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		// Insert event record
++		_, err = tx.Exec(ctx, `INSERT INTO "PurchaseEvent" ("tenantId","purchaseId",type,"actorId","idempotencyKey") VALUES ($1,$2,$3,$4,$5)`,
++			u.Tenant, id, "purchase.reopened", u.User, key)
++		if err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		result := protocol.ItemResult{ID: id, Status: "submitted"}
++		response, err := json.Marshal(result)
++		if err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		_, err = tx.Exec(ctx, `INSERT INTO "ActionRequest" ("tenantId","actorId",operation,key,"requestHash",response) VALUES ($1,$2,$3,$4,$5,$6::jsonb)`,
++			u.Tenant, u.User, opReopen, key, hash, string(response))
++		if err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		if err = tx.Commit(ctx); err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		return result, false, nil
++	}
++}

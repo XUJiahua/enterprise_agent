@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Per-model facts for v4 implicit-convention cohorts from archived evidence (no re-scoring).
+"""Per-model facts for v4/v5 implicit-convention cohorts (conventions read from results) from archived evidence (no re-scoring).
 
 Usage: analyze_v4_cohort.py <evidence-root>   (one subdirectory per model)
 """
@@ -38,13 +38,14 @@ def model(root):
     for c in ('go-manual', 'go-action'):
         r = [x for x in t.values() if x['cell'] == c]
         scored = [x for x in r if x['conventions'] is not None]
+        names = sorted({k for x in t.values() if x['conventions'] for k in x['conventions']}) or CONVENTIONS
         clean = [x for x in scored if x['explicit_passed']]
         cells[c] = {
             'planned': len(r), 'observed': sum(x['outcome'] not in UNMEASURED for x in r),
             'passed_all': sum(x['passed'] for x in r), 'passed_explicit': sum(x['explicit_passed'] for x in r),
             'outcomes': {o: sum(x['outcome'] == o for x in r) for o in sorted({x['outcome'] for x in r})},
-            'conventions_followed_of_scored': {k: [sum(x['conventions'][k] for x in scored), len(scored)] for k in CONVENTIONS},
-            'conventions_followed_given_explicit_pass': {k: [sum(x['conventions'][k] for x in clean), len(clean)] for k in CONVENTIONS},
+            'conventions_followed_of_scored': {k: [sum(x['conventions'][k] for x in scored), len(scored)] for k in names},
+            'conventions_followed_given_explicit_pass': {k: [sum(x['conventions'][k] for x in clean), len(clean)] for k in names},
             'median_seconds': statistics.median(x['seconds'] for x in r),
             'median_credits': statistics.median(x['credits'] for x in r if x['credits'] is not None),
             'total_credits': round(sum(x['credits'] or 0 for x in r), 3)}

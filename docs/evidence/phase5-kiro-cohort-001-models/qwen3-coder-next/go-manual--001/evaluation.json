@@ -1,0 +1,876 @@
+{
+  "version": 5,
+  "kind": "model-trial",
+  "plan_sha256": "8fee16719ab8771091a61a634dbe82b27f854c24a24b86cd5dcc81ceceb212d4",
+  "trial": {
+    "id": "go-manual--001",
+    "cell": "go-manual",
+    "instance": 1,
+    "prompt": "本版本在既有批量审批（POST /purchases/bulk-approve）与批量驳回（POST /purchases/bulk-reject）的基础上，新增重新提交被驳回的采购单：POST /purchases/{id}/reopen，请求体为 {\"reason\":\"...\"}，原因必填，1..200 字节。只有已认证的 requester 可以调用，只能重新提交本人在当前租户创建、状态为 rejected 的采购单；成功后状态变为 submitted，之后可以再次被批量审批或批量驳回。目标不符合条件时返回 4xx，数据库全部不变。请求体、身份、报文上限和 Idempotency-Key 校验由共享 HTTP 适配器 protocol.Item 完成（verb 为 reopen，角色为 requester），新路径通过它注册。成功返回 200，响应为 {\"id\":ID,\"status\":\"submitted\"}。首次成功 Idempotency-Replayed=false；同一 actor 以同一 key 对同一采购单、同一原因重放时，返回相同状态和响应字节，header=true，不产生新写入；同 key 不同采购单返回 409。不同 actor 使用同名 key 互不影响。幂等结果与状态变更在同一事务中写入 ActionRequest：operation 为 \"reopen.v5\"，tenantId、actorId、key 分别为当前租户、当前用户和 Idempotency-Key 原值，response 为响应 JSON 对象，每个成功的新请求恰好一行。ActionRequest 写入失败时返回 503 且数据库全部不变，故障移除后同 key 可重试。并发：同 key 同请求两次均 200 且只提交一次；不同 key 对同一采购单只能一个成功，失败方返回 4xx。approver 调用返回 403，未认证返回 401；客户端上下文头不能覆盖认证身份。批量审批、批量驳回与原有 API 行为保持不变。\nAdd the reopen Action described above to the existing service.\nRead the existing code first and follow its conventions.\nBoth conditions use guarded RLS. The shared HTTP adapter in internal/protocol validates input and binds demo identity; register the new path with protocol.Item.\nOnly edit/add internal/candidate/ Go code. All other exports, dependencies, Git settings and tests are protected.\nPreserve the existing APIs, including bulk-approve and bulk-reject.\nDo not commit/push, read credentials, other checkouts or evaluator materials; do not use other agents.\nUse go build ./... and go test ./... as needed. Private database credentials are unavailable during generation. The public SQL schema is in SCHEMA.sql.\nCapability: no platform Action kernel. The existing batch approval and rejection are hand-written in internal/candidate/.\nThis is a trusted-code pilot; directory export alone does not enforce host or network isolation.",
+    "prompt_sha256": "d837469a675d39da2638f0b5176e779495c272fbe899871a5929bb1ae3369fc7"
+  },
+  "candidate_sha": "407fd099a82e5e6e5d6ccaa0ca0bb30a0fcdb6fe",
+  "manifest_sha256": "8ec67bbea5c67aadae5c13324ff91c924aa5b69336b31f425179a98819886e8d",
+  "generation": {
+    "status": "completed",
+    "usage": {
+      "credits": 4.969573734660032
+    },
+    "turn_started": true,
+    "run_finished": true,
+    "reported_model": "qwen3-coder-next",
+    "event_count": 700,
+    "agent_messages": [
+      "我会先阅读现有代码，了解批量审批/驳回的实现模式，然后添加重新提交（reopen）功能。\n\n现在我理解了代码结构。我需要：\n1. 创建 `reopen.go` 文件，实现 reopen action handler\n2. 在 `approval.go` 中注册新路径 `/purchases/{id}/reopen`\n\n让我先创建 reopen.go 文件：\n\n我需要重新审阅需求：reopen 是单个采购单的操作，响应应该是 `{\"id\":\"...\",\"status\":\"submitted\"}` 而不是 `{\"rejectedIds\":[...]}`。同时需要使用 `ItemHandler` 和 `Item` 函数来处理单个采购单的 reopen 操作。\n\n让我重新理解协议层的 `Item` 函数：它处理的是单个采购单的 POST /purchases/{id}/<verb> 请求，使用 `ItemHandler` 类型。而现有批量操作使用的是 `Handler` 类型。\n\n我需要修改 `Item` 函数来支持 reopen 操作，或者创建一个自定义的 handler。\n\n让我查看 `approval.go` 如何使用 `Item`：\n\n我看到 `approval.go` 的 `New` 函数使用 `protocol.HTTP` 注册批量操作路由。reopen 需要使用 `protocol.Item` 来注册单采购单路由。\n\n根据需求：\n- POST /purchases/{id}/reopen\n- 请求体：{\"reason\":\"...\"}，原因必填，1..200 字节\n- 只有已认证的 requester 可以调用\n- 只能重新提交本人在当前租户创建、状态为 rejected 的采购单\n- 成功后状态变为 submitted\n- 响应：{\"id\":\"ID\",\"status\":\"submitted\"}\n- 幂等性处理\n\n我需要修改 `reopen.go` 使用 `ItemHandler` 类型：\n\n现在修改 `approval.go` 注册 reopen 路径：\n\n构建和测试通过。让我检查一下 `reopen.go` 中的幂等性处理是否正确。根据需求：\n\n1. 同一 actor 使用同一 key 对同一采购单、同一原因重放时，返回相同状态和响应字节，header=true，不产生新写入\n2. 同 key 不同采购单返回 409\n\n当前实现中，hash 是基于 `Fingerprint(opReopen, []string{id})`，这意味着如果采购单 id 不同，hash 也会不同。但需求要求\"同 key 不同采购单返回 409\"。\n\n让我重新审阅需求：\n- \"同 key 不同采购单返回 409\" - 这意味着如果同一个 Idempotency-Key 被用于不同的采购单，应该返回 409\n- \"同 key 不同 actor 使用互不影响\" - 不同 actor 使用同名 key 互不影响\n\n但是 hash 只包含 id，不包含 reason。而需求说\"同一 actor 以同一 key 对同一采购单、**同一原因**重放时...\"，这意味着 hash 应该也包含 reason。\n\n让我修改 `reopen.go`：\n\n等待，我需要再仔细阅读需求。需求说：\n\n> \"成功后状态变为 submitted，之后可以再次被批量审批或批量驳回\"\n\n这意味着 reopen 后状态是 submitted，然后可以被批量审批或批量驳回。但是批量审批和批量驳回的操作中，只有状态为 'submitted' 的采购单可以被处理。所以 reopen 后的状态应该是 submitted，这样就可以被批准或驳回。\n\n但是查看 SCHEMA.sql，我看到：\n```sql\nCREATE POLICY purchase_transition ON \"Purchase\" FOR UPDATE TO app_runtime\n USING (\"tenantId\" = current_setting('app.tenant', true) AND (\n   (current_setting('app.role', true) = 'approver' AND \"createdBy\" <> current_setting('app.user', true) AND status = 'submitted')\n   OR (current_setting('app.role', true) = 'requester' AND \"createdBy\" = current_setting('app.user', true) AND status = 'rejected')))\n WITH CHECK (\"tenantId\" = current_setting('app.tenant', true) AND (\n   (current_setting('app.role', true) = 'approver' AND status IN ('approved','rejected'))\n   OR (current_setting('app.role', true) = 'requester' AND \"createdBy\" = current_setting('app.user', true) AND status = 'submitted')));\n```\n\n所以 requester 可以将 status 从 'rejected' 更新为 'submitted'，这正是 reopen 要做的。\n\n现在回到幂等性问题。我需要重新理解\"同 key 不同采购单返回 409\"：\n\n这可能意味着：\n1. 如果同一个 Idempotency-Key 被用于不同的采购单（即使是不同原因），应该返回 409\n\n但这与\"同 key 同请求两次均 200 且只提交一次\"冲突，因为如果不同采购单也使用相同 key，那它们会在同一个锁下执行。\n\n让我重新阅读需求：\n> 幂等：同 key 同请求两次均 200 且只提交一次；不同 key 对同一采购单只能一个成功，失败方返回 4xx。\n\n这说：\n- 同 key（相同请求）可以重放，返回 200，只提交一次\n- 不同 key 对同一采购单，只能一个成功\n\n所以 \"同 key 不同采购单返回 409\" 可能是说：如果用同一个 key 尝试重新提交不同的采购单，应该返回 409（因为 key 已经被另一个采购单使用了）。\n\n但这与 hash 应该包含采购单 id 矛盾，因为 hash 是用于验证幂等性的。\n\n让我再读一遍：\n> 同 key 不同采购单返回 409。\n\n这可能是指：如果用同一个 Idempotency-Key 尝试重新提交一个已经使用该 key 的采购单（不同采购单指的是其他采购单），返回 409。但这还是说不通。\n\n或者，它的意思是：如果同一个 Idempotency-Key 已经用于另一个采购单（不同采购单），那么尝试重新提交当前采购单时返回 409。\n\n让我看看批量操作的实现。在 `reject.go` 中：\n\n```go\nhash := ledger.Fingerprint(opReject, ids)\n...\nerr = tx.QueryRow(ctx, `SELECT \"requestHash\",response FROM \"ActionRequest\" WHERE \"tenantId\"=$1 AND \"actorId\"=$2 AND operation=$3 AND key=$4`,\n    u.Tenant, u.User, opReject, key).Scan(&savedHash, &saved)\nswitch {\ncase err == nil && savedHash != hash:\n    return protocol.Result{}, false, &protocol.Rejection{Status: 409}\n...\n```\n\n所以如果 hash 不匹配（即 ids 不同），返回 409。\n\n对于 reopen，它处理单个采购单。如果同一个 key 已经用于另一个采购单（hash 不同），那么应该返回 409。\n\n但是我的实现中，hash 包含了 id 和 reason，这意味着如果采购单 id 不同，hash 也不同，所以如果 key 已经被用于另一个采购单，会返回 409。\n\n但是需求说\"同 key 同请求两次均 200 且只提交一次\"，这要求 hash 必须包含所有请求参数（id 和 reason）。\n\n让我检查我的实现：\n- hash := ledger.Fingerprint(opReopen, []string{id + \":\" + reason})\n\n这样，如果 id 或 reason 不同，hash 也不同。如果 key 已经被用于不同的 id 或 reason，会返回 409。\n\n但是需求说\"同 key 不同采购单返回 409\"，这符合我的实现：如果 key 已经用于另一个采购单（不同的 id），会返回 409。\n\n但是\"同 key 同请求两次均 200 且只提交一次\"也符合：如果 key 和所有参数（id 和 reason）都相同，会返回缓存的响应，hash 相同，所以返回 200。\n\n但\"同 key 同请求\"这个说法有点模糊。如果 \"同请求\" 意味着相同的 id 和相同的 reason，那么我的实现是正确的。\n\n但是需求又说\"不同 actor 使用同名 key 互不影响\"，这意味着不同 actor 可以使用相同的 key 和相同的参数，互不影响。在我的实现中，key 是存储在 ActionRequest 表中的，表的主键是 (\"tenantId\",\"actorId\",operation,key)，所以不同 actor 的 key 是分开存储的，互不影响。\n\n所以我的实现应该是正确的。\n\n但还有一个问题：响应格式。需求说\"成功返回 200，响应为 {\"id\":ID,\"status\":\"submitted\"}\"，但我使用了 `protocol.Result` 的 `Field: \"rejectedIds\"`，这会导致响应为 `{\"rejectedIds\":[id]}`。\n\n让我修复这个问题：\n\n我看到代码中返回幂等缓存结果时，使用的是 `protocol.ItemResult{ID: id, Status: \"submitted\"}`，这与需求一致。\n\n但还有一个问题：需求说\"同 key 同请求两次均 200 且只提交一次\"，而我的实现中，hash 包含了 reason，这意味着如果 reason 不同，hash 也不同，会返回 409。\n\n但是需求没有明确说 reason 不同时的行为。让我仔细读一下：\n\n> 同一 actor 以同一 key 对同一采购单、**同一原因**重放时，返回相同状态和响应字节，header=true，不产生新写入；\n\n这说\"同一原因\"重放时返回缓存结果。但没有说不同原因时的行为。根据批量操作的模式（hash 不同返回 409），不同原因应该也返回 409。\n\n但\"同 key 不同采购单返回 409\"这个说法还是让我困惑。让我看看批处理实现：\n\n在 `reject.go` 中：\n```go\nhash := ledger.Fingerprint(opReject, ids)\n...\ncase err == nil && savedHash != hash:\n    return protocol.Result{}, false, &protocol.Rejection{Status: 409}\n```\n\n所以如果 ids 不同，hash 不同，返回 409。\n\n对于 reopen，它处理单个采购单。如果同一个 key 已经用于另一个采购单（不同的 id），那么 hash 也会不同（因为 hash 包含 id），返回 409。\n\n所以\"同 key 不同采购单返回 409\"的意思是：如果同一个 Idempotency-Key 已经用于另一个采购单，尝试重新提交当前采购单时返回 409。\n\n但这个理解与\"同 key 同请求两次均 200 且只提交一次\"可能冲突，因为\"同请求\"可能意味着相同的 id 和相同的 reason。\n\n让我重新理解需求中的所有要求：\n\n1. **同 key 同请求两次均 200 且只提交一次**：\n   - \"同请求\" = 相同的 key, 相同的 id, 相同的 reason\n   - hash 包含 id 和 reason，所以 hash 相同\n   - ActionRequest 已经存在，savedHash == hash，返回缓存结果，replayed=true\n\n2. **同 key 不同采购单返回 409**：\n   - 这里的 \"不同采购单\" 可能是指：同一个 key 已经用于采购单 A，现在尝试用于采购单 B\n   - hash 包含 id，所以 hash 不同\n   - ActionRequest 已经存在（对于采购单 A），savedHash != hash，返回 409\n\n3. **不同 actor 使用同名 key 互不影响**：\n   - ActionRequest 表的主键是 (\"tenantId\",\"actorId\",operation,key)\n   - 不同 actor 有不同的 \"actorId\"，所以互不影响\n\n4. **不同 key 对同一采购单只能一个成功，失败方返回 4xx**：\n   - 这个要求有点模糊。它可能是指并发请求的情况\n   - 如果两个请求使用不同的 key 对同一采购单，锁机制会确保只有一个成功\n\n让我检查锁机制。在 `reopen.go` 中：\n```go\nlock, _ := json.Marshal([]string{opReopen, u.Tenant, u.User, key, id})\nif _, err = tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1,0))`, string(lock)); err != nil {\n    return protocol.ItemResult{}, false, err\n}\n```\n\n锁的键包含 key 和 id，这意味着：\n- 同一个 (key, id) 对组合使用同一个锁\n- 不同的 key 或不同的 id 使用不同的锁\n\n但需求说\"不同 key 对同一采购单只能一个成功，失败方返回 4xx\"。这意味着如果两个请求使用不同的 key 对同一采购单，它们应该互相竞争。\n\n但我的锁机制不会阻止这种情况，因为不同的 key 使用不同的锁。\n\n让我再读一遍需求：\n> 幂等：同 key 同请求两次均 200 且只提交一次；不同 key 对同一采购单只能一个成功，失败方返回 4xx。\n\n这可能是指：\n- 对于同一个采购单，如果使用不同的 key，数据库锁（行级锁或 Advisory Lock）会确保只有一个成功\n- 其他请求会失败（返回 4xx）\n\n在 `reject.go` 中，批量操作使用 advisory lock：\n```go\nlock, _ := json.Marshal([]string{opReject, u.Tenant, u.User, key})\nif _, err = tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1,0))`, string(lock)); err != nil {\n    return protocol.Result{}, false, err\n}\n```\n\n锁的键包含 key，但不包含 ids。这意味着同一个 key 使用同一个锁，不同的 key 使用不同的锁。\n\n但锁的目的是防止并发冲突，不是防止不同的 key 对同一采购单的冲突。\n\n让我看看批量操作的幂等性检查：\n```go\nhash := ledger.Fingerprint(opReject, ids)\n...\ncase err == nil && savedHash != hash:\n    return protocol.Result{}, false, &protocol.Rejection{Status: 409}\n```\n\n如果同一个 key 已经用于不同的 ids（采购单），savedHash != hash，返回 409。\n\n对于 reopen，它处理单个采购单。如果同一个 key 已经用于不同的采购单，应该返回 409。\n\n但我的实现中，hash 包含 id 和 reason，所以如果 id 不同，hash 不同。但锁的键也包含 id，所以不同的采购单使用不同的锁。\n\n我需要重新思考锁的机制。\n\n在批量操作中，锁的键是 `{operation, tenant, actor, key}`，不包含 ids。这意味着：\n- 同一个 key 使用同一个锁\n- 不同的 key 使用不同的锁\n- 如果同一个 key 已经用于不同的 ids，它会在同一个锁下检查 hash，如果 hash 不同，返回 409\n\n对于 reopen，我应该使用相同的锁机制：锁的键是 `{operation, tenant, actor, key}`，不包含 id。\n\n让我修改 `reopen.go`：\n\n构建通过。让我检查是否所有条件都满足：\n\n1. **POST /purchases/{id}/reopen** - 已注册通过 `protocol.Item(\"reopen\", \"requester\", ...)`\n2. **请求体 {\"reason\":\"...\"}，1..200 字节** - 由 `protocol.Item` 的 `decodeReason` 处理\n3. **只有已认证的 requester 可以调用** - 由 `protocol.Item` 检查 `u.Role != role`\n4. **只能重新提交本人在当前租户创建、状态为 rejected 的采购单** - SQL 查询检查 `\"createdBy\"=$3 AND status='rejected'`\n5. **成功后状态变为 submitted** - `UPDATE \"Purchase\" SET status='submitted'`\n6. **响应 {\"id\":\"ID\",\"status\":\"submitted\"}** - `protocol.ItemResult{ID: id, Status: \"submitted\"}`\n7. **幂等性**：\n   - hash 包含 id 和 reason\n   - 同 key 同请求（相同 id 和 reason）→ hash 相同 → 返回缓存结果\n   - 同 key 不同采购单（不同 id）→ hash 不同 → 返回 409\n   - 不同 actor 使用同名 key 互不影响 → ActionRequest 表主键包含 actorId\n   - 不同 key 对同一采购单只能一个成功 → Advisory lock 确保同一 key 串行执行\n\n8. **ActionRequest 写入**：\n   - operation 为 \"reopen.v5\"\n   - tenantId、actorId、key 分别为当前租户、当前用户和 Idempotency-Key 原值\n   - response 为响应 JSON 对象（`protocol.ItemResult`）\n\n9. **ApprovalAudit 写入**：已添加 reason 字段\n10. **PurchaseEvent 写入**：type 为 'purchase.reopened'\n\n让我检查一下 SCHEMA.sql 中的 ApprovalAudit 表是否支持 reason 字段：\n\nSCHEMA.sql 已经支持：\n- `operation IN ('bulk-approve.v3','bulk-reject.v4','reopen.v5')` ✓\n- `fromStatus IN ('submitted','rejected')` ✓\n- `toStatus IN ('approved','rejected','submitted')` ✓\n- `reason text CHECK (reason IS NULL OR length(reason) BETWEEN 1 AND 200)` ✓\n- `PurchaseEvent` 表存在 ✓\n- RLS 策略已更新为支持 requester ✓\n\n所以数据库 schema 已经准备好。\n\n现在让我检查一下 ApprovalAudit 的主键变更：\n- 原来：PRIMARY KEY (\"tenantId\",\"purchaseId\")\n- 现在：PRIMARY KEY (\"tenantId\",\"purchaseId\",\"approvedBy\",operation,\"idempotencyKey\")\n\n这意味着同一个采购单可以有多个审批记录（例如，先批准，然后驳回，然后重新提交再批准）。\n\n但在我的 reopen 实现中，我只插入一条 ApprovalAudit 记录，没有检查是否已存在。这可能是正确的，因为 reopen 是一个新的操作。\n\n让我检查 `approval.go` 中的批量审批：\n\n我注意到批量审批使用了 `INSERT INTO \"ApprovalAudit\" ... SELECT ... FROM unnest($1::text[])`，这会插入多行。\n\n在我的 reopen 实现中，我使用了 `batch.Queue` 来插入单行。\n\n让我检查一下 SCHEMA.sql 中 ApprovalAudit 的主键变更是否允许重复的 (\"tenantId\",\"purchaseId\")：\n\n从 SCHEMA.sql：\n```sql\nALTER TABLE \"ApprovalAudit\" ADD PRIMARY KEY (\"tenantId\",\"purchaseId\",\"approvedBy\",operation,\"idempotencyKey\");\n```\n\n这意味着主键现在包括 operation 和 idempotencyKey，所以同一个采购单可以有多个审批记录（不同的 operation 或 key）。\n\n但在批量审批中，它使用 `INSERT INTO \"ApprovalAudit\" ... SELECT ...`，这会插入多行，每行一个采购单。\n\n在 reopen 中，我只插入一行。\n\n现在让我检查一下 SCHEMA.sql 中的 ApprovalAudit 表定义：\n\n我看到原始的 ApprovalAudit 表主键是 (\"tenantId\",\"purchaseId\")，但 v5 schema 改为 (\"tenantId\",\"purchaseId\",\"approvedBy\",operation,\"idempotencyKey\")。\n\n这意味着同一个采购单可以有多个审批记录（例如，先批准，然后驳回，然后重新提交再批准）。\n\n在我的 reopen 实现中，我插入一条 ApprovalAudit 记录，operation='reopen.v5'，fromStatus='rejected'，toStatus='submitted'，这应该是正确的。\n\n现在让我检查一下 `approval.go` 中的批量驳回实现：\n\n我看到文件末尾有多余的 `}`。让我修复它：\n\n所有检查通过。让我检查一下我的实现是否满足所有需求：\n\n1. **POST /purchases/{id}/reopen** - ✓ 通过 `protocol.Item(\"reopen\", \"requester\", newReopen(pool), fallback)` 注册\n2. **请求体 {\"reason\":\"...\"}，1..200 字节** - ✓ 由 `protocol.Item` 的 `decodeReason` 处理\n3. **只有已认证的 requester 可以调用** - ✓ 由 `protocol.Item` 检查 `u.Role != role`\n4. **只能重新提交本人在当前租户创建、状态为 rejected 的采购单** - ✓ SQL 查询检查 `\"createdBy\"=$3 AND status='rejected'`\n5. **成功后状态变为 submitted** - ✓ `UPDATE \"Purchase\" SET status='submitted'`\n6. **响应 {\"id\":\"ID\",\"status\":\"submitted\"}** - ✓ `protocol.ItemResult{ID: id, Status: \"submitted\"}`\n7. **幂等性**：\n   - hash 包含 id 和 reason\n   - 同 key 同请求（相同 id 和 reason）→ hash 相同 → 返回缓存结果\n   - 同 key 不同采购单（不同 id 或 reason）→ hash 不同 → 返回 409\n   - 不同 actor 使用同名 key 互不影响 → ActionRequest 表主键包含 actorId\n   - 不同 key 对同一采购单只能一个成功 → Advisory lock 确保同一 key 串行执行\n8. **ActionRequest 写入**：\n   - operation 为 \"reopen.v5\" ✓\n   - tenantId、actorId、key 分别为当前租户、当前用户和 Idempotency-Key 原值 ✓\n   - response 为响应 JSON 对象 ✓\n9. **ApprovalAudit 写入**：包含 reason 字段 ✓\n10. **PurchaseEvent 写入**：type 为 'purchase.reopened' ✓\n\n让我检查一下 SCHEMA.sql 中 ApprovalAudit 的 RLS 策略是否支持 requester：\n\nSCHEMA.sql 的 v5 部分已经更新 ApprovalAudit 的 RLS 策略支持 requester。\n\n现在让我检查一下 PurchaseEvent 的 RLS 策略：\n\nPurchaseEvent 的 RLS 策略也支持 requester。\n\n现在让我检查一下 ActionRequest 的 RLS 策略：\n\nActionRequest 的 RLS 策略在 v5 部分也支持 requester。\n\n所有数据库权限都已配置。\n\n让我检查一下我的实现是否满足所有并发要求：\n\n需求说：\n> 并发：同 key 同请求两次均 200 且只提交一次；不同 key 对同一采购单只能一个成功，失败方返回 4xx。\n\n我的实现使用了 advisory lock：\n```go\nlock, _ := json.Marshal([]string{opReopen, u.Tenant, u.User, key})\nif _, err = tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1,0))`, string(lock)); err != nil {\n    return protocol.ItemResult{}, false, err\n}\n```\n\n这个锁的键是 `{operation, tenant, actor, key}`，这意味着：\n- 同一个 key 使用同一个锁\n- 不同的 key 使用不同的锁\n\n所以同 key 同请求会串行执行（只提交一次），不同 key 对同一采购单会竞争不同的锁，不会直接返回 4xx。\n\n但是需求说\"不同 key 对同一采购单只能一个成功，失败方返回 4xx\"。这可能是指数据库行级锁（FOR UPDATE）的效果。\n\n在我的实现中：\n```go\nrows, err := tx.Query(ctx, `UPDATE \"Purchase\" SET status='submitted' WHERE id=$1 AND \"tenantId\"=$2 AND \"createdBy\"=$3 AND status='rejected' RETURNING id`, id, u.Tenant, u.User)\n```\n\n这个 UPDATE 语句会对采购单行加行级锁（隐式），所以不同 key 对同一采购单的 UPDATE 会串行执行，但不会直接返回 4xx。\n\n但是需求说\"失败方返回 4xx\"，这可能是指幂等性检查的结果。\n\n让我再读一遍需求：\n> 同 key 同请求两次均 200 且只提交一次；不同 key 对同一采购单只能一个成功，失败方返回 4xx。\n\n这可能是指：\n- 如果同一个采购单已经被提交（status != 'rejected'），则返回 409\n- 这已经在我的实现中处理了：如果 changed != 1，返回 409\n\n但是\"不同 key 对同一采购单只能一个成功\"可能是指并发请求的情况。如果两个请求使用不同的 key 对同一采购单，它们会竞争行级锁，先获得锁的请求会成功，后获得锁的请求可能会发现采购单已经被修改（status != 'rejected'），返回 409。\n\n所以我的实现应该是正确的。\n\n让我检查一下是否有其他问题。需求说：\n> 请求体、身份、报文上限和 Idempotency-Key 校验由共享 HTTP 适配器 protocol.Item 完成（verb 为 reopen，角色为 requester）\n\n`protocol.Item` 函数处理了：\n- verb 为 reopen - ✓ 通过 `protocol.Item(\"reopen\", ...)` 指定\n- 角色为 requester - ✓ 通过 `protocol.Item(\"reopen\", \"requester\", ...)` 指定\n- 请求体校验（1..200 字节的 reason）- ✓ 由 `decodeReason` 处理\n- 身份校验 - ✓ 由 `AuthenticateDemo` 处理\n- Idempotency-Key 校验 - ✓ 由 `validKey` 处理\n- 报文上限 - ✓ 由 `MaxBodyBytes` 处理\n\n所有需求都已满足。\n\n让我检查一下 SCHEMA.sql 中的 `fromStatus` 和 `toStatus` 约束：\n\nSCHEMA.sql 支持：\n- `fromStatus IN ('submitted','rejected')` ✓\n- `toStatus IN ('approved','rejected','submitted')` ✓\n- `reason text CHECK (reason IS NULL OR length(reason) BETWEEN 1 AND 200)` ✓\n\n在我的实现中，我插入 `fromStatus='rejected'` 和 `toStatus='submitted'`，这符合约束。\n\n现在让我检查一下数据库操作的顺序是否正确。在 batch 中，我先插入 ApprovalAudit 和 PurchaseEvent，然后插入 ActionRequest。\n\n但是需求说：\n> ActionRequest 写入失败时返回 503 且数据库全部不变\n\n这意味着 ActionRequest 的写入应该在所有其他操作之前或之后，以确保原子性。使用 batch 可以确保原子性，但问题是如果 ActionRequest 插入失败，其他操作已经提交了（在 batch.Close() 之前）。\n\n让我检查一下 `reject.go` 的实现：\n\nLet me verify the final state of the code and run all checks:\n\n已成功添加 reopen 功能：\n\n1. **新建文件** `internal/candidate/reopen.go`：实现 reopen handler，使用 `protocol.ItemHandler` 类型\n2. **修改** `internal/candidate/approval.go`：注册新路径 `/purchases/{id}/reopen`，通过 `protocol.Item(\"reopen\", \"requester\", ...)` 注册\n\n功能实现要点：\n- 仅 requester 可调用（角色校验由 `protocol.Item` 处理）\n- 仅能重新提交本人创建且状态为 rejected 的采购单\n- 请求体必须包含 1-200 字节的 reason 字段\n- 响应格式：`{\"id\":\"ID\",\"status\":\"submitted\"}`\n- 幂等性：通过 hash（operation+id+reason）和 advisory lock 保证\n- ActionRequest 记录 operation 为 \"reopen.v5\"\n- ApprovalAudit 记录包含 reason 字段\n- PurchaseEvent 记录 type 为 \"purchase.reopened\"\n- 所有数据库操作在事务中，失败时全部回滚"
+    ],
+    "errors": [],
+    "engine": "kiro",
+    "generation_seconds": 285.647,
+    "requested_model": "qwen3-coder-next",
+    "reasoning_effort": "medium",
+    "sandbox": "workspace-write",
+    "command": [
+      "kiro-cli",
+      "chat",
+      "--no-interactive",
+      "--output-format",
+      "stream-json",
+      "--agent-engine",
+      "v3",
+      "--agent",
+      "poc-v3-generator",
+      "--model",
+      "qwen3-coder-next",
+      "--effort",
+      "medium",
+      "--trust-all-tools"
+    ],
+    "returncode": 0,
+    "timed_out": false,
+    "cli_version": "kiro-cli 3.3.0"
+  },
+  "cases": [
+    {
+      "case": "reopen own rejected",
+      "group": "reopen-functional",
+      "passed": true
+    },
+    {
+      "case": "other tenant requester",
+      "group": "reopen-functional",
+      "passed": true
+    },
+    {
+      "case": "100 byte Unicode ID",
+      "group": "reopen-functional",
+      "passed": true
+    },
+    {
+      "case": "approver",
+      "group": "reopen-authorization",
+      "passed": true
+    },
+    {
+      "case": "anonymous",
+      "group": "reopen-authorization",
+      "passed": true
+    },
+    {
+      "case": "forged context",
+      "group": "reopen-authorization",
+      "passed": true
+    },
+    {
+      "case": "ineligible missing",
+      "group": "reopen-eligibility",
+      "passed": true
+    },
+    {
+      "case": "ineligible other",
+      "group": "reopen-eligibility",
+      "passed": true
+    },
+    {
+      "case": "ineligible zoe",
+      "group": "reopen-eligibility",
+      "passed": true
+    },
+    {
+      "case": "ineligible sub",
+      "group": "reopen-eligibility",
+      "passed": true
+    },
+    {
+      "case": "ineligible done",
+      "group": "reopen-eligibility",
+      "passed": true
+    },
+    {
+      "case": "missing key",
+      "group": "reopen-input",
+      "passed": true
+    },
+    {
+      "case": "empty reason",
+      "group": "reopen-input",
+      "passed": true
+    },
+    {
+      "case": "unknown field",
+      "group": "reopen-input",
+      "passed": true
+    },
+    {
+      "case": "reason over 200 bytes",
+      "group": "reopen-input",
+      "passed": true
+    },
+    {
+      "case": "64 KiB plus one",
+      "group": "reopen-input",
+      "passed": true
+    },
+    {
+      "case": "replay",
+      "group": "reopen-idempotency",
+      "passed": true
+    },
+    {
+      "case": "same key different purchase",
+      "group": "reopen-idempotency",
+      "passed": true
+    },
+    {
+      "case": "key scoped by actor",
+      "group": "reopen-idempotency",
+      "passed": true
+    },
+    {
+      "case": "concurrent identical",
+      "group": "reopen-concurrency",
+      "passed": true
+    },
+    {
+      "case": "concurrent different keys",
+      "group": "reopen-concurrency",
+      "passed": true
+    },
+    {
+      "case": "ActionRequest failure and same-key retry",
+      "group": "reopen-failure-rollback",
+      "passed": true
+    },
+    {
+      "case": "reopened can be approved",
+      "group": "reopen-lifecycle",
+      "passed": true
+    },
+    {
+      "case": "reopened can be rejected again",
+      "group": "reopen-lifecycle",
+      "passed": true
+    },
+    {
+      "case": "reopen again after second rejection",
+      "group": "reopen-lifecycle",
+      "passed": true
+    },
+    {
+      "case": "audit row",
+      "group": "implicit-audit",
+      "passed": true
+    },
+    {
+      "case": "audit row other tenant",
+      "group": "implicit-audit",
+      "passed": true
+    },
+    {
+      "case": "audit failure rolls back and same-key retry",
+      "group": "implicit-audit",
+      "passed": true
+    },
+    {
+      "case": "requestHash",
+      "group": "implicit-request-hash",
+      "passed": false,
+      "error": "{'stored': '93533f15196bbdca800432946ed5ef5d3c48b7a65b838ce782bcd52b6e6d06b3', 'ledger': '07c9cdcfcb509e19644181bb1f5ad79ceb81859f01a95a61a9e08e184bb2993a'}"
+    },
+    {
+      "case": "requestHash Unicode ID",
+      "group": "implicit-request-hash",
+      "passed": false,
+      "error": "{'stored': 'bb059abade9d1996bb383d3851c8ba397ec36d1df717ab948768052cfcb43151', 'ledger': '29dc6dbc700bc4f576049ec701b60cf1e3557de254361d6cb442ad32e93403d7'}"
+    },
+    {
+      "case": "outbox row",
+      "group": "implicit-outbox",
+      "passed": true
+    },
+    {
+      "case": "outbox row other tenant",
+      "group": "implicit-outbox",
+      "passed": true
+    },
+    {
+      "case": "outbox failure rolls back and same-key retry",
+      "group": "implicit-outbox",
+      "passed": true
+    },
+    {
+      "case": "other denied like missing",
+      "group": "implicit-uniform-denial",
+      "passed": true
+    },
+    {
+      "case": "zoe denied like missing",
+      "group": "implicit-uniform-denial",
+      "passed": true
+    },
+    {
+      "case": "sub denied like missing",
+      "group": "implicit-uniform-denial",
+      "passed": true
+    },
+    {
+      "case": "done denied like missing",
+      "group": "implicit-uniform-denial",
+      "passed": true
+    },
+    {
+      "case": "reject-functional: two targets",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-functional: 100 targets",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-functional: 100 byte Unicode ID",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-functional: another approver",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-functional: other tenant approver",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-authorization: requester",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-authorization: anonymous",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-authorization: forged context",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-atomicity: mixed own",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-atomicity: mixed other",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-atomicity: mixed done",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-atomicity: mixed gone",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-atomicity: mixed missing",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-input: empty list",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-input: unknown field",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-input: missing key",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-input: 64 KiB plus one",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-idempotency: reordered replay",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-idempotency: same key different set",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-idempotency: new key cannot reject again",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-idempotency: key scoped by actor",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-idempotency: key scoped by tenant",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-idempotency: requester cannot reuse approver key",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-concurrency: concurrent identical",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-concurrency: concurrent overlap",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-concurrency: concurrent approve and reject",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-failure-rollback: ActionRequest failure and same-key retry",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-lifecycle: rejected cannot be approved",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "reject-lifecycle: approved cannot be rejected",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "implicit-audit: audit rows",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "implicit-audit: audit rows other tenant",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "implicit-audit: audit failure rolls back and same-key retry",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "implicit-operation-scope: approve key does not block reject",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "implicit-operation-scope: reject replay after approve with same key",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "implicit-request-hash: requestHash two targets",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "implicit-request-hash: requestHash 100 targets",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "implicit-uniform-409: mixed own is 409",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "implicit-uniform-409: mixed other is 409",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "implicit-uniform-409: mixed done is 409",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "implicit-uniform-409: mixed gone is 409",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "implicit-uniform-409: mixed missing is 409",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "implicit-uniform-409: already rejected with new key is 409",
+      "group": "reject-regression",
+      "passed": true
+    },
+    {
+      "case": "functional: two targets",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "functional: 100 targets",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "functional: 100 byte Unicode ID",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "functional: quoted ID",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "functional: another approver",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "functional: other tenant approver",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "authorization: requester",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "authorization: anonymous",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "authorization: cross tenant",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "authorization: self approval",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "authorization: forged context",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "atomicity: mixed own",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "atomicity: mixed other",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "atomicity: mixed done",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "atomicity: mixed missing",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: empty list",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: duplicate IDs",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: 101 IDs",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: null IDs",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: null member",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: number member",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: empty ID",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: 102 byte ID",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: unknown field",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: case sensitive field",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: array root",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: null root",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: malformed JSON",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: duplicate field",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: trailing JSON",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: invalid UTF8",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: missing key",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: empty key",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: bad key",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: 129 byte key",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: 128 byte key",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: exact 64 KiB body",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: 64 KiB plus one",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: NUL absent target",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "idempotency: reordered replay",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "idempotency: same key different payload",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "idempotency: new key cannot approve again",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "idempotency: key scoped by actor",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "idempotency: key scoped by tenant",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "idempotency: requester cannot reuse approver key",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "concurrency: concurrent identical",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "concurrency: concurrent mismatch",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "concurrency: concurrent overlap",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "failure-rollback: audit failure and same-key retry",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "failure-rollback: request failure and same-key retry",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "anonymous",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "forged_headers",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "tenant_list",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "tenant_detail",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "field_hidden",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "requester_cannot_approve",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "approver_cannot_self_approve",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "cross_tenant_approval",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "valid_create",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "approver_cannot_create",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "valid_approval",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "concurrent_approval",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "mass_assignment",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "bypass_action",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "invalid_amount",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "alternating_context",
+      "passed": true
+    }
+  ],
+  "passed": false,
+  "groups": {
+    "reopen-functional": {
+      "kind": "explicit",
+      "passed": 3,
+      "total": 3
+    },
+    "reopen-authorization": {
+      "kind": "explicit",
+      "passed": 3,
+      "total": 3
+    },
+    "reopen-eligibility": {
+      "kind": "explicit",
+      "passed": 5,
+      "total": 5
+    },
+    "reopen-input": {
+      "kind": "explicit",
+      "passed": 5,
+      "total": 5
+    },
+    "reopen-idempotency": {
+      "kind": "explicit",
+      "passed": 3,
+      "total": 3
+    },
+    "reopen-concurrency": {
+      "kind": "explicit",
+      "passed": 2,
+      "total": 2
+    },
+    "reopen-failure-rollback": {
+      "kind": "explicit",
+      "passed": 1,
+      "total": 1
+    },
+    "reopen-lifecycle": {
+      "kind": "explicit",
+      "passed": 3,
+      "total": 3
+    },
+    "reject-regression": {
+      "kind": "explicit",
+      "passed": 42,
+      "total": 42
+    },
+    "approve-regression": {
+      "kind": "explicit",
+      "passed": 50,
+      "total": 50
+    },
+    "original-regression": {
+      "kind": "explicit",
+      "passed": 16,
+      "total": 16
+    },
+    "implicit-audit": {
+      "kind": "implicit",
+      "passed": 3,
+      "total": 3
+    },
+    "implicit-request-hash": {
+      "kind": "implicit",
+      "passed": 0,
+      "total": 2
+    },
+    "implicit-outbox": {
+      "kind": "implicit",
+      "passed": 3,
+      "total": 3
+    },
+    "implicit-uniform-denial": {
+      "kind": "implicit",
+      "passed": 4,
+      "total": 4
+    }
+  },
+  "explicit": {
+    "passed": 133,
+    "total": 133
+  },
+  "implicit": {
+    "passed": 10,
+    "total": 12
+  },
+  "explicit_passed": true,
+  "conventions": {
+    "implicit-audit": true,
+    "implicit-request-hash": false,
+    "implicit-outbox": true,
+    "implicit-uniform-denial": true
+  },
+  "outcome": "acceptance-failed",
+  "evaluation_seconds": 6.013
+}
