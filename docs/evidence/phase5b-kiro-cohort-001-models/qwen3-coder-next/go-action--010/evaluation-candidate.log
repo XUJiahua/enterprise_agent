@@ -1,0 +1,2328 @@
+2026/11/15 11:58:19 http: panic serving 127.0.0.1:57434: runtime error: invalid memory address or nil pointer dereference
+goroutine 25 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ef4000}, 0x26ef97dfa640)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97dc8214?, {0x100c54520?, 0x26ef97ef4000?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ef4000}, 0x26ef97dfa640)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ef4000?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ef4000}, 0x26ef97dfa640)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ef4000?}, 0x26ef97df9b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97de6740?}, {0x100c54520?, 0x26ef97ef4000?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e803f0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:19 http: panic serving 127.0.0.1:57436: runtime error: invalid memory address or nil pointer dereference
+goroutine 27 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ef40f0}, 0x26ef97dfa780)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97dc8244?, {0x100c54520?, 0x26ef97ef40f0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ef40f0}, 0x26ef97dfa780)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ef40f0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ef40f0}, 0x26ef97dfa780)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ef40f0?}, 0x26ef97e16b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97de68c0?}, {0x100c54520?, 0x26ef97ef40f0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e805a0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:19 http: panic serving 127.0.0.1:57437: runtime error: invalid memory address or nil pointer dereference
+goroutine 29 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ef41e0}, 0x26ef97dfa8c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97dc8274?, {0x100c54520?, 0x26ef97ef41e0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ef41e0}, 0x26ef97dfa8c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ef41e0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ef41e0}, 0x26ef97dfa8c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ef41e0?}, 0x26ef97e16b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97de69c0?}, {0x100c54520?, 0x26ef97ef41e0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e806c0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:19 http: panic serving 127.0.0.1:57438: runtime error: invalid memory address or nil pointer dereference
+goroutine 31 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ef42d0}, 0x26ef97dfaa00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97dc82a4?, {0x100c54520?, 0x26ef97ef42d0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ef42d0}, 0x26ef97dfaa00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ef42d0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ef42d0}, 0x26ef97dfaa00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ef42d0?}, 0x26ef97e16b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97de6ac0?}, {0x100c54520?, 0x26ef97ef42d0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e807e0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:19 http: panic serving 127.0.0.1:57439: runtime error: invalid memory address or nil pointer dereference
+goroutine 49 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ef43c0}, 0x26ef97dfab40)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97dc82d4?, {0x100c54520?, 0x26ef97ef43c0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ef43c0}, 0x26ef97dfab40)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ef43c0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ef43c0}, 0x26ef97dfab40)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ef43c0?}, 0x26ef97e16b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97de6bc0?}, {0x100c54520?, 0x26ef97ef43c0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e80900, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:19 http: panic serving 127.0.0.1:57440: runtime error: invalid memory address or nil pointer dereference
+goroutine 51 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ef44b0}, 0x26ef97dfac80)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97dc8304?, {0x100c54520?, 0x26ef97ef44b0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ef44b0}, 0x26ef97dfac80)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ef44b0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ef44b0}, 0x26ef97dfac80)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ef44b0?}, 0x26ef97e16b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97de6cc0?}, {0x100c54520?, 0x26ef97ef44b0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e80a20, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:19 http: panic serving 127.0.0.1:57441: runtime error: invalid memory address or nil pointer dereference
+goroutine 35 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97e3e000}, 0x26ef97e38000)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97e3a004?, {0x100c54520?, 0x26ef97e3e000?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97e3e000}, 0x26ef97e38000)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97e3e000?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97e3e000}, 0x26ef97e38000)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97e3e000?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a040?}, {0x100c54520?, 0x26ef97e3e000?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e32000, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:19 http: panic serving 127.0.0.1:57442: runtime error: invalid memory address or nil pointer dereference
+goroutine 37 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97e3e0f0}, 0x26ef97e38140)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97e3a04c?, {0x100c54520?, 0x26ef97e3e0f0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97e3e0f0}, 0x26ef97e38140)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97e3e0f0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97e3e0f0}, 0x26ef97e38140)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97e3e0f0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a1c0?}, {0x100c54520?, 0x26ef97e3e0f0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e32120, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:19 http: panic serving 127.0.0.1:57443: runtime error: invalid memory address or nil pointer dereference
+goroutine 39 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97e3e1e0}, 0x26ef97e38280)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97e3a07c?, {0x100c54520?, 0x26ef97e3e1e0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97e3e1e0}, 0x26ef97e38280)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97e3e1e0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97e3e1e0}, 0x26ef97e38280)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97e3e1e0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a2c0?}, {0x100c54520?, 0x26ef97e3e1e0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e32240, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:20 http: panic serving 127.0.0.1:57446: runtime error: invalid memory address or nil pointer dereference
+goroutine 41 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97e3e2d0}, 0x26ef97e383c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97e3a0ac?, {0x100c54520?, 0x26ef97e3e2d0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97e3e2d0}, 0x26ef97e383c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97e3e2d0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97e3e2d0}, 0x26ef97e383c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97e3e2d0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a3c0?}, {0x100c54520?, 0x26ef97e3e2d0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e32360, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:20 http: panic serving 127.0.0.1:57447: runtime error: invalid memory address or nil pointer dereference
+goroutine 43 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97e3e3c0}, 0x26ef97e38500)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97e3a0dc?, {0x100c54520?, 0x26ef97e3e3c0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97e3e3c0}, 0x26ef97e38500)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97e3e3c0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97e3e3c0}, 0x26ef97e38500)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97e3e3c0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a4c0?}, {0x100c54520?, 0x26ef97e3e3c0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e32480, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:20 http: panic serving 127.0.0.1:57448: runtime error: invalid memory address or nil pointer dereference
+goroutine 45 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97e3e4b0}, 0x26ef97e38640)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97e3a10c?, {0x100c54520?, 0x26ef97e3e4b0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97e3e4b0}, 0x26ef97e38640)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97e3e4b0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97e3e4b0}, 0x26ef97e38640)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97e3e4b0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a5c0?}, {0x100c54520?, 0x26ef97e3e4b0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e325a0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:20 http: panic serving 127.0.0.1:57449: runtime error: invalid memory address or nil pointer dereference
+goroutine 47 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97e3e5a0}, 0x26ef97e38780)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97e3a13c?, {0x100c54520?, 0x26ef97e3e5a0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97e3e5a0}, 0x26ef97e38780)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97e3e5a0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97e3e5a0}, 0x26ef97e38780)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97e3e5a0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a6c0?}, {0x100c54520?, 0x26ef97e3e5a0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e326c0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:20 http: panic serving 127.0.0.1:57450: runtime error: invalid memory address or nil pointer dereference
+goroutine 65 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97e3e690}, 0x26ef97e388c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97e3a16c?, {0x100c54520?, 0x26ef97e3e690?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97e3e690}, 0x26ef97e388c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97e3e690?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97e3e690}, 0x26ef97e388c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97e3e690?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a7c0?}, {0x100c54520?, 0x26ef97e3e690?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e327e0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:20 http: panic serving 127.0.0.1:57451: runtime error: invalid memory address or nil pointer dereference
+goroutine 67 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97e3e780}, 0x26ef97e38a00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97e3a19c?, {0x100c54520?, 0x26ef97e3e780?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97e3e780}, 0x26ef97e38a00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97e3e780?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97e3e780}, 0x26ef97e38a00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97e3e780?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a8c0?}, {0x100c54520?, 0x26ef97e3e780?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e32900, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:20 http: panic serving 127.0.0.1:57452: runtime error: invalid memory address or nil pointer dereference
+goroutine 69 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97e3e870}, 0x26ef97e38b40)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97e3a1cc?, {0x100c54520?, 0x26ef97e3e870?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97e3e870}, 0x26ef97e38b40)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97e3e870?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97e3e870}, 0x26ef97e38b40)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97e3e870?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a9c0?}, {0x100c54520?, 0x26ef97e3e870?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e32a20, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:20 http: panic serving 127.0.0.1:57454: runtime error: invalid memory address or nil pointer dereference
+goroutine 71 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97e3e960}, 0x26ef97e38c80)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97e3a1fc?, {0x100c54520?, 0x26ef97e3e960?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97e3e960}, 0x26ef97e38c80)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97e3e960?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97e3e960}, 0x26ef97e38c80)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97e3e960?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0aac0?}, {0x100c54520?, 0x26ef97e3e960?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e32b40, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:20 http: panic serving 127.0.0.1:57455: runtime error: invalid memory address or nil pointer dereference
+goroutine 73 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97e3ea50}, 0x26ef97e38dc0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97e3a22c?, {0x100c54520?, 0x26ef97e3ea50?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97e3ea50}, 0x26ef97e38dc0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97e3ea50?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97e3ea50}, 0x26ef97e38dc0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97e3ea50?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0abc0?}, {0x100c54520?, 0x26ef97e3ea50?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e32c60, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:20 http: panic serving 127.0.0.1:57456: runtime error: invalid memory address or nil pointer dereference
+goroutine 75 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97e3eb40}, 0x26ef97e38f00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97e3a25c?, {0x100c54520?, 0x26ef97e3eb40?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97e3eb40}, 0x26ef97e38f00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97e3eb40?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97e3eb40}, 0x26ef97e38f00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97e3eb40?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0acc0?}, {0x100c54520?, 0x26ef97e3eb40?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e32d80, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:21 http: panic serving 127.0.0.1:57457: runtime error: invalid memory address or nil pointer dereference
+goroutine 77 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97e3ec30}, 0x26ef97e39040)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97e3a28c?, {0x100c54520?, 0x26ef97e3ec30?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97e3ec30}, 0x26ef97e39040)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97e3ec30?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97e3ec30}, 0x26ef97e39040)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97e3ec30?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0adc0?}, {0x100c54520?, 0x26ef97e3ec30?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e32ea0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:21 http: panic serving 127.0.0.1:57458: runtime error: invalid memory address or nil pointer dereference
+goroutine 79 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97e3ed20}, 0x26ef97e39180)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97e3a2bc?, {0x100c54520?, 0x26ef97e3ed20?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97e3ed20}, 0x26ef97e39180)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97e3ed20?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97e3ed20}, 0x26ef97e39180)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97e3ed20?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0aec0?}, {0x100c54520?, 0x26ef97e3ed20?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e32fc0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:21 http: panic serving 127.0.0.1:57459: runtime error: invalid memory address or nil pointer dereference
+goroutine 81 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97e3ee10}, 0x26ef97e392c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97e3a2ec?, {0x100c54520?, 0x26ef97e3ee10?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97e3ee10}, 0x26ef97e392c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97e3ee10?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97e3ee10}, 0x26ef97e392c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97e3ee10?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0afc0?}, {0x100c54520?, 0x26ef97e3ee10?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e330e0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:21 http: panic serving 127.0.0.1:57461: runtime error: invalid memory address or nil pointer dereference
+goroutine 83 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97e3ef00}, 0x26ef97e39400)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97e3a31c?, {0x100c54520?, 0x26ef97e3ef00?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97e3ef00}, 0x26ef97e39400)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97e3ef00?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97e3ef00}, 0x26ef97e39400)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97e3ef00?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0b0c0?}, {0x100c54520?, 0x26ef97e3ef00?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e33200, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:21 http: panic serving 127.0.0.1:57462: runtime error: invalid memory address or nil pointer dereference
+goroutine 85 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97e3eff0}, 0x26ef97e39540)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97e3a34c?, {0x100c54520?, 0x26ef97e3eff0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97e3eff0}, 0x26ef97e39540)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97e3eff0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97e3eff0}, 0x26ef97e39540)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97e3eff0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0b1c0?}, {0x100c54520?, 0x26ef97e3eff0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e33320, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:21 http: panic serving 127.0.0.1:57463: runtime error: invalid memory address or nil pointer dereference
+goroutine 87 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97e3f0e0}, 0x26ef97e39680)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97e3a37c?, {0x100c54520?, 0x26ef97e3f0e0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97e3f0e0}, 0x26ef97e39680)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97e3f0e0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97e3f0e0}, 0x26ef97e39680)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97e3f0e0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0b2c0?}, {0x100c54520?, 0x26ef97e3f0e0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e33440, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:21 http: panic serving 127.0.0.1:57464: runtime error: invalid memory address or nil pointer dereference
+goroutine 89 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97e3f1d0}, 0x26ef97e397c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97e3a3ac?, {0x100c54520?, 0x26ef97e3f1d0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97e3f1d0}, 0x26ef97e397c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97e3f1d0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97e3f1d0}, 0x26ef97e397c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97e3f1d0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0b3c0?}, {0x100c54520?, 0x26ef97e3f1d0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e33560, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:21 http: panic serving 127.0.0.1:57472: runtime error: invalid memory address or nil pointer dereference
+goroutine 91 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d76000}, 0x26ef97ccc140)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c01c?, {0x100c54520?, 0x26ef97d76000?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d76000}, 0x26ef97ccc140)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d76000?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d76000}, 0x26ef97ccc140)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d76000?}, 0x26ef97e13b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a000?}, {0x100c54520?, 0x26ef97d76000?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e33680, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:21 http: panic serving 127.0.0.1:57475: runtime error: invalid memory address or nil pointer dereference
+goroutine 4 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d760f0}, 0x26ef97ccc280)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c064?, {0x100c54520?, 0x26ef97d760f0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d760f0}, 0x26ef97ccc280)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d760f0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d760f0}, 0x26ef97ccc280)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d760f0?}, 0x26ef97e13b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a140?}, {0x100c54520?, 0x26ef97d760f0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d70090, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:22 http: panic serving 127.0.0.1:57476: runtime error: invalid memory address or nil pointer dereference
+goroutine 6 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d761e0}, 0x26ef97ccc3c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c094?, {0x100c54520?, 0x26ef97d761e0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d761e0}, 0x26ef97ccc3c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d761e0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d761e0}, 0x26ef97ccc3c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d761e0?}, 0x26ef97e13b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a240?}, {0x100c54520?, 0x26ef97d761e0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d701b0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:22 http: panic serving 127.0.0.1:57478: runtime error: invalid memory address or nil pointer dereference
+goroutine 8 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d762d0}, 0x26ef97ccc500)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c0c4?, {0x100c54520?, 0x26ef97d762d0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d762d0}, 0x26ef97ccc500)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d762d0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d762d0}, 0x26ef97ccc500)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d762d0?}, 0x26ef97e13b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a340?}, {0x100c54520?, 0x26ef97d762d0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d702d0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:22 http: panic serving 127.0.0.1:57479: runtime error: invalid memory address or nil pointer dereference
+goroutine 10 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d763c0}, 0x26ef97ccc640)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c0f4?, {0x100c54520?, 0x26ef97d763c0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d763c0}, 0x26ef97ccc640)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d763c0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d763c0}, 0x26ef97ccc640)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d763c0?}, 0x26ef97e13b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a440?}, {0x100c54520?, 0x26ef97d763c0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d703f0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:22 http: panic serving 127.0.0.1:57480: runtime error: invalid memory address or nil pointer dereference
+goroutine 12 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d764b0}, 0x26ef97ccc780)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c124?, {0x100c54520?, 0x26ef97d764b0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d764b0}, 0x26ef97ccc780)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d764b0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d764b0}, 0x26ef97ccc780)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d764b0?}, 0x26ef97e13b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a540?}, {0x100c54520?, 0x26ef97d764b0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d70510, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:22 http: panic serving 127.0.0.1:57481: runtime error: invalid memory address or nil pointer dereference
+goroutine 14 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d765a0}, 0x26ef97ccc8c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c154?, {0x100c54520?, 0x26ef97d765a0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d765a0}, 0x26ef97ccc8c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d765a0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d765a0}, 0x26ef97ccc8c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d765a0?}, 0x26ef97e13b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a640?}, {0x100c54520?, 0x26ef97d765a0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d70630, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:22 http: panic serving 127.0.0.1:57482: runtime error: invalid memory address or nil pointer dereference
+goroutine 16 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d76690}, 0x26ef97ccca00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c184?, {0x100c54520?, 0x26ef97d76690?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d76690}, 0x26ef97ccca00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d76690?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d76690}, 0x26ef97ccca00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d76690?}, 0x26ef97e13b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a740?}, {0x100c54520?, 0x26ef97d76690?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d70750, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:22 http: panic serving 127.0.0.1:57485: runtime error: invalid memory address or nil pointer dereference
+goroutine 108 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d76000}, 0x26ef97ccc140)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c01c?, {0x100c54520?, 0x26ef97d76000?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d76000}, 0x26ef97ccc140)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d76000?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d76000}, 0x26ef97ccc140)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d76000?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a000?}, {0x100c54520?, 0x26ef97d76000?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d70000, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:22 http: panic serving 127.0.0.1:57486: runtime error: invalid memory address or nil pointer dereference
+goroutine 110 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d760f0}, 0x26ef97ccc280)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c064?, {0x100c54520?, 0x26ef97d760f0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d760f0}, 0x26ef97ccc280)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d760f0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d760f0}, 0x26ef97ccc280)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d760f0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a1c0?}, {0x100c54520?, 0x26ef97d760f0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d70120, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:22 http: panic serving 127.0.0.1:57487: runtime error: invalid memory address or nil pointer dereference
+goroutine 112 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d761e0}, 0x26ef97ccc3c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c094?, {0x100c54520?, 0x26ef97d761e0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d761e0}, 0x26ef97ccc3c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d761e0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d761e0}, 0x26ef97ccc3c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d761e0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a2c0?}, {0x100c54520?, 0x26ef97d761e0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d70240, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:23 http: panic serving 127.0.0.1:57488: runtime error: invalid memory address or nil pointer dereference
+goroutine 114 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d762d0}, 0x26ef97ccc500)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c0c4?, {0x100c54520?, 0x26ef97d762d0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d762d0}, 0x26ef97ccc500)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d762d0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d762d0}, 0x26ef97ccc500)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d762d0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a3c0?}, {0x100c54520?, 0x26ef97d762d0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d70360, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:23 http: panic serving 127.0.0.1:57489: runtime error: invalid memory address or nil pointer dereference
+goroutine 116 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d763c0}, 0x26ef97ccc640)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c0f4?, {0x100c54520?, 0x26ef97d763c0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d763c0}, 0x26ef97ccc640)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d763c0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d763c0}, 0x26ef97ccc640)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d763c0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a4c0?}, {0x100c54520?, 0x26ef97d763c0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d70480, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:23 http: panic serving 127.0.0.1:57490: runtime error: invalid memory address or nil pointer dereference
+goroutine 118 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d764b0}, 0x26ef97ccc780)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c124?, {0x100c54520?, 0x26ef97d764b0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d764b0}, 0x26ef97ccc780)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d764b0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d764b0}, 0x26ef97ccc780)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d764b0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a5c0?}, {0x100c54520?, 0x26ef97d764b0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d705a0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:23 http: panic serving 127.0.0.1:57491: runtime error: invalid memory address or nil pointer dereference
+goroutine 120 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d765a0}, 0x26ef97ccc8c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c154?, {0x100c54520?, 0x26ef97d765a0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d765a0}, 0x26ef97ccc8c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d765a0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d765a0}, 0x26ef97ccc8c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d765a0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a6c0?}, {0x100c54520?, 0x26ef97d765a0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d706c0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:23 http: panic serving 127.0.0.1:57492: runtime error: invalid memory address or nil pointer dereference
+goroutine 122 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d76780}, 0x26ef97cccb40)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c1b4?, {0x100c54520?, 0x26ef97d76780?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d76780}, 0x26ef97cccb40)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d76780?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d76780}, 0x26ef97cccb40)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d76780?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a8c0?}, {0x100c54520?, 0x26ef97d76780?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d70900, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:23 http: panic serving 127.0.0.1:57495: runtime error: invalid memory address or nil pointer dereference
+goroutine 124 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d76870}, 0x26ef97cccc80)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c1e4?, {0x100c54520?, 0x26ef97d76870?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d76870}, 0x26ef97cccc80)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d76870?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d76870}, 0x26ef97cccc80)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d76870?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a9c0?}, {0x100c54520?, 0x26ef97d76870?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d70a20, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:23 http: panic serving 127.0.0.1:57496: runtime error: invalid memory address or nil pointer dereference
+goroutine 126 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d76960}, 0x26ef97cccdc0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c214?, {0x100c54520?, 0x26ef97d76960?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d76960}, 0x26ef97cccdc0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d76960?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d76960}, 0x26ef97cccdc0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d76960?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6aac0?}, {0x100c54520?, 0x26ef97d76960?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d70b40, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:23 http: panic serving 127.0.0.1:57498: runtime error: invalid memory address or nil pointer dereference
+goroutine 128 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d76a50}, 0x26ef97cccf00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c244?, {0x100c54520?, 0x26ef97d76a50?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d76a50}, 0x26ef97cccf00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d76a50?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d76a50}, 0x26ef97cccf00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d76a50?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6abc0?}, {0x100c54520?, 0x26ef97d76a50?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d70c60, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:23 http: panic serving 127.0.0.1:57499: runtime error: invalid memory address or nil pointer dereference
+goroutine 130 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d76b40}, 0x26ef97ccd040)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c274?, {0x100c54520?, 0x26ef97d76b40?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d76b40}, 0x26ef97ccd040)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d76b40?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d76b40}, 0x26ef97ccd040)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d76b40?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6acc0?}, {0x100c54520?, 0x26ef97d76b40?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d70d80, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:23 http: panic serving 127.0.0.1:57500: runtime error: invalid memory address or nil pointer dereference
+goroutine 132 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d76c30}, 0x26ef97ccd180)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c2a4?, {0x100c54520?, 0x26ef97d76c30?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d76c30}, 0x26ef97ccd180)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d76c30?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d76c30}, 0x26ef97ccd180)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d76c30?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6adc0?}, {0x100c54520?, 0x26ef97d76c30?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d70ea0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:24 http: panic serving 127.0.0.1:57501: runtime error: invalid memory address or nil pointer dereference
+goroutine 134 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d76d20}, 0x26ef97ccd2c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c2d4?, {0x100c54520?, 0x26ef97d76d20?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d76d20}, 0x26ef97ccd2c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d76d20?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d76d20}, 0x26ef97ccd2c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d76d20?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6aec0?}, {0x100c54520?, 0x26ef97d76d20?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d70fc0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:24 http: panic serving 127.0.0.1:57502: runtime error: invalid memory address or nil pointer dereference
+goroutine 136 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d76e10}, 0x26ef97ccd400)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c304?, {0x100c54520?, 0x26ef97d76e10?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d76e10}, 0x26ef97ccd400)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d76e10?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d76e10}, 0x26ef97ccd400)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d76e10?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6afc0?}, {0x100c54520?, 0x26ef97d76e10?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d710e0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:24 http: panic serving 127.0.0.1:57503: runtime error: invalid memory address or nil pointer dereference
+goroutine 138 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d76f00}, 0x26ef97ccd540)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c334?, {0x100c54520?, 0x26ef97d76f00?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d76f00}, 0x26ef97ccd540)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d76f00?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d76f00}, 0x26ef97ccd540)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d76f00?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6b0c0?}, {0x100c54520?, 0x26ef97d76f00?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d71200, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:24 http: panic serving 127.0.0.1:57505: runtime error: invalid memory address or nil pointer dereference
+goroutine 140 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d76ff0}, 0x26ef97ccd680)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c364?, {0x100c54520?, 0x26ef97d76ff0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d76ff0}, 0x26ef97ccd680)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d76ff0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d76ff0}, 0x26ef97ccd680)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d76ff0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6b1c0?}, {0x100c54520?, 0x26ef97d76ff0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d71320, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:24 http: panic serving 127.0.0.1:57506: runtime error: invalid memory address or nil pointer dereference
+goroutine 142 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d770e0}, 0x26ef97ccd7c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c394?, {0x100c54520?, 0x26ef97d770e0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d770e0}, 0x26ef97ccd7c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d770e0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d770e0}, 0x26ef97ccd7c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d770e0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6b2c0?}, {0x100c54520?, 0x26ef97d770e0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d71440, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:24 http: panic serving 127.0.0.1:57507: runtime error: invalid memory address or nil pointer dereference
+goroutine 144 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d771d0}, 0x26ef97ccd900)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c3c4?, {0x100c54520?, 0x26ef97d771d0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d771d0}, 0x26ef97ccd900)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d771d0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d771d0}, 0x26ef97ccd900)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d771d0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6b3c0?}, {0x100c54520?, 0x26ef97d771d0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d71560, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:24 http: panic serving 127.0.0.1:57508: runtime error: invalid memory address or nil pointer dereference
+goroutine 146 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d772c0}, 0x26ef97ccda40)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c3f4?, {0x100c54520?, 0x26ef97d772c0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d772c0}, 0x26ef97ccda40)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d772c0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d772c0}, 0x26ef97ccda40)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d772c0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6b4c0?}, {0x100c54520?, 0x26ef97d772c0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d71680, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:24 http: panic serving 127.0.0.1:57509: runtime error: invalid memory address or nil pointer dereference
+goroutine 148 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d773b0}, 0x26ef97ccdb80)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c424?, {0x100c54520?, 0x26ef97d773b0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d773b0}, 0x26ef97ccdb80)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d773b0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d773b0}, 0x26ef97ccdb80)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d773b0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6b5c0?}, {0x100c54520?, 0x26ef97d773b0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d717a0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:24 http: panic serving 127.0.0.1:57510: runtime error: invalid memory address or nil pointer dereference
+goroutine 150 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d774a0}, 0x26ef97ccdcc0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c454?, {0x100c54520?, 0x26ef97d774a0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d774a0}, 0x26ef97ccdcc0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d774a0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d774a0}, 0x26ef97ccdcc0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d774a0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6b6c0?}, {0x100c54520?, 0x26ef97d774a0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d718c0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:25 http: panic serving 127.0.0.1:57511: runtime error: invalid memory address or nil pointer dereference
+goroutine 152 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d77590}, 0x26ef97dfa000)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c484?, {0x100c54520?, 0x26ef97d77590?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d77590}, 0x26ef97dfa000)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d77590?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d77590}, 0x26ef97dfa000)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d77590?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6b7c0?}, {0x100c54520?, 0x26ef97d77590?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d719e0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:25 http: panic serving 127.0.0.1:57513: runtime error: invalid memory address or nil pointer dereference
+goroutine 154 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d77680}, 0x26ef97dfa140)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c4b4?, {0x100c54520?, 0x26ef97d77680?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d77680}, 0x26ef97dfa140)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d77680?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d77680}, 0x26ef97dfa140)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d77680?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6b8c0?}, {0x100c54520?, 0x26ef97d77680?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d71b00, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:25 http: panic serving 127.0.0.1:57514: runtime error: invalid memory address or nil pointer dereference
+goroutine 156 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d77770}, 0x26ef97dfa3c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c4e4?, {0x100c54520?, 0x26ef97d77770?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d77770}, 0x26ef97dfa3c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d77770?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d77770}, 0x26ef97dfa3c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d77770?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6b9c0?}, {0x100c54520?, 0x26ef97d77770?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d71c20, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:25 http: panic serving 127.0.0.1:57515: runtime error: invalid memory address or nil pointer dereference
+goroutine 158 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d77860}, 0x26ef97dfa640)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c514?, {0x100c54520?, 0x26ef97d77860?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d77860}, 0x26ef97dfa640)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d77860?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d77860}, 0x26ef97dfa640)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d77860?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6bac0?}, {0x100c54520?, 0x26ef97d77860?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d71d40, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:25 http: panic serving 127.0.0.1:57516: runtime error: invalid memory address or nil pointer dereference
+goroutine 160 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d77950}, 0x26ef97dfa780)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c544?, {0x100c54520?, 0x26ef97d77950?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d77950}, 0x26ef97dfa780)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d77950?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d77950}, 0x26ef97dfa780)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d77950?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6bbc0?}, {0x100c54520?, 0x26ef97d77950?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97d71e60, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:25 http: panic serving 127.0.0.1:57517: runtime error: invalid memory address or nil pointer dereference
+goroutine 162 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d77a40}, 0x26ef97dfa8c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c574?, {0x100c54520?, 0x26ef97d77a40?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d77a40}, 0x26ef97dfa8c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d77a40?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d77a40}, 0x26ef97dfa8c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d77a40?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6bcc0?}, {0x100c54520?, 0x26ef97d77a40?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e802d0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:25 http: panic serving 127.0.0.1:57518: runtime error: invalid memory address or nil pointer dereference
+goroutine 164 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d77b30}, 0x26ef97dfaa00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c5a4?, {0x100c54520?, 0x26ef97d77b30?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d77b30}, 0x26ef97dfaa00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d77b30?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d77b30}, 0x26ef97dfaa00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d77b30?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6bdc0?}, {0x100c54520?, 0x26ef97d77b30?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e80510, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:25 http: panic serving 127.0.0.1:57519: runtime error: invalid memory address or nil pointer dereference
+goroutine 166 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d77c20}, 0x26ef97dfab40)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c5d4?, {0x100c54520?, 0x26ef97d77c20?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d77c20}, 0x26ef97dfab40)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d77c20?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d77c20}, 0x26ef97dfab40)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d77c20?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6bec0?}, {0x100c54520?, 0x26ef97d77c20?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e80630, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:25 http: panic serving 127.0.0.1:57520: runtime error: invalid memory address or nil pointer dereference
+goroutine 168 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d77d10}, 0x26ef97dfac80)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c604?, {0x100c54520?, 0x26ef97d77d10?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d77d10}, 0x26ef97dfac80)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d77d10?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d77d10}, 0x26ef97dfac80)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d77d10?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a100?}, {0x100c54520?, 0x26ef97d77d10?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e80750, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:26 http: panic serving 127.0.0.1:57521: runtime error: invalid memory address or nil pointer dereference
+goroutine 170 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97d77e00}, 0x26ef97dfadc0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c634?, {0x100c54520?, 0x26ef97d77e00?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97d77e00}, 0x26ef97dfadc0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97d77e00?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97d77e00}, 0x26ef97dfadc0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97d77e00?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a240?}, {0x100c54520?, 0x26ef97d77e00?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e80870, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:26 http: panic serving 127.0.0.1:57522: runtime error: invalid memory address or nil pointer dereference
+goroutine 172 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce2000}, 0x26ef97dfaf00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c664?, {0x100c54520?, 0x26ef97ce2000?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce2000}, 0x26ef97dfaf00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce2000?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce2000}, 0x26ef97dfaf00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce2000?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a340?}, {0x100c54520?, 0x26ef97ce2000?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e80990, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:26 http: panic serving 127.0.0.1:57523: runtime error: invalid memory address or nil pointer dereference
+goroutine 174 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce20f0}, 0x26ef97dfb040)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c694?, {0x100c54520?, 0x26ef97ce20f0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce20f0}, 0x26ef97dfb040)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce20f0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce20f0}, 0x26ef97dfb040)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce20f0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a440?}, {0x100c54520?, 0x26ef97ce20f0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e80ab0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:26 http: panic serving 127.0.0.1:57524: runtime error: invalid memory address or nil pointer dereference
+goroutine 176 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce21e0}, 0x26ef97dfb180)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c6c4?, {0x100c54520?, 0x26ef97ce21e0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce21e0}, 0x26ef97dfb180)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce21e0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce21e0}, 0x26ef97dfb180)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce21e0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a540?}, {0x100c54520?, 0x26ef97ce21e0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e80bd0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:26 http: panic serving 127.0.0.1:57525: runtime error: invalid memory address or nil pointer dereference
+goroutine 178 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce22d0}, 0x26ef97dfb2c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c6f4?, {0x100c54520?, 0x26ef97ce22d0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce22d0}, 0x26ef97dfb2c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce22d0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce22d0}, 0x26ef97dfb2c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce22d0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a640?}, {0x100c54520?, 0x26ef97ce22d0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e80cf0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:26 http: panic serving 127.0.0.1:57526: runtime error: invalid memory address or nil pointer dereference
+goroutine 180 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce23c0}, 0x26ef97dfb400)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c724?, {0x100c54520?, 0x26ef97ce23c0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce23c0}, 0x26ef97dfb400)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce23c0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce23c0}, 0x26ef97dfb400)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce23c0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a740?}, {0x100c54520?, 0x26ef97ce23c0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e80e10, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:26 http: panic serving 127.0.0.1:57529: runtime error: invalid memory address or nil pointer dereference
+goroutine 182 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce24b0}, 0x26ef97dfb540)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c754?, {0x100c54520?, 0x26ef97ce24b0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce24b0}, 0x26ef97dfb540)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce24b0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce24b0}, 0x26ef97dfb540)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce24b0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a840?}, {0x100c54520?, 0x26ef97ce24b0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e80f30, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:26 http: panic serving 127.0.0.1:57531: runtime error: invalid memory address or nil pointer dereference
+goroutine 184 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce25a0}, 0x26ef97dfb680)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c784?, {0x100c54520?, 0x26ef97ce25a0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce25a0}, 0x26ef97dfb680)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce25a0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce25a0}, 0x26ef97dfb680)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce25a0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a940?}, {0x100c54520?, 0x26ef97ce25a0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e81050, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:26 http: panic serving 127.0.0.1:57532: runtime error: invalid memory address or nil pointer dereference
+goroutine 186 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce2690}, 0x26ef97dfb7c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c7b4?, {0x100c54520?, 0x26ef97ce2690?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce2690}, 0x26ef97dfb7c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce2690?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce2690}, 0x26ef97dfb7c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce2690?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0aa40?}, {0x100c54520?, 0x26ef97ce2690?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e81170, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:26 http: panic serving 127.0.0.1:57533: runtime error: invalid memory address or nil pointer dereference
+goroutine 188 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce2780}, 0x26ef97dfb900)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c7e4?, {0x100c54520?, 0x26ef97ce2780?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce2780}, 0x26ef97dfb900)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce2780?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce2780}, 0x26ef97dfb900)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce2780?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0ab40?}, {0x100c54520?, 0x26ef97ce2780?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e81290, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:27 http: panic serving 127.0.0.1:57534: runtime error: invalid memory address or nil pointer dereference
+goroutine 190 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce2870}, 0x26ef97dfba40)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c814?, {0x100c54520?, 0x26ef97ce2870?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce2870}, 0x26ef97dfba40)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce2870?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce2870}, 0x26ef97dfba40)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce2870?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0ac40?}, {0x100c54520?, 0x26ef97ce2870?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e813b0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:27 http: panic serving 127.0.0.1:57535: runtime error: invalid memory address or nil pointer dereference
+goroutine 192 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce2960}, 0x26ef97dfbb80)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c844?, {0x100c54520?, 0x26ef97ce2960?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce2960}, 0x26ef97dfbb80)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce2960?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce2960}, 0x26ef97dfbb80)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce2960?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0ad40?}, {0x100c54520?, 0x26ef97ce2960?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e814d0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:27 http: panic serving 127.0.0.1:57538: runtime error: invalid memory address or nil pointer dereference
+goroutine 194 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce2a50}, 0x26ef97dfbcc0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c874?, {0x100c54520?, 0x26ef97ce2a50?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce2a50}, 0x26ef97dfbcc0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce2a50?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce2a50}, 0x26ef97dfbcc0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce2a50?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0ae40?}, {0x100c54520?, 0x26ef97ce2a50?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e815f0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:27 http: panic serving 127.0.0.1:57539: runtime error: invalid memory address or nil pointer dereference
+goroutine 196 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce2b40}, 0x26ef97cec000)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c8a4?, {0x100c54520?, 0x26ef97ce2b40?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce2b40}, 0x26ef97cec000)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce2b40?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce2b40}, 0x26ef97cec000)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce2b40?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0af40?}, {0x100c54520?, 0x26ef97ce2b40?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e81710, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:27 http: panic serving 127.0.0.1:57540: runtime error: invalid memory address or nil pointer dereference
+goroutine 198 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce2c30}, 0x26ef97cec140)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c8d4?, {0x100c54520?, 0x26ef97ce2c30?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce2c30}, 0x26ef97cec140)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce2c30?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce2c30}, 0x26ef97cec140)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce2c30?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0b040?}, {0x100c54520?, 0x26ef97ce2c30?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e81830, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:27 http: panic serving 127.0.0.1:57541: runtime error: invalid memory address or nil pointer dereference
+goroutine 200 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce2d20}, 0x26ef97cec280)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c904?, {0x100c54520?, 0x26ef97ce2d20?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce2d20}, 0x26ef97cec280)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce2d20?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce2d20}, 0x26ef97cec280)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce2d20?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0b140?}, {0x100c54520?, 0x26ef97ce2d20?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e81950, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:27 http: panic serving 127.0.0.1:57542: runtime error: invalid memory address or nil pointer dereference
+goroutine 202 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce2e10}, 0x26ef97cec3c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c934?, {0x100c54520?, 0x26ef97ce2e10?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce2e10}, 0x26ef97cec3c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce2e10?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce2e10}, 0x26ef97cec3c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce2e10?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0b240?}, {0x100c54520?, 0x26ef97ce2e10?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e81a70, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:27 http: panic serving 127.0.0.1:57543: runtime error: invalid memory address or nil pointer dereference
+goroutine 209 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce2000}, 0x26ef97cec000)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c01c?, {0x100c54520?, 0x26ef97ce2000?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce2000}, 0x26ef97cec000)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce2000?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce2000}, 0x26ef97cec000)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce2000?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a000?}, {0x100c54520?, 0x26ef97ce2000?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e801b0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:27 http: panic serving 127.0.0.1:57544: runtime error: invalid memory address or nil pointer dereference
+goroutine 211 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce20f0}, 0x26ef97cec140)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c064?, {0x100c54520?, 0x26ef97ce20f0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce20f0}, 0x26ef97cec140)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce20f0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce20f0}, 0x26ef97cec140)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce20f0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a1c0?}, {0x100c54520?, 0x26ef97ce20f0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e803f0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:28 http: panic serving 127.0.0.1:57545: runtime error: invalid memory address or nil pointer dereference
+goroutine 213 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce21e0}, 0x26ef97cec280)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c094?, {0x100c54520?, 0x26ef97ce21e0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce21e0}, 0x26ef97cec280)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce21e0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce21e0}, 0x26ef97cec280)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce21e0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a2c0?}, {0x100c54520?, 0x26ef97ce21e0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e805a0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:28 http: panic serving 127.0.0.1:57546: runtime error: invalid memory address or nil pointer dereference
+goroutine 215 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce22d0}, 0x26ef97cec500)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c0c4?, {0x100c54520?, 0x26ef97ce22d0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce22d0}, 0x26ef97cec500)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce22d0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce22d0}, 0x26ef97cec500)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce22d0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a3c0?}, {0x100c54520?, 0x26ef97ce22d0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e806c0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:28 http: panic serving 127.0.0.1:57547: runtime error: invalid memory address or nil pointer dereference
+goroutine 217 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce23c0}, 0x26ef97cec640)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c0f4?, {0x100c54520?, 0x26ef97ce23c0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce23c0}, 0x26ef97cec640)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce23c0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce23c0}, 0x26ef97cec640)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce23c0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a4c0?}, {0x100c54520?, 0x26ef97ce23c0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e807e0, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:28 http: panic serving 127.0.0.1:57548: runtime error: invalid memory address or nil pointer dereference
+goroutine 219 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce24b0}, 0x26ef97cec780)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c124?, {0x100c54520?, 0x26ef97ce24b0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce24b0}, 0x26ef97cec780)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce24b0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce24b0}, 0x26ef97cec780)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce24b0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a5c0?}, {0x100c54520?, 0x26ef97ce24b0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e80900, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:28 http: panic serving 127.0.0.1:57549: runtime error: invalid memory address or nil pointer dereference
+goroutine 221 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce25a0}, 0x26ef97cec8c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c154?, {0x100c54520?, 0x26ef97ce25a0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce25a0}, 0x26ef97cec8c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce25a0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce25a0}, 0x26ef97cec8c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce25a0?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a6c0?}, {0x100c54520?, 0x26ef97ce25a0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e80a20, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:28 http: panic serving 127.0.0.1:57550: runtime error: invalid memory address or nil pointer dereference
+goroutine 223 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce2690}, 0x26ef97ceca00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c184?, {0x100c54520?, 0x26ef97ce2690?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce2690}, 0x26ef97ceca00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce2690?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce2690}, 0x26ef97ceca00)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce2690?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a7c0?}, {0x100c54520?, 0x26ef97ce2690?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e80b40, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:28 http: panic serving 127.0.0.1:57551: runtime error: invalid memory address or nil pointer dereference
+goroutine 225 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce2780}, 0x26ef97cecb40)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c1b4?, {0x100c54520?, 0x26ef97ce2780?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce2780}, 0x26ef97cecb40)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce2780?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce2780}, 0x26ef97cecb40)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce2780?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a8c0?}, {0x100c54520?, 0x26ef97ce2780?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e80c60, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:28 http: panic serving 127.0.0.1:57552: runtime error: invalid memory address or nil pointer dereference
+goroutine 227 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce2870}, 0x26ef97cecc80)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97d0c1e4?, {0x100c54520?, 0x26ef97ce2870?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce2870}, 0x26ef97cecc80)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce2870?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce2870}, 0x26ef97cecc80)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce2870?}, 0x26ef97e12b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97e0a9c0?}, {0x100c54520?, 0x26ef97ce2870?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97e80d80, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:28 http: panic serving 127.0.0.1:57553: runtime error: invalid memory address or nil pointer dereference
+goroutine 92 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce8000}, 0x26ef97ccc140)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97dc810c?, {0x100c54520?, 0x26ef97ce8000?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce8000}, 0x26ef97ccc140)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce8000?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce8000}, 0x26ef97ccc140)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce8000?}, 0x26ef97e45b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a000?}, {0x100c54520?, 0x26ef97ce8000?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97ce0000, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:29 http: panic serving 127.0.0.1:57554: runtime error: invalid memory address or nil pointer dereference
+goroutine 94 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce80f0}, 0x26ef97ccc280)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97dc816c?, {0x100c54520?, 0x26ef97ce80f0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce80f0}, 0x26ef97ccc280)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce80f0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce80f0}, 0x26ef97ccc280)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce80f0?}, 0x26ef97e45b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a200?}, {0x100c54520?, 0x26ef97ce80f0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97ce0120, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:29 http: panic serving 127.0.0.1:57555: runtime error: invalid memory address or nil pointer dereference
+goroutine 96 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce81e0}, 0x26ef97ccc3c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97dc81b4?, {0x100c54520?, 0x26ef97ce81e0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce81e0}, 0x26ef97ccc3c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce81e0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce81e0}, 0x26ef97ccc3c0)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce81e0?}, 0x26ef97e45b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a300?}, {0x100c54520?, 0x26ef97ce81e0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97ce0240, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:29 http: panic serving 127.0.0.1:57556: runtime error: invalid memory address or nil pointer dereference
+goroutine 242 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce82d0}, 0x26ef97ccc500)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97dc81fc?, {0x100c54520?, 0x26ef97ce82d0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce82d0}, 0x26ef97ccc500)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce82d0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce82d0}, 0x26ef97ccc500)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce82d0?}, 0x26ef97e45b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a400?}, {0x100c54520?, 0x26ef97ce82d0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97ce0360, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c
+2026/11/15 11:58:29 http: panic serving 127.0.0.1:57557: runtime error: invalid memory address or nil pointer dereference
+goroutine 244 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x100ba0be0?, 0x100cdbf90?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func3({0x100c54520, 0x26ef97ce83c0}, 0x26ef97ccc640)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x164
+net/http.HandlerFunc.ServeHTTP(0x26ef97dc822c?, {0x100c54520?, 0x26ef97ce83c0?}, 0x10078535a?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func5({0x100c54520, 0x26ef97ce83c0}, 0x26ef97ccc640)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x149bd4248?, {0x100c54520?, 0x26ef97ce83c0?}, 0x1005c25b4?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.HTTP.func6({0x100c54520, 0x26ef97ce83c0}, 0x26ef97ccc640)
+	/Users/administrator/poc-v5b-lanes/qwen3-coder-next/eval/go-action--010/internal/protocol/protocol.go:48 +0x178
+net/http.HandlerFunc.ServeHTTP(0x0?, {0x100c54520?, 0x26ef97ce83c0?}, 0x26ef97e45b50?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x26ef97d6a500?}, {0x100c54520?, 0x26ef97ce83c0?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x26ef97ce0480, {0x100c55820, 0x26ef97e993e0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c

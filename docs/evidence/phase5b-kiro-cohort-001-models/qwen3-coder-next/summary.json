@@ -1,0 +1,176 @@
+{
+  "version": 5,
+  "kind": "model-trial",
+  "plan_sha256": "1762322626284816f0dd4572fe005b14ddc3dd9ade1c0f3fc338ac840c33ec8b",
+  "rows": [
+    {
+      "cell": "go-manual",
+      "planned": 10,
+      "observed": 10,
+      "unmeasured": 0,
+      "passed_all": 5,
+      "passed_explicit": 7,
+      "conventions_followed": {
+        "implicit-audit": 7,
+        "implicit-request-hash": 6,
+        "implicit-outbox": 5,
+        "implicit-uniform-denial": 7
+      },
+      "first_pass_rate": 0.5,
+      "explicit_pass_rate": 0.7,
+      "outcomes": {
+        "candidate-error": 1,
+        "acceptance-failed": 3,
+        "passed": 5,
+        "scope-violation": 1
+      },
+      "usage": [
+        {
+          "trial": "go-manual--001",
+          "usage": {
+            "credits": 0.7395939834162522
+          }
+        },
+        {
+          "trial": "go-manual--002",
+          "usage": {
+            "credits": 1.5040307346600337
+          }
+        },
+        {
+          "trial": "go-manual--003",
+          "usage": {
+            "credits": 0.8764223466003316
+          }
+        },
+        {
+          "trial": "go-manual--004",
+          "usage": {
+            "credits": 0.4559512769485904
+          }
+        },
+        {
+          "trial": "go-manual--005",
+          "usage": {
+            "credits": 1.1083786451077942
+          }
+        },
+        {
+          "trial": "go-manual--006",
+          "usage": {
+            "credits": 0.9372359436152572
+          }
+        },
+        {
+          "trial": "go-manual--007",
+          "usage": {
+            "credits": 1.2616186484245435
+          }
+        },
+        {
+          "trial": "go-manual--008",
+          "usage": {
+            "credits": 0.6134146832504144
+          }
+        },
+        {
+          "trial": "go-manual--009",
+          "usage": {
+            "credits": 1.065663454394693
+          }
+        },
+        {
+          "trial": "go-manual--010",
+          "usage": {
+            "credits": 0.579407422885572
+          }
+        }
+      ]
+    },
+    {
+      "cell": "go-action",
+      "planned": 10,
+      "observed": 10,
+      "unmeasured": 0,
+      "passed_all": 1,
+      "passed_explicit": 8,
+      "conventions_followed": {
+        "implicit-audit": 8,
+        "implicit-request-hash": 8,
+        "implicit-outbox": 1,
+        "implicit-uniform-denial": 8
+      },
+      "first_pass_rate": 0.1,
+      "explicit_pass_rate": 0.8,
+      "outcomes": {
+        "acceptance-failed": 7,
+        "passed": 1,
+        "scope-violation": 1,
+        "candidate-error": 1
+      },
+      "usage": [
+        {
+          "trial": "go-action--001",
+          "usage": {
+            "credits": 0.4924665207296848
+          }
+        },
+        {
+          "trial": "go-action--002",
+          "usage": {
+            "credits": 0.33140359867330016
+          }
+        },
+        {
+          "trial": "go-action--003",
+          "usage": {
+            "credits": 0.5070394776119403
+          }
+        },
+        {
+          "trial": "go-action--004",
+          "usage": {
+            "credits": 0.26762572636815923
+          }
+        },
+        {
+          "trial": "go-action--005",
+          "usage": {
+            "credits": 0.6307751293532339
+          }
+        },
+        {
+          "trial": "go-action--006",
+          "usage": {
+            "credits": 0.6473403084577114
+          }
+        },
+        {
+          "trial": "go-action--007",
+          "usage": {
+            "credits": 0.7781084776119404
+          }
+        },
+        {
+          "trial": "go-action--008",
+          "usage": {
+            "credits": 0.5660068225538971
+          }
+        },
+        {
+          "trial": "go-action--009",
+          "usage": {
+            "credits": 0.34562811940298505
+          }
+        },
+        {
+          "trial": "go-action--010",
+          "usage": {
+            "credits": 0.4530088971807628
+          }
+        }
+      ]
+    }
+  ],
+  "note": "Explicit contract and implicit conventions are reported separately. Synthetic controls are not model evidence. Missing/infrastructure trials remain unmeasured; absent usage is unknown."
+}

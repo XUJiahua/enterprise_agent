@@ -1,0 +1,74 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index c928b73..55ad03c 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -108,5 +108,11 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		}
+ 		return result, false, nil
+ 	}
+-	return protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve, "/purchases/bulk-reject": newReject(pool)}, fallback), nil
++	itemRoutes := map[string]protocol.ItemHandler{
++		"/purchases/reopen": newReopen(pool),
++	}
++	return protocol.HTTPWithItem(map[string]protocol.Handler{
++		"/purchases/bulk-approve": approve,
++		"/purchases/bulk-reject":  newReject(pool),
++	}, itemRoutes, fallback), nil
+ }
+diff --git a/internal/protocol/protocol.go b/internal/protocol/protocol.go
+index ca0b028..5c1edb9 100644
+--- a/internal/protocol/protocol.go
++++ b/internal/protocol/protocol.go
+@@ -80,6 +80,52 @@ func HTTP(routes Routes, fallback http.Handler) http.Handler {
+ 	})
+ }
+ 
++// HTTPWithItem extends HTTP to also handle single-target Item routes.
++// Batch routes require approver; Item routes are dispatched by path and role.
++func HTTPWithItem(routes Routes, itemRoutes map[string]ItemHandler, fallback http.Handler) http.Handler {
++	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++		// Check batch routes first
++		if handle, found := routes[r.URL.Path]; r.Method == http.MethodPost && found {
++			u, ok := app.AuthenticateDemo(r.Header.Get("Authorization"))
++			if !ok {
++				reject(w, 401)
++				return
++			}
++			if u.Role != "approver" {
++				reject(w, 403)
++				return
++			}
++			body, err := io.ReadAll(http.MaxBytesReader(w, r.Body, MaxBodyBytes))
++			if err != nil {
++				var large *http.MaxBytesError
++				if errors.As(err, &large) {
++					reject(w, 413)
++				} else {
++					reject(w, 400)
++				}
++				return
++			}
++			ids, ok := decode(body)
++			keys := r.Header.Values("Idempotency-Key")
++			if !ok || len(keys) != 1 || !validKey(keys[0]) {
++				reject(w, 400)
++				return
++			}
++			ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
++			defer cancel()
++			result, replayed, err := handle(ctx, u, keys[0], ids)
++			respond(w, result, replayed, err)
++			return
++		}
++		// Check item routes
++		if handle, found := itemRoutes[r.URL.Path]; r.Method == http.MethodPost && found {
++			Item("reopen", "requester", handle, fallback).ServeHTTP(w, r)
++			return
++		}
++		fallback.ServeHTTP(w, r)
++	})
++}
++
+ // ItemResult is the response of a single-target Action: {"id":...,"status":...}.
+ type ItemResult struct {
+ 	ID     string `json:"id"`

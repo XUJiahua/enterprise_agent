@@ -1,0 +1,2 @@
+[warn] failed to set effort 'medium': model 'gpt-5.6-luna' offers no effort levels
+[INFO] [KRS] <-- GenerateAssistantResponseCommand done totalEvents=10
