@@ -112,4 +112,14 @@ class Phase4Tests(unittest.TestCase):
                 if violated: self.assertNotEqual(controls.reject_source(mode),reference,mode)
         self.assertEqual(sum(bool(v) for m in controls.MODES.values() for v,_ in m.values()),8)
 
+    def test_v4b_changes_only_action_capability_line(self):
+        manual,action=ctl.contract()['cells']
+        if manual['capability']: manual,action=action,manual
+        self.assertEqual(ctl.prompt(manual,'v4b'),ctl.prompt(manual,'v4'))
+        a,b=ctl.prompt(action,'v4').splitlines(),ctl.prompt(action,'v4b').splitlines()
+        diff=[(x,y) for x,y in zip(a,b) if x!=y]
+        self.assertEqual(len(a),len(b));self.assertEqual(len(diff),1)
+        self.assertEqual(diff[0][1],diff[0][0]+' '+ctl.EXTENSION_HINT)
+        for word in ctl.contract()['forbidden_in_task']: self.assertNotIn(word.lower(),ctl.EXTENSION_HINT.lower())
+
 if __name__=='__main__':unittest.main()
