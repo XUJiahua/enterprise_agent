@@ -67,3 +67,5 @@
 ## 追加（网络隔离）
 
 生成端新增了网络受限的隔离方式，见 [network-isolation.md](network-isolation.md)，对应 `isolate_net.py` 和 `run_kiro_cohort_net.sh`。github.com、直连 IP 和 DNS 均已实测被拒绝，Kiro READY 和工具调用正常。但 Kiro 的服务端 `web_search` 经已放行的 runtime 主机，在沙箱内仍能返回 GitHub 搜索结果。因此在 Oracle 从公开仓库移走之前，仍不能称为盲测。上面各队列都是在旧的（无网络限制）隔离下运行的。
+
+> 追加（2026-11-15）：确认性实验的第二个新任务 v6b（批量改派审批人）的 harness 与控制见 [phase6b-bulk-reassign.md](phase6b-bulk-reassign.md)，尚无真实模型样本。

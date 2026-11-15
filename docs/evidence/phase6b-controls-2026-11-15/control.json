@@ -1,0 +1,686 @@
+{
+  "kind": "synthetic-v6b-bulk-reassign-control",
+  "new_model_generations": 0,
+  "human_evaluations": 16,
+  "worker_transport_evaluations": 2,
+  "cases_per_evaluation": 190,
+  "explicit_cases": 178,
+  "implicit_cases": 12,
+  "reference_passed": 3,
+  "implicit_violations_isolated": 8,
+  "explicit_violations_detected": 5,
+  "crash_control": {
+    "cell": "go-manual",
+    "mode": "handler-panic",
+    "outcome": "candidate-error",
+    "stray_server_ignored": true
+  },
+  "partial_denominator_checked": true,
+  "duplicate_rejected": true,
+  "controls": [
+    {
+      "cell": "go-manual",
+      "mode": "correct",
+      "violates": null,
+      "passed": true,
+      "explicit": {
+        "passed": 178,
+        "total": 178
+      },
+      "implicit": {
+        "passed": 12,
+        "total": 12
+      },
+      "conventions": {
+        "implicit-history": true,
+        "implicit-request-hash": true,
+        "implicit-outbox": true,
+        "implicit-uniform-denial": true
+      },
+      "groups": {
+        "reassign-functional": 4,
+        "reassign-authorization": 3,
+        "reassign-eligibility": 5,
+        "reassign-assignee": 4,
+        "reassign-input": 7,
+        "reassign-idempotency": 4,
+        "reassign-concurrency": 2,
+        "reassign-failure-rollback": 1,
+        "reassign-lifecycle": 3,
+        "reopen-regression": 37,
+        "reject-regression": 42,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-history": 4,
+        "implicit-request-hash": 2,
+        "implicit-outbox": 3,
+        "implicit-uniform-denial": 3
+      }
+    },
+    {
+      "cell": "go-manual",
+      "mode": "now-timestamp",
+      "violates": null,
+      "passed": true,
+      "explicit": {
+        "passed": 178,
+        "total": 178
+      },
+      "implicit": {
+        "passed": 12,
+        "total": 12
+      },
+      "conventions": {
+        "implicit-history": true,
+        "implicit-request-hash": true,
+        "implicit-outbox": true,
+        "implicit-uniform-denial": true
+      },
+      "groups": {
+        "reassign-functional": 4,
+        "reassign-authorization": 3,
+        "reassign-eligibility": 5,
+        "reassign-assignee": 4,
+        "reassign-input": 7,
+        "reassign-idempotency": 4,
+        "reassign-concurrency": 2,
+        "reassign-failure-rollback": 1,
+        "reassign-lifecycle": 3,
+        "reopen-regression": 37,
+        "reject-regression": 42,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-history": 4,
+        "implicit-request-hash": 2,
+        "implicit-outbox": 3,
+        "implicit-uniform-denial": 3
+      }
+    },
+    {
+      "cell": "go-manual",
+      "mode": "omit-history",
+      "violates": "implicit-history",
+      "passed": false,
+      "explicit": {
+        "passed": 178,
+        "total": 178
+      },
+      "implicit": {
+        "passed": 8,
+        "total": 12
+      },
+      "conventions": {
+        "implicit-history": false,
+        "implicit-request-hash": true,
+        "implicit-outbox": true,
+        "implicit-uniform-denial": true
+      },
+      "groups": {
+        "reassign-functional": 4,
+        "reassign-authorization": 3,
+        "reassign-eligibility": 5,
+        "reassign-assignee": 4,
+        "reassign-input": 7,
+        "reassign-idempotency": 4,
+        "reassign-concurrency": 2,
+        "reassign-failure-rollback": 1,
+        "reassign-lifecycle": 3,
+        "reopen-regression": 37,
+        "reject-regression": 42,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-history": 0,
+        "implicit-request-hash": 2,
+        "implicit-outbox": 3,
+        "implicit-uniform-denial": 3
+      }
+    },
+    {
+      "cell": "go-manual",
+      "mode": "param-hash",
+      "violates": "implicit-request-hash",
+      "passed": false,
+      "explicit": {
+        "passed": 178,
+        "total": 178
+      },
+      "implicit": {
+        "passed": 10,
+        "total": 12
+      },
+      "conventions": {
+        "implicit-history": true,
+        "implicit-request-hash": false,
+        "implicit-outbox": true,
+        "implicit-uniform-denial": true
+      },
+      "groups": {
+        "reassign-functional": 4,
+        "reassign-authorization": 3,
+        "reassign-eligibility": 5,
+        "reassign-assignee": 4,
+        "reassign-input": 7,
+        "reassign-idempotency": 4,
+        "reassign-concurrency": 2,
+        "reassign-failure-rollback": 1,
+        "reassign-lifecycle": 3,
+        "reopen-regression": 37,
+        "reject-regression": 42,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-history": 4,
+        "implicit-request-hash": 0,
+        "implicit-outbox": 3,
+        "implicit-uniform-denial": 3
+      }
+    },
+    {
+      "cell": "go-manual",
+      "mode": "omit-event",
+      "violates": "implicit-outbox",
+      "passed": false,
+      "explicit": {
+        "passed": 178,
+        "total": 178
+      },
+      "implicit": {
+        "passed": 9,
+        "total": 12
+      },
+      "conventions": {
+        "implicit-history": true,
+        "implicit-request-hash": true,
+        "implicit-outbox": false,
+        "implicit-uniform-denial": true
+      },
+      "groups": {
+        "reassign-functional": 4,
+        "reassign-authorization": 3,
+        "reassign-eligibility": 5,
+        "reassign-assignee": 4,
+        "reassign-input": 7,
+        "reassign-idempotency": 4,
+        "reassign-concurrency": 2,
+        "reassign-failure-rollback": 1,
+        "reassign-lifecycle": 3,
+        "reopen-regression": 37,
+        "reject-regression": 42,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-history": 4,
+        "implicit-request-hash": 2,
+        "implicit-outbox": 0,
+        "implicit-uniform-denial": 3
+      }
+    },
+    {
+      "cell": "go-manual",
+      "mode": "distinguish",
+      "violates": "implicit-uniform-denial",
+      "passed": false,
+      "explicit": {
+        "passed": 178,
+        "total": 178
+      },
+      "implicit": {
+        "passed": 10,
+        "total": 12
+      },
+      "conventions": {
+        "implicit-history": true,
+        "implicit-request-hash": true,
+        "implicit-outbox": true,
+        "implicit-uniform-denial": false
+      },
+      "groups": {
+        "reassign-functional": 4,
+        "reassign-authorization": 3,
+        "reassign-eligibility": 5,
+        "reassign-assignee": 4,
+        "reassign-input": 7,
+        "reassign-idempotency": 4,
+        "reassign-concurrency": 2,
+        "reassign-failure-rollback": 1,
+        "reassign-lifecycle": 3,
+        "reopen-regression": 37,
+        "reject-regression": 42,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-history": 4,
+        "implicit-request-hash": 2,
+        "implicit-outbox": 3,
+        "implicit-uniform-denial": 1
+      }
+    },
+    {
+      "cell": "go-manual",
+      "mode": "no-replay",
+      "violates": null,
+      "passed": false,
+      "explicit": {
+        "passed": 176,
+        "total": 178
+      },
+      "implicit": {
+        "passed": 12,
+        "total": 12
+      },
+      "conventions": {
+        "implicit-history": true,
+        "implicit-request-hash": true,
+        "implicit-outbox": true,
+        "implicit-uniform-denial": true
+      },
+      "groups": {
+        "reassign-functional": 4,
+        "reassign-authorization": 3,
+        "reassign-eligibility": 5,
+        "reassign-assignee": 4,
+        "reassign-input": 7,
+        "reassign-idempotency": 3,
+        "reassign-concurrency": 1,
+        "reassign-failure-rollback": 1,
+        "reassign-lifecycle": 3,
+        "reopen-regression": 37,
+        "reject-regression": 42,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-history": 4,
+        "implicit-request-hash": 2,
+        "implicit-outbox": 3,
+        "implicit-uniform-denial": 3
+      }
+    },
+    {
+      "cell": "go-manual",
+      "mode": "unchanged",
+      "violates": null,
+      "passed": false,
+      "explicit": {
+        "passed": 155,
+        "total": 178
+      },
+      "implicit": {
+        "passed": 3,
+        "total": 12
+      },
+      "conventions": {
+        "implicit-history": false,
+        "implicit-request-hash": false,
+        "implicit-outbox": false,
+        "implicit-uniform-denial": true
+      },
+      "groups": {
+        "reassign-functional": 0,
+        "reassign-authorization": 1,
+        "reassign-eligibility": 5,
+        "reassign-assignee": 4,
+        "reassign-input": 0,
+        "reassign-idempotency": 0,
+        "reassign-concurrency": 0,
+        "reassign-failure-rollback": 0,
+        "reassign-lifecycle": 0,
+        "reopen-regression": 37,
+        "reject-regression": 42,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-history": 0,
+        "implicit-request-hash": 0,
+        "implicit-outbox": 0,
+        "implicit-uniform-denial": 3
+      }
+    },
+    {
+      "cell": "go-action",
+      "mode": "correct",
+      "violates": null,
+      "passed": true,
+      "explicit": {
+        "passed": 178,
+        "total": 178
+      },
+      "implicit": {
+        "passed": 12,
+        "total": 12
+      },
+      "conventions": {
+        "implicit-history": true,
+        "implicit-request-hash": true,
+        "implicit-outbox": true,
+        "implicit-uniform-denial": true
+      },
+      "groups": {
+        "reassign-functional": 4,
+        "reassign-authorization": 3,
+        "reassign-eligibility": 5,
+        "reassign-assignee": 4,
+        "reassign-input": 7,
+        "reassign-idempotency": 4,
+        "reassign-concurrency": 2,
+        "reassign-failure-rollback": 1,
+        "reassign-lifecycle": 3,
+        "reopen-regression": 37,
+        "reject-regression": 42,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-history": 4,
+        "implicit-request-hash": 2,
+        "implicit-outbox": 3,
+        "implicit-uniform-denial": 3
+      }
+    },
+    {
+      "cell": "go-action",
+      "mode": "no-event",
+      "violates": "implicit-outbox",
+      "passed": false,
+      "explicit": {
+        "passed": 178,
+        "total": 178
+      },
+      "implicit": {
+        "passed": 9,
+        "total": 12
+      },
+      "conventions": {
+        "implicit-history": true,
+        "implicit-request-hash": true,
+        "implicit-outbox": false,
+        "implicit-uniform-denial": true
+      },
+      "groups": {
+        "reassign-functional": 4,
+        "reassign-authorization": 3,
+        "reassign-eligibility": 5,
+        "reassign-assignee": 4,
+        "reassign-input": 7,
+        "reassign-idempotency": 4,
+        "reassign-concurrency": 2,
+        "reassign-failure-rollback": 1,
+        "reassign-lifecycle": 3,
+        "reopen-regression": 37,
+        "reject-regression": 42,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-history": 4,
+        "implicit-request-hash": 2,
+        "implicit-outbox": 0,
+        "implicit-uniform-denial": 3
+      }
+    },
+    {
+      "cell": "go-action",
+      "mode": "omit-history",
+      "violates": "implicit-history",
+      "passed": false,
+      "explicit": {
+        "passed": 178,
+        "total": 178
+      },
+      "implicit": {
+        "passed": 8,
+        "total": 12
+      },
+      "conventions": {
+        "implicit-history": false,
+        "implicit-request-hash": true,
+        "implicit-outbox": true,
+        "implicit-uniform-denial": true
+      },
+      "groups": {
+        "reassign-functional": 4,
+        "reassign-authorization": 3,
+        "reassign-eligibility": 5,
+        "reassign-assignee": 4,
+        "reassign-input": 7,
+        "reassign-idempotency": 4,
+        "reassign-concurrency": 2,
+        "reassign-failure-rollback": 1,
+        "reassign-lifecycle": 3,
+        "reopen-regression": 37,
+        "reject-regression": 42,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-history": 0,
+        "implicit-request-hash": 2,
+        "implicit-outbox": 3,
+        "implicit-uniform-denial": 3
+      }
+    },
+    {
+      "cell": "go-action",
+      "mode": "param-hash",
+      "violates": "implicit-request-hash",
+      "passed": false,
+      "explicit": {
+        "passed": 178,
+        "total": 178
+      },
+      "implicit": {
+        "passed": 10,
+        "total": 12
+      },
+      "conventions": {
+        "implicit-history": true,
+        "implicit-request-hash": false,
+        "implicit-outbox": true,
+        "implicit-uniform-denial": true
+      },
+      "groups": {
+        "reassign-functional": 4,
+        "reassign-authorization": 3,
+        "reassign-eligibility": 5,
+        "reassign-assignee": 4,
+        "reassign-input": 7,
+        "reassign-idempotency": 4,
+        "reassign-concurrency": 2,
+        "reassign-failure-rollback": 1,
+        "reassign-lifecycle": 3,
+        "reopen-regression": 37,
+        "reject-regression": 42,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-history": 4,
+        "implicit-request-hash": 0,
+        "implicit-outbox": 3,
+        "implicit-uniform-denial": 3
+      }
+    },
+    {
+      "cell": "go-action",
+      "mode": "distinguish",
+      "violates": "implicit-uniform-denial",
+      "passed": false,
+      "explicit": {
+        "passed": 178,
+        "total": 178
+      },
+      "implicit": {
+        "passed": 10,
+        "total": 12
+      },
+      "conventions": {
+        "implicit-history": true,
+        "implicit-request-hash": true,
+        "implicit-outbox": true,
+        "implicit-uniform-denial": false
+      },
+      "groups": {
+        "reassign-functional": 4,
+        "reassign-authorization": 3,
+        "reassign-eligibility": 5,
+        "reassign-assignee": 4,
+        "reassign-input": 7,
+        "reassign-idempotency": 4,
+        "reassign-concurrency": 2,
+        "reassign-failure-rollback": 1,
+        "reassign-lifecycle": 3,
+        "reopen-regression": 37,
+        "reject-regression": 42,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-history": 4,
+        "implicit-request-hash": 2,
+        "implicit-outbox": 3,
+        "implicit-uniform-denial": 1
+      }
+    },
+    {
+      "cell": "go-action",
+      "mode": "omit-event",
+      "violates": null,
+      "passed": false,
+      "explicit": {
+        "passed": 155,
+        "total": 178
+      },
+      "implicit": {
+        "passed": 0,
+        "total": 12
+      },
+      "conventions": {
+        "implicit-history": false,
+        "implicit-request-hash": false,
+        "implicit-outbox": false,
+        "implicit-uniform-denial": false
+      },
+      "groups": {
+        "reassign-functional": 0,
+        "reassign-authorization": 3,
+        "reassign-eligibility": 0,
+        "reassign-assignee": 0,
+        "reassign-input": 7,
+        "reassign-idempotency": 0,
+        "reassign-concurrency": 0,
+        "reassign-failure-rollback": 0,
+        "reassign-lifecycle": 0,
+        "reopen-regression": 37,
+        "reject-regression": 42,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-history": 0,
+        "implicit-request-hash": 0,
+        "implicit-outbox": 0,
+        "implicit-uniform-denial": 0
+      }
+    },
+    {
+      "cell": "go-action",
+      "mode": "own-true",
+      "violates": null,
+      "passed": false,
+      "explicit": {
+        "passed": 164,
+        "total": 178
+      },
+      "implicit": {
+        "passed": 3,
+        "total": 12
+      },
+      "conventions": {
+        "implicit-history": false,
+        "implicit-request-hash": false,
+        "implicit-outbox": false,
+        "implicit-uniform-denial": true
+      },
+      "groups": {
+        "reassign-functional": 0,
+        "reassign-authorization": 3,
+        "reassign-eligibility": 5,
+        "reassign-assignee": 4,
+        "reassign-input": 7,
+        "reassign-idempotency": 0,
+        "reassign-concurrency": 0,
+        "reassign-failure-rollback": 0,
+        "reassign-lifecycle": 0,
+        "reopen-regression": 37,
+        "reject-regression": 42,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-history": 0,
+        "implicit-request-hash": 0,
+        "implicit-outbox": 0,
+        "implicit-uniform-denial": 3
+      }
+    },
+    {
+      "cell": "go-action",
+      "mode": "unchanged",
+      "violates": null,
+      "passed": false,
+      "explicit": {
+        "passed": 155,
+        "total": 178
+      },
+      "implicit": {
+        "passed": 3,
+        "total": 12
+      },
+      "conventions": {
+        "implicit-history": false,
+        "implicit-request-hash": false,
+        "implicit-outbox": false,
+        "implicit-uniform-denial": true
+      },
+      "groups": {
+        "reassign-functional": 0,
+        "reassign-authorization": 1,
+        "reassign-eligibility": 5,
+        "reassign-assignee": 4,
+        "reassign-input": 0,
+        "reassign-idempotency": 0,
+        "reassign-concurrency": 0,
+        "reassign-failure-rollback": 0,
+        "reassign-lifecycle": 0,
+        "reopen-regression": 37,
+        "reject-regression": 42,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-history": 0,
+        "implicit-request-hash": 0,
+        "implicit-outbox": 0,
+        "implicit-uniform-denial": 3
+      }
+    }
+  ],
+  "source_parent_commit": "a35d74f22ccab3c2d6e9c743b45aaf45828c503c",
+  "source_checkout_dirty": false,
+  "source_sha256": {
+    "go.mod": "648c40a4bf80a1cb567029bbf31c771963254e92aa8712da903eb8a883fe3217",
+    "go.sum": "e718bd4e6664b6aa2d808d7bf1f72ca1b2e36316db23235318c9e20a8705f0c4",
+    "internal/app/server.go": "128f710c1d022e50ba925fda4a2a9d8c88f4233cccc9f57c3eae6704c3d0b53f",
+    "internal/app/demo_identity.go": "1b49e429ba1a98236fea3bc84a626a4698d276dc6d55758462c0e40a97eda2fb",
+    "benchmark/phase3/source/main.go.txt": "cec57aacd74de3bb2a95d3aa504abcf8cde3661fa38fc1f8421728b47ab04e14",
+    "benchmark/phase5b/source/manual-reject.go.txt": "f3ba5ad249a16019fe9e51938c9a3cdeccca8c2831d6d70810c452ec2f845c1d",
+    "benchmark/phase6b/source/action-candidate.go.txt": "1048cb4329abfed113e70e30ff6b5c51d8b58ef5836563f51e2b09ec860ba225",
+    "benchmark/phase6b/source/action-operations.go.txt": "ad0d77ba2b9efdf50920d7972458a293965765c9f66750c340eb4c8268e8915c",
+    "benchmark/phase6b/source/action.go.txt": "ffc2ced670da57e4b710b8fd493a358862c3fab6f34fcae147ea88e2a838b464",
+    "benchmark/phase6b/source/ledger.go.txt": "448eaf873185e1a45acea99624e083f5f489afc45ca0613fb7fd581c18a4c1cc",
+    "benchmark/phase6b/source/manual-approval.go.txt": "8c18d3cf10b0f14d7d587233c671578f49a49838304f6d5305c1b3e50709f2d8",
+    "benchmark/phase6b/source/manual-reopen.go.txt": "394c0d9ed4155ce6065bc16bb0defc9ecda1aa8a6158a95adadaa48a4496dc44",
+    "benchmark/phase6b/source/notify.go.txt": "769185322346052e8dea1842e6de5befb5c22e5e800116ec8eb545bf39a65af7",
+    "benchmark/phase6b/source/protocol.go.txt": "e75a07a90d787c9c580291345bd727fe059a3943907faa25e0100eaceadf4337",
+    "benchmark/phase6b/source/reconcile.go.txt": "b9a5d68936c15187bce3b8adc0493af03f974b7bfe1e7c4d7528b75f2230f77c",
+    "benchmark/phase4/schema.sql": "0b01e9d6be225bb72c63bc81207c73ea00972ddc47b35a320bdc9d73141db07d",
+    "benchmark/phase5/schema.sql": "63872f328d4a01cb5573006c00c76a3d786ccbf669ff76b0169e532c5b6332c5",
+    "benchmark/phase6b/schema.sql": "4a36e163c6d5008bc75f673cb2b444661769bb71925d14ad5334df2dc55dc0eb",
+    "benchmark/phase5/ctl.py": "936fac1b84bb7ceefa8dc6b69b036ccb40f4665daceb43b3777865e6ccdcf50d",
+    "benchmark/phase6b/ctl.py": "422343eaece59d683d3e08054b432bc14ca9b70e5ed5a7acbaf7b64e85f028b8",
+    "benchmark/phase6b/cohort.json": "20de386c18730fc393f9942fbdf7b629da70c291574d198570cb0ac11bed5266",
+    "benchmark/phase6b/oracle.py": "5fadfebda0d07cc1b334eed8d244b261d1a579ad471bdec2cd52809c598395d1",
+    "benchmark/phase6b/db.mjs": "f19e643367cad5df4805822294d0f047ed2e6f170b33f8601579e854ff9e5e6d",
+    "benchmark/phase5/oracle.py": "f7bb9cd427c102a9fe224a4852e25d866a1723041dc5e3e5d80409b268ab0f7b",
+    "benchmark/phase4/oracle.py": "613c9de1ecffcf8edeaa69dfae79d93cb68cdd1758b0744dcba7e94bbde47031",
+    "benchmark/phase3/generation_worker.py": "d9ab0f895361be310ad84886e38a152c68596dc84746e1887ad5390fa50d0355",
+    "benchmark/phase3/cohort_oracle.py": "79e5caa74f15b6aa5fc351a91cddbe53eb09d4480d6d949b16933b2c832978d2",
+    "benchmark/phase3/oracle.py": "b9cb0e762e48fc1c84366aefb4155aa561d62982827caecc3b0ed313603ec303",
+    "tests/acceptance.py": "b630076565eac949da042a821caa52fb44cc59fe555943e65049c92d4935b373",
+    "db/bootstrap.sql": "4eb60b5cbbdcb2b79813c63cc7baf44665755a7327df6d1aa702c430357f30b9",
+    "db/seed.sql": "9004fb919509475a987349f8d1804044af1688c1fdca524b2b191912bb1414cc",
+    "db/migrations/001_purchase.sql": "00db7c65bdf932912f4764da76bba0a5d84032eb208c6073fb89b495179a3e85",
+    "generated/guard.sql": "b728fc08e43c5642b7dadf5823cad098d24bcd0740bef98a340d921424661f13",
+    "poc/transactional-action/schema.sql": "9e8a6b49a8da58ee75cf1d0258dc9c13807f1ac455de8e3e23d573da2c69a662",
+    "benchmark/phase6b/controls.py": "6092957c278a64fccea6698cf0d345f0f3bda34595c535b9d37a708703315a40",
+    "benchmark/phase6b/driver_smoke.py": "90a5cf81e722212fd4203068b29a2e9ea8cf3deee70e702102b84295a86c896d"
+  }
+}

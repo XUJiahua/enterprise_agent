@@ -1,0 +1,55 @@
+// Batch Actions of the purchase service through the platform Action kernel.
+package candidate
+
+import (
+	"context"
+	"errors"
+	"net/http"
+
+	"github.com/XUJiahua/enterprise_agent/internal/action"
+	"github.com/XUJiahua/enterprise_agent/internal/app"
+	"github.com/XUJiahua/enterprise_agent/internal/protocol"
+	"github.com/jackc/pgx/v5/pgxpool"
+)
+
+// adapt converts kernel rejections at the service boundary.
+func adapt(err error) error {
+	var denied *action.Rejection
+	if errors.As(err, &denied) {
+		return &protocol.Rejection{Status: denied.Status}
+	}
+	return err
+}
+
+func batch(executor *action.Executor, op action.Operation) protocol.Handler {
+	return func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
+		done, replayed, err := executor.Run(ctx, u, op, key, ids, "")
+		if err != nil {
+			return protocol.Result{}, false, adapt(err)
+		}
+		return protocol.Result{Field: op.Field, IDs: done}, replayed, nil
+	}
+}
+
+func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
+	executor, err := action.New(ctx, pool)
+	if err != nil {
+		return nil, err
+	}
+	reopen := func(ctx context.Context, u app.Identity, key, id, reason string) (protocol.ItemResult, bool, error) {
+		done, replayed, err := executor.Run(ctx, u, reopenOp, key, []string{id}, reason)
+		if err != nil {
+			return protocol.ItemResult{}, false, adapt(err)
+		}
+		return protocol.ItemResult{ID: done[0], Status: reopenOp.To}, replayed, nil
+	}
+	batches := protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": batch(executor, approveOp), "/purchases/bulk-reject": batch(executor, rejectOp)}, fallback)
+	reassign := func(ctx context.Context, u app.Identity, key string, ids []string, assignee string) (protocol.AssignResult, bool, error) {
+		done, replayed, err := executor.Set(ctx, u, reassignOp, key, ids, assignee)
+		if err != nil {
+			return protocol.AssignResult{}, false, adapt(err)
+		}
+		return protocol.AssignResult{Field: reassignOp.Field, IDs: done, Assignee: assignee}, replayed, nil
+	}
+	return protocol.Assign("/purchases/bulk-reassign", reassign, protocol.Item("reopen", "requester", reopen, batches)), nil
+}
