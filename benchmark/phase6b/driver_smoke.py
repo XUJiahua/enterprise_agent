@@ -27,7 +27,7 @@ def call(*args,expected=0):
     if p.returncode!=expected: raise AssertionError((args,p.returncode,p.stdout[-2000:],p.stderr[-2000:]))
     return p
 
-def reference(cell,mode):
+def is_reference(cell,mode):
     """Correct references: no violated convention and the explicit contract expected to pass."""
     return controls.MODES[cell][mode]==(None,True)
 
@@ -36,7 +36,7 @@ def check(result,cell,mode):
     assert len(result['cases'])==sum(ctl.counts().values()),result.get('error')
     for g in ('reopen-regression','reject-regression','approve-regression','original-regression'):
         assert result['groups'][g]['passed']==result['groups'][g]['total'],(g,result['groups'][g])
-    if reference(cell,mode): assert result['passed'],result['groups']
+    if is_reference(cell,mode): assert result['passed'],result['groups']
     elif violated:
         # Exactly the targeted convention fails; the explicit contract and the others hold.
         assert result['explicit_passed'],result['groups']
@@ -83,7 +83,7 @@ def main():
                 result_dir=out/'controls'/name
                 call('evaluate','--plan',plan,'--trial',ident,'--candidate',candidate,'--manifest',manifest,
                      '--receipt',directory/'receipt.json','--fixtures',private,'--output',result_dir,
-                     expected=0 if reference(cell,mode) else 2)
+                     expected=0 if is_reference(cell,mode) else 2)
                 result=json.loads((result_dir/'result.json').read_text());check(result,cell,mode)
                 evaluations.append({'cell':cell,'mode':mode,'violates':controls.MODES[cell][mode][0],
                     'passed':result['passed'],'explicit':result['explicit'],'implicit':result['implicit'],
@@ -142,9 +142,9 @@ def main():
             'cases_per_evaluation':sum(ctl.counts().values()),
             'explicit_cases':sum(v['count'] for v in ctl.contract()['groups'].values() if v['kind']=='explicit'),
             'implicit_cases':sum(v['count'] for v in ctl.contract()['groups'].values() if v['kind']=='implicit'),
-            'reference_passed':sum(reference(e['cell'],e['mode']) and e['passed'] for e in evaluations),
+            'reference_passed':sum(is_reference(e['cell'],e['mode']) and e['passed'] for e in evaluations),
             'implicit_violations_isolated':sum(bool(e['violates']) for e in evaluations),
-            'explicit_violations_detected':sum(not e['violates'] and not reference(e['cell'],e['mode']) for e in evaluations),
+            'explicit_violations_detected':sum(not e['violates'] and not is_reference(e['cell'],e['mode']) for e in evaluations),
             'crash_control':crash_control,'partial_denominator_checked':True,'duplicate_rejected':True,'controls':evaluations,
             'source_parent_commit':ctl.git(ctl.ROOT,'rev-parse','HEAD'),
             'source_checkout_dirty':bool(ctl.git(ctl.ROOT,'status','--porcelain')),
