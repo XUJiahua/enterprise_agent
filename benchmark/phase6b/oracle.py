@@ -8,6 +8,7 @@ as explicit regression, through a view that hides the v6b additions.
 """
 import concurrent.futures
 import hashlib
+import itertools
 import importlib.util
 import json
 import os
@@ -75,6 +76,19 @@ def fixtures(seed):
               'changedBy':{'tenant-a':'bob','tenant-b':'erin'}[r['tenantId']],'operation':REASSIGN,'idempotencyKey':'seed'}
              for r in rows if r.get('assigneeId')]
     return names,rows,history
+
+
+def chains_of(rows,initial,final):
+    """Distinct orderings of (fromAssignee,toAssignee) rows that chain from initial and end at final; no timestamps used."""
+    chains=set()
+    for order in itertools.permutations(rows):
+        current=initial
+        for previous,new in order:
+            if previous!=current: break
+            current=new
+        else:
+            if current==final: chains.add(order)
+    return chains
 
 
 def reassign(ids,assignee='hana',user='carol',key='key',raw=None,headers=None):
@@ -207,12 +221,13 @@ def run(db,seed):
     case('history rows per target with previous assignee','implicit-history',lambda:recorded([names['s2'],names['s3'],names['s1']],assignee='bob'))
 
     def chained(before,after,final):
-        added=sorted(new_rows(before,after,'history'),key=lambda r:(r['purchaseId'],r['createdAt']))
+        """Timestamp-free: each target's new rows must order into exactly one chain from its initial assignee."""
+        added=new_rows(before,after,'history')
         for ident in final:
-            mine=[r for r in added if r['purchaseId']==ident]
+            mine=[(r['fromAssignee'],r['toAssignee']) for r in added if r['purchaseId']==ident]
             assert len(mine)==2,{'history rows':mine}
-            assert mine[0]['fromAssignee']==initial[ident] and mine[1]['fromAssignee']==mine[0]['toAssignee'],mine
-            assert mine[1]['toAssignee']==final[ident],mine
+            chains=chains_of(mine,initial[ident],final[ident])
+            assert len(chains)==1,{'history rows':mine,'initial':initial[ident],'final':final[ident],'chains':len(chains)}
     case('concurrent changes form one chain','implicit-history',lambda:concurrent_keys(chained))
 
     def fault_then_retry(target,check):

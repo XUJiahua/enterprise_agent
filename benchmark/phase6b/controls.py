@@ -10,7 +10,7 @@ ROUTES={'go-manual':'\treturn protocol.Item("reopen", "requester", newReopen(poo
 
 # control -> (violated group or None, explicit contract expected to pass)
 MODES={
- 'go-manual':{'correct':(None,True),'omit-history':('implicit-history',True),'param-hash':('implicit-request-hash',True),
+ 'go-manual':{'correct':(None,True),'now-timestamp':(None,True),'omit-history':('implicit-history',True),'param-hash':('implicit-request-hash',True),
               'omit-event':('implicit-outbox',True),'distinguish':('implicit-uniform-denial',True),
               'no-replay':(None,False),'unchanged':(None,False)},
  'go-action':{'correct':(None,True),'no-event':('implicit-outbox',True),'omit-history':('implicit-history',True),
@@ -157,6 +157,9 @@ DISTINGUISH='''var role string
 		case !active:
 			return protocol.AssignResult{}, false, &protocol.Rejection{Status: 409}
 		}'''
+# A valid alternative: createdAt written explicitly as transaction start time (now()).
+HISTORY_NOW='''batch.Queue(`INSERT INTO "AssignmentHistory" ("tenantId","purchaseId","fromAssignee","toAssignee","changedBy",operation,"idempotencyKey","createdAt") VALUES ($1,$2,$3,$4,$5,$6,$7,now())`,
+				u.Tenant, id, previous[id], assignee, u.User, opReassign, key)'''
 HISTORY='''batch.Queue(`INSERT INTO "AssignmentHistory" ("tenantId","purchaseId","fromAssignee","toAssignee","changedBy",operation,"idempotencyKey") VALUES ($1,$2,$3,$4,$5,$6,$7)`,
 				u.Tenant, id, previous[id], assignee, u.User, opReassign, key)'''
 EVENT='''batch.Queue(`INSERT INTO "PurchaseEvent" ("tenantId","purchaseId",type,"actorId","idempotencyKey") VALUES ($1,$2,'purchase.reassigned',$3,$4)`,
@@ -181,7 +184,7 @@ def reassign_source(mode):
     return (REASSIGN_GO.replace('@HASH@',PARAM_HASH if mode=='param-hash' else HASH)
             .replace('@REPLAY@',NO_REPLAY if mode=='no-replay' else REPLAY)
             .replace('@MEMBER@',DISTINGUISH if mode=='distinguish' else MEMBER)
-            .replace('@HISTORY@','' if mode=='omit-history' else HISTORY)
+            .replace('@HISTORY@','' if mode=='omit-history' else HISTORY_NOW if mode=='now-timestamp' else HISTORY)
             .replace('@EVENT@','' if mode=='omit-event' else EVENT))
 
 

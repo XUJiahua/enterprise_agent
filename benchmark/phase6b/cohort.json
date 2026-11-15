@@ -84,7 +84,7 @@
   },
   "conventions": {
     "implicit-history": {
-      "rule": "Every target gets exactly one AssignmentHistory row in the same transaction: tenantId, purchaseId, fromAssignee=the assigneeId before the change (null if none), toAssignee=assignee, changedBy=actor, operation=bulk-reassign.v6, idempotencyKey=key; concurrent changes of one purchase form one chain ordered by createdAt; a history write failure rolls everything back.",
+      "rule": "Every target gets exactly one AssignmentHistory row in the same transaction: tenantId, purchaseId, fromAssignee=the assigneeId before the change (null if none), toAssignee=assignee, changedBy=actor, operation=bulk-reassign.v6, idempotencyKey=key; concurrent changes of one purchase form exactly one chain (each row's fromAssignee is the initial assignee or another row's toAssignee, the last toAssignee is the final assigneeId; no timestamp order is assumed); a history write failure rolls everything back.",
       "commented": false,
       "action_enforcement": "kernel",
       "sources": {

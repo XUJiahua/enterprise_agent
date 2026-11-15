@@ -15,6 +15,7 @@ def load(name,path):
     value=importlib.util.module_from_spec(spec);spec.loader.exec_module(value);return value
 ctl=load('phase6b_ctl_tests','benchmark/phase6b/ctl.py').ctl
 controls=load('phase6b_controls_tests','benchmark/phase6b/controls.py')
+oracle=load('phase6b_oracle_tests','benchmark/phase6b/oracle.py')
 BASE='d8a5c576cc3c293ee2da884f5c618958df407b51'
 
 class Phase6bTests(unittest.TestCase):
@@ -153,5 +154,14 @@ class Phase6bTests(unittest.TestCase):
         # The declared convention is violated through the declaration itself in go-action.
         self.assertEqual(controls.MODES['go-action']['no-event'],('implicit-outbox',True))
         self.assertEqual(controls.MODES['go-action']['omit-event'],(None,False))
+
+    def test_history_chain_ignores_timestamps(self):
+        self.assertEqual(len(oracle.chains_of([('hana','bob'),('bob','hana')],'bob','bob')),1)
+        self.assertEqual(len(oracle.chains_of([('bob','bob'),('bob','hana')],'bob','hana')),1)
+        self.assertEqual(len(oracle.chains_of([('bob','hana'),('bob','carol')],'bob','carol')),0)  # lost update
+        self.assertEqual(len(oracle.chains_of([('hana','carol'),('carol','hana')],'bob','hana')),0)  # wrong first previous
+        self.assertNotIn('createdAt',Path(oracle.__file__).read_text().split('def chains_of')[1].split('def reassign')[0])
+        self.assertEqual(controls.MODES['go-manual']['now-timestamp'],(None,True))
+        self.assertIn('"createdAt") VALUES ($1,$2,$3,$4,$5,$6,$7,now())',controls.reassign_source('now-timestamp'))
 
 if __name__=='__main__':unittest.main()
