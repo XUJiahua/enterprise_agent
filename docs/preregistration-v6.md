@@ -64,3 +64,13 @@ v3–v5b 的探索性结果显示，平台内核带来的正确性收益只覆�
 - **审计**：检查每个 trial 的 ACP 事件里的 shell 命令，凡是出现 `kiro-cli`、`q chat`、`web_search`、`curl`/`wget`/`git clone`，或访问外网 URL 的，标记为 `retrieval-attempt`。另外检查 `network.log`，凡是存在被拒绝的 CONNECT 请求的 trial，标记为 `network-denied`。
 - **主分析**不排除任何被标记的 trial，避免事后剔除样本。**敏感性分析**则排除所有 `retrieval-attempt` trial（连同所在块的配对 trial）后重跑 H1–H3，两种结果都报告。
 - 结论里写“生成端网络受限（仅模型端点），服务端检索未经证实已排除”，不使用“盲测”这一说法。
+
+### 附录 B（2026-11-15 14:03，确认性数据产生之前）：冻结的 harness
+
+三个任务的 harness 与网络隔离已合并到 `poc/v6-confirmatory` 的 `bae80aa`。对应的 `benchmark/` 目录树 hash 为 `11d276234c7e41cfef3d8e9905530d3af717da00`；之后追加文档不改变这个 hash。各计划仍按文件冻结 hash，并记录注册时的 HEAD。任务入口如下：
+
+- T1：`benchmark/phase5b/ctl.py`
+- T2：`benchmark/phase6a/ctl.py`
+- T3：`benchmark/phase6b/ctl.py`
+
+生成使用 `benchmark/phase3/run_kiro_cohort_net.sh`。12 个通道（3 任务 × 4 模型）各有独立的数据库与端口，最多 6 个通道并行。每个通道内严格按计划顺序执行；每块的两组在同一通道中先后运行，承受相近的负载。
