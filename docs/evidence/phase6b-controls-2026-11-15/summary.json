@@ -1,7 +1,7 @@
 {
   "version": 5,
   "kind": "synthetic-smoke",
-  "plan_sha256": "998674a7e62ca6d93c3713f5efd55b4e4ec3667562751106b2a64b3465e967b7",
+  "plan_sha256": "2583c4927ba4acb6f3efb29c5f4dac2c7839a35e1aeecda641d226669fb8586e",
   "rows": [
     {
       "cell": "go-manual",
