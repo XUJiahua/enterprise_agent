@@ -1,0 +1,37 @@
+{
+  "status": "completed",
+  "usage": {
+    "credits": 0.4600395223880598
+  },
+  "turn_started": true,
+  "run_finished": true,
+  "reported_model": "qwen3-coder-next",
+  "event_count": 142,
+  "agent_messages": [
+    "I'll analyze the task and implement the batch approval with audit logging and scoped idempotency. Let me start by exploring the existing codebase structure.\n\nNow I understand the structure. I need to:\n\n1. Create a new batch approval action with audit logging and scoped idempotency\n2. The `protocol` package provides the HTTP adapter and types\n3. The `action` package provides the `Executor.BulkApprove` method\n4. The `candidate` package is the boundary that adapts between `protocol` and `action`\n\nLet me implement the solution:\n\nDone. I've updated `/Users/administrator/poc-v3-lanes/qwen3-coder-next/kits/go-action--010/candidate/internal/candidate/approval.go` to:\n\n1. Use the existing `action.New()` to get an `Executor` with guarded RLS checks and mutation support\n2. Wrap `exec.BulkApprove()` to translate between `action.Result/Rejection` types and `protocol.Result/Rejection` types\n3. Pass through the `replayed` boolean from the action layer to the protocol HTTP adapter\n4. The `action` package already implements all the required features:\n   - Audit logging via `ApprovalAudit` table\n   - Scoped idempotency via `ActionRequest` table with `requestHash`\n   - Proper transaction boundaries\n   - Concurrency handling with advisory locks\n   - All validation and rejection logic\n\nThe code compiles and tests pass."
+  ],
+  "errors": [],
+  "engine": "kiro",
+  "generation_seconds": 47.0,
+  "requested_model": "qwen3-coder-next",
+  "reasoning_effort": "medium",
+  "sandbox": "workspace-write",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "qwen3-coder-next",
+    "--effort",
+    "medium",
+    "--trust-all-tools"
+  ],
+  "returncode": 0,
+  "timed_out": false
+}

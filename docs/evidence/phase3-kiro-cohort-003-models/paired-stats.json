@@ -1,0 +1,138 @@
+{
+  "claude-haiku-4.5": {
+    "cells": {
+      "go-manual": {
+        "planned": 10,
+        "observed": 10,
+        "passed": 5,
+        "outcomes": {
+          "acceptance-failed": 4,
+          "passed": 5,
+          "scope-violation": 1
+        },
+        "median_seconds": 59.341,
+        "median_credits": 0.69,
+        "total_credits": 7.52
+      },
+      "go-action": {
+        "planned": 10,
+        "observed": 10,
+        "passed": 8,
+        "outcomes": {
+          "acceptance-failed": 1,
+          "passed": 8,
+          "scope-violation": 1
+        },
+        "median_seconds": 55.556,
+        "median_credits": 0.647,
+        "total_credits": 6.72
+      }
+    },
+    "blocks_manual_action": [
+      "PP",
+      "FP",
+      "PP",
+      "PF",
+      "FP",
+      "PP",
+      "FP",
+      "FF",
+      "FP",
+      "PP"
+    ],
+    "action_only_pass": 4,
+    "manual_only_pass": 1,
+    "sign_test_p": 0.375,
+    "fisher_p_observed": 0.3498
+  },
+  "gpt-5.6-luna": {
+    "cells": {
+      "go-manual": {
+        "planned": 10,
+        "observed": 10,
+        "passed": 3,
+        "outcomes": {
+          "acceptance-failed": 7,
+          "passed": 3
+        },
+        "median_seconds": 48.653,
+        "median_credits": 0.676,
+        "total_credits": 7.08
+      },
+      "go-action": {
+        "planned": 10,
+        "observed": 10,
+        "passed": 10,
+        "outcomes": {
+          "passed": 10
+        },
+        "median_seconds": 38.0355,
+        "median_credits": 0.554,
+        "total_credits": 5.26
+      }
+    },
+    "blocks_manual_action": [
+      "FP",
+      "FP",
+      "PP",
+      "FP",
+      "FP",
+      "FP",
+      "PP",
+      "PP",
+      "FP",
+      "FP"
+    ],
+    "action_only_pass": 7,
+    "manual_only_pass": 0,
+    "sign_test_p": 0.0156,
+    "fisher_p_observed": 0.0031
+  },
+  "qwen3-coder-next": {
+    "cells": {
+      "go-manual": {
+        "planned": 10,
+        "observed": 9,
+        "passed": 1,
+        "outcomes": {
+          "acceptance-failed": 7,
+          "infrastructure-blocked": 1,
+          "passed": 1,
+          "scope-violation": 1
+        },
+        "median_seconds": 84.6675,
+        "median_credits": 0.753,
+        "total_credits": 7.32
+      },
+      "go-action": {
+        "planned": 10,
+        "observed": 9,
+        "passed": 6,
+        "outcomes": {
+          "passed": 6,
+          "provider-error": 1,
+          "scope-violation": 3
+        },
+        "median_seconds": 52.334999999999994,
+        "median_credits": 0.488,
+        "total_credits": 4.91
+      }
+    },
+    "blocks_manual_action": [
+      "unmeasured",
+      "FP",
+      "unmeasured",
+      "FP",
+      "PF",
+      "FF",
+      "FP",
+      "FF",
+      "FP",
+      "FP"
+    ],
+    "action_only_pass": 5,
+    "manual_only_pass": 1,
+    "sign_test_p": 0.2188,
+    "fisher_p_observed": 0.0498
+  }
+}

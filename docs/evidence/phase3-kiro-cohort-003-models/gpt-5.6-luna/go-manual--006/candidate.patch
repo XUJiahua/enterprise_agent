@@ -1,0 +1,150 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index ad14a29..70dd3d2 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -1,36 +1,83 @@
+-// Shared starting point: atomic batch approval, without audit or idempotency.
+ package candidate
+ 
+ import (
+ 	"context"
++	"crypto/sha256"
++	"encoding/hex"
++	"encoding/json"
++	"fmt"
++	"net/http"
++	"sort"
++
+ 	"github.com/XUJiahua/enterprise_agent/internal/app"
+ 	"github.com/XUJiahua/enterprise_agent/internal/protocol"
+ 	"github.com/jackc/pgx/v5/pgxpool"
+-	"net/http"
+-	"strings"
+ )
+ 
++const operation = "bulk-approve.v3"
++
+ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
+ 	approve := func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
+-		for _, id := range ids {
+-			if strings.ContainsRune(id, 0) {
+-				return protocol.Result{}, false, &protocol.Rejection{Status: 404}
+-			}
++		// The adapter canonicalizes IDs, but keep the transaction's hash and response
++		// definition independent of any caller ordering.
++		sortedIDs := append([]string(nil), ids...)
++		sort.Strings(sortedIDs)
++		hash := requestHash(sortedIDs)
++		response := protocol.Result{ApprovedIDs: sortedIDs}
++		responseJSON, err := json.Marshal(response)
++		if err != nil {
++			return protocol.Result{}, false, err
+ 		}
++
+ 		tx, err := pool.Begin(ctx)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+ 		defer tx.Rollback(ctx)
++
+ 		_, err = tx.Exec(ctx, `SELECT set_config('app.tenant',$1,true),set_config('app.user',$2,true),set_config('app.role',$3,true)`, u.Tenant, u.User, u.Role)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+-		rows, err := tx.Query(ctx, `SELECT id FROM "Purchase" WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted' ORDER BY id FOR UPDATE`, ids, u.Tenant, u.User)
++
++		// Inserting first gives the scope a row lock. A concurrent request with
++		// the same scope waits here; a failed transaction rolls the reservation back.
++		tag, err := tx.Exec(ctx, `
++			INSERT INTO "ActionRequest" ("tenantId","actorId",operation,key,"requestHash",response)
++			VALUES ($1,$2,$3,$4,$5,$6::jsonb)
++			ON CONFLICT ("tenantId","actorId",operation,key) DO NOTHING`,
++			u.Tenant, u.User, operation, key, hash, string(responseJSON))
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+-		eligible := []string{}
++		if tag.RowsAffected() == 0 {
++			var existingHash string
++			var existingResponse []byte
++			err = tx.QueryRow(ctx, `SELECT "requestHash",response::text FROM "ActionRequest"
++				WHERE "tenantId"=$1 AND "actorId"=$2 AND operation=$3 AND key=$4 FOR UPDATE`,
++				u.Tenant, u.User, operation, key).Scan(&existingHash, &existingResponse)
++			if err != nil {
++				return protocol.Result{}, false, err
++			}
++			if existingHash != hash {
++				return protocol.Result{}, false, &protocol.Rejection{Status: 409}
++			}
++			if err = json.Unmarshal(existingResponse, &response); err != nil {
++				return protocol.Result{}, false, err
++			}
++			if err = tx.Commit(ctx); err != nil {
++				return protocol.Result{}, false, err
++			}
++			return response, true, nil
++		}
++
++		rows, err := tx.Query(ctx, `SELECT id FROM "Purchase"
++			WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'
++			ORDER BY id FOR UPDATE`, ids, u.Tenant, u.User)
++		if err != nil {
++			return protocol.Result{}, false, err
++		}
++		eligible := make([]string, 0, len(ids))
+ 		for rows.Next() {
+ 			var id string
+ 			if err = rows.Scan(&id); err != nil {
+@@ -39,25 +86,47 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 			}
+ 			eligible = append(eligible, id)
+ 		}
+-		err = rows.Err()
+-		rows.Close()
+-		if err != nil {
++		if err = rows.Err(); err != nil {
++			rows.Close()
+ 			return protocol.Result{}, false, err
+ 		}
++		rows.Close()
+ 		if len(eligible) != len(ids) {
+ 			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+ 		}
+-		tag, err := tx.Exec(ctx, `UPDATE "Purchase" SET status='approved' WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'`, ids, u.Tenant, u.User)
++
++		tag, err = tx.Exec(ctx, `UPDATE "Purchase" SET status='approved'
++			WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'`,
++			ids, u.Tenant, u.User)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+ 		if tag.RowsAffected() != int64(len(ids)) {
+ 			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+ 		}
++
++		for _, id := range sortedIDs {
++			_, err = tx.Exec(ctx, `INSERT INTO "ApprovalAudit"
++				("tenantId","purchaseId","approvedBy",operation,"idempotencyKey","fromStatus","toStatus")
++				VALUES ($1,$2,$3,$4,$5,'submitted','approved')`,
++				u.Tenant, id, u.User, operation, key)
++			if err != nil {
++				return protocol.Result{}, false, err
++			}
++		}
+ 		if err = tx.Commit(ctx); err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+-		return protocol.Result{ApprovedIDs: ids}, false, nil
++		return response, false, nil
+ 	}
+ 	return protocol.HTTP(approve, fallback), nil
+ }
++
++func requestHash(ids []string) string {
++	h := sha256.New()
++	_, _ = h.Write([]byte(operation + "\n"))
++	for _, id := range ids {
++		_, _ = fmt.Fprintf(h, "%d:%s", len([]byte(id)), id)
++	}
++	return hex.EncodeToString(h.Sum(nil))
++}

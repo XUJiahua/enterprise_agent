@@ -1,0 +1,441 @@
+{
+  "cells": {
+    "go-manual": {
+      "planned": 10,
+      "passed": 5,
+      "outcomes": {
+        "acceptance-failed": 4,
+        "passed": 5,
+        "scope-violation": 1
+      },
+      "median_seconds": 59.341,
+      "median_credits": 0.6902715952570481,
+      "median_added_lines": 96.5,
+      "wrote_tests": 1,
+      "ran_go_test": 6,
+      "sandbox_denials": 0
+    },
+    "go-action": {
+      "planned": 10,
+      "passed": 8,
+      "outcomes": {
+        "acceptance-failed": 1,
+        "passed": 8,
+        "scope-violation": 1
+      },
+      "median_seconds": 55.556,
+      "median_credits": 0.6465706716086237,
+      "median_added_lines": 23.0,
+      "wrote_tests": 0,
+      "ran_go_test": 6,
+      "sandbox_denials": 0
+    }
+  },
+  "trials": [
+    {
+      "trial": "go-action--001",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 66.672,
+      "credits": 0.8340851241127696,
+      "model": "claude-haiku-4.5",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 149,
+      "tool_calls": 26,
+      "wrote_tests": false,
+      "ran_go_test": false,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--001",
+      "cell": "go-manual",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 55.48,
+      "credits": 0.6295123652404643,
+      "model": "claude-haiku-4.5",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 91,
+      "tool_calls": 19,
+      "wrote_tests": false,
+      "ran_go_test": false,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--002",
+      "cell": "go-manual",
+      "outcome": "scope-violation",
+      "cases_passed": null,
+      "failed_cases": null,
+      "generation_seconds": 38.655,
+      "credits": 0.39258400364842455,
+      "model": "claude-haiku-4.5",
+      "files": [],
+      "added_lines": 0,
+      "tool_calls": 12,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--002",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 73.673,
+      "credits": 0.9621766949917084,
+      "model": "claude-haiku-4.5",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 24,
+      "tool_calls": 34,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--003",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 56.514,
+      "credits": 0.6723541283582091,
+      "model": "claude-haiku-4.5",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 19,
+      "tool_calls": 24,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--003",
+      "cell": "go-manual",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 42.416,
+      "credits": 0.47048533737976794,
+      "model": "claude-haiku-4.5",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 100,
+      "tool_calls": 17,
+      "wrote_tests": false,
+      "ran_go_test": false,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--004",
+      "cell": "go-action",
+      "outcome": "scope-violation",
+      "cases_passed": null,
+      "failed_cases": null,
+      "generation_seconds": 58.341,
+      "credits": 0.6984317629850746,
+      "model": "claude-haiku-4.5",
+      "files": [],
+      "added_lines": 0,
+      "tool_calls": 29,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--004",
+      "cell": "go-manual",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 80.667,
+      "credits": 0.9162426272636816,
+      "model": "claude-haiku-4.5",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 93,
+      "tool_calls": 25,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--005",
+      "cell": "go-manual",
+      "outcome": "acceptance-failed",
+      "cases_passed": 56,
+      "failed_cases": [
+        "authorization:cross tenant",
+        "authorization:self approval",
+        "atomicity:mixed own",
+        "atomicity:mixed other",
+        "atomicity:mixed done",
+        "atomicity:mixed missing",
+        "input:NUL absent target",
+        "idempotency:new key cannot approve again",
+        "concurrency:concurrent mismatch",
+        "concurrency:concurrent overlap"
+      ],
+      "generation_seconds": 62.785,
+      "credits": 0.698099320066335,
+      "model": "claude-haiku-4.5",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 101,
+      "tool_calls": 24,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--005",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 54.598,
+      "credits": 0.6207872148590382,
+      "model": "claude-haiku-4.5",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 34,
+      "tool_calls": 23,
+      "wrote_tests": false,
+      "ran_go_test": false,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--006",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 60.993,
+      "credits": 0.763204758872305,
+      "model": "claude-haiku-4.5",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 16,
+      "tool_calls": 28,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--006",
+      "cell": "go-manual",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 61.393,
+      "credits": 0.6921687310779436,
+      "model": "claude-haiku-4.5",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 79,
+      "tool_calls": 20,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--007",
+      "cell": "go-manual",
+      "outcome": "acceptance-failed",
+      "cases_passed": 47,
+      "failed_cases": [
+        "functional:two targets",
+        "functional:100 targets",
+        "functional:100 byte Unicode ID",
+        "functional:quoted ID",
+        "functional:another approver",
+        "functional:other tenant approver",
+        "input:128 byte key",
+        "input:exact 64 KiB body",
+        "idempotency:reordered replay",
+        "idempotency:same key different payload",
+        "idempotency:new key cannot approve again",
+        "idempotency:key scoped by actor",
+        "idempotency:key scoped by tenant",
+        "idempotency:requester cannot reuse approver key",
+        "concurrency:concurrent identical",
+        "concurrency:concurrent mismatch",
+        "concurrency:concurrent overlap",
+        "failure-rollback:audit failure and same-key retry",
+        "failure-rollback:request failure and same-key retry"
+      ],
+      "generation_seconds": 105.107,
+      "credits": 1.2216746293200664,
+      "model": "claude-haiku-4.5",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 101,
+      "tool_calls": 28,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--007",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 49.628,
+      "credits": 0.5750771042122719,
+      "model": "claude-haiku-4.5",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 124,
+      "tool_calls": 20,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--008",
+      "cell": "go-action",
+      "outcome": "acceptance-failed",
+      "cases_passed": 55,
+      "failed_cases": [
+        "authorization:cross tenant",
+        "authorization:self approval",
+        "atomicity:mixed own",
+        "atomicity:mixed other",
+        "atomicity:mixed done",
+        "atomicity:mixed missing",
+        "input:NUL absent target",
+        "idempotency:same key different payload",
+        "idempotency:new key cannot approve again",
+        "concurrency:concurrent mismatch",
+        "concurrency:concurrent overlap"
+      ],
+      "generation_seconds": 36.988,
+      "credits": 0.43579215601990046,
+      "model": "claude-haiku-4.5",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 12,
+      "tool_calls": 19,
+      "wrote_tests": false,
+      "ran_go_test": false,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--008",
+      "cell": "go-manual",
+      "outcome": "acceptance-failed",
+      "cases_passed": 64,
+      "failed_cases": [
+        "idempotency:reordered replay",
+        "concurrency:concurrent identical"
+      ],
+      "generation_seconds": 48.314,
+      "credits": 0.5572392249419569,
+      "model": "claude-haiku-4.5",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 102,
+      "tool_calls": 17,
+      "wrote_tests": false,
+      "ran_go_test": false,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--009",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 49.216,
+      "credits": 0.5480480028524046,
+      "model": "claude-haiku-4.5",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 22,
+      "tool_calls": 21,
+      "wrote_tests": false,
+      "ran_go_test": false,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--009",
+      "cell": "go-manual",
+      "outcome": "acceptance-failed",
+      "cases_passed": 65,
+      "failed_cases": [
+        "input:NUL absent target"
+      ],
+      "generation_seconds": 57.289,
+      "credits": 0.6883744594361525,
+      "model": "claude-haiku-4.5",
+      "files": [
+        "internal/candidate/approval.go",
+        "internal/candidate/approval_test.go"
+      ],
+      "added_lines": 217,
+      "tool_calls": 23,
+      "wrote_tests": true,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--010",
+      "cell": "go-manual",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 108.256,
+      "credits": 1.252806246633499,
+      "model": "claude-haiku-4.5",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 77,
+      "tool_calls": 30,
+      "wrote_tests": false,
+      "ran_go_test": false,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--010",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 52.756,
+      "credits": 0.6059924212271974,
+      "model": "claude-haiku-4.5",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 32,
+      "tool_calls": 24,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    }
+  ]
+}

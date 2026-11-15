@@ -1,0 +1,53 @@
+{
+  "version": 3,
+  "kind": "model-trial",
+  "plan_sha256": "e5751cf4d14d52c80007dff2812979d984e422d27fe270915184ce79b9a909da",
+  "trial": {
+    "id": "go-manual--010",
+    "cell": "go-manual",
+    "instance": 10,
+    "prompt": "\u672c\u7248\u672c\u5728\u6279\u91cf\u5ba1\u6279\u57fa\u7840\u4e0a\u65b0\u589e\u540c\u4e8b\u52a1\u5ba1\u6279\u65e5\u5fd7\u4e0e\u5e42\u7b49\u7ed3\u679c\u3002\u53ea\u6709\u5f53\u524d\u5df2\u8ba4\u8bc1 approver \u53ef\u4ee5\u5ba1\u6279\u5f53\u524d\u79df\u6237\u5185\u4ed6\u4eba\u521b\u5efa\u7684 submitted \u76ee\u6807\uff0c\u4efb\u4f55\u76ee\u6807\u65e0\u6548\u5219\u5168\u6279\u62d2\u7edd\u4e14 Purchase/ApprovalAudit/ActionRequest \u5168\u90e8\u4e0d\u53d8\u30021..100 \u4e2a\u4e0d\u91cd\u590d\u975e\u7a7a\u5b57\u7b26\u4e32 ID\uff0c\u6bcf\u9879 UTF-8 \u957f\u5ea6\u4e0d\u8d85\u8fc7100\u5b57\u8282\uff0c\u4e25\u683c\u4ec5\u542b ids \u7684 JSON \u5bf9\u8c61\uff0c\u672a\u77e5/\u91cd\u590d\u5b57\u6bb5\u3001\u9519\u8bef\u7c7b\u578b\u548c\u65e0\u6548 JSON \u8fd4\u56de400\u3002\u533f\u540d401\uff0crequester403\u3002\u8ba4\u8bc1\u548c\u89d2\u8272\u5148\u4e8e\u62a5\u6587\u68c0\u67e5\u3002\u6700\u5927\u8bf7\u6c42\u4f5365536\u5b57\u8282\uff0c\u8d85\u9650413\uff1b\u6070\u597d65536\u5b57\u8282\u7684\u5408\u6cd5\u8f93\u5165\u5141\u8bb8\u3002Idempotency-Key \u5fc5\u9700\u4e14\u53ea\u80fd\u6709\u4e00\u4e2a\u503c\uff0c\u957f\u5ea61..128\uff0c\u5b57\u7b26\u96c6A-Z/a-z/0-9/\u70b9/\u4e0b\u5212\u7ebf/\u5192\u53f7/\u8fde\u5b57\u7b26\u3002\u6210\u529f200\uff0c\u54cd\u5e94\u4ec5 approvedIds\uff0c\u6309UTF-8\u5b57\u5178\u5e8f\u6392\u5e8f\u3002\u9996\u6b21\u6210\u529f Idempotency-Replayed=false\uff1b\u540c\u4f5c\u7528\u57df\u540c key\u3001\u540c\u76ee\u6807\u96c6\u5408\u7684\u91cd\u653e\u8fd4\u56de\u76f8\u540c\u72b6\u6001\u548c\u54cd\u5e94\u5b57\u8282\uff0cheader=true\uff0c\u4e0d\u4ea7\u751f\u65b0\u5199\u5165\uff1b\u540ckey\u4e0d\u540c\u76ee\u6807409\u3002\u4f5c\u7528\u57df\u4e3a operation+tenant+actor+key\u3002\u4e0d\u540ckey\u4e0d\u5f97\u518d\u6b21\u5ba1\u6279\u5df2\u5ba1\u6279\u8bb0\u5f55\u3002\u6bcf\u4e2a\u6210\u529f\u76ee\u6807\u6070\u597d\u4e00\u6761\u5b8c\u6574 ApprovalAudit\uff1b\u6bcf\u4e2a\u6210\u529f\u4f5c\u7528\u57df\u6070\u597d\u4e00\u6761\u5b8c\u6210\u6001 ActionRequest\u3002ActionRequest.requestHash \u4e3a\u5c0f\u5199\u5341\u516d\u8fdb\u5236 SHA-256\uff0c\u8f93\u5165\u4e3a \"bulk-approve.v3\" \u52a0\u6362\u884c\u7b26\uff0c\u518d\u4f9d UTF-8 \u5b57\u8282\u5e8f\u6392\u5e8f\u540e\u7684\u6bcf\u4e2a ID \u4f9d\u6b21\u62fc\u63a5 \"<UTF-8\u5b57\u8282\u957f\u5ea6>:<ID>\"\uff08\u65e0\u5206\u9694\u7b26\uff09\uff1bActionRequest.response \u4e3a {\"approvedIds\":[\u6392\u5e8f\u540eID]}\u3002\u5df2\u786e\u8ba4\u56de\u6eda\u7684\u5931\u8d25\u4e0d\u5360\u7528key\uff1b\u79fb\u9664\u53d7\u63a7\u5199\u5165\u6545\u969c\u540e\u540ckey\u53ef\u91cd\u8bd5\u3002\u7f51\u7edc\u6216\u63d0\u4ea4\u786e\u8ba4\u4e22\u5931\u65f6\u4e0d\u4fdd\u8bc1\u672a\u63d0\u4ea4\uff0c\u5ba2\u6237\u7aef\u5e94\u4f7f\u7528\u540ckey\u91cd\u8bd5\u4ee5\u8bfb\u53d6\u5df2\u63d0\u4ea4\u7ed3\u679c\u3002\u5e76\u53d1\u540ckey\u540c\u96c6\u5408\u4e24\u6b21\u5747200\uff0c\u53ea\u63d0\u4ea4\u4e00\u6b21\uff1b\u5e76\u53d1\u540ckey\u4e0d\u540c\u96c6\u5408\u4e00\u4e2a200\u3001\u53e6\u4e00\u4e2a409\uff1b\u4e0d\u540ckey\u7684\u91cd\u53e0\u6279\u6b21\u53ea\u80fd\u4e00\u4e2a\u6210\u529f\uff0c\u8d25\u8005\u72ec\u6709\u76ee\u6807\u4e0d\u53d8\u3002\u5ba2\u6237\u7aef\u4e0a\u4e0b\u6587\u5934\u4e0d\u80fd\u8986\u76d6\u8ba4\u8bc1\u8eab\u4efd\u3002\u4fdd\u7559\u539f\u6709API\u884c\u4e3a\uff1b\u65b0\u65e5\u5fd7/\u5e42\u7b49\u5951\u7ea6\u4ec5\u9002\u7528\u4e8e\u672cAction\uff0c\u65e7\u5355\u6761\u5ba1\u6279API\u672a\u8fc1\u79fb\u3002\nEvolve the existing atomic batch approval to add audit and scoped idempotency.\nBoth conditions use guarded RLS. The shared HTTP adapter already validates input and binds demo identity.\nOnly edit/add internal/candidate/ Go code. All other exports, dependencies, Git settings and tests are protected.\nPreserve the original APIs. New returns: protocol.Result, replayed bool, error; protocol.Rejection controls HTTP rejection status.\nDo not commit/push, read credentials, other checkouts or evaluator materials; do not use other agents.\nUse go test ./... and python3 visible_smoke.py only if an independent public test service is supplied.\nPrivate database credentials are unavailable during generation. Public SQL schema is in SCHEMA.sql.\nCapability: no prebuilt Action kernel. Implement the transaction in internal/candidate/.\nThis is a trusted-code pilot; directory export alone does not enforce host or network isolation.",
+    "prompt_sha256": "1bb7c0d8c4b0eea2557663b40f365e2cb9cdfa3d75bd1e7466e435307e53f5a5"
+  },
+  "candidate_sha": "71db3920a289cb03fb619502d39e7ae12f7469ea",
+  "manifest_sha256": "6a0129cc53a4e8cdc09408797ebacd479646803391139e7346669e25ed7d2c0f",
+  "bundle_sha256": "db68806baeba0050619889f04dbafc66514446bf4fa99fcaec067f3ffd3591ff",
+  "generation": {
+    "status": "completed",
+    "usage": {
+      "credits": 0.6596446577114429
+    },
+    "turn_started": true,
+    "run_finished": true,
+    "reported_model": "gpt-5.6-luna",
+    "event_count": 472,
+    "agent_messages": [
+      "\u6211\u5148\u68c0\u67e5\u5019\u9009\u5b9e\u73b0\u3001\u516c\u5f00 schema \u53ca\u73b0\u6709\u6d4b\u8bd5\u5165\u53e3\uff0c\u786e\u8ba4\u4e8b\u52a1\u8fb9\u754c\u548c\u63a5\u53e3\u5f62\u72b6\u540e\u76f4\u63a5\u5b9e\u73b0\u5e76\u505a\u672c\u5730 Go \u6821\u9a8c\u3002\n\u73b0\u6709\u9002\u914d\u5668\u5df2\u6ee1\u8db3\u8ba4\u8bc1/\u89d2\u8272\u4f18\u5148\u300165536 \u5b57\u8282\u4e0a\u9650\u548c\u4e25\u683c JSON \u7684\u5927\u90e8\u5206\u7ea6\u675f\uff1b\u6838\u5fc3\u7f3a\u53e3\u5728\u5019\u9009\u4e8b\u52a1\u3002\u73b0\u5728\u8865\u4e0a\u201c\u5148\u9501\u5b9a\u5e42\u7b49\u4f5c\u7528\u57df\u3001\u518d\u9501\u5b9a\u76ee\u6807\u3001\u66f4\u65b0\u3001\u5ba1\u8ba1\u3001\u63d0\u4ea4\u201d\u7684\u5355\u4e8b\u52a1\u6d41\u7a0b\uff0c\u5e76\u4fdd\u7559\u65e7 API\u3002\n\u5df2\u5b8c\u6210 `internal/candidate/approval.go` \u7684\u539f\u5b50\u6279\u91cf\u5ba1\u6279\u5347\u7ea7\uff1a\n\n- \u589e\u52a0 scoped idempotency\uff1a`tenant + actor + operation + key`\n- \u652f\u6301\u5e76\u53d1\u540c key \u540c\u96c6\u5408\u91cd\u653e\uff0c\u4fdd\u8bc1\u53ea\u63d0\u4ea4\u4e00\u6b21\n- \u540c key \u4e0d\u540c\u76ee\u6807\u96c6\u5408\u8fd4\u56de 409\n- \u4f7f\u7528 SHA-256 \u751f\u6210\u89c4\u8303\u5316 `requestHash`\n- \u5355\u4e8b\u52a1\u5b8c\u6210\uff1a\n  - \u521b\u5efa `ActionRequest`\n  - \u9501\u5b9a\u5e76\u6821\u9a8c\u5168\u90e8 `Purchase`\n  - \u6279\u91cf\u66f4\u65b0\u4e3a `approved`\n  - \u4e3a\u6bcf\u4e2a\u76ee\u6807\u5199\u5165\u4e00\u6761 `ApprovalAudit`\n- \u4efb\u610f\u76ee\u6807\u65e0\u6548\u65f6\u6574\u4f53\u56de\u6eda\uff0c\u4e0d\u7559\u4e0b\u5e42\u7b49\u8bb0\u5f55\u6216\u5ba1\u8ba1\u8bb0\u5f55\n- \u91cd\u653e\u4e0d\u4ea7\u751f\u65b0\u7684\u5199\u5165\uff0c\u5e76\u8fd4\u56de `Idempotency-Replayed: true`\n- \u4fdd\u7559\u539f\u6709 API \u548c HTTP \u9002\u914d\u5668\u884c\u4e3a\n\n\u9a8c\u8bc1\u7ed3\u679c\uff1a\n\n```text\ngo test ./...\n?    github.com/XUJiahua/enterprise_agent/cmd/server\n?    github.com/XUJiahua/enterprise_agent/internal/app\n?    github.com/XUJiahua/enterprise_agent/internal/candidate\n?    github.com/XUJiahua/enterprise_agent/internal/protocol\n```\n\n\u540c\u65f6\u901a\u8fc7 `gofmt` \u548c `git diff --check`\u3002\u672a\u8fd0\u884c `visible_smoke.py`\uff0c\u56e0\u4e3a\u5f53\u524d\u672a\u63d0\u4f9b\u72ec\u7acb\u516c\u5171\u6d4b\u8bd5\u670d\u52a1\u3002"
+    ],
+    "errors": [],
+    "engine": "kiro",
+    "generation_seconds": 43.799,
+    "requested_model": "gpt-5.6-luna",
+    "reasoning_effort": "medium",
+    "sandbox": "workspace-write",
+    "command": [
+      "kiro-cli",
+      "chat",
+      "--no-interactive",
+      "--output-format",
+      "stream-json",
+      "--agent-engine",
+      "v3",
+      "--agent",
+      "poc-v3-generator",
+      "--model",
+      "gpt-5.6-luna",
+      "--effort",
+      "medium",
+      "--trust-all-tools"
+    ],
+    "returncode": 0,
+    "timed_out": false,
+    "cli_version": "kiro-cli 3.3.0"
+  }
+}

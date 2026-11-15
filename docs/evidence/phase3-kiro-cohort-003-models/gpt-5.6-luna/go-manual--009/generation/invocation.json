@@ -1,0 +1,37 @@
+{
+  "status": "completed",
+  "usage": {
+    "credits": 0.6606057725373133
+  },
+  "turn_started": true,
+  "run_finished": true,
+  "reported_model": "gpt-5.6-luna",
+  "event_count": 450,
+  "agent_messages": [
+    "\u6211\u5148\u68c0\u67e5\u5019\u9009\u5b9e\u73b0\u3001\u516c\u5f00 schema \u548c\u73b0\u6709\u6d4b\u8bd5\u5165\u53e3\uff0c\u786e\u8ba4\u9700\u8981\u6269\u5c55\u7684\u4e8b\u52a1\u8fb9\u754c\u4e0e\u63a5\u53e3\u540e\u76f4\u63a5\u5b9e\u73b0\u5e76\u505a\u672c\u5730\u53ef\u884c\u7684\u9a8c\u8bc1\u3002\n\u73b0\u6709 HTTP \u9002\u914d\u5668\u5df2\u8986\u76d6\u8ba4\u8bc1\u4f18\u5148\u7ea7\u3001\u4e25\u683c\u62a5\u6587\u89e3\u6790\u3001\u4f53\u79ef\u4e0a\u9650\u548c key \u6821\u9a8c\uff1b\u6838\u5fc3\u7f3a\u53e3\u5728\u5019\u9009\u4e8b\u52a1\u3002\u4e0b\u9762\u5c06\u628a\u5e42\u7b49\u4f5c\u7528\u57df\u9501\u5b9a\u3001\u89c4\u8303 hash/response\u3001Purchase \u884c\u9501\u3001\u5ba1\u8ba1\u5199\u5165\u548c\u56de\u6eda\u8bed\u4e49\u653e\u5165\u540c\u4e00\u4e8b\u52a1\u3002\n\u5df2\u5b8c\u6210\u5b9e\u73b0\uff0c\u4fee\u6539\u4ec5\u6d89\u53ca `internal/candidate/approval.go`\uff1a\n\n- \u5728\u540c\u4e00\u4e8b\u52a1\u4e2d\u5b8c\u6210\uff1a\n  - scoped `ActionRequest` \u5e42\u7b49\u8bb0\u5f55\n  - Purchase \u884c\u9501\u4e0e\u5168\u6279\u6821\u9a8c\n  - Purchase \u72b6\u6001\u66f4\u65b0\n  - `ApprovalAudit` \u5199\u5165\n- \u4f7f\u7528 `bulk-approve.v3\\n` \u52a0\u6392\u5e8f\u540e\u7684\u957f\u5ea6\u524d\u7f00 ID \u751f\u6210 SHA-256 request hash\u3002\n- \u540c key\u3001\u540c\u76ee\u6807\u96c6\u5408\u8fd4\u56de replay\uff1b\u540c key\u3001\u4e0d\u540c\u96c6\u5408\u8fd4\u56de 409\u3002\n- \u5931\u8d25\u4e8b\u52a1\u6574\u4f53\u56de\u6eda\uff0c\u4e0d\u5360\u7528\u5e42\u7b49 key\u3002\n- \u901a\u8fc7\u6392\u5e8f\u540e\u7684\u9010\u884c\u9501\u907f\u514d\u91cd\u53e0\u6279\u6b21\u90e8\u5206\u63d0\u4ea4\u3002\n- \u54cd\u5e94\u4e2d\u7684 `approvedIds` \u6309 UTF-8 \u5b57\u5178\u5e8f\u8fd4\u56de\u3002\n- \u4fdd\u7559\u8ba4\u8bc1\u8eab\u4efd\u7ed1\u5b9a\u548c RLS \u4e0a\u4e0b\u6587\u8bbe\u7f6e\u3002\n\n\u9a8c\u8bc1\u5df2\u901a\u8fc7\uff1a\n\n```text\ngo test ./...\n?    github.com/XUJiahua/enterprise_agent/cmd/server\n?    github.com/XUJiahua/enterprise_agent/internal/app\n?    github.com/XUJiahua/enterprise_agent/internal/candidate\n?    github.com/XUJiahua/enterprise_agent/internal/protocol\n```\n\n\u672a\u8fd0\u884c `visible_smoke.py`\uff0c\u56e0\u4e3a\u5f53\u524d\u6ca1\u6709\u53ef\u7528\u7684\u72ec\u7acb\u516c\u5171\u6d4b\u8bd5\u670d\u52a1\u3002"
+  ],
+  "errors": [],
+  "engine": "kiro",
+  "generation_seconds": 42.31,
+  "requested_model": "gpt-5.6-luna",
+  "reasoning_effort": "medium",
+  "sandbox": "workspace-write",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "gpt-5.6-luna",
+    "--effort",
+    "medium",
+    "--trust-all-tools"
+  ],
+  "returncode": 0,
+  "timed_out": false
+}

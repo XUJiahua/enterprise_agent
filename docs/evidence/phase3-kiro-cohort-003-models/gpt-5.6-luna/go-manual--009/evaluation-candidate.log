@@ -1,0 +1,3 @@
+2026/11/15 08:49:39 Action transaction failed: ERROR: unsupported Unicode escape sequence (SQLSTATE 22P05)
+2026/11/15 08:49:40 Action transaction failed: ERROR: controlled phase3 write failure (SQLSTATE P0001)
+2026/11/15 08:49:40 Action transaction failed: ERROR: controlled phase3 write failure (SQLSTATE P0001)

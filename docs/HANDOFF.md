@@ -74,6 +74,7 @@
 | v3 业务演进 | 手写事务 vs 平台 Action | **0，尚未注册/执行真实队列** | 仅控制通过，真实 CLI 预检阻塞 |
 | v3 Kiro 队列（2026-11-15） | 同上，引擎 kiro-cli 3.3.0 / claude-opus-5.5 | 2 个；manual 50/66 失败，action 66/66 | manual 失败全部来自契约未规定的 requestHash 公式；放宽该项的诊断两组均 66/66。见 [Kiro pilot](phase3-kiro-pilot-results.md) |
 | v3 Kiro 队列 002（2026-11-15） | 契约写明 requestHash；Seatbelt 文件隔离；10 块 | 20 个；manual 10/10，action 10/10，每份 66/66 | 正确性无差异；action 耗时与 credit 约为一半，范围不重叠。见 [队列 002](phase3-kiro-cohort-002-results.md) |
+| v3 Kiro 队列 003（2026-11-15） | 同 002，换 haiku-4.5 / gpt-5.6-luna / qwen3-coder-next，各 10 块并行 | 60 个；manual 5/10、3/10、1/10，action 8/10、10/10、6/10（qwen 各 1 未测量） | **首次出现正确性差异**，集中在幂等/并发；失败均为拒绝过度、无越权写。配对检验为事后探索性。见 [队列 003](phase3-kiro-cohort-003-results.md) |
 
 已完成真实生成合计为 3 + 9 + 4 = 16 个候选；条件不同，**不能合并计算成一个统一处理条件的成功率**。早期 9 个 trial 的环境阻塞计划仍保留为未测量，不是 0/9 通过。
 

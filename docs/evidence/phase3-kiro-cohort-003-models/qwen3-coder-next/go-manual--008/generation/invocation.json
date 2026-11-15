@@ -1,0 +1,37 @@
+{
+  "status": "completed",
+  "usage": {
+    "credits": 0.4100752918739635
+  },
+  "turn_started": true,
+  "run_finished": true,
+  "reported_model": "qwen3-coder-next",
+  "event_count": 142,
+  "agent_messages": [
+    "I'll analyze this task and implement the batch approval with audit logging and scoped idempotency. Let me start by exploring the existing codebase structure.\n\nNow let me check the go.mod and the visible_smoke.py for test understanding:\n\nNow I understand the structure. I need to implement the bulk approval action with audit logging and scoped idempotency in `/internal/candidate/approval.go`. Let me implement this:\n\nI need to add the missing import for `encoding/json`:\n\nNow I need to fix the replay response parsing logic - the response format should match protocol.Result:\n\nNow let's test the implementation:\n\nBuild succeeded. Let me verify the final implementation by reading the file:\n\nI notice an issue with the logic - when checking existing action, I'm scanning into `responseStored` but then trying to parse as `protocol.Result`. Let me trace through the logic more carefully and also check if I need to handle the `42501` (RLS violation) case properly. Let me review the SCHEMA.sql again and fix the approach:\n\nBuild succeeded. Let me review the final implementation once more:\n\nImplementation complete. The implementation adds:\n\n1. **Idempotency key validation**: Already handled by `protocol.HTTP`\n2. **Scoped idempotency**: Checks `ActionRequest` with scope `operation+tenant+actor+key`\n3. **Replay detection**: Returns same response with `Idempotency-Replayed=true` for same key+IDs\n4. **Conflict detection**: Returns 409 for same key with different IDs\n5. **Approval audit logging**: One `ApprovalAudit` per approved purchase\n6. **ActionRequest completion record**: One per successful action scope\n7. **Deterministic requestHash**: SHA-256 of `\"bulk-approve.v3\\n\"` + sorted `<length>:<id>` pairs\n8. **All-or-nothing approval**: If any target is invalid (missing, not submitted, or self-approved), all are rejected\n9. **Sorted responses**: Approved IDs returned in UTF-8 byte order\n\nThe code:\n- Uses guarded RLS via session context settings\n- Maintains backward compatibility with existing APIs\n- Returns `protocol.Result`, `replayed bool`, and `error`\n- Uses `protocol.Rejection` for HTTP rejection status control"
+  ],
+  "errors": [],
+  "engine": "kiro",
+  "generation_seconds": 51.502,
+  "requested_model": "qwen3-coder-next",
+  "reasoning_effort": "medium",
+  "sandbox": "workspace-write",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "qwen3-coder-next",
+    "--effort",
+    "medium",
+    "--trust-all-tools"
+  ],
+  "returncode": 0,
+  "timed_out": false
+}

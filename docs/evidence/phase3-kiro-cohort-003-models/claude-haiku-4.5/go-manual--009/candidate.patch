@@ -1,0 +1,284 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index ad14a29..ffb70c8 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -1,35 +1,87 @@
+-// Shared starting point: atomic batch approval, without audit or idempotency.
++// Evolved atomic batch approval with audit logging and scoped idempotency.
+ package candidate
+ 
+ import (
+ 	"context"
++	"crypto/sha256"
++	"encoding/hex"
++	"encoding/json"
++	"fmt"
++	"sort"
++	"strings"
++	"unicode/utf8"
++
+ 	"github.com/XUJiahua/enterprise_agent/internal/app"
+ 	"github.com/XUJiahua/enterprise_agent/internal/protocol"
++	"github.com/jackc/pgx/v5"
+ 	"github.com/jackc/pgx/v5/pgxpool"
+ 	"net/http"
+-	"strings"
+ )
+ 
+ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
+ 	approve := func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
++		// Validate that all IDs are valid UTF-8 strings
+ 		for _, id := range ids {
+-			if strings.ContainsRune(id, 0) {
+-				return protocol.Result{}, false, &protocol.Rejection{Status: 404}
++			if !utf8.ValidString(id) || strings.ContainsRune(id, 0) {
++				return protocol.Result{}, false, &protocol.Rejection{Status: 400}
+ 			}
+ 		}
++
+ 		tx, err := pool.Begin(ctx)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+ 		defer tx.Rollback(ctx)
++
++		// Set security context
+ 		_, err = tx.Exec(ctx, `SELECT set_config('app.tenant',$1,true),set_config('app.user',$2,true),set_config('app.role',$3,true)`, u.Tenant, u.User, u.Role)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+-		rows, err := tx.Query(ctx, `SELECT id FROM "Purchase" WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted' ORDER BY id FOR UPDATE`, ids, u.Tenant, u.User)
++
++		// Compute request hash: "bulk-approve.v3\n" + sorted IDs with format "<utf8_byte_length>:<id>"
++		requestHash := computeRequestHash(ids)
++
++		// Check idempotency: scope = operation + tenant + actor + key
++		var existingActionRequest struct {
++			requestHash string
++			response    json.RawMessage
++		}
++
++		err = tx.QueryRow(ctx, `
++			SELECT "requestHash", response FROM "ActionRequest"
++			WHERE "tenantId"=$1 AND "actorId"=$2 AND operation='bulk-approve.v3' AND key=$3
++		`, u.Tenant, u.User, key).Scan(&existingActionRequest.requestHash, &existingActionRequest.response)
++
++		if err == nil {
++			// Key exists - check if request matches
++			if existingActionRequest.requestHash != requestHash {
++				// Same key, different target set
++				return protocol.Result{}, false, &protocol.Rejection{Status: 409}
++			}
++			// Same key, same targets - return cached response
++			var result protocol.Result
++			if err := json.Unmarshal(existingActionRequest.response, &result); err != nil {
++				return protocol.Result{}, false, err
++			}
++			if err := tx.Commit(ctx); err != nil {
++				return protocol.Result{}, false, err
++			}
++			return result, true, nil
++		} else if err != pgx.ErrNoRows {
++			return protocol.Result{}, false, err
++		}
++
++		// New request - validate and approve targets
++		rows, err := tx.Query(ctx, `
++			SELECT id FROM "Purchase"
++			WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'
++			ORDER BY id FOR UPDATE
++		`, ids, u.Tenant, u.User)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
++
+ 		eligible := []string{}
+ 		for rows.Next() {
+ 			var id string
+@@ -44,20 +96,77 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
++
++		// All-or-nothing: if any target is invalid, reject all
+ 		if len(eligible) != len(ids) {
+ 			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+ 		}
+-		tag, err := tx.Exec(ctx, `UPDATE "Purchase" SET status='approved' WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'`, ids, u.Tenant, u.User)
++
++		// Approve all targets
++		tag, err := tx.Exec(ctx, `
++			UPDATE "Purchase" SET status='approved'
++			WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'
++		`, ids, u.Tenant, u.User)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
++
+ 		if tag.RowsAffected() != int64(len(ids)) {
+ 			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+ 		}
++
++		// Create one ApprovalAudit record per approved target
++		for _, id := range ids {
++			_, err := tx.Exec(ctx, `
++				INSERT INTO "ApprovalAudit" ("tenantId", "purchaseId", "approvedBy", operation, "idempotencyKey", "fromStatus", "toStatus")
++				VALUES ($1, $2, $3, $4, $5, $6, $7)
++			`, u.Tenant, id, u.User, "bulk-approve.v3", key, "submitted", "approved")
++			if err != nil {
++				return protocol.Result{}, false, err
++			}
++		}
++
++		// Create ActionRequest record with response
++		result := protocol.Result{ApprovedIDs: ids}
++		responseJSON, err := json.Marshal(result)
++		if err != nil {
++			return protocol.Result{}, false, err
++		}
++
++		_, err = tx.Exec(ctx, `
++			INSERT INTO "ActionRequest" ("tenantId", "actorId", operation, key, "requestHash", response)
++			VALUES ($1, $2, $3, $4, $5, $6)
++		`, u.Tenant, u.User, "bulk-approve.v3", key, requestHash, responseJSON)
++		if err != nil {
++			return protocol.Result{}, false, err
++		}
++
+ 		if err = tx.Commit(ctx); err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+-		return protocol.Result{ApprovedIDs: ids}, false, nil
++
++		return result, false, nil
+ 	}
+ 	return protocol.HTTP(approve, fallback), nil
+ }
++
++// computeRequestHash computes SHA-256 of "bulk-approve.v3\n" + sorted IDs with format "<utf8_byte_length>:<id>"
++func computeRequestHash(ids []string) string {
++	h := sha256.New()
++	h.Write([]byte("bulk-approve.v3\n"))
++
++	// Ensure IDs are sorted
++	sortedIDs := make([]string, len(ids))
++	copy(sortedIDs, ids)
++	sort.Strings(sortedIDs)
++
++	for _, id := range sortedIDs {
++		idBytes := []byte(id)
++		idLen := len(idBytes)
++		lengthStr := fmt.Sprintf("%d:", idLen)
++		h.Write([]byte(lengthStr))
++		h.Write(idBytes)
++	}
++
++	return hex.EncodeToString(h.Sum(nil))
++}
+diff --git a/internal/candidate/approval_test.go b/internal/candidate/approval_test.go
+new file mode 100644
+index 0000000..00f9221
+--- /dev/null
++++ b/internal/candidate/approval_test.go
+@@ -0,0 +1,101 @@
++package candidate
++
++import (
++	"crypto/sha256"
++	"encoding/hex"
++	"fmt"
++	"sort"
++	"testing"
++)
++
++// TestComputeRequestHash verifies the SHA-256 hash computation matches the specification.
++func TestComputeRequestHash(t *testing.T) {
++	tests := []struct {
++		name     string
++		ids      []string
++		expected string
++	}{
++		{
++			name: "single id",
++			ids:  []string{"hello"},
++			// "bulk-approve.v3\n" + "5:hello" (5 bytes)
++			expected: computeExpected([]string{"hello"}),
++		},
++		{
++			name: "multiple ids sorted",
++			ids:  []string{"charlie", "alice", "bob"},
++			// Should be sorted: alice, bob, charlie
++			expected: computeExpected([]string{"alice", "bob", "charlie"}),
++		},
++		{
++			name: "already sorted",
++			ids:  []string{"alice", "bob", "charlie"},
++			expected: computeExpected([]string{"alice", "bob", "charlie"}),
++		},
++		{
++			name: "single character ids",
++			ids:  []string{"a", "b"},
++			expected: computeExpected([]string{"a", "b"}),
++		},
++		{
++			name: "utf8 ids",
++			ids:  []string{"id-1", "id-2"},
++			expected: computeExpected([]string{"id-1", "id-2"}),
++		},
++	}
++
++	for _, tt := range tests {
++		t.Run(tt.name, func(t *testing.T) {
++			result := computeRequestHash(tt.ids)
++			if result != tt.expected {
++				t.Errorf("computeRequestHash(%v) = %s, want %s", tt.ids, result, tt.expected)
++			}
++		})
++	}
++}
++
++func computeExpected(ids []string) string {
++	h := sha256.New()
++	h.Write([]byte("bulk-approve.v3\n"))
++
++	sortedIDs := make([]string, len(ids))
++	copy(sortedIDs, ids)
++	sort.Strings(sortedIDs)
++
++	for _, id := range sortedIDs {
++		idBytes := []byte(id)
++		idLen := len(idBytes)
++		lengthStr := fmt.Sprintf("%d:", idLen)
++		h.Write([]byte(lengthStr))
++		h.Write(idBytes)
++	}
++
++	return hex.EncodeToString(h.Sum(nil))
++}
++
++// TestRequestHashDeterministic verifies that the same IDs always produce the same hash
++func TestRequestHashDeterministic(t *testing.T) {
++	ids := []string{"zebra", "apple", "mango"}
++
++	hash1 := computeRequestHash(ids)
++	hash2 := computeRequestHash(ids)
++
++	if hash1 != hash2 {
++		t.Errorf("Hash should be deterministic, got %s and %s", hash1, hash2)
++	}
++}
++
++// TestRequestHashOrderIndependent verifies different orders produce the same hash
++func TestRequestHashOrderIndependent(t *testing.T) {
++	ids1 := []string{"zebra", "apple", "mango"}
++	ids2 := []string{"apple", "mango", "zebra"}
++	ids3 := []string{"mango", "zebra", "apple"}
++
++	hash1 := computeRequestHash(ids1)
++	hash2 := computeRequestHash(ids2)
++	hash3 := computeRequestHash(ids3)
++
++	if hash1 != hash2 || hash2 != hash3 {
++		t.Errorf("Hashes should be identical regardless of input order: %s, %s, %s", hash1, hash2, hash3)
++	}
++}
