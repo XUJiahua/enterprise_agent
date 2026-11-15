@@ -1,0 +1,54 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index 0fd94e3..e9bdd68 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -28,5 +28,9 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		}
+ 		return protocol.Result{Field: action.Approve.Field, IDs: approved}, replayed, nil
+ 	}
+-	return protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve}, fallback), nil
++	reject := rejectHandler(executor)
++	return protocol.HTTP(protocol.Routes{
++		"/purchases/bulk-approve": approve,
++		"/purchases/bulk-reject":  reject,
++	}, fallback), nil
+ }
+diff --git a/internal/candidate/rejection.go b/internal/candidate/rejection.go
+new file mode 100644
+index 0000000..6cedf19
+--- /dev/null
++++ b/internal/candidate/rejection.go
+@@ -0,0 +1,33 @@
++package candidate
++
++import (
++	"context"
++	"errors"
++
++	"github.com/XUJiahua/enterprise_agent/internal/action"
++	"github.com/XUJiahua/enterprise_agent/internal/app"
++	"github.com/XUJiahua/enterprise_agent/internal/protocol"
++)
++
++// Reject is the v4 batch rejection Action. It is kept in the candidate
++// adapter because the platform action kernel exposes transitions generically.
++var Reject = action.Transition{
++	Operation: "bulk-reject.v4",
++	From:      "submitted",
++	To:        "rejected",
++	Field:     "rejectedIds",
++}
++
++func rejectHandler(executor *action.Executor) protocol.Handler {
++	return func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
++		rejected, replayed, err := executor.Run(ctx, u, Reject, key, ids)
++		var denied *action.Rejection
++		if errors.As(err, &denied) {
++			return protocol.Result{}, false, &protocol.Rejection{Status: denied.Status}
++		}
++		if err != nil {
++			return protocol.Result{}, false, err
++		}
++		return protocol.Result{Field: Reject.Field, IDs: rejected}, replayed, nil
++	}
++}

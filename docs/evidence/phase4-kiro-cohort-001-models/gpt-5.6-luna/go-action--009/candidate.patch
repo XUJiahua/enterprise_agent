@@ -1,0 +1,30 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index 0fd94e3..96c6589 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -28,5 +28,24 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		}
+ 		return protocol.Result{Field: action.Approve.Field, IDs: approved}, replayed, nil
+ 	}
+-	return protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve}, fallback), nil
++	reject := func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
++		rejected, replayed, err := executor.Run(ctx, u, action.Transition{
++			Operation: "bulk-reject.v4",
++			From:      "submitted",
++			To:        "rejected",
++			Field:     "rejectedIds",
++		}, key, ids)
++		var denied *action.Rejection
++		if errors.As(err, &denied) {
++			return protocol.Result{}, false, &protocol.Rejection{Status: denied.Status}
++		}
++		if err != nil {
++			return protocol.Result{}, false, err
++		}
++		return protocol.Result{Field: "rejectedIds", IDs: rejected}, replayed, nil
++	}
++	return protocol.HTTP(protocol.Routes{
++		"/purchases/bulk-approve": approve,
++		"/purchases/bulk-reject":  reject,
++	}, fallback), nil
+ }

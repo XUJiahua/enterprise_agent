@@ -1,0 +1,37 @@
+{
+  "status": "completed",
+  "usage": {
+    "credits": 2.3580416779436155
+  },
+  "turn_started": true,
+  "run_finished": true,
+  "reported_model": "claude-opus-5.5",
+  "event_count": 440,
+  "agent_messages": [
+    "Now a DB-free unit test that the digest matches the reconciliation ledger for both operations and that responses have the expected shape.\nI added `POST /purchases/bulk-reject`. It builds, and `go vet` and `go test ./...` pass, but I couldn't test it against a real database because the credentials weren't available. So the RLS, transaction, failure and concurrency behaviour is reasoned from the code and `SCHEMA.sql`, not run.\n\nOnly `internal/candidate/` changed:\n\n- **`approval.go`**: The existing bulk-approve handler is now a shared `decide` function, set up once per action. Approve uses `bulk-approve.v3` \u2192 `approvedIds` \u2192 status `approved`. Reject uses `bulk-reject.v4` \u2192 `rejectedIds` \u2192 status `rejected`. Both paths are registered in `protocol.Routes`, so `protocol.HTTP` still does all the input, identity, body-size and Idempotency-Key checks.\n- **Approve is unchanged in behaviour**: same SQL, same digest, same lock key, same response. The status values are now passed as parameters (`$4::text`, `$6::text`) instead of written into the SQL.\n- **How reject works**: it runs the same steps as approve in one transaction:\n  1. Set the RLS context from the authenticated identity (client headers can't override it).\n  2. Take an advisory lock on (operation, tenant, actor, key).\n  3. If the key was already used, replay the stored response (header `true`), or return 409 for a different target set.\n  4. Lock the targets with `FOR UPDATE` and require that every one is eligible; otherwise return 409 and change nothing.\n  5. Update the statuses, add one audit row per target, insert the `ActionRequest` row, then commit.\n\n  Any database failure, including the `ActionRequest` insert, rolls everything back and returns 503, so the same key can be retried afterwards.\n- **Concurrency**: approve and reject lock the same rows and re-check `status='submitted'` while holding the lock. So a race on the same target, or overlapping batches with different keys, ends with one 200 and one 409. The `ApprovalAudit` primary key (one row per purchase) also blocks a second decision on the same purchase.\n- **Request hash**: it now includes the operation name, so it still matches what the nightly reconciliation job in `ledger` recomputes for both operations.\n- **`approval_test.go`** (new): tests that need no database, checking that the hash matches the ledger's for both operations and that the reject response has the expected shape.\n\nReject also writes `ApprovalAudit` rows (operation `bulk-reject.v4`, `toStatus='rejected'`), as the v4 schema allows. `gofmt` reports `internal/protocol/protocol.go` as unformatted; that's existing code outside my scope, so I left it alone."
+  ],
+  "errors": [],
+  "engine": "kiro",
+  "generation_seconds": 63.446,
+  "requested_model": "claude-opus-5.5",
+  "reasoning_effort": "medium",
+  "sandbox": "workspace-write",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "claude-opus-5.5",
+    "--effort",
+    "medium",
+    "--trust-all-tools"
+  ],
+  "returncode": 0,
+  "timed_out": false
+}

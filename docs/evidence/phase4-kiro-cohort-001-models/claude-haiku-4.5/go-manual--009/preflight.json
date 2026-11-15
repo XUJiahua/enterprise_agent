@@ -1,0 +1,41 @@
+{
+  "ready": true,
+  "cli_version": "kiro-cli 3.3.0",
+  "invocation": {
+    "status": "completed",
+    "usage": {
+      "credits": 0.013395753565505803
+    },
+    "turn_started": true,
+    "run_finished": true,
+    "reported_model": "claude-haiku-4.5",
+    "event_count": 20,
+    "agent_messages": [
+      "READY"
+    ],
+    "errors": [],
+    "engine": "kiro",
+    "generation_seconds": 7.356,
+    "requested_model": "claude-haiku-4.5",
+    "reasoning_effort": "medium",
+    "sandbox": "read-only",
+    "command": [
+      "kiro-cli",
+      "chat",
+      "--no-interactive",
+      "--output-format",
+      "stream-json",
+      "--agent-engine",
+      "v3",
+      "--agent",
+      "poc-v3-generator",
+      "--model",
+      "claude-haiku-4.5",
+      "--effort",
+      "medium",
+      "--trust-tools="
+    ],
+    "returncode": 0,
+    "timed_out": false
+  }
+}

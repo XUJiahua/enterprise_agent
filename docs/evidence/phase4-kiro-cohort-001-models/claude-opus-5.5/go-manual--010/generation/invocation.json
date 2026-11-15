@@ -1,0 +1,37 @@
+{
+  "status": "completed",
+  "usage": {
+    "credits": 1.9730121074626863
+  },
+  "turn_started": true,
+  "run_finished": true,
+  "reported_model": "claude-opus-5.5",
+  "event_count": 362,
+  "agent_messages": [
+    "I added `POST /purchases/bulk-reject` and registered it in `protocol.Routes`. It builds, vets and passes `go test ./...`, but none of it has run against a database. There are no tests in the repo and no database credentials were available, so the transaction and concurrency behaviour is reasoned from the code, not observed. I only changed `internal/candidate/approval.go`.\n\n**How it's built:** I moved the existing bulk-approve code into one shared function, and both endpoints now use it. They differ only in the operation name (`bulk-approve.v3` / `bulk-reject.v4`), the response field (`approvedIds` / `rejectedIds`) and the new status (`approved` / `rejected`). The bulk-approve SQL, locking and responses are unchanged. Body, identity, size limit and Idempotency-Key checks stay in the shared `protocol.HTTP` adapter.\n\n**What reject does, all in one transaction:**\n1. It sets the RLS session values (tenant, user, role) from the authenticated identity, so client context headers can't override it.\n2. It takes a lock on operation + tenant + actor + key. If a matching `ActionRequest` already exists, it returns the stored response with `Idempotency-Replayed: true`; a different target set returns 409. Different actors or tenants using the same key don't affect each other.\n3. It locks the target rows with `FOR UPDATE`. Every target must be in the current tenant, created by someone else and still `submitted`; otherwise the whole batch gets 409.\n4. It sets the status to `rejected` and writes one `ApprovalAudit` row per target. This matches the existing \"every status change is audited\" rule, and the v4 schema allows it.\n5. It writes exactly one `ActionRequest` row with the response `{\"rejectedIds\":[...]}`. If that insert fails, the whole transaction rolls back and the client gets 503, so the same key can be retried later.\n\n**Concurrency, as designed:**\n- **Same key, same targets:** the key lock makes the second request wait, find the stored result and replay it, so both get 200 and only one write happens.\n- **Overlapping batches, or approve vs reject on the same target:** the row locks plus the re-checked `status='submitted'` condition make the loser get 409, with nothing written. The same check stops a rejected order from being approved or rejected again, and an approved one from being rejected.\n\n**One deliberate fix:** the old fingerprint helper always used `bulk-approve.v3` as its prefix. I replaced it with `ledger.Fingerprint(op, ids)`. That gives the same hash for approve, and a hash for reject that the nightly reconciliation check will accept; the old helper would have made it flag every reject row as tampered."
+  ],
+  "errors": [],
+  "engine": "kiro",
+  "generation_seconds": 51.188,
+  "requested_model": "claude-opus-5.5",
+  "reasoning_effort": "medium",
+  "sandbox": "workspace-write",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "claude-opus-5.5",
+    "--effort",
+    "medium",
+    "--trust-all-tools"
+  ],
+  "returncode": 0,
+  "timed_out": false
+}
