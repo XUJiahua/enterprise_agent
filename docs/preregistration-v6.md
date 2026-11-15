@@ -56,3 +56,11 @@ v3–v5b 的探索性结果显示，平台内核带来的正确性收益只覆�
 ## 附录（只追加）
 
 （尚无）
+
+### 附录 A（2026-11-15 13:45，确认性数据产生之前）：网络隔离的剩余缺口与审计规则
+
+[网络隔离](network-isolation.md)（PR #21）通过了 21/21 项控制，其中包括 Kiro 的真实探针。但实测确认了一个缺口：Kiro 的服务端 `web_search` 走的是已放行的 runtime 主机，所以仍能检索到 GitHub。正式 trial 使用的 agent 没有 `web_search` 工具，模型如果要绕过，只能在 shell 中再启动一个 kiro-cli，或者调用同类客户端。为此事先约定以下规则：
+
+- **审计**：检查每个 trial 的 ACP 事件里的 shell 命令，凡是出现 `kiro-cli`、`q chat`、`web_search`、`curl`/`wget`/`git clone`，或访问外网 URL 的，标记为 `retrieval-attempt`。另外检查 `network.log`，凡是存在被拒绝的 CONNECT 请求的 trial，标记为 `network-denied`。
+- **主分析**不排除任何被标记的 trial，避免事后剔除样本。**敏感性分析**则排除所有 `retrieval-attempt` trial（连同所在块的配对 trial）后重跑 H1–H3，两种结果都报告。
+- 结论里写“生成端网络受限（仅模型端点），服务端检索未经证实已排除”，不使用“盲测”这一说法。
