@@ -103,3 +103,12 @@ python3 benchmark/phase4/ctl.py summarize --plan "$W/plan.json" --inputs "$W/eva
 - request-hash 的 Oracle 是 `ledger.Fingerprint` 的 Python 独立实现。两者等价的证据是两份参考（使用 Go 版 ledger）都通过，Oracle 没有直接调用 Go 代码。
 - 隔离条件与 v3 队列 002 相同：只有文件系统 Seatbelt，网络不受限，生成与验收在同一宿主；公开仓库里有本 Oracle 和参考控制，因此**不能称为盲测**。
 - 本地 PostgreSQL 为 17.11，不是 CI 的 17.6。phase4 控制**尚未接入 public CI**（需要修改 `.github/workflows/poc.yml`，本次按约束只新增文件）。还没有 phase4 专用的 lane 脚本（`phase3/run_kiro_cohort.sh` 写死了 phase3 ctl）。
+
+## 注册真实队列前的修订（2026-11-15）
+
+根据 v3 队列 003 暴露的两个 harness 问题，在注册任何 v4 真实计划之前做了两项修订：
+
+- 导出的 `.gitignore` 增加 `/server`。在 v3 中，模型执行 `go build` 后留下的二进制文件曾被判为作用域违规。
+- 验收时，如果 Oracle 报告连接被关闭，同时候选进程已退出或日志中出现 `panic`，则判为 `candidate-error`，不再判为 infrastructure-blocked。
+
+`driver_smoke.py` 新增了一项崩溃控制：一个驳回处理函数故意 panic，并在候选目录中放置一个游离的 `server` 文件。期望结果是判为 candidate-error，且 `server` 文件不算越界，实测结果符合预期。全部控制已重跑通过，结果见 `control-r2-crash-and-gitignore.json`。v4 的 lane 运行沿用 `benchmark/phase3/run_kiro_cohort.sh`，使用时设置 `CTL=benchmark/phase4/ctl.py`。

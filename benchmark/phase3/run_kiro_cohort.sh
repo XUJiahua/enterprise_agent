@@ -5,6 +5,7 @@
 # The lane's own DATABASE_URL/ADMIN_DATABASE_URL/POC_HTTP_PORT come from the env,
 # so parallel lanes need separate disposable databases and ports.
 set -u
+CTL=${CTL:-benchmark/phase3/ctl.py}  # benchmark/phase4/ctl.py for v4 cohorts
 W=$1; R=$2; shift 2; EXTRA=("$@"); H=$HOME
 cd "$R"
 mkdir -p "$W/ops"; STATUS=$W/ops/status.log
@@ -26,9 +27,9 @@ for t in $ORDER; do
       > "$W/ops/$t.txt" 2>&1
   rc=$?; echo "$(date -u +%FT%TZ) $t worker_rc=$rc" >> "$STATUS"
   if [ -f "$W/results/$t/receipt.json" ]; then
-    python3 benchmark/phase3/ctl.py restore --plan "$W/plan.json" --trial "$t" --bundle "$W/results/$t/candidate.bundle" \
+    python3 "$CTL" restore --plan "$W/plan.json" --trial "$t" --bundle "$W/results/$t/candidate.bundle" \
       --receipt "$W/results/$t/receipt.json" --manifest "$W/kits/$t/manifest.json" --candidate "$W/eval/$t" >> "$W/ops/$t.txt" 2>&1
-    perl -e 'alarm 900; exec @ARGV' python3 benchmark/phase3/ctl.py evaluate --plan "$W/plan.json" --trial "$t" \
+    perl -e 'alarm 900; exec @ARGV' python3 "$CTL" evaluate --plan "$W/plan.json" --trial "$t" \
       --candidate "$W/eval/$t" --manifest "$W/kits/$t/manifest.json" --receipt "$W/results/$t/receipt.json" \
       --fixtures "$W/private/fixtures.json" --output "$W/evaluations/$t" >> "$W/ops/$t.txt" 2>&1
     rc=$?; echo "$(date -u +%FT%TZ) $t eval_rc=$rc" >> "$STATUS"

@@ -1,0 +1,556 @@
+{
+  "kind": "synthetic-v4-implicit-convention-control",
+  "new_model_generations": 0,
+  "human_evaluations": 14,
+  "worker_transport_evaluations": 2,
+  "cases_per_evaluation": 108,
+  "explicit_cases": 95,
+  "implicit_cases": 13,
+  "reference_passed": 2,
+  "implicit_violations_isolated": 8,
+  "explicit_violations_detected": 4,
+  "crash_control": {
+    "cell": "go-manual",
+    "mode": "handler-panic",
+    "outcome": "candidate-error",
+    "stray_server_ignored": true
+  },
+  "partial_denominator_checked": true,
+  "duplicate_rejected": true,
+  "controls": [
+    {
+      "cell": "go-manual",
+      "mode": "correct",
+      "violates": null,
+      "passed": true,
+      "explicit": {
+        "passed": 95,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 13,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": true,
+        "implicit-operation-scope": true,
+        "implicit-request-hash": true,
+        "implicit-uniform-409": true
+      },
+      "groups": {
+        "reject-functional": 5,
+        "reject-authorization": 3,
+        "reject-atomicity": 5,
+        "reject-input": 4,
+        "reject-idempotency": 6,
+        "reject-concurrency": 3,
+        "reject-failure-rollback": 1,
+        "reject-lifecycle": 2,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-audit": 3,
+        "implicit-operation-scope": 2,
+        "implicit-request-hash": 2,
+        "implicit-uniform-409": 6
+      }
+    },
+    {
+      "cell": "go-manual",
+      "mode": "omit-audit",
+      "violates": "implicit-audit",
+      "passed": false,
+      "explicit": {
+        "passed": 95,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 10,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": false,
+        "implicit-operation-scope": true,
+        "implicit-request-hash": true,
+        "implicit-uniform-409": true
+      },
+      "groups": {
+        "reject-functional": 5,
+        "reject-authorization": 3,
+        "reject-atomicity": 5,
+        "reject-input": 4,
+        "reject-idempotency": 6,
+        "reject-concurrency": 3,
+        "reject-failure-rollback": 1,
+        "reject-lifecycle": 2,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-audit": 0,
+        "implicit-operation-scope": 2,
+        "implicit-request-hash": 2,
+        "implicit-uniform-409": 6
+      }
+    },
+    {
+      "cell": "go-manual",
+      "mode": "ignore-operation",
+      "violates": "implicit-operation-scope",
+      "passed": false,
+      "explicit": {
+        "passed": 95,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 11,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": true,
+        "implicit-operation-scope": false,
+        "implicit-request-hash": true,
+        "implicit-uniform-409": true
+      },
+      "groups": {
+        "reject-functional": 5,
+        "reject-authorization": 3,
+        "reject-atomicity": 5,
+        "reject-input": 4,
+        "reject-idempotency": 6,
+        "reject-concurrency": 3,
+        "reject-failure-rollback": 1,
+        "reject-lifecycle": 2,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-audit": 3,
+        "implicit-operation-scope": 0,
+        "implicit-request-hash": 2,
+        "implicit-uniform-409": 6
+      }
+    },
+    {
+      "cell": "go-manual",
+      "mode": "approve-hash",
+      "violates": "implicit-request-hash",
+      "passed": false,
+      "explicit": {
+        "passed": 95,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 11,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": true,
+        "implicit-operation-scope": true,
+        "implicit-request-hash": false,
+        "implicit-uniform-409": true
+      },
+      "groups": {
+        "reject-functional": 5,
+        "reject-authorization": 3,
+        "reject-atomicity": 5,
+        "reject-input": 4,
+        "reject-idempotency": 6,
+        "reject-concurrency": 3,
+        "reject-failure-rollback": 1,
+        "reject-lifecycle": 2,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-audit": 3,
+        "implicit-operation-scope": 2,
+        "implicit-request-hash": 0,
+        "implicit-uniform-409": 6
+      }
+    },
+    {
+      "cell": "go-manual",
+      "mode": "distinguish-404",
+      "violates": "implicit-uniform-409",
+      "passed": false,
+      "explicit": {
+        "passed": 95,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 7,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": true,
+        "implicit-operation-scope": true,
+        "implicit-request-hash": true,
+        "implicit-uniform-409": false
+      },
+      "groups": {
+        "reject-functional": 5,
+        "reject-authorization": 3,
+        "reject-atomicity": 5,
+        "reject-input": 4,
+        "reject-idempotency": 6,
+        "reject-concurrency": 3,
+        "reject-failure-rollback": 1,
+        "reject-lifecycle": 2,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-audit": 3,
+        "implicit-operation-scope": 2,
+        "implicit-request-hash": 2,
+        "implicit-uniform-409": 0
+      }
+    },
+    {
+      "cell": "go-manual",
+      "mode": "skip-completeness",
+      "violates": null,
+      "passed": false,
+      "explicit": {
+        "passed": 89,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 8,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": true,
+        "implicit-operation-scope": true,
+        "implicit-request-hash": true,
+        "implicit-uniform-409": false
+      },
+      "groups": {
+        "reject-functional": 5,
+        "reject-authorization": 3,
+        "reject-atomicity": 0,
+        "reject-input": 4,
+        "reject-idempotency": 6,
+        "reject-concurrency": 2,
+        "reject-failure-rollback": 1,
+        "reject-lifecycle": 2,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-audit": 3,
+        "implicit-operation-scope": 2,
+        "implicit-request-hash": 2,
+        "implicit-uniform-409": 1
+      }
+    },
+    {
+      "cell": "go-manual",
+      "mode": "unchanged",
+      "violates": null,
+      "passed": false,
+      "explicit": {
+        "passed": 74,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 0,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": false,
+        "implicit-operation-scope": false,
+        "implicit-request-hash": false,
+        "implicit-uniform-409": false
+      },
+      "groups": {
+        "reject-functional": 0,
+        "reject-authorization": 1,
+        "reject-atomicity": 5,
+        "reject-input": 0,
+        "reject-idempotency": 0,
+        "reject-concurrency": 1,
+        "reject-failure-rollback": 0,
+        "reject-lifecycle": 1,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-audit": 0,
+        "implicit-operation-scope": 0,
+        "implicit-request-hash": 0,
+        "implicit-uniform-409": 0
+      }
+    },
+    {
+      "cell": "go-action",
+      "mode": "correct",
+      "violates": null,
+      "passed": true,
+      "explicit": {
+        "passed": 95,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 13,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": true,
+        "implicit-operation-scope": true,
+        "implicit-request-hash": true,
+        "implicit-uniform-409": true
+      },
+      "groups": {
+        "reject-functional": 5,
+        "reject-authorization": 3,
+        "reject-atomicity": 5,
+        "reject-input": 4,
+        "reject-idempotency": 6,
+        "reject-concurrency": 3,
+        "reject-failure-rollback": 1,
+        "reject-lifecycle": 2,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-audit": 3,
+        "implicit-operation-scope": 2,
+        "implicit-request-hash": 2,
+        "implicit-uniform-409": 6
+      }
+    },
+    {
+      "cell": "go-action",
+      "mode": "omit-audit",
+      "violates": "implicit-audit",
+      "passed": false,
+      "explicit": {
+        "passed": 95,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 10,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": false,
+        "implicit-operation-scope": true,
+        "implicit-request-hash": true,
+        "implicit-uniform-409": true
+      },
+      "groups": {
+        "reject-functional": 5,
+        "reject-authorization": 3,
+        "reject-atomicity": 5,
+        "reject-input": 4,
+        "reject-idempotency": 6,
+        "reject-concurrency": 3,
+        "reject-failure-rollback": 1,
+        "reject-lifecycle": 2,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-audit": 0,
+        "implicit-operation-scope": 2,
+        "implicit-request-hash": 2,
+        "implicit-uniform-409": 6
+      }
+    },
+    {
+      "cell": "go-action",
+      "mode": "ignore-operation",
+      "violates": "implicit-operation-scope",
+      "passed": false,
+      "explicit": {
+        "passed": 95,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 11,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": true,
+        "implicit-operation-scope": false,
+        "implicit-request-hash": true,
+        "implicit-uniform-409": true
+      },
+      "groups": {
+        "reject-functional": 5,
+        "reject-authorization": 3,
+        "reject-atomicity": 5,
+        "reject-input": 4,
+        "reject-idempotency": 6,
+        "reject-concurrency": 3,
+        "reject-failure-rollback": 1,
+        "reject-lifecycle": 2,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-audit": 3,
+        "implicit-operation-scope": 0,
+        "implicit-request-hash": 2,
+        "implicit-uniform-409": 6
+      }
+    },
+    {
+      "cell": "go-action",
+      "mode": "approve-hash",
+      "violates": "implicit-request-hash",
+      "passed": false,
+      "explicit": {
+        "passed": 95,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 11,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": true,
+        "implicit-operation-scope": true,
+        "implicit-request-hash": false,
+        "implicit-uniform-409": true
+      },
+      "groups": {
+        "reject-functional": 5,
+        "reject-authorization": 3,
+        "reject-atomicity": 5,
+        "reject-input": 4,
+        "reject-idempotency": 6,
+        "reject-concurrency": 3,
+        "reject-failure-rollback": 1,
+        "reject-lifecycle": 2,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-audit": 3,
+        "implicit-operation-scope": 2,
+        "implicit-request-hash": 0,
+        "implicit-uniform-409": 6
+      }
+    },
+    {
+      "cell": "go-action",
+      "mode": "distinguish-404",
+      "violates": "implicit-uniform-409",
+      "passed": false,
+      "explicit": {
+        "passed": 95,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 7,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": true,
+        "implicit-operation-scope": true,
+        "implicit-request-hash": true,
+        "implicit-uniform-409": false
+      },
+      "groups": {
+        "reject-functional": 5,
+        "reject-authorization": 3,
+        "reject-atomicity": 5,
+        "reject-input": 4,
+        "reject-idempotency": 6,
+        "reject-concurrency": 3,
+        "reject-failure-rollback": 1,
+        "reject-lifecycle": 2,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-audit": 3,
+        "implicit-operation-scope": 2,
+        "implicit-request-hash": 2,
+        "implicit-uniform-409": 0
+      }
+    },
+    {
+      "cell": "go-action",
+      "mode": "wrong-field",
+      "violates": null,
+      "passed": false,
+      "explicit": {
+        "passed": 79,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 5,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": false,
+        "implicit-operation-scope": false,
+        "implicit-request-hash": false,
+        "implicit-uniform-409": false
+      },
+      "groups": {
+        "reject-functional": 0,
+        "reject-authorization": 3,
+        "reject-atomicity": 5,
+        "reject-input": 4,
+        "reject-idempotency": 0,
+        "reject-concurrency": 0,
+        "reject-failure-rollback": 0,
+        "reject-lifecycle": 1,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-audit": 0,
+        "implicit-operation-scope": 0,
+        "implicit-request-hash": 0,
+        "implicit-uniform-409": 5
+      }
+    },
+    {
+      "cell": "go-action",
+      "mode": "unchanged",
+      "violates": null,
+      "passed": false,
+      "explicit": {
+        "passed": 74,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 0,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": false,
+        "implicit-operation-scope": false,
+        "implicit-request-hash": false,
+        "implicit-uniform-409": false
+      },
+      "groups": {
+        "reject-functional": 0,
+        "reject-authorization": 1,
+        "reject-atomicity": 5,
+        "reject-input": 0,
+        "reject-idempotency": 0,
+        "reject-concurrency": 1,
+        "reject-failure-rollback": 0,
+        "reject-lifecycle": 1,
+        "approve-regression": 50,
+        "original-regression": 16,
+        "implicit-audit": 0,
+        "implicit-operation-scope": 0,
+        "implicit-request-hash": 0,
+        "implicit-uniform-409": 0
+      }
+    }
+  ],
+  "source_parent_commit": "24de408efdd607d8b6547f4a6b90d7bcd1fac672",
+  "source_checkout_dirty": true,
+  "source_sha256": {
+    "go.mod": "648c40a4bf80a1cb567029bbf31c771963254e92aa8712da903eb8a883fe3217",
+    "go.sum": "e718bd4e6664b6aa2d808d7bf1f72ca1b2e36316db23235318c9e20a8705f0c4",
+    "internal/app/server.go": "128f710c1d022e50ba925fda4a2a9d8c88f4233cccc9f57c3eae6704c3d0b53f",
+    "internal/app/demo_identity.go": "1b49e429ba1a98236fea3bc84a626a4698d276dc6d55758462c0e40a97eda2fb",
+    "benchmark/phase3/source/main.go.txt": "cec57aacd74de3bb2a95d3aa504abcf8cde3661fa38fc1f8421728b47ab04e14",
+    "benchmark/phase4/source/action-candidate.go.txt": "0c44d6ef89e0122e5424b3cec590670bdf0214c021511d8e9adcdd52639859c2",
+    "benchmark/phase4/source/action.go.txt": "f4d66f574a6034ef7902367375652c72af6d970e180e9cde986516d86b42e966",
+    "benchmark/phase4/source/ledger.go.txt": "a201a5eb3175e7e4aa0e9fed37363e5983ef982f82fb0aa8187cd0aca1920bbb",
+    "benchmark/phase4/source/manual.go.txt": "f195b6032975de582f2200a51257a23d03d1c7ba72e9f56b3f506786f0f5948e",
+    "benchmark/phase4/source/protocol.go.txt": "f122aeb04bad92169c3e1fb57e103b208f0cb30d12a10a121e05742efacb750e",
+    "benchmark/phase4/ctl.py": "8ec417cf36643c38a058e5119f673ab80c858c8df0f884288b03aef14d9ca63c",
+    "benchmark/phase4/cohort.json": "0559f1dc2bec2bcb8a6210ce647f406d34a9b40e4e1d5b4a985f1818bc4f0f8b",
+    "benchmark/phase4/oracle.py": "613c9de1ecffcf8edeaa69dfae79d93cb68cdd1758b0744dcba7e94bbde47031",
+    "benchmark/phase4/db.mjs": "bbff20272b5e05fa33f3ae19ef1a000137ae4afaa478256e96b7ad348f5f43d4",
+    "benchmark/phase4/schema.sql": "0b01e9d6be225bb72c63bc81207c73ea00972ddc47b35a320bdc9d73141db07d",
+    "benchmark/phase3/generation_worker.py": "d9ab0f895361be310ad84886e38a152c68596dc84746e1887ad5390fa50d0355",
+    "benchmark/phase3/cohort_oracle.py": "79e5caa74f15b6aa5fc351a91cddbe53eb09d4480d6d949b16933b2c832978d2",
+    "benchmark/phase3/oracle.py": "b9cb0e762e48fc1c84366aefb4155aa561d62982827caecc3b0ed313603ec303",
+    "tests/acceptance.py": "b630076565eac949da042a821caa52fb44cc59fe555943e65049c92d4935b373",
+    "db/bootstrap.sql": "4eb60b5cbbdcb2b79813c63cc7baf44665755a7327df6d1aa702c430357f30b9",
+    "db/seed.sql": "9004fb919509475a987349f8d1804044af1688c1fdca524b2b191912bb1414cc",
+    "db/migrations/001_purchase.sql": "00db7c65bdf932912f4764da76bba0a5d84032eb208c6073fb89b495179a3e85",
+    "generated/guard.sql": "b728fc08e43c5642b7dadf5823cad098d24bcd0740bef98a340d921424661f13",
+    "poc/transactional-action/schema.sql": "9e8a6b49a8da58ee75cf1d0258dc9c13807f1ac455de8e3e23d573da2c69a662",
+    "benchmark/phase4/controls.py": "9af950c6fda1342fac4af1e2d3f72da75bb5953d4f2ad0586a3d43bd1be0a9da",
+    "benchmark/phase4/driver_smoke.py": "11b10be71304f78d90d8ef507e5c2372729604b09b2cc5bc3dc2d3f5914c6c11"
+  }
+}

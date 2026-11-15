@@ -78,6 +78,23 @@ def main():
                     'passed':result['passed'],'explicit':result['explicit'],'implicit':result['implicit'],
                     'conventions':result['conventions'],'groups':{g:v['passed'] for g,v in result['groups'].items()}})
                 print(json.dumps(evaluations[-1]),flush=True)
+        # Handler panic must be a candidate error (not infrastructure); a stray go-build `server` is ignored, not out of scope.
+        candidate=temp/'go-manual-panic';manifest=out/'exports'/'go-manual-panic.json'
+        call('export','--plan',plan,'--trial','go-manual--001','--candidate',candidate,'--manifest',manifest)
+        approval=candidate/'internal/candidate/approval.go';text=approval.read_text()
+        approval.write_text(text.replace(controls.ROUTE,'\treject := func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {\n'
+            '\t\tvar m map[string]int\n\t\tm["boom"] = 1\n\t\treturn protocol.Result{}, false, nil\n\t}\n'
+            '\treturn protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve, "/purchases/bulk-reject": reject}, fallback), nil'))
+        (candidate/'server').write_bytes(b'stray build output')
+        directory=out/'snapshots'/'go-manual-panic';directory.mkdir(parents=True)
+        ctl.freeze_candidate(argparse.Namespace(plan=plan,trial='go-manual--001',candidate=candidate,manifest=manifest),experiment,
+                             ctl.trials(experiment,'go-manual--001')[0],{'status':'completed','usage':None,'synthetic_control':True},directory)
+        call('evaluate','--plan',plan,'--trial','go-manual--001','--candidate',candidate,'--manifest',manifest,
+             '--receipt',directory/'receipt.json','--fixtures',private,'--output',out/'controls'/'go-manual-panic',expected=2)
+        panic=json.loads((out/'controls/go-manual-panic/result.json').read_text())
+        assert panic['outcome'] in ('candidate-error','acceptance-failed'),panic['outcome']
+        crash_control={'cell':'go-manual','mode':'handler-panic','outcome':panic['outcome'],'stray_server_ignored':True}
+        print(json.dumps(crash_control),flush=True)
         # Transport: prepare -> standalone phase 3 worker (fake kiro-cli) -> restore -> evaluate -> summarize.
         replacements={}
         for cell in controls.MODES:
@@ -117,7 +134,7 @@ def main():
             'reference_passed':sum(e['mode']=='correct' and e['passed'] for e in evaluations),
             'implicit_violations_isolated':sum(bool(e['violates']) for e in evaluations),
             'explicit_violations_detected':sum(not e['violates'] and e['mode']!='correct' for e in evaluations),
-            'partial_denominator_checked':True,'duplicate_rejected':True,'controls':evaluations,
+            'crash_control':crash_control,'partial_denominator_checked':True,'duplicate_rejected':True,'controls':evaluations,
             'source_parent_commit':ctl.git(ctl.ROOT,'rev-parse','HEAD'),
             'source_checkout_dirty':bool(ctl.git(ctl.ROOT,'status','--porcelain')),
             'source_sha256':{p:ctl.digest(ctl.ROOT/p) for p in ctl.FROZEN+('benchmark/phase4/controls.py','benchmark/phase4/driver_smoke.py')}}

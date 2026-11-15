@@ -72,7 +72,7 @@ def files(plan,cell):
     for path,template in {**COMMON,**CELL[cell['id']]}.items(): data[path]=(ROOT/template).read_bytes()
     data['TASK.md']=(contract()['requirements']+'\n').encode()
     data['SCHEMA.sql']=b'\n'.join([*(source(plan['base_sha'],p) for p in SQL),(HERE/'schema.sql').read_bytes()])
-    data['.gitignore']=b'bin/\n*.log\n__pycache__/\n'
+    data['.gitignore']=b'bin/\n/server\n*.log\n__pycache__/\n'  # v3 cohort 003: stray go build output was a scope violation
     return data
 
 def load_plan(path):
@@ -264,7 +264,9 @@ def evaluate(args):
                 except ValueError as error: raise oracle.InfrastructureError(str(error)) from error
                 result.update({'cases':cases,**scored,'outcome':'passed' if scored['passed'] else 'acceptance-failed'})
             except oracle.InfrastructureError as error:
-                result.update({'outcome':'infrastructure-blocked','error':str(error)})
+                # v3 cohort 003: a handler panic closes the connection and looked like infrastructure.
+                log.flush();crashed=server is not None and (server.poll() is not None or 'panic' in (out/'candidate.log').read_text())
+                result.update({'outcome':'candidate-error' if crashed else 'infrastructure-blocked','error':str(error)})
             except (subprocess.SubprocessError,RuntimeError,OSError) as error:
                 result.update({'outcome':'candidate-error','error':str(error)})
             finally:
