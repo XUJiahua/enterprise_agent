@@ -403,3 +403,5 @@ Codex 工具；如果只有 Kiro，先实现经过正反控制验证的新后端
 ```
 
 **2026-11-15 更新（v4）：** 新增“隐含约定”实验 harness（`benchmark/phase4/`）：在既有 Action 上新增批量驳回，四条只存在于导出代码中的约定（审计、幂等作用域含 operation、requestHash 指纹、不合格目标统一 409）与显式契约分开计分，共 108 项（显式 95 + 隐含 13）。人工/假 CLI 控制通过，真实模型样本为 0。见 [phase4-implicit-convention.md](phase4-implicit-convention.md)。
+
+**2026-11-15 更新（v5）：** 新增“分散约定”实验 harness（`benchmark/phase5/`）：在 v4 完成态上新增单目标、requester 侧的 `POST /purchases/{id}/reopen`，四条约定（审计含 reason、单目标 requestHash、outbox 事件类型、统一拒绝，最后一条无注释）的线索分布在候选代码、ledger、对账、notify 与 SCHEMA 多个文件；action 组的 Operation 示例改放在可编辑的 `internal/candidate`。共 145 项（显式 133 + 隐含 12），人工/假 CLI 控制通过，真实模型样本为 0。见 [phase5-scattered-convention.md](phase5-scattered-convention.md)。
