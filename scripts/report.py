@@ -56,6 +56,21 @@ assert cohort['human_evaluations']==6 and cohort['reference_passed']==2 and coho
 assert cohort['driver_evaluations']==4 and cohort['kiro_driver_evaluations']==1 and cohort['bundle_replays']==4 and cohort['cases_per_evaluation']==66
 assert cohort['standalone_worker_passed'] and cohort['partial_denominator_checked'] and cohort['duplicate_rejected']
 verifier=json.loads((root/'verifier.json').read_text());assert verifier['ok'] and len(verifier['results'])==7
+for name,kind,cases,isolated,explicit in [('phase4-controls','synthetic-v4-implicit-convention-control',108,8,4),
+        ('phase5-controls','synthetic-v5-scattered-convention-control',145,8,4),('phase5b-controls','synthetic-v5-scattered-convention-control',145,7,5)]:
+    control=json.loads((root/name/'control.json').read_text())
+    assert control['kind']==kind and control['new_model_generations']==0 and control['cases_per_evaluation']==cases
+    assert control['human_evaluations']==14==len(control['controls']) and control['worker_transport_evaluations']==2 and control['reference_passed']==2
+    assert control['implicit_violations_isolated']==isolated and control['explicit_violations_detected']==explicit
+    assert control['crash_control']['outcome']=='candidate-error' and control['partial_denominator_checked'] and control['duplicate_rejected']
+# v5b: omitting Event is an explicit (fail-loud) failure, not an isolated implicit violation as in v5.
+assert next(c for c in json.loads((root/'phase5b-controls/control.json').read_text())['controls'] if c['cell']=='go-action' and c['mode']=='omit-event')['violates'] is None
+extension=json.loads((root/'extension-controls.json').read_text())
+assert extension['ok'] and extension['model_calls']==0 and extension['controls']==44 and all(r['passed'] for r in extension['results'])
+assert (extension['negative_detected'],extension['positive_clean'],extension['uncovered_clean'])==(24,7,13)
+interception=json.loads((root/'verifier-extension-rules/summary.json').read_text())
+frozen=json.loads((Path(__file__).resolve().parents[1]/'docs/evidence/verifier-extension-rules-2026-11-15/summary.json').read_text())
+assert interception==frozen and interception['trials']==280 and interception['new_model_generations']==0 and not interception['frozen_scores_modified']
 text='# Controlled POC results\n\n| Path | Healthy acceptance | Faults blocked |\n|---|---:|---:|\n'
 for route,acceptance,blocked in rows:text+=f'| {route} | {acceptance} | {blocked} |\n'
 text+='\nVerifier adversarial probes: 7/7. Direct SQL probes: 6/6. Startup configuration probes: 2/2. Shared browser acceptance: 18/18. Synthetic evaluator controls: 4 committed-candidate evaluations plus 1 driver end-to-end control (not AI measurements).\n\nThese are hand-authored fault injections, not measured AI defect rates or first-pass productivity. A guarded field over-fetch fails closed with 403; ZenStack nullifies the denied field. Disabling the ZenStack policy client is an expected escaping boundary control.\n'
@@ -64,6 +79,8 @@ text+='\nPR 7 archived replay: 9 candidates / 195 frozen cases; 45 post-hoc case
 text+='\nPhase 2 atomic bulk approval: 12 human-authored candidate evaluations, 46 cases each; 4 correct references pass, 8 negative controls are detected. One additional synthetic driver control exercises export, generation protocol, bundle, and evaluation. Zero new model samples. Candidate exports omit evaluator files and prior Git history; this is not a same-host security sandbox.\n'
 text+='\nPR 10 audit: 50 archived files and four candidate bundles verified. New public fixtures: 184 replay cases plus 28 additional checks pass; four candidate-authored Go test suites pass. Four request-capacity observations remain separate from first-pass scoring. Original private seed was not used. No new model generations.\n'
 text+='\nTyped Action mechanism POC: reference passes 66/66; five negative controls detected, each evaluated against 66 cases. Purchase state, audit rows and completed idempotency response commit in one PostgreSQL transaction. Metadata SQL probes: 12/12; startup checks: 7/7. No new model samples or general workflow-engine claim.\n'
+text+='\nImplicit-convention cohort controls v4/v5/v5b (real PostgreSQL 17.6, fake Kiro, no model calls): 14 human candidates and 2 worker-transport evaluations each; references pass; v5b omit-event is an explicit failure.\n'
+text+=f"\nExtension verifier (appctl extensions): {extension['controls']} controls on real exports ({extension['negative_detected']} negatives flagged, {extension['positive_clean']} positives clean, {extension['uncovered_clean']} known-uncovered stay clean). Archived interception (post hoc, {interception['trials']} real candidates): any rule TP/FP/FN = {interception['any_rule']['vs_any_frozen_failure']['TP']}/{interception['any_rule']['vs_any_frozen_failure']['FP']}/{interception['any_rule']['vs_any_frozen_failure']['FN']} against frozen failures; frozen scores unchanged.\n"
 text+='\nAction evolution cohort v3: same guarded RLS, HTTP adapter, schema and starting candidate; only the Action capability differs. Six human controls and four synthetic generation/transfer evaluations (one through a fake Kiro CLI), 66 checks each. Two correct references pass; four negative controls detected; four bundle replays pass, including two standalone workers. Zero new model generations. Generation kits contain no Oracle or private seed; actual host/network isolation remains an operator deployment requirement.\n'
 (root/'comparison.md').write_text(text)
 print(text)

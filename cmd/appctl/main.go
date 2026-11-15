@@ -10,6 +10,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/XUJiahua/enterprise_agent/internal/extcheck"
 	"github.com/XUJiahua/enterprise_agent/internal/policy"
 )
 
@@ -22,10 +23,13 @@ type Finding struct {
 func main() { os.Exit(run()) }
 func run() int {
 	if len(os.Args) < 2 {
-		fmt.Fprintln(os.Stderr, "usage: appctl compile|check|plan|verify [--base REF] [--root DIR]")
+		fmt.Fprintln(os.Stderr, "usage: appctl compile|check|plan|verify|extensions [--base REF] [--root DIR]")
 		return 1
 	}
 	command := os.Args[1]
+	if command == "extensions" {
+		return extensions(os.Args[2:])
+	}
 	f := flag.NewFlagSet(command, flag.ContinueOnError)
 	root := f.String("root", ".", "application root")
 	base := f.String("base", "", "trusted git baseline ref")
@@ -129,6 +133,28 @@ func git(root string, args ...string) ([]byte, error) {
 func report(f []Finding) int {
 	_ = json.NewEncoder(os.Stdout).Encode(map[string]any{"ok": len(f) == 0, "findings": f})
 	if len(f) > 0 {
+		return 1
+	}
+	return 0
+}
+
+// extensions statically checks a candidate checkout against its trusted
+// baseline commit; exit 0 only with no findings, 2 when it cannot run.
+func extensions(args []string) int {
+	f := flag.NewFlagSet("extensions", flag.ContinueOnError)
+	root := f.String("root", ".", "candidate checkout")
+	base := f.String("base", "", "trusted baseline commit (required)")
+	if f.Parse(args) != nil || *base == "" {
+		fmt.Fprintln(os.Stderr, "usage: appctl extensions --base REF [--root DIR]")
+		return 2
+	}
+	findings, err := extcheck.Check(*root, *base, extcheck.Default)
+	if err != nil {
+		_ = json.NewEncoder(os.Stdout).Encode(map[string]any{"ok": false, "error": err.Error()})
+		return 2
+	}
+	_ = json.NewEncoder(os.Stdout).Encode(map[string]any{"ok": len(findings) == 0, "findings": findings})
+	if len(findings) > 0 {
 		return 1
 	}
 	return 0

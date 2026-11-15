@@ -1,0 +1,6250 @@
+[
+ {
+  "phase": "v4",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": false,
+   "implicit-operation-scope": false,
+   "implicit-request-hash": false,
+   "implicit-uniform-409": false
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": false,
+   "implicit-uniform-409": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/approval.go",
+    "line": 207,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "phase": "v4",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 36,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 36,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4b",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4b",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4b",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/action/action.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "extension-scope",
+    "code": "DECLARATION_OUTSIDE_EXTENSION",
+    "path": "internal/action/action.go",
+    "line": 32,
+    "detail": "new action.Transition must be declared in internal/candidate/"
+   }
+  ]
+ },
+ {
+  "phase": "v4b",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v4b",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-operation-scope": true,
+   "implicit-request-hash": true,
+   "implicit-uniform-409": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_EMPTY",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is empty"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_EMPTY",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is empty"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": false
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": false
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": false
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 37,
+    "detail": "requestHash call reopenFingerprint(opReopen, id, reason) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": false
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": false
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": false
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": false
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": false
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": false
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": false
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": false
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": false
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": false
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 34,
+    "detail": "requestHash call reopenHash(id, reason) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 33,
+    "detail": "requestHash call ledger.Fingerprint(opReopen, []string{id, reason}) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 35,
+    "detail": "requestHash call ledger.Fingerprint(opReopen, []string{id, reason}) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 41,
+    "detail": "requestHash call reopenHash(id, reason) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 34,
+    "detail": "requestHash call reopenFingerprint(id, reason) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "candidate-error",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 35,
+    "detail": "requestHash call ledger.Fingerprint(opReopen, []string{id + \":\" + reason}) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "candidate-error",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": false
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "phase": "v5",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "candidate-error",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_NO_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "event \"purchase.resubmitted\" is not handled by internal/notify"
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": false
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reopen.go",
+    "line": 105,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 37,
+    "detail": "requestHash call computeFingerprint(id, reason) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": false
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 28,
+    "detail": "requestHash call ledger.Fingerprint(opReopen, []string{id, reason}) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": false
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": false
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 35,
+    "detail": "requestHash call reopenFingerprint(id, reason) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 33,
+    "detail": "requestHash call ledger.Fingerprint(opReopen, []string{id, reason}) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 35,
+    "detail": "requestHash call reopenFingerprint(id, reason) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 34,
+    "detail": "requestHash call ledger.Fingerprint(opReopen, []string{id + \"\\x00\" + reason}) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "event-consumer",
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/protocol/protocol.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "candidate-error",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "candidate-error",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 49,
+    "detail": "requestHash call computeHash(opReopen, u.Tenant, u.User, key, id, reason) includes non-target request field \"key\""
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 49,
+    "detail": "requestHash call computeHash(opReopen, u.Tenant, u.User, key, id, reason) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": false,
+   "implicit-request-hash": false,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": false
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 38,
+    "detail": "requestHash call FingerprintReopen(id, reason) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "export+diff (untracked not archived: internal/candidate/reopen.go)",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/protocol/protocol.go",
+    "detail": "only internal/candidate/ may change"
+   }
+  ]
+ },
+ {
+  "phase": "v5b",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "phase": "v5b",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ }
+]

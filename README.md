@@ -149,3 +149,7 @@ CI 执行 12 次人工正反候选控制和一次假 CLI 链路控制，不调�
 [手写事务与平台 Action 实验指南](docs/phase3-action-evolution.md)：两组共用原子批量审批起点、RLS、SQL 结构和 HTTP 适配器，只有 Action 能力文件不同。新增冻结计划、最小候选导出、独立生成包、bundle/receipt 恢复、私有验收和完整分母汇总。六次人工候选控制与三次假 CLI/交接验收均使用 66 项评分；真实模型数据另行采集。生成包不包含 Oracle/私有 seed，实际主机及网络隔离仍需部署验证。
 
 首个真实 v3 两组 pilot 使用新增的 Kiro CLI 引擎完成：manual 50/66，action 66/66。manual 的失败全部来自 Oracle 检查了契约未声明的 requestHash 公式，属于 harness 缺陷，不是能力收益证据。见 [Kiro pilot 结果](docs/phase3-kiro-pilot-results.md)。修正契约后的 [10 块重复队列 002](docs/phase3-kiro-cohort-002-results.md)：两组 20 个候选全部 66/66，正确性无差异；action 组生成耗时与 credit 约为 manual 的一半。[队列 003](docs/phase3-kiro-cohort-003-results.md) 换三个较弱模型：manual 通过 5/10、3/10、1/10，action 8/10、10/10、6/10，差异集中在幂等与并发，失败候选均未越权写入（单任务、事后检验，探索性）。[v4 隐含约定队列](docs/phase4-kiro-cohort-001-results.md)：起点有可照抄的手写实现时，manual 几乎都遵守隐含约定；较弱模型在 action 组把扩展写进受保护内核而全部越界（行为本身正确），说明扩展点位置是平台设计问题。
+
+## 扩展 Verifier 规则
+
+[`appctl extensions`](docs/verifier-extension-rules.md) 对候选做静态检查：扩展作用域、Operation 声明完整性与版本化命名、事件与 notify 消费者的对应，以及两条手写代码规则（事件、requestHash 指纹）。在 280 个已归档真实候选上事后评估：合计拦住 97/120 个冻结失败、0 误报，补上 75 个“显式全过、隐含失败”中的 63 个（剩余 12 个均为统一拒绝，静态不覆盖）；规则与评估使用同一批数据。CI 另跑 44 个规则控制和 v4/v5/v5b 的 PostgreSQL 控制。

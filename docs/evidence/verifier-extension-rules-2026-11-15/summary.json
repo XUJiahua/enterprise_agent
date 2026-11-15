@@ -1,0 +1,613 @@
+{
+ "kind": "post-hoc-verifier-interception",
+ "new_model_generations": 0,
+ "frozen_scores_modified": false,
+ "trials": 280,
+ "phases": {
+  "v4": 80,
+  "v4b": 40,
+  "v5": 80,
+  "v5b": 80
+ },
+ "v4b_evidence_commit": "d2f9a25fef970cf39fc125d53d4d981cb29deba4",
+ "reconstructions": {
+  "bundle": 251,
+  "export+diff": 28,
+  "export+diff (untracked not archived: internal/candidate/reopen.go)": 1
+ },
+ "silent_failures": 75,
+ "silent_failures_caught_by_any_rule": 63,
+ "uncaught_silent_failures": [
+  {
+   "phase": "v5",
+   "model": "claude-haiku-4.5",
+   "trial": "go-manual--007",
+   "conventions": {
+    "implicit-audit": true,
+    "implicit-request-hash": true,
+    "implicit-outbox": true,
+    "implicit-uniform-denial": false
+   }
+  },
+  {
+   "phase": "v5",
+   "model": "claude-opus-5.5",
+   "trial": "go-manual--001",
+   "conventions": {
+    "implicit-audit": true,
+    "implicit-request-hash": true,
+    "implicit-outbox": true,
+    "implicit-uniform-denial": false
+   }
+  },
+  {
+   "phase": "v5",
+   "model": "claude-opus-5.5",
+   "trial": "go-manual--002",
+   "conventions": {
+    "implicit-audit": true,
+    "implicit-request-hash": true,
+    "implicit-outbox": true,
+    "implicit-uniform-denial": false
+   }
+  },
+  {
+   "phase": "v5",
+   "model": "claude-opus-5.5",
+   "trial": "go-manual--003",
+   "conventions": {
+    "implicit-audit": true,
+    "implicit-request-hash": true,
+    "implicit-outbox": true,
+    "implicit-uniform-denial": false
+   }
+  },
+  {
+   "phase": "v5",
+   "model": "claude-opus-5.5",
+   "trial": "go-manual--004",
+   "conventions": {
+    "implicit-audit": true,
+    "implicit-request-hash": true,
+    "implicit-outbox": true,
+    "implicit-uniform-denial": false
+   }
+  },
+  {
+   "phase": "v5",
+   "model": "claude-opus-5.5",
+   "trial": "go-manual--005",
+   "conventions": {
+    "implicit-audit": true,
+    "implicit-request-hash": true,
+    "implicit-outbox": true,
+    "implicit-uniform-denial": false
+   }
+  },
+  {
+   "phase": "v5",
+   "model": "claude-opus-5.5",
+   "trial": "go-manual--006",
+   "conventions": {
+    "implicit-audit": true,
+    "implicit-request-hash": true,
+    "implicit-outbox": true,
+    "implicit-uniform-denial": false
+   }
+  },
+  {
+   "phase": "v5",
+   "model": "claude-opus-5.5",
+   "trial": "go-manual--007",
+   "conventions": {
+    "implicit-audit": true,
+    "implicit-request-hash": true,
+    "implicit-outbox": true,
+    "implicit-uniform-denial": false
+   }
+  },
+  {
+   "phase": "v5",
+   "model": "claude-opus-5.5",
+   "trial": "go-manual--008",
+   "conventions": {
+    "implicit-audit": true,
+    "implicit-request-hash": true,
+    "implicit-outbox": true,
+    "implicit-uniform-denial": false
+   }
+  },
+  {
+   "phase": "v5",
+   "model": "claude-opus-5.5",
+   "trial": "go-manual--009",
+   "conventions": {
+    "implicit-audit": true,
+    "implicit-request-hash": true,
+    "implicit-outbox": true,
+    "implicit-uniform-denial": false
+   }
+  },
+  {
+   "phase": "v5",
+   "model": "claude-opus-5.5",
+   "trial": "go-manual--010",
+   "conventions": {
+    "implicit-audit": true,
+    "implicit-request-hash": true,
+    "implicit-outbox": true,
+    "implicit-uniform-denial": false
+   }
+  },
+  {
+   "phase": "v5",
+   "model": "qwen3-coder-next",
+   "trial": "go-manual--006",
+   "conventions": {
+    "implicit-audit": true,
+    "implicit-request-hash": true,
+    "implicit-outbox": true,
+    "implicit-uniform-denial": false
+   }
+  }
+ ],
+ "any_rule": {
+  "vs_any_frozen_failure": {
+   "TP": 97,
+   "FP": 0,
+   "FN": 23,
+   "TN": 160
+  }
+ },
+ "rules": {
+  "extension-scope": {
+   "vs_targeted_frozen_result": {
+    "TP": 29,
+    "FP": 0,
+    "FN": 0,
+    "TN": 251,
+    "excluded": 0
+   },
+   "vs_any_frozen_failure": {
+    "TP": 29,
+    "FP": 0,
+    "FN": 91,
+    "TN": 160,
+    "excluded": 0
+   },
+   "silent_failures_caught": 0,
+   "by_cell": {
+    "v4/go-action": {
+     "TP": 20,
+     "FP": 0,
+     "FN": 0,
+     "TN": 20,
+     "excluded": 0
+    },
+    "v4/go-manual": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 0,
+     "TN": 40,
+     "excluded": 0
+    },
+    "v4b/go-action": {
+     "TP": 7,
+     "FP": 0,
+     "FN": 0,
+     "TN": 13,
+     "excluded": 0
+    },
+    "v4b/go-manual": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 0,
+     "TN": 20,
+     "excluded": 0
+    },
+    "v5/go-action": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 0,
+     "TN": 40,
+     "excluded": 0
+    },
+    "v5/go-manual": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 0,
+     "TN": 40,
+     "excluded": 0
+    },
+    "v5b/go-action": {
+     "TP": 1,
+     "FP": 0,
+     "FN": 0,
+     "TN": 39,
+     "excluded": 0
+    },
+    "v5b/go-manual": {
+     "TP": 1,
+     "FP": 0,
+     "FN": 0,
+     "TN": 39,
+     "excluded": 0
+    }
+   }
+  },
+  "operation-declaration": {
+   "vs_targeted_frozen_result": {
+    "TP": 27,
+    "FP": 0,
+    "FN": 25,
+    "TN": 101,
+    "excluded": 127
+   },
+   "vs_any_frozen_failure": {
+    "TP": 28,
+    "FP": 0,
+    "FN": 92,
+    "TN": 160,
+    "excluded": 0
+   },
+   "silent_failures_caught": 27,
+   "by_cell": {
+    "v4/go-action": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 0,
+     "TN": 0,
+     "excluded": 40
+    },
+    "v4/go-manual": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 0,
+     "TN": 0,
+     "excluded": 40
+    },
+    "v4b/go-action": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 0,
+     "TN": 0,
+     "excluded": 20
+    },
+    "v4b/go-manual": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 0,
+     "TN": 0,
+     "excluded": 20
+    },
+    "v5/go-action": {
+     "TP": 27,
+     "FP": 0,
+     "FN": 0,
+     "TN": 12,
+     "excluded": 1
+    },
+    "v5/go-manual": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 7,
+     "TN": 31,
+     "excluded": 2
+    },
+    "v5b/go-action": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 10,
+     "TN": 28,
+     "excluded": 2
+    },
+    "v5b/go-manual": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 8,
+     "TN": 30,
+     "excluded": 2
+    }
+   }
+  },
+  "event-consumer": {
+   "vs_targeted_frozen_result": {
+    "TP": 37,
+    "FP": 0,
+    "FN": 15,
+    "TN": 101,
+    "excluded": 127
+   },
+   "vs_any_frozen_failure": {
+    "TP": 40,
+    "FP": 0,
+    "FN": 80,
+    "TN": 160,
+    "excluded": 0
+   },
+   "silent_failures_caught": 37,
+   "by_cell": {
+    "v4/go-action": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 0,
+     "TN": 0,
+     "excluded": 40
+    },
+    "v4/go-manual": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 0,
+     "TN": 0,
+     "excluded": 40
+    },
+    "v4b/go-action": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 0,
+     "TN": 0,
+     "excluded": 20
+    },
+    "v4b/go-manual": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 0,
+     "TN": 0,
+     "excluded": 20
+    },
+    "v5/go-action": {
+     "TP": 27,
+     "FP": 0,
+     "FN": 0,
+     "TN": 12,
+     "excluded": 1
+    },
+    "v5/go-manual": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 7,
+     "TN": 31,
+     "excluded": 2
+    },
+    "v5b/go-action": {
+     "TP": 10,
+     "FP": 0,
+     "FN": 0,
+     "TN": 28,
+     "excluded": 2
+    },
+    "v5b/go-manual": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 8,
+     "TN": 30,
+     "excluded": 2
+    }
+   }
+  },
+  "manual-event-consumer": {
+   "vs_targeted_frozen_result": {
+    "TP": 14,
+    "FP": 0,
+    "FN": 38,
+    "TN": 101,
+    "excluded": 127
+   },
+   "vs_any_frozen_failure": {
+    "TP": 15,
+    "FP": 0,
+    "FN": 105,
+    "TN": 160,
+    "excluded": 0
+   },
+   "silent_failures_caught": 13,
+   "by_cell": {
+    "v4/go-action": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 0,
+     "TN": 0,
+     "excluded": 40
+    },
+    "v4/go-manual": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 0,
+     "TN": 0,
+     "excluded": 40
+    },
+    "v4b/go-action": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 0,
+     "TN": 0,
+     "excluded": 20
+    },
+    "v4b/go-manual": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 0,
+     "TN": 0,
+     "excluded": 20
+    },
+    "v5/go-action": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 27,
+     "TN": 12,
+     "excluded": 1
+    },
+    "v5/go-manual": {
+     "TP": 7,
+     "FP": 0,
+     "FN": 0,
+     "TN": 31,
+     "excluded": 2
+    },
+    "v5b/go-action": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 10,
+     "TN": 28,
+     "excluded": 2
+    },
+    "v5b/go-manual": {
+     "TP": 7,
+     "FP": 0,
+     "FN": 1,
+     "TN": 30,
+     "excluded": 2
+    }
+   }
+  },
+  "manual-fingerprint": {
+   "vs_targeted_frozen_result": {
+    "TP": 17,
+    "FP": 0,
+    "FN": 1,
+    "TN": 228,
+    "excluded": 34
+   },
+   "vs_any_frozen_failure": {
+    "TP": 17,
+    "FP": 0,
+    "FN": 103,
+    "TN": 160,
+    "excluded": 0
+   },
+   "silent_failures_caught": 16,
+   "by_cell": {
+    "v4/go-action": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 0,
+     "TN": 20,
+     "excluded": 20
+    },
+    "v4/go-manual": {
+     "TP": 1,
+     "FP": 0,
+     "FN": 1,
+     "TN": 38,
+     "excluded": 0
+    },
+    "v4b/go-action": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 0,
+     "TN": 13,
+     "excluded": 7
+    },
+    "v4b/go-manual": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 0,
+     "TN": 20,
+     "excluded": 0
+    },
+    "v5/go-action": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 0,
+     "TN": 39,
+     "excluded": 1
+    },
+    "v5/go-manual": {
+     "TP": 7,
+     "FP": 0,
+     "FN": 0,
+     "TN": 31,
+     "excluded": 2
+    },
+    "v5b/go-action": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 0,
+     "TN": 38,
+     "excluded": 2
+    },
+    "v5b/go-manual": {
+     "TP": 9,
+     "FP": 0,
+     "FN": 0,
+     "TN": 29,
+     "excluded": 2
+    }
+   }
+  }
+ },
+ "groups": {
+  "v4/go-action": {
+   "trials": 40,
+   "failed": 20,
+   "scope_violation": 20,
+   "silent": 0,
+   "silent_caught": 0,
+   "flagged_failed": 20,
+   "flagged_passed": 0
+  },
+  "v4/go-manual": {
+   "trials": 40,
+   "failed": 2,
+   "scope_violation": 0,
+   "silent": 1,
+   "silent_caught": 1,
+   "flagged_failed": 1,
+   "flagged_passed": 0
+  },
+  "v4b/go-action": {
+   "trials": 20,
+   "failed": 7,
+   "scope_violation": 7,
+   "silent": 0,
+   "silent_caught": 0,
+   "flagged_failed": 7,
+   "flagged_passed": 0
+  },
+  "v4b/go-manual": {
+   "trials": 20,
+   "failed": 0,
+   "scope_violation": 0,
+   "silent": 0,
+   "silent_caught": 0,
+   "flagged_failed": 0,
+   "flagged_passed": 0
+  },
+  "v5/go-action": {
+   "trials": 40,
+   "failed": 28,
+   "scope_violation": 0,
+   "silent": 27,
+   "silent_caught": 27,
+   "flagged_failed": 28,
+   "flagged_passed": 0
+  },
+  "v5/go-manual": {
+   "trials": 40,
+   "failed": 32,
+   "scope_violation": 0,
+   "silent": 25,
+   "silent_caught": 13,
+   "flagged_failed": 14,
+   "flagged_passed": 0
+  },
+  "v5b/go-action": {
+   "trials": 40,
+   "failed": 12,
+   "scope_violation": 1,
+   "silent": 10,
+   "silent_caught": 10,
+   "flagged_failed": 12,
+   "flagged_passed": 0
+  },
+  "v5b/go-manual": {
+   "trials": 40,
+   "failed": 19,
+   "scope_violation": 1,
+   "silent": 12,
+   "silent_caught": 12,
+   "flagged_failed": 15,
+   "flagged_passed": 0
+  }
+ }
+}
