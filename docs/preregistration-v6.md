@@ -79,3 +79,7 @@ v3–v5b 的探索性结果显示，平台内核带来的正确性收益只覆�
 
 1. **T1 的约定分类。** phase5b 的 cohort.json 没有 `action_enforcement` 字段。按照 v5、v5b 报告中已经写明的分类：audit、request-hash、uniform-denial 由内核实现（kernel），outbox 由作者声明（declared）。这只是把已有分类写明，没有做新的选择。
 2. **`network-denied` 标记。** 每个 trial 的网络日志里，都会有 Kiro 遥测主机被拒绝的记录：`telemetry.eu-central-1.kiro.dev`、`client-telemetry.us-east-1.amazonaws.com`。这两个主机在[网络隔离](network-isolation.md)文档中已被认定为遥测，因此不计入 `network-denied`。`network-denied` 只统计对其他主机的拒绝。这个标记仅用于描述，不影响主分析，也不影响敏感性分析。
+
+### 附录 D（2026-11-15 14:24；尚未查看任何 v6 验收结果）：冻结 Verifier 规则，作为样本外评估
+
+`appctl extensions` 的规则（PR #24）在调试过程中参考过已归档的 280 个候选：指纹规则第一版在 v4 manual 组有 57 个误报，修改后降为 0。因此那组拦截率只能算样本内的拟合程度。现在把规则冻结在 `4e286c9f256c29b98d7684156ad5c28c99dd3d03`，`internal/extcheck` 树 hash 为 `d6cfaaa4de66dec76e025f49fa6aeeabcceb0910`，然后**原样**运行于 v6 的全部 240 个候选，作为样本外评估。报告内容为各条规则的 TP/FP/FN，以及"显式全部通过但隐含约定被违反"的候选中有多少被补拦。规则一律不再调整；如果之后要改，必须另起一次评估，并标注为探索性。
