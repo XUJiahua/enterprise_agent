@@ -1,0 +1,275 @@
+{
+  "kind": "network-isolation-control",
+  "allowlist": [
+    "management.eu-central-1.kiro.dev",
+    "runtime.eu-central-1.kiro.dev"
+  ],
+  "checks": {
+    "evaluator unreadable": true,
+    "seed unreadable": true,
+    "evaluator unlistable": true,
+    "home not writable": true,
+    "kit writable": true,
+    "output writable": true,
+    "unreadable: /Users/administrator/.paseo": true,
+    "unreadable: /Users/administrator/cil/ainative/enterprise_agent": true,
+    "unreadable: /Users/administrator/.kiro": true,
+    "curl https://github.com fails (proxy deny logged)": true,
+    "curl https://api.github.com fails (proxy deny logged)": true,
+    "git ls-remote github fails (proxy deny logged)": true,
+    "direct github literal 140.82.112.3: reachable outside, blocked inside": true,
+    "direct github resolved 198.18.0.53: reachable outside, blocked inside": true,
+    "direct allowlisted model host IP 198.19.2.92: reachable outside, blocked inside": true,
+    "DNS lookup inside sandbox fails": true,
+    "other localhost port: reachable outside, blocked inside": true,
+    "allowlisted model host reachable via proxy": true,
+    "child-written network.log is replaced": true,
+    "kiro READY inside sandbox": true,
+    "kiro tool call: model curl github is blocked": true
+  },
+  "kiro_final_answer": [
+    "curl: (56) CONNECT tunnel failed, response 403\n000 EXIT=56"
+  ],
+  "runs": [
+    {
+      "name": "cat /private/var/folders/j0/m92nmdwj055gwk4t7w3v22xw0000gn/T/v3-net-isolation-es",
+      "returncode": 1,
+      "proxy_decisions": []
+    },
+    {
+      "name": "cat /private/var/folders/j0/m92nmdwj055gwk4t7w3v22xw0000gn/T/v3-net-isolation-es",
+      "returncode": 1,
+      "proxy_decisions": []
+    },
+    {
+      "name": "ls /private/var/folders/j0/m92nmdwj055gwk4t7w3v22xw0000gn/T/v3-net-isolation-esg",
+      "returncode": 1,
+      "proxy_decisions": []
+    },
+    {
+      "name": "touch \"$HOME/.v3-isolation-probe\"",
+      "returncode": 1,
+      "proxy_decisions": []
+    },
+    {
+      "name": "echo ok > /private/var/folders/j0/m92nmdwj055gwk4t7w3v22xw0000gn/T/v3-net-isolat",
+      "returncode": 0,
+      "proxy_decisions": []
+    },
+    {
+      "name": "mkdir -p {out} && echo ok > {out}/probe",
+      "returncode": 0,
+      "proxy_decisions": []
+    },
+    {
+      "name": "ls \"/Users/administrator/.paseo\"",
+      "returncode": 1,
+      "proxy_decisions": []
+    },
+    {
+      "name": "ls \"/Users/administrator/cil/ainative/enterprise_agent\"",
+      "returncode": 1,
+      "proxy_decisions": []
+    },
+    {
+      "name": "ls \"/Users/administrator/.kiro\"",
+      "returncode": 1,
+      "proxy_decisions": []
+    },
+    {
+      "name": "curl-github.com",
+      "returncode": 56,
+      "proxy_decisions": [
+        [
+          "github.com",
+          "deny"
+        ]
+      ]
+    },
+    {
+      "name": "curl-api.github.com",
+      "returncode": 56,
+      "proxy_decisions": [
+        [
+          "api.github.com",
+          "deny"
+        ]
+      ]
+    },
+    {
+      "name": "git-ls-remote",
+      "returncode": 128,
+      "proxy_decisions": [
+        [
+          "github.com",
+          "deny"
+        ]
+      ]
+    },
+    {
+      "name": "curl -k -sS -m 15 -o /dev/null --noproxy '*' https://140.82.112.3",
+      "returncode": 7,
+      "proxy_decisions": []
+    },
+    {
+      "name": "curl -k -sS -m 15 -o /dev/null --noproxy '*' https://198.18.0.53",
+      "returncode": 7,
+      "proxy_decisions": []
+    },
+    {
+      "name": "curl -k -sS -m 15 -o /dev/null --noproxy '*' https://198.19.2.92",
+      "returncode": 7,
+      "proxy_decisions": []
+    },
+    {
+      "name": "python3 -c \"import socket; socket.getaddrinfo('github.com', 443)\"",
+      "returncode": 1,
+      "proxy_decisions": []
+    },
+    {
+      "name": "python3 -c \"import socket; socket.create_connection(('127.0.0.1', 59713), timeou",
+      "returncode": 1,
+      "proxy_decisions": []
+    },
+    {
+      "name": "curl-allowlisted",
+      "returncode": 0,
+      "proxy_decisions": [
+        [
+          "runtime.eu-central-1.kiro.dev",
+          "allow"
+        ]
+      ]
+    },
+    {
+      "name": "mkdir -p {out} && echo forged > {out}/network.log",
+      "returncode": 0,
+      "proxy_decisions": []
+    },
+    {
+      "name": "kiro-ready",
+      "returncode": 0,
+      "proxy_decisions": [
+        [
+          "client-telemetry.us-east-1.amazonaws.com",
+          "deny"
+        ],
+        [
+          "management.eu-central-1.kiro.dev",
+          "allow"
+        ],
+        [
+          "management.eu-central-1.kiro.dev",
+          "allow"
+        ],
+        [
+          "management.eu-central-1.kiro.dev",
+          "allow"
+        ],
+        [
+          "runtime.eu-central-1.kiro.dev",
+          "allow"
+        ],
+        [
+          "management.eu-central-1.kiro.dev",
+          "allow"
+        ],
+        [
+          "runtime.eu-central-1.kiro.dev",
+          "allow"
+        ],
+        [
+          "management.eu-central-1.kiro.dev",
+          "allow"
+        ],
+        [
+          "runtime.eu-central-1.kiro.dev",
+          "allow"
+        ],
+        [
+          "runtime.eu-central-1.kiro.dev",
+          "allow"
+        ],
+        [
+          "client-telemetry.us-east-1.amazonaws.com",
+          "deny"
+        ],
+        [
+          "telemetry.eu-central-1.kiro.dev",
+          "deny"
+        ],
+        [
+          "telemetry.eu-central-1.kiro.dev",
+          "deny"
+        ]
+      ]
+    },
+    {
+      "name": "kiro-curl-github",
+      "returncode": 0,
+      "proxy_decisions": [
+        [
+          "client-telemetry.us-east-1.amazonaws.com",
+          "deny"
+        ],
+        [
+          "management.eu-central-1.kiro.dev",
+          "allow"
+        ],
+        [
+          "management.eu-central-1.kiro.dev",
+          "allow"
+        ],
+        [
+          "management.eu-central-1.kiro.dev",
+          "allow"
+        ],
+        [
+          "runtime.eu-central-1.kiro.dev",
+          "allow"
+        ],
+        [
+          "runtime.eu-central-1.kiro.dev",
+          "allow"
+        ],
+        [
+          "management.eu-central-1.kiro.dev",
+          "allow"
+        ],
+        [
+          "management.eu-central-1.kiro.dev",
+          "allow"
+        ],
+        [
+          "runtime.eu-central-1.kiro.dev",
+          "allow"
+        ],
+        [
+          "runtime.eu-central-1.kiro.dev",
+          "allow"
+        ],
+        [
+          "github.com",
+          "deny"
+        ],
+        [
+          "runtime.eu-central-1.kiro.dev",
+          "allow"
+        ],
+        [
+          "client-telemetry.us-east-1.amazonaws.com",
+          "deny"
+        ],
+        [
+          "telemetry.eu-central-1.kiro.dev",
+          "deny"
+        ],
+        [
+          "telemetry.eu-central-1.kiro.dev",
+          "deny"
+        ]
+      ]
+    }
+  ],
+  "passed": true
+}
