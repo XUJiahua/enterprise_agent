@@ -63,3 +63,7 @@
 2. 隔离部署到 VM 或容器，并限制网络访问，满足盲测条件。
 3. 把“新操作必须声明事件且有消费者”“扩展只能写在 candidate 包”做成 appctl Verifier 规则，并测量它们的拦截率。
 4. 把 phase4、phase5、phase5b 的控制接入 public CI。
+
+## 追加（网络隔离）
+
+生成端新增了网络受限的隔离方式，见 [network-isolation.md](network-isolation.md)，对应 `isolate_net.py` 和 `run_kiro_cohort_net.sh`。github.com、直连 IP 和 DNS 均已实测被拒绝，Kiro READY 和工具调用正常。但 Kiro 的服务端 `web_search` 经已放行的 runtime 主机，在沙箱内仍能返回 GitHub 搜索结果。因此在 Oracle 从公开仓库移走之前，仍不能称为盲测。上面各队列都是在旧的（无网络限制）隔离下运行的。
