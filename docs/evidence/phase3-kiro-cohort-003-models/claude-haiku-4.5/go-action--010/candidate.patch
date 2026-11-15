@@ -1,0 +1,100 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index ad14a29..fbec317 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -1,63 +1,50 @@
+-// Shared starting point: atomic batch approval, without audit or idempotency.
++// Package candidate implements batch approval with audit logging and scoped idempotency.
++// It adapts the domain action layer (internal/action) to the protocol layer (internal/protocol).
+ package candidate
+ 
+ import (
+ 	"context"
++	"errors"
++	"net/http"
++
++	"github.com/XUJiahua/enterprise_agent/internal/action"
+ 	"github.com/XUJiahua/enterprise_agent/internal/app"
+ 	"github.com/XUJiahua/enterprise_agent/internal/protocol"
++	"github.com/jackc/pgx/v5/pgconn"
+ 	"github.com/jackc/pgx/v5/pgxpool"
+-	"net/http"
+-	"strings"
+ )
+ 
++// New creates an HTTP handler that wraps the action executor.
++// It uses guarded RLS on Purchase and manages ApprovalAudit and ActionRequest tables.
+ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
++	// Initialize the action executor with guarded Purchase runtime and idempotency tables.
++	executor, err := action.New(ctx, pool, "")
++	if err != nil {
++		return nil, err
++	}
++
++	// Create the approve callback that adapts action.Result to protocol.Result
+ 	approve := func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
+-		for _, id := range ids {
+-			if strings.ContainsRune(id, 0) {
+-				return protocol.Result{}, false, &protocol.Rejection{Status: 404}
+-			}
+-		}
+-		tx, err := pool.Begin(ctx)
++		// Call the action executor with audit and idempotency support
++		result, replayed, err := executor.BulkApprove(ctx, u, key, ids)
+ 		if err != nil {
+-			return protocol.Result{}, false, err
+-		}
+-		defer tx.Rollback(ctx)
+-		_, err = tx.Exec(ctx, `SELECT set_config('app.tenant',$1,true),set_config('app.user',$2,true),set_config('app.role',$3,true)`, u.Tenant, u.User, u.Role)
+-		if err != nil {
+-			return protocol.Result{}, false, err
+-		}
+-		rows, err := tx.Query(ctx, `SELECT id FROM "Purchase" WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted' ORDER BY id FOR UPDATE`, ids, u.Tenant, u.User)
+-		if err != nil {
+-			return protocol.Result{}, false, err
+-		}
+-		eligible := []string{}
+-		for rows.Next() {
+-			var id string
+-			if err = rows.Scan(&id); err != nil {
+-				rows.Close()
+-				return protocol.Result{}, false, err
++			// Adapt action.Rejection to protocol.Rejection
++			var rejected *action.Rejection
++			if errors.As(err, &rejected) {
++				return protocol.Result{}, false, &protocol.Rejection{Status: rejected.Status}
+ 			}
+-			eligible = append(eligible, id)
+-		}
+-		err = rows.Err()
+-		rows.Close()
+-		if err != nil {
+-			return protocol.Result{}, false, err
+-		}
+-		if len(eligible) != len(ids) {
+-			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+-		}
+-		tag, err := tx.Exec(ctx, `UPDATE "Purchase" SET status='approved' WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'`, ids, u.Tenant, u.User)
+-		if err != nil {
+-			return protocol.Result{}, false, err
+-		}
+-		if tag.RowsAffected() != int64(len(ids)) {
+-			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+-		}
+-		if err = tx.Commit(ctx); err != nil {
++			// Adapt postgres unique constraint violations to 409
++			var pgErr *pgconn.PgError
++			if errors.As(err, &pgErr) && pgErr.Code == "23505" {
++				return protocol.Result{}, false, &protocol.Rejection{Status: 409}
++			}
++			// Pass through other errors (503 handling in protocol.HTTP)
+ 			return protocol.Result{}, false, err
+ 		}
+-		return protocol.Result{ApprovedIDs: ids}, false, nil
++
++		// Adapt action.Result to protocol.Result
++		return protocol.Result{ApprovedIDs: result.ApprovedIDs}, replayed, nil
+ 	}
++
+ 	return protocol.HTTP(approve, fallback), nil
+ }

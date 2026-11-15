@@ -1,0 +1,35 @@
+{
+  "status": "provider-error",
+  "usage": null,
+  "turn_started": true,
+  "run_finished": false,
+  "reported_model": "qwen3-coder-next",
+  "event_count": 124,
+  "agent_messages": [],
+  "errors": [
+    "Improperly formed request. (Request ID: 6c1de972-4153-4be8-a448-17c41a8203a9) (code -32000): {\"errorType\":\"BedrockValidationError\",\"retryErrorType\":\"CLIENT_ERROR\",\"requestId\":\"6c1de972-4153-4be8-a448-17c41a8203a9\"}"
+  ],
+  "engine": "kiro",
+  "generation_seconds": 36.778,
+  "requested_model": "qwen3-coder-next",
+  "reasoning_effort": "medium",
+  "sandbox": "workspace-write",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "qwen3-coder-next",
+    "--effort",
+    "medium",
+    "--trust-all-tools"
+  ],
+  "returncode": 1,
+  "timed_out": false
+}

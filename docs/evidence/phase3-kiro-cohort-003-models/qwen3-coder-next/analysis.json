@@ -1,0 +1,453 @@
+{
+  "cells": {
+    "go-manual": {
+      "planned": 10,
+      "passed": 1,
+      "outcomes": {
+        "acceptance-failed": 7,
+        "infrastructure-blocked": 1,
+        "passed": 1,
+        "scope-violation": 1
+      },
+      "median_seconds": 84.6675,
+      "median_credits": 0.7528365845771144,
+      "median_added_lines": 110.5,
+      "wrote_tests": 0,
+      "ran_go_test": 7,
+      "sandbox_denials": 0
+    },
+    "go-action": {
+      "planned": 10,
+      "passed": 6,
+      "outcomes": {
+        "passed": 6,
+        "provider-error": 1,
+        "scope-violation": 3
+      },
+      "median_seconds": 52.334999999999994,
+      "median_credits": 0.48796280099502487,
+      "median_added_lines": 11.0,
+      "wrote_tests": 0,
+      "ran_go_test": 9,
+      "sandbox_denials": 0
+    }
+  },
+  "trials": [
+    {
+      "trial": "go-action--001",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 40.483,
+      "credits": 0.3919352570480928,
+      "model": "qwen3-coder-next",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 11,
+      "tool_calls": 24,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--001",
+      "cell": "go-manual",
+      "outcome": "infrastructure-blocked",
+      "cases_passed": 0,
+      "failed_cases": [],
+      "generation_seconds": 92.398,
+      "credits": 0.7709994610281924,
+      "model": "qwen3-coder-next",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 100,
+      "tool_calls": 32,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--002",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 50.76,
+      "credits": 0.42151935157545606,
+      "model": "qwen3-coder-next",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 111,
+      "tool_calls": 25,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--002",
+      "cell": "go-manual",
+      "outcome": "acceptance-failed",
+      "cases_passed": 64,
+      "failed_cases": [
+        "idempotency:reordered replay",
+        "concurrency:concurrent identical"
+      ],
+      "generation_seconds": 48.203,
+      "credits": 0.411581487562189,
+      "model": "qwen3-coder-next",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 95,
+      "tool_calls": 20,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--003",
+      "cell": "go-manual",
+      "outcome": "acceptance-failed",
+      "cases_passed": 63,
+      "failed_cases": [
+        "input:NUL absent target",
+        "idempotency:reordered replay",
+        "concurrency:concurrent identical"
+      ],
+      "generation_seconds": 169.528,
+      "credits": 1.7241772371475947,
+      "model": "qwen3-coder-next",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 170,
+      "tool_calls": 49,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--003",
+      "cell": "go-action",
+      "outcome": "provider-error",
+      "cases_passed": null,
+      "failed_cases": null,
+      "generation_seconds": 36.778,
+      "credits": null,
+      "model": "qwen3-coder-next",
+      "files": [],
+      "added_lines": 0,
+      "tool_calls": 26,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--004",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 59.072,
+      "credits": 0.569825023217247,
+      "model": "qwen3-coder-next",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 11,
+      "tool_calls": 31,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--004",
+      "cell": "go-manual",
+      "outcome": "scope-violation",
+      "cases_passed": null,
+      "failed_cases": null,
+      "generation_seconds": 87.093,
+      "credits": 0.7630859867330017,
+      "model": "qwen3-coder-next",
+      "files": [],
+      "added_lines": 0,
+      "tool_calls": 33,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--005",
+      "cell": "go-manual",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 71.778,
+      "credits": 0.46588833001658375,
+      "model": "qwen3-coder-next",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 139,
+      "tool_calls": 29,
+      "wrote_tests": false,
+      "ran_go_test": false,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--005",
+      "cell": "go-action",
+      "outcome": "scope-violation",
+      "cases_passed": null,
+      "failed_cases": null,
+      "generation_seconds": 65.717,
+      "credits": 0.48796280099502487,
+      "model": "qwen3-coder-next",
+      "files": [],
+      "added_lines": 0,
+      "tool_calls": 26,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--006",
+      "cell": "go-action",
+      "outcome": "scope-violation",
+      "cases_passed": null,
+      "failed_cases": null,
+      "generation_seconds": 57.923,
+      "credits": 0.626003527363184,
+      "model": "qwen3-coder-next",
+      "files": [],
+      "added_lines": 0,
+      "tool_calls": 35,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--006",
+      "cell": "go-manual",
+      "outcome": "acceptance-failed",
+      "cases_passed": 62,
+      "failed_cases": [
+        "input:NUL absent target",
+        "idempotency:reordered replay",
+        "idempotency:same key different payload",
+        "concurrency:concurrent identical"
+      ],
+      "generation_seconds": 43.698,
+      "credits": 0.3550688739635157,
+      "model": "qwen3-coder-next",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 103,
+      "tool_calls": 19,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--007",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 53.91,
+      "credits": 0.6378044029850746,
+      "model": "qwen3-coder-next",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 12,
+      "tool_calls": 29,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--007",
+      "cell": "go-manual",
+      "outcome": "acceptance-failed",
+      "cases_passed": 46,
+      "failed_cases": [
+        "functional:two targets",
+        "functional:100 targets",
+        "functional:100 byte Unicode ID",
+        "functional:quoted ID",
+        "functional:another approver",
+        "functional:other tenant approver",
+        "input:128 byte key",
+        "input:exact 64 KiB body",
+        "input:NUL absent target",
+        "idempotency:reordered replay",
+        "idempotency:same key different payload",
+        "idempotency:new key cannot approve again",
+        "idempotency:key scoped by actor",
+        "idempotency:key scoped by tenant",
+        "idempotency:requester cannot reuse approver key",
+        "concurrency:concurrent identical",
+        "concurrency:concurrent mismatch",
+        "concurrency:concurrent overlap",
+        "failure-rollback:audit failure and same-key retry",
+        "failure-rollback:request failure and same-key retry"
+      ],
+      "generation_seconds": 82.242,
+      "credits": 0.8605394427860696,
+      "model": "qwen3-coder-next",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 118,
+      "tool_calls": 35,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--008",
+      "cell": "go-manual",
+      "outcome": "acceptance-failed",
+      "cases_passed": 65,
+      "failed_cases": [
+        "functional:quoted ID"
+      ],
+      "generation_seconds": 51.502,
+      "credits": 0.4100752918739635,
+      "model": "qwen3-coder-next",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 98,
+      "tool_calls": 26,
+      "wrote_tests": false,
+      "ran_go_test": false,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--008",
+      "cell": "go-action",
+      "outcome": "scope-violation",
+      "cases_passed": null,
+      "failed_cases": null,
+      "generation_seconds": 97.66,
+      "credits": 0.9138799087893864,
+      "model": "qwen3-coder-next",
+      "files": [],
+      "added_lines": 0,
+      "tool_calls": 37,
+      "wrote_tests": false,
+      "ran_go_test": false,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--009",
+      "cell": "go-manual",
+      "outcome": "acceptance-failed",
+      "cases_passed": 63,
+      "failed_cases": [
+        "functional:quoted ID",
+        "idempotency:reordered replay",
+        "concurrency:concurrent identical"
+      ],
+      "generation_seconds": 102.135,
+      "credits": 0.7425871824212272,
+      "model": "qwen3-coder-next",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 147,
+      "tool_calls": 31,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--009",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 45.489,
+      "credits": 0.40214938308457704,
+      "model": "qwen3-coder-next",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 103,
+      "tool_calls": 23,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--010",
+      "cell": "go-manual",
+      "outcome": "acceptance-failed",
+      "cases_passed": 40,
+      "failed_cases": [
+        "functional:two targets",
+        "functional:100 targets",
+        "functional:100 byte Unicode ID",
+        "functional:quoted ID",
+        "functional:another approver",
+        "functional:other tenant approver",
+        "authorization:cross tenant",
+        "authorization:self approval",
+        "atomicity:mixed own",
+        "atomicity:mixed other",
+        "atomicity:mixed done",
+        "atomicity:mixed missing",
+        "input:128 byte key",
+        "input:exact 64 KiB body",
+        "input:NUL absent target",
+        "idempotency:reordered replay",
+        "idempotency:same key different payload",
+        "idempotency:new key cannot approve again",
+        "idempotency:key scoped by actor",
+        "idempotency:key scoped by tenant",
+        "idempotency:requester cannot reuse approver key",
+        "concurrency:concurrent identical",
+        "concurrency:concurrent mismatch",
+        "concurrency:concurrent overlap",
+        "failure-rollback:audit failure and same-key retry",
+        "failure-rollback:request failure and same-key retry"
+      ],
+      "generation_seconds": 116.45,
+      "credits": 0.8114310298507462,
+      "model": "qwen3-coder-next",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 234,
+      "tool_calls": 27,
+      "wrote_tests": false,
+      "ran_go_test": false,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--010",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 47.0,
+      "credits": 0.4600395223880598,
+      "model": "qwen3-coder-next",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 13,
+      "tool_calls": 27,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    }
+  ]
+}

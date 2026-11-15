@@ -1,0 +1,204 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index ad14a29..8047857 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -1,12 +1,20 @@
+-// Shared starting point: atomic batch approval, without audit or idempotency.
++// Batch approval with audit logging and scoped idempotency.
+ package candidate
+ 
+ import (
+ 	"context"
++	"crypto/sha256"
++	"encoding/hex"
++	"encoding/json"
++	"errors"
++	"fmt"
+ 	"github.com/XUJiahua/enterprise_agent/internal/app"
+ 	"github.com/XUJiahua/enterprise_agent/internal/protocol"
++	"github.com/jackc/pgx/v5"
++	"github.com/jackc/pgx/v5/pgconn"
+ 	"github.com/jackc/pgx/v5/pgxpool"
+ 	"net/http"
++	"sort"
+ 	"strings"
+ )
+ 
+@@ -17,47 +25,169 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 				return protocol.Result{}, false, &protocol.Rejection{Status: 404}
+ 			}
+ 		}
++
+ 		tx, err := pool.Begin(ctx)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+ 		defer tx.Rollback(ctx)
++
+ 		_, err = tx.Exec(ctx, `SELECT set_config('app.tenant',$1,true),set_config('app.user',$2,true),set_config('app.role',$3,true)`, u.Tenant, u.User, u.Role)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+-		rows, err := tx.Query(ctx, `SELECT id FROM "Purchase" WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted' ORDER BY id FOR UPDATE`, ids, u.Tenant, u.User)
++
++		// Check existing ActionRequest for idempotency
++		var existingResp json.RawMessage
++		var existingActor string
++		err = tx.QueryRow(ctx, `SELECT response, "actorId" FROM "ActionRequest" WHERE "tenantId"=$1 AND "actorId"=$2 AND operation=$3 AND key=$4`,
++			u.Tenant, u.User, "bulk-approve.v3", key).Scan(&existingResp, &existingActor)
++
++		if err == nil {
++			// ActionRequest exists - check if it's a replay (same ids) or conflict (different ids)
++			var existingResult protocol.Result
++			if err := json.Unmarshal(existingResp, &existingResult); err == nil {
++				if equalStrings(existingResult.ApprovedIDs, ids) {
++					// Same key + same ids = replay
++					return existingResult, true, nil
++				} else {
++					// Same key + different ids = conflict
++					return protocol.Result{}, false, &protocol.Rejection{Status: 409}
++				}
++			}
++		} else if err != pgx.ErrNoRows {
++			return protocol.Result{}, false, err
++		}
++
++		// Check for purchases that are already approved (must reject if any exist)
++		rows, err := tx.Query(ctx, `SELECT id FROM "Purchase" WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND status='approved'`, ids, u.Tenant)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+-		eligible := []string{}
++		alreadyApproved := map[string]bool{}
+ 		for rows.Next() {
+ 			var id string
+ 			if err = rows.Scan(&id); err != nil {
+ 				rows.Close()
+ 				return protocol.Result{}, false, err
+ 			}
+-			eligible = append(eligible, id)
++			alreadyApproved[id] = true
+ 		}
+-		err = rows.Err()
+ 		rows.Close()
++		if err = rows.Err(); err != nil {
++			return protocol.Result{}, false, err
++		}
++
++		if len(alreadyApproved) > 0 {
++			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
++		}
++
++		// Filter to only eligible purchases (submitted, created by others)
++		eligible := []string{}
++		for _, id := range ids {
++			var count int64
++			err = tx.QueryRow(ctx, `SELECT COUNT(*) FROM "Purchase" WHERE id=$1 AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'`, id, u.Tenant, u.User).Scan(&count)
++			if err != nil || count == 0 {
++				// Not eligible - either not found, not submitted, created by self, or wrong tenant
++				return protocol.Result{}, false, &protocol.Rejection{Status: 409}
++			}
++			eligible = append(eligible, id)
++		}
++
++		if len(eligible) == 0 {
++			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
++		}
++
++		// Lock eligible purchases for update
++		rows2, err := tx.Query(ctx, `SELECT id FROM "Purchase" WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted' ORDER BY id FOR UPDATE`, eligible, u.Tenant, u.User)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+-		if len(eligible) != len(ids) {
++		locked := []string{}
++		for rows2.Next() {
++			var id string
++			if err = rows2.Scan(&id); err != nil {
++				rows2.Close()
++				return protocol.Result{}, false, err
++			}
++			locked = append(locked, id)
++		}
++		rows2.Close()
++		if err = rows2.Err(); err != nil {
++			return protocol.Result{}, false, err
++		}
++
++		if len(locked) != len(eligible) {
+ 			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+ 		}
+-		tag, err := tx.Exec(ctx, `UPDATE "Purchase" SET status='approved' WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'`, ids, u.Tenant, u.User)
++
++		// Update purchases
++		tag, err := tx.Exec(ctx, `UPDATE "Purchase" SET status='approved' WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'`, eligible, u.Tenant, u.User)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+-		if tag.RowsAffected() != int64(len(ids)) {
++		if tag.RowsAffected() != int64(len(eligible)) {
+ 			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+ 		}
++
++		// Create ApprovalAudit entries for each approved purchase
++		for _, id := range eligible {
++			_, err = tx.Exec(ctx, `INSERT INTO "ApprovalAudit" ("tenantId","purchaseId","approvedBy",operation,"idempotencyKey","fromStatus","toStatus") VALUES ($1,$2,$3,$4,$5,$6,$7)`,
++				u.Tenant, id, u.User, "bulk-approve.v3", key, "submitted", "approved")
++			if err != nil {
++				return protocol.Result{}, false, err
++			}
++		}
++
++		// Compute request hash
++		requestHash := computeRequestHash(eligible)
++
++		// Create ActionRequest
++		result := protocol.Result{ApprovedIDs: eligible}
++		respJSON, _ := json.Marshal(result)
++		_, err = tx.Exec(ctx, `INSERT INTO "ActionRequest" ("tenantId","actorId",operation,key,"requestHash",response,"createdAt") VALUES ($1,$2,$3,$4,$5,$6,now())`,
++			u.Tenant, u.User, "bulk-approve.v3", key, requestHash, respJSON)
++		if err != nil {
++			var pgErr *pgconn.PgError
++			if errors.As(err, &pgErr) && pgErr.Code == "23505" {
++				// Concurrent insertion - check if it's the same ids
++				return protocol.Result{}, false, &protocol.Rejection{Status: 409}
++			}
++			return protocol.Result{}, false, err
++		}
++
+ 		if err = tx.Commit(ctx); err != nil {
++			var pgErr *pgconn.PgError
++			if errors.As(err, &pgErr) && pgErr.Code == "23505" {
++				// Another transaction committed first
++				return protocol.Result{}, false, &protocol.Rejection{Status: 409}
++			}
+ 			return protocol.Result{}, false, err
+ 		}
+-		return protocol.Result{ApprovedIDs: ids}, false, nil
++
++		return result, false, nil
+ 	}
+ 	return protocol.HTTP(approve, fallback), nil
+ }
++
++func computeRequestHash(ids []string) string {
++	sort.Strings(ids)
++	hash := sha256.New()
++	hash.Write([]byte("bulk-approve.v3\n"))
++	for _, id := range ids {
++		hash.Write([]byte(fmt.Sprintf("%d:%s", len(id), id)))
++	}
++	return hex.EncodeToString(hash.Sum(nil))
++}
++
++func equalStrings(a, b []string) bool {
++	if len(a) != len(b) {
++		return false
++	}
++	for i := range a {
++		if a[i] != b[i] {
++			return false
++		}
++	}
++	return true
++}

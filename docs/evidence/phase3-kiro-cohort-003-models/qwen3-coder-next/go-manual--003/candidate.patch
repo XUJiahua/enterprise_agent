@@ -1,0 +1,231 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index ad14a29..3ba7c6f 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -1,35 +1,116 @@
+-// Shared starting point: atomic batch approval, without audit or idempotency.
++// Batch approval with scoped idempotency and audit logging.
+ package candidate
+ 
+ import (
+ 	"context"
++	"crypto/sha256"
++	"encoding/hex"
++	"encoding/json"
++	"errors"
++	"fmt"
+ 	"github.com/XUJiahua/enterprise_agent/internal/app"
+ 	"github.com/XUJiahua/enterprise_agent/internal/protocol"
++	"github.com/jackc/pgx/v5"
++	"github.com/jackc/pgx/v5/pgconn"
+ 	"github.com/jackc/pgx/v5/pgxpool"
+ 	"net/http"
+-	"strings"
++	"sort"
+ )
+ 
+ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
+ 	approve := func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
++		// Check for existing action request with same scope (operation + tenant + actor + key)
++		var existing struct {
++			Exists      bool
++			ApprovedIDs string
++		}
++		
++		err := pool.QueryRow(ctx, 
++			`SELECT EXISTS(SELECT 1 FROM "ActionRequest" WHERE "tenantId"=$1 AND "actorId"=$2 AND operation=$3 AND key=$4),
++			      response->>'approvedIds' 
++			 FROM "ActionRequest" 
++			 WHERE "tenantId"=$1 AND "actorId"=$2 AND operation=$3 AND key=$4`,
++			u.Tenant, u.User, "bulk-approve.v3", key).Scan(&existing.Exists, &existing.ApprovedIDs)
++		
++		if err != pgx.ErrNoRows && err != nil {
++			return protocol.Result{}, false, err
++		}
++		
++		// If existing action found, replay if same set, 409 if different set
++		if existing.Exists {
++			var existingIDs []string
++			if err := json.Unmarshal([]byte(`[`+existing.ApprovedIDs+`]`), &existingIDs); err == nil {
++				// Sort both slices for comparison
++				idsCopy := append([]string(nil), ids...)
++				sort.Strings(idsCopy)
++				existingCopy := append([]string(nil), existingIDs...)
++				sort.Strings(existingCopy)
++				
++				if len(idsCopy) == len(existingCopy) {
++					sameSet := true
++					for i := range idsCopy {
++						if idsCopy[i] != existingCopy[i] {
++							sameSet = false
++							break
++						}
++					}
++					if sameSet {
++						// Same scope, same set - replay
++						return protocol.Result{ApprovedIDs: existingIDs}, true, nil
++					}
++				}
++			}
++			// Same key, different set - conflict
++			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
++		}
++		
++		// Verify all IDs are valid (non-empty, UTF-8 length <= 100)
+ 		for _, id := range ids {
+-			if strings.ContainsRune(id, 0) {
+-				return protocol.Result{}, false, &protocol.Rejection{Status: 404}
++			if len(id) == 0 || len(id) > 100 {
++				return protocol.Result{}, false, &protocol.Rejection{Status: 400}
+ 			}
+ 		}
++		
++		// Check if any of these IDs have already been approved by ANY key
++		// This prevents different keys from re-approving already approved records
++		var alreadyApprovedAny []string
++		err = pool.QueryRow(ctx,
++			`SELECT array_agg(DISTINCT "purchaseId") FROM "ApprovalAudit" 
++			 WHERE "tenantId"=$1 AND operation=$2 AND "purchaseId"=ANY($3::text[])`,
++			u.Tenant, "bulk-approve.v3", ids).Scan(&alreadyApprovedAny)
++		if err != nil {
++			return protocol.Result{}, false, err
++		}
++		if len(alreadyApprovedAny) > 0 {
++			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
++		}
++		
++		// Build request hash
++		requestHash := buildRequestHash(ids)
++		
++		// Start transaction
+ 		tx, err := pool.Begin(ctx)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+ 		defer tx.Rollback(ctx)
+-		_, err = tx.Exec(ctx, `SELECT set_config('app.tenant',$1,true),set_config('app.user',$2,true),set_config('app.role',$3,true)`, u.Tenant, u.User, u.Role)
++		
++		// Set context
++		_, err = tx.Exec(ctx, 
++			`SELECT set_config('app.tenant',$1,true),set_config('app.user',$2,true),set_config('app.role',$3,true)`,
++			u.Tenant, u.User, u.Role)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+-		rows, err := tx.Query(ctx, `SELECT id FROM "Purchase" WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted' ORDER BY id FOR UPDATE`, ids, u.Tenant, u.User)
++		
++		// Check all IDs exist, belong to tenant, are submitted, and not created by current user
++		rows, err := tx.Query(ctx, 
++			`SELECT id FROM "Purchase" WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted' ORDER BY id FOR UPDATE`,
++			ids, u.Tenant, u.User)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
++		
+ 		eligible := []string{}
+ 		for rows.Next() {
+ 			var id string
+@@ -44,20 +125,102 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
++		
++		// If not all IDs are eligible, reject all
+ 		if len(eligible) != len(ids) {
+ 			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+ 		}
+-		tag, err := tx.Exec(ctx, `UPDATE "Purchase" SET status='approved' WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'`, ids, u.Tenant, u.User)
++		
++		// Update purchases
++		tag, err := tx.Exec(ctx, 
++			`UPDATE "Purchase" SET status='approved' WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'`,
++			ids, u.Tenant, u.User)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+ 		if tag.RowsAffected() != int64(len(ids)) {
+ 			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+ 		}
++		
++		// Insert approval audits for each approved purchase
++		for _, id := range ids {
++			_, err = tx.Exec(ctx,
++				`INSERT INTO "ApprovalAudit" ("tenantId", "purchaseId", "approvedBy", operation, "idempotencyKey", "fromStatus", "toStatus")
++				 VALUES ($1, $2, $3, $4, $5, 'submitted', 'approved')`,
++				u.Tenant, id, u.User, "bulk-approve.v3", key)
++			if err != nil {
++				return protocol.Result{}, false, err
++			}
++		}
++		
++		// Insert action request
++		responseJSON := `{"approvedIds":` + escapeJSONArray(ids) + `}`
++		_, err = tx.Exec(ctx,
++			`INSERT INTO "ActionRequest" ("tenantId", "actorId", operation, key, "requestHash", response)
++			 VALUES ($1, $2, $3, $4, $5, $6::jsonb)`,
++			u.Tenant, u.User, "bulk-approve.v3", key, requestHash, responseJSON)
++		if err != nil {
++			return protocol.Result{}, false, err
++		}
++		
+ 		if err = tx.Commit(ctx); err != nil {
++			// Check if it's a unique constraint violation (duplicate key)
++			var pgerr *pgconn.PgError
++			if errors.As(err, &pgerr) && pgerr.Code == "23505" {
++				// This means another transaction already inserted with same scope
++				// Retry to read the existing result
++				return retryRead(ctx, pool, u, key, ids)
++			}
+ 			return protocol.Result{}, false, err
+ 		}
++		
+ 		return protocol.Result{ApprovedIDs: ids}, false, nil
+ 	}
+ 	return protocol.HTTP(approve, fallback), nil
+ }
++
++// buildRequestHash builds the SHA-256 hash for ActionRequest.requestHash
++// Input: "bulk-approve.v3" + newline, then each sorted ID as "<UTF-8 byte length>:<ID>"
++func buildRequestHash(ids []string) string {
++	// Sort IDs by UTF-8 byte order (lexicographic)
++	sorted := append([]string(nil), ids...)
++	sort.Strings(sorted)
++	
++	// Build the hash input
++	hashInput := "bulk-approve.v3\n"
++	for _, id := range sorted {
++		hashInput += fmt.Sprintf("%d:%s", len([]byte(id)), id)
++	}
++	
++	// SHA-256
++	hash := sha256.Sum256([]byte(hashInput))
++	return hex.EncodeToString(hash[:])
++}
++
++// escapeJSONArray escapes a string slice for JSON embedding using proper encoding
++func escapeJSONArray(ids []string) string {
++	// Use json.Marshal for proper escaping
++	b, _ := json.Marshal(ids)
++	return string(b)
++}
++
++// retryRead reads an existing action request when concurrent insert happens
++func retryRead(ctx context.Context, pool *pgxpool.Pool, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
++	var existingApprovedIDs string
++	
++	err := pool.QueryRow(ctx,
++		`SELECT response->>'approvedIds' FROM "ActionRequest" 
++		 WHERE "tenantId"=$1 AND "actorId"=$2 AND operation=$3 AND key=$4`,
++		u.Tenant, u.User, "bulk-approve.v3", key).Scan(&existingApprovedIDs)
++	
++	if err != nil {
++		return protocol.Result{}, false, err
++	}
++	
++	var result protocol.Result
++	if err := json.Unmarshal([]byte(`{"approvedIds":`+existingApprovedIDs+`}`), &result); err != nil {
++		return protocol.Result{}, false, err
++	}
++	
++	return result, true, nil
++}

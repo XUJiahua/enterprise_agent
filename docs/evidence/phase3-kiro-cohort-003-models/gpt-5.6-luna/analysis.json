@@ -1,0 +1,471 @@
+{
+  "cells": {
+    "go-manual": {
+      "planned": 10,
+      "passed": 3,
+      "outcomes": {
+        "acceptance-failed": 7,
+        "passed": 3
+      },
+      "median_seconds": 48.653,
+      "median_credits": 0.6761283663184079,
+      "median_added_lines": 83.0,
+      "wrote_tests": 0,
+      "ran_go_test": 10,
+      "sandbox_denials": 0
+    },
+    "go-action": {
+      "planned": 10,
+      "passed": 10,
+      "outcomes": {
+        "passed": 10
+      },
+      "median_seconds": 38.0355,
+      "median_credits": 0.5542592730348259,
+      "median_added_lines": 15.5,
+      "wrote_tests": 0,
+      "ran_go_test": 10,
+      "sandbox_denials": 0
+    }
+  },
+  "trials": [
+    {
+      "trial": "go-manual--001",
+      "cell": "go-manual",
+      "outcome": "acceptance-failed",
+      "cases_passed": 40,
+      "failed_cases": [
+        "functional:two targets",
+        "functional:100 targets",
+        "functional:100 byte Unicode ID",
+        "functional:quoted ID",
+        "functional:another approver",
+        "functional:other tenant approver",
+        "authorization:cross tenant",
+        "authorization:self approval",
+        "atomicity:mixed own",
+        "atomicity:mixed other",
+        "atomicity:mixed done",
+        "atomicity:mixed missing",
+        "input:128 byte key",
+        "input:exact 64 KiB body",
+        "input:NUL absent target",
+        "idempotency:reordered replay",
+        "idempotency:same key different payload",
+        "idempotency:new key cannot approve again",
+        "idempotency:key scoped by actor",
+        "idempotency:key scoped by tenant",
+        "idempotency:requester cannot reuse approver key",
+        "concurrency:concurrent identical",
+        "concurrency:concurrent mismatch",
+        "concurrency:concurrent overlap",
+        "failure-rollback:audit failure and same-key retry",
+        "failure-rollback:request failure and same-key retry"
+      ],
+      "generation_seconds": 53.895,
+      "credits": 0.746698675920398,
+      "model": "gpt-5.6-luna",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 91,
+      "tool_calls": 15,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--001",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 37.536,
+      "credits": 0.5391257388059701,
+      "model": "gpt-5.6-luna",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 13,
+      "tool_calls": 17,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--002",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 38.938,
+      "credits": 0.5763578710447761,
+      "model": "gpt-5.6-luna",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 14,
+      "tool_calls": 20,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--002",
+      "cell": "go-manual",
+      "outcome": "acceptance-failed",
+      "cases_passed": 61,
+      "failed_cases": [
+        "input:NUL absent target",
+        "idempotency:reordered replay",
+        "idempotency:same key different payload",
+        "concurrency:concurrent identical",
+        "concurrency:concurrent mismatch"
+      ],
+      "generation_seconds": 44.69,
+      "credits": 0.6203423284577113,
+      "model": "gpt-5.6-luna",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 83,
+      "tool_calls": 19,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--003",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 38.878,
+      "credits": 0.5705981932338309,
+      "model": "gpt-5.6-luna",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 16,
+      "tool_calls": 19,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--003",
+      "cell": "go-manual",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 39.693,
+      "credits": 0.5945297293532338,
+      "model": "gpt-5.6-luna",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 75,
+      "tool_calls": 17,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--004",
+      "cell": "go-manual",
+      "outcome": "acceptance-failed",
+      "cases_passed": 62,
+      "failed_cases": [
+        "idempotency:reordered replay",
+        "idempotency:same key different payload",
+        "concurrency:concurrent identical",
+        "concurrency:concurrent mismatch"
+      ],
+      "generation_seconds": 55.991,
+      "credits": 0.7902407645771145,
+      "model": "gpt-5.6-luna",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 79,
+      "tool_calls": 25,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--004",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 28.88,
+      "credits": 0.4147961076616915,
+      "model": "gpt-5.6-luna",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 15,
+      "tool_calls": 15,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--005",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 24.918,
+      "credits": 0.35006348437810936,
+      "model": "gpt-5.6-luna",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 15,
+      "tool_calls": 11,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--005",
+      "cell": "go-manual",
+      "outcome": "acceptance-failed",
+      "cases_passed": 40,
+      "failed_cases": [
+        "functional:two targets",
+        "functional:100 targets",
+        "functional:100 byte Unicode ID",
+        "functional:quoted ID",
+        "functional:another approver",
+        "functional:other tenant approver",
+        "authorization:cross tenant",
+        "authorization:self approval",
+        "atomicity:mixed own",
+        "atomicity:mixed other",
+        "atomicity:mixed done",
+        "atomicity:mixed missing",
+        "input:128 byte key",
+        "input:exact 64 KiB body",
+        "input:NUL absent target",
+        "idempotency:reordered replay",
+        "idempotency:same key different payload",
+        "idempotency:new key cannot approve again",
+        "idempotency:key scoped by actor",
+        "idempotency:key scoped by tenant",
+        "idempotency:requester cannot reuse approver key",
+        "concurrency:concurrent identical",
+        "concurrency:concurrent mismatch",
+        "concurrency:concurrent overlap",
+        "failure-rollback:audit failure and same-key retry",
+        "failure-rollback:request failure and same-key retry"
+      ],
+      "generation_seconds": 48.742,
+      "credits": 0.6627932954228855,
+      "model": "gpt-5.6-luna",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 118,
+      "tool_calls": 22,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--006",
+      "cell": "go-manual",
+      "outcome": "acceptance-failed",
+      "cases_passed": 61,
+      "failed_cases": [
+        "input:NUL absent target",
+        "idempotency:reordered replay",
+        "idempotency:same key different payload",
+        "concurrency:concurrent identical",
+        "concurrency:concurrent mismatch"
+      ],
+      "generation_seconds": 48.564,
+      "credits": 0.6894634372139303,
+      "model": "gpt-5.6-luna",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 83,
+      "tool_calls": 24,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--006",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 40.678,
+      "credits": 0.5693928072636816,
+      "model": "gpt-5.6-luna",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 17,
+      "tool_calls": 19,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--007",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 38.156,
+      "credits": 0.535828115323383,
+      "model": "gpt-5.6-luna",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 19,
+      "tool_calls": 19,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--007",
+      "cell": "go-manual",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 55.695,
+      "credits": 0.8450062885572139,
+      "model": "gpt-5.6-luna",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 75,
+      "tool_calls": 24,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--008",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 38.948,
+      "credits": 0.5935556739303482,
+      "model": "gpt-5.6-luna",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 16,
+      "tool_calls": 22,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--008",
+      "cell": "go-manual",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 58.154,
+      "credits": 0.8111646065671642,
+      "model": "gpt-5.6-luna",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 82,
+      "tool_calls": 23,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--009",
+      "cell": "go-manual",
+      "outcome": "acceptance-failed",
+      "cases_passed": 65,
+      "failed_cases": [
+        "input:NUL absent target"
+      ],
+      "generation_seconds": 42.31,
+      "credits": 0.6606057725373133,
+      "model": "gpt-5.6-luna",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 84,
+      "tool_calls": 16,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--009",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 36.7,
+      "credits": 0.5353255181094527,
+      "model": "gpt-5.6-luna",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 18,
+      "tool_calls": 18,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-manual--010",
+      "cell": "go-manual",
+      "outcome": "acceptance-failed",
+      "cases_passed": 62,
+      "failed_cases": [
+        "idempotency:reordered replay",
+        "idempotency:same key different payload",
+        "concurrency:concurrent identical",
+        "concurrency:concurrent mismatch"
+      ],
+      "generation_seconds": 43.799,
+      "credits": 0.6596446577114429,
+      "model": "gpt-5.6-luna",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 88,
+      "tool_calls": 18,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    },
+    {
+      "trial": "go-action--010",
+      "cell": "go-action",
+      "outcome": "passed",
+      "cases_passed": 66,
+      "failed_cases": [],
+      "generation_seconds": 37.915,
+      "credits": 0.5770988419900497,
+      "model": "gpt-5.6-luna",
+      "files": [
+        "internal/candidate/approval.go"
+      ],
+      "added_lines": 13,
+      "tool_calls": 18,
+      "wrote_tests": false,
+      "ran_go_test": true,
+      "sandbox_denials": 0
+    }
+  ]
+}

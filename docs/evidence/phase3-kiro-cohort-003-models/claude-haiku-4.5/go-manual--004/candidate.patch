@@ -1,0 +1,150 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index ad14a29..75de8f7 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -1,31 +1,78 @@
+-// Shared starting point: atomic batch approval, without audit or idempotency.
++// Atomic batch approval with audit logging and scoped idempotency.
+ package candidate
+ 
+ import (
+ 	"context"
++	"crypto/sha256"
++	"encoding/hex"
++	"encoding/json"
++	"fmt"
+ 	"github.com/XUJiahua/enterprise_agent/internal/app"
+ 	"github.com/XUJiahua/enterprise_agent/internal/protocol"
+ 	"github.com/jackc/pgx/v5/pgxpool"
+ 	"net/http"
++	"sort"
+ 	"strings"
+ )
+ 
+ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
+ 	approve := func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
++		// Validate all IDs upfront
+ 		for _, id := range ids {
+ 			if strings.ContainsRune(id, 0) {
+ 				return protocol.Result{}, false, &protocol.Rejection{Status: 404}
+ 			}
+ 		}
++
++		// Begin transaction
+ 		tx, err := pool.Begin(ctx)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+ 		defer tx.Rollback(ctx)
++
++		// Set up RLS context
+ 		_, err = tx.Exec(ctx, `SELECT set_config('app.tenant',$1,true),set_config('app.user',$2,true),set_config('app.role',$3,true)`, u.Tenant, u.User, u.Role)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
++
++		// Calculate requestHash
++		requestHash, err := calculateRequestHash(ids)
++		if err != nil {
++			return protocol.Result{}, false, err
++		}
++
++		// Check for existing ActionRequest with same scope but different ID set
++		var existingHash string
++		var existingResponse string
++		err = tx.QueryRow(ctx, `SELECT "requestHash", response::text FROM "ActionRequest" WHERE "tenantId"=$1 AND "actorId"=$2 AND operation='bulk-approve.v3' AND key=$3`, u.Tenant, u.User, key).Scan(&existingHash, &existingResponse)
++		if err == nil {
++			// ActionRequest exists for this scope+key
++			if existingHash != requestHash {
++				// Same key, different target set -> 409
++				return protocol.Result{}, false, &protocol.Rejection{Status: 409}
++			}
++			// Same key, same targets -> idempotent replay
++			var result protocol.Result
++			if err := json.Unmarshal([]byte(existingResponse), &result); err != nil {
++				return protocol.Result{}, false, err
++			}
++			return result, true, nil
++		}
++
++		// Check for any approved records in this batch with different keys
++		var approvedCount int
++		err = tx.QueryRow(ctx, `SELECT COUNT(*) FROM "ApprovalAudit" WHERE "tenantId"=$1 AND "purchaseId"=ANY($2::text[])`, u.Tenant, ids).Scan(&approvedCount)
++		if err != nil {
++			return protocol.Result{}, false, err
++		}
++		if approvedCount > 0 {
++			// Some records already approved with different keys
++			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
++		}
++
++		// Verify all target IDs exist, are submitted, created by others, and in tenant
+ 		rows, err := tx.Query(ctx, `SELECT id FROM "Purchase" WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted' ORDER BY id FOR UPDATE`, ids, u.Tenant, u.User)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+@@ -44,9 +91,13 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
++
++		// All-or-nothing: if any target is invalid, reject everything
+ 		if len(eligible) != len(ids) {
+ 			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+ 		}
++
++		// Update all purchases to approved
+ 		tag, err := tx.Exec(ctx, `UPDATE "Purchase" SET status='approved' WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'`, ids, u.Tenant, u.User)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+@@ -54,10 +105,51 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		if tag.RowsAffected() != int64(len(ids)) {
+ 			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+ 		}
++
++		// Create ApprovalAudit records for each approved purchase
++		for _, id := range ids {
++			_, err := tx.Exec(ctx, `INSERT INTO "ApprovalAudit" ("tenantId","purchaseId","approvedBy",operation,"idempotencyKey","fromStatus","toStatus") VALUES ($1,$2,$3,$4,$5,$6,$7)`,
++				u.Tenant, id, u.User, "bulk-approve.v3", key, "submitted", "approved")
++			if err != nil {
++				return protocol.Result{}, false, err
++			}
++		}
++
++		// Create ActionRequest record
++		responseJSON := map[string][]string{"approvedIds": ids}
++		responseBytes, _ := json.Marshal(responseJSON)
++
++		_, err = tx.Exec(ctx, `INSERT INTO "ActionRequest" ("tenantId","actorId",operation,key,"requestHash",response) VALUES ($1,$2,$3,$4,$5,$6)`,
++			u.Tenant, u.User, "bulk-approve.v3", key, requestHash, responseBytes)
++		if err != nil {
++			return protocol.Result{}, false, err
++		}
++
++		// Commit transaction
+ 		if err = tx.Commit(ctx); err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
++
+ 		return protocol.Result{ApprovedIDs: ids}, false, nil
+ 	}
+ 	return protocol.HTTP(approve, fallback), nil
+ }
++
++// calculateRequestHash computes the SHA-256 hash of "bulk-approve.v3\n" followed by
++// each sorted ID in format "<UTF-8 byte length>:<ID>"
++func calculateRequestHash(ids []string) (string, error) {
++	// Ensure IDs are sorted
++	sortedIDs := append([]string(nil), ids...)
++	sort.Strings(sortedIDs)
++
++	hash := sha256.New()
++	hash.Write([]byte("bulk-approve.v3\n"))
++
++	for _, id := range sortedIDs {
++		idBytes := []byte(id)
++		byteLen := len(idBytes)
++		hash.Write([]byte(fmt.Sprintf("%d:%s", byteLen, id)))
++	}
++
++	return hex.EncodeToString(hash.Sum(nil)), nil
++}

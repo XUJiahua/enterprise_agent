@@ -24,14 +24,14 @@ for t in $ORDER; do
       --allow-write "$H/Library/Caches" --allow-write "$H/go/pkg/mod" \
       --allow-write "$H/Library/Application Support/kiro-cli" --allow-write "$H/.aws/sso/cache" \
       > "$W/ops/$t.txt" 2>&1
-  echo "$(date -u +%FT%TZ) $t worker_rc=$?" >> "$STATUS"
+  rc=$?; echo "$(date -u +%FT%TZ) $t worker_rc=$rc" >> "$STATUS"
   if [ -f "$W/results/$t/receipt.json" ]; then
     python3 benchmark/phase3/ctl.py restore --plan "$W/plan.json" --trial "$t" --bundle "$W/results/$t/candidate.bundle" \
       --receipt "$W/results/$t/receipt.json" --manifest "$W/kits/$t/manifest.json" --candidate "$W/eval/$t" >> "$W/ops/$t.txt" 2>&1
     perl -e 'alarm 900; exec @ARGV' python3 benchmark/phase3/ctl.py evaluate --plan "$W/plan.json" --trial "$t" \
       --candidate "$W/eval/$t" --manifest "$W/kits/$t/manifest.json" --receipt "$W/results/$t/receipt.json" \
       --fixtures "$W/private/fixtures.json" --output "$W/evaluations/$t" >> "$W/ops/$t.txt" 2>&1
-    echo "$(date -u +%FT%TZ) $t eval_rc=$?" >> "$STATUS"
+    rc=$?; echo "$(date -u +%FT%TZ) $t eval_rc=$rc" >> "$STATUS"
   fi
 done
 echo "$(date -u +%FT%TZ) DONE" >> "$STATUS"
