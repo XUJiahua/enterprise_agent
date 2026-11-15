@@ -1,0 +1,41 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index 0fd94e3..632996e 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -1,4 +1,4 @@
+-// Existing batch approval through the platform Action kernel.
++// Existing batch approval and new batch rejection through the platform Action kernel.
+ package candidate
+ 
+ import (
+@@ -12,6 +12,9 @@ import (
+ 	"github.com/jackc/pgx/v5/pgxpool"
+ )
+ 
++// Reject is the batch rejection Action.
++var reject = action.Transition{Operation: "bulk-reject.v4", From: "submitted", To: "rejected", Field: "rejectedIds"}
++
+ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
+ 	executor, err := action.New(ctx, pool)
+ 	if err != nil {
+@@ -28,5 +31,19 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		}
+ 		return protocol.Result{Field: action.Approve.Field, IDs: approved}, replayed, nil
+ 	}
+-	return protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve}, fallback), nil
++	rejectHandler := func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
++		rejected, replayed, err := executor.Run(ctx, u, reject, key, ids)
++		var denied *action.Rejection
++		if errors.As(err, &denied) {
++			return protocol.Result{}, false, &protocol.Rejection{Status: denied.Status}
++		}
++		if err != nil {
++			return protocol.Result{}, false, err
++		}
++		return protocol.Result{Field: reject.Field, IDs: rejected}, replayed, nil
++	}
++	return protocol.HTTP(protocol.Routes{
++		"/purchases/bulk-approve": approve,
++		"/purchases/bulk-reject":  rejectHandler,
++	}, fallback), nil
+ }

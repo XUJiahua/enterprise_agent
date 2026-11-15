@@ -1,0 +1,20 @@
+{
+  "version": 4,
+  "trial_id": "go-manual--005",
+  "plan_sha256": "0aee3650171dbb224e27ce8ff9304d7591fbb51603c8dd22edd17bbfe46b947d",
+  "initial_sha": "1f7fda3a14eb141dee0684a41aced1866bf1ab7d",
+  "source_base_sha": "d8a5c576cc3c293ee2da884f5c618958df407b51",
+  "files": {
+    "go.mod": "648c40a4bf80a1cb567029bbf31c771963254e92aa8712da903eb8a883fe3217",
+    "go.sum": "e718bd4e6664b6aa2d808d7bf1f72ca1b2e36316db23235318c9e20a8705f0c4",
+    "internal/app/server.go": "128f710c1d022e50ba925fda4a2a9d8c88f4233cccc9f57c3eae6704c3d0b53f",
+    "internal/app/demo_identity.go": "1b49e429ba1a98236fea3bc84a626a4698d276dc6d55758462c0e40a97eda2fb",
+    "cmd/server/main.go": "cec57aacd74de3bb2a95d3aa504abcf8cde3661fa38fc1f8421728b47ab04e14",
+    "internal/protocol/protocol.go": "f122aeb04bad92169c3e1fb57e103b208f0cb30d12a10a121e05742efacb750e",
+    "internal/ledger/ledger.go": "a201a5eb3175e7e4aa0e9fed37363e5983ef982f82fb0aa8187cd0aca1920bbb",
+    "internal/candidate/approval.go": "f195b6032975de582f2200a51257a23d03d1c7ba72e9f56b3f506786f0f5948e",
+    "TASK.md": "5cea59080ab299f27684b4efaa4473b82911e699e834e03fdfb1dfd35f0fb856",
+    "SCHEMA.sql": "b22c48f73051e3e0c0c86e9eeee717b7a24ac4108319f6f0ce0fb5a61dc23743",
+    ".gitignore": "12a897501ac2360137d17d7b5dabb56661447cc7cccc68a7e3a5b7a49729f6da"
+  }
+}
