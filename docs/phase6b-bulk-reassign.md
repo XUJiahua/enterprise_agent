@@ -97,6 +97,8 @@ v6b 中有三处新旧写法并存，都在代码里写明了以哪一种为准�
 
 这些都是人工或假 CLI 控制，不计入模型样本。
 
+两份参考实现的候选包源码保存在证据目录 `references/*.go.txt`。
+
 控制中得到的设计事实：
 
 - **uniform-denial 部分由 RLS 兜底**。他租户的 approver 在 `TenantMember` RLS 下不可见，所以自然就和未知用户一样。distinguish 控制只在 requester 和 inactive 两项上失败（1/3）。这条约定真正有区分力的只有这两种情形。

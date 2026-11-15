@@ -63,3 +63,5 @@
 2. 隔离部署到 VM 或容器，并限制网络访问，满足盲测条件。
 3. 把“新操作必须声明事件且有消费者”“扩展只能写在 candidate 包”做成 appctl Verifier 规则，并测量它们的拦截率。
 4. 把 phase4、phase5、phase5b 的控制接入 public CI。
+
+> 追加（2026-11-15）：确认性实验的第二个新任务 v6b（批量改派审批人）的 harness 与控制见 [phase6b-bulk-reassign.md](phase6b-bulk-reassign.md)，尚无真实模型样本。
