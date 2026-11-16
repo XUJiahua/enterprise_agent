@@ -71,6 +71,15 @@ assert (extension['negative_detected'],extension['positive_clean'],extension['un
 interception=json.loads((root/'verifier-extension-rules/summary.json').read_text())
 frozen=json.loads((Path(__file__).resolve().parents[1]/'docs/evidence/verifier-extension-rules-2026-11-15/summary.json').read_text())
 assert interception==frozen and interception['trials']==280 and interception['new_model_generations']==0 and not interception['frozen_scores_modified']
+operations=json.loads((root/'operation-controls.json').read_text())
+assert operations['ok'] and operations['model_calls']==0 and operations['controls']==53 and all(r['passed'] for r in operations['results'])
+assert (operations['negative_detected'],operations['positive_clean'],operations['uncovered_clean'],operations['unverifiable_detected'])==(34,12,7,4)
+replay=json.loads((root/'operation-semantics/summary.json').read_text())
+replay_frozen=json.loads((Path(__file__).resolve().parents[1]/'docs/evidence/operation-semantics-2026-11-16/summary.json').read_text())
+assert replay==replay_frozen and replay['out_of_sample'] is False and replay['configs']['full']['trials']==228 and replay['new_model_generations']==0
+assert operations['catalog']==replay['catalog']
+opkernel=(root/'opkernel-db.txt').read_text()
+assert '--- PASS: TestCatalogOperationsDB' in opkernel and '--- SKIP' not in opkernel and '\nok ' in opkernel
 text='# Controlled POC results\n\n| Path | Healthy acceptance | Faults blocked |\n|---|---:|---:|\n'
 for route,acceptance,blocked in rows:text+=f'| {route} | {acceptance} | {blocked} |\n'
 text+='\nVerifier adversarial probes: 7/7. Direct SQL probes: 6/6. Startup configuration probes: 2/2. Shared browser acceptance: 18/18. Synthetic evaluator controls: 4 committed-candidate evaluations plus 1 driver end-to-end control (not AI measurements).\n\nThese are hand-authored fault injections, not measured AI defect rates or first-pass productivity. A guarded field over-fetch fails closed with 403; ZenStack nullifies the denied field. Disabling the ZenStack policy client is an expected escaping boundary control.\n'
@@ -81,6 +90,8 @@ text+='\nPR 10 audit: 50 archived files and four candidate bundles verified. New
 text+='\nTyped Action mechanism POC: reference passes 66/66; five negative controls detected, each evaluated against 66 cases. Purchase state, audit rows and completed idempotency response commit in one PostgreSQL transaction. Metadata SQL probes: 12/12; startup checks: 7/7. No new model samples or general workflow-engine claim.\n'
 text+='\nImplicit-convention cohort controls v4/v5/v5b (real PostgreSQL 17.6, fake Kiro, no model calls): 14 human candidates and 2 worker-transport evaluations each; references pass; v5b omit-event is an explicit failure.\n'
 text+=f"\nExtension verifier (appctl extensions): {extension['controls']} controls on real exports ({extension['negative_detected']} negatives flagged, {extension['positive_clean']} positives clean, {extension['uncovered_clean']} known-uncovered stay clean). Archived interception (post hoc, {interception['trials']} real candidates): any rule TP/FP/FN = {interception['any_rule']['vs_any_frozen_failure']['TP']}/{interception['any_rule']['vs_any_frozen_failure']['FP']}/{interception['any_rule']['vs_any_frozen_failure']['FN']} against frozen failures; frozen scores unchanged.\n"
+full=replay['configs']['full'];sem=full['semantic_findings_vs_any_frozen_failure']
+text+=f"\nOperation catalog {replay['catalog'][:19]}: catalog kernel passes on PostgreSQL 17.6 for all entries. Catalog-bound verifier (appctl operations): {operations['controls']} controls ({operations['negative_detected']} negatives flagged, of which {operations['unverifiable_detected']} UNVERIFIABLE; {operations['positive_clean']} positives clean; {operations['uncovered_clean']} known-uncovered clean). Retrospective replay on {full['trials']} seen v6 candidates (NOT out-of-sample): TP/FP/FN = {sem['TP']}/{sem['FP']}/{sem['FN']}, silent failures caught {full['silent_caught']}/{full['silent_failures']}.\n"
 text+='\nAction evolution cohort v3: same guarded RLS, HTTP adapter, schema and starting candidate; only the Action capability differs. Six human controls and four synthetic generation/transfer evaluations (one through a fake Kiro CLI), 66 checks each. Two correct references pass; four negative controls detected; four bundle replays pass, including two standalone workers. Zero new model generations. Generation kits contain no Oracle or private seed; actual host/network isolation remains an operator deployment requirement.\n'
 (root/'comparison.md').write_text(text)
 print(text)

@@ -153,3 +153,7 @@ CI 执行 12 次人工正反候选控制和一次假 CLI 链路控制，不调�
 ## 扩展 Verifier 规则
 
 [`appctl extensions`](docs/verifier-extension-rules.md) 对候选做静态检查：扩展作用域、Operation 声明完整性与版本化命名、事件与 notify 消费者的对应，以及两条手写代码规则（事件、requestHash 指纹）。在 280 个已归档真实候选上事后评估：合计拦住 97/120 个冻结失败、0 误报，补上 75 个“显式全过、隐含失败”中的 63 个（剩余 12 个均为统一拒绝，静态不覆盖）；规则与评估使用同一批数据。CI 另跑 44 个规则控制和 v4/v5/v5b 的 PostgreSQL 控制。
+
+## 操作语义目录与目录绑定 Verifier
+
+[`internal/opdef`](docs/operation-semantics.md) 是一份受保护的操作目录。每个带版本的条目写明类别、角色与对象、状态或列、审计/历史、指纹字段、事件或带理由的豁免、职责分离、统一拒绝码，目录本身有内容摘要。`internal/opkernel` 只按条目名执行，扩展代码不能再选择 Event 或 NoEvent。`appctl operations` 以同一份目录为准检查 action 声明和手写代码；遇到未知内核类型或无法解析的构造时，判为 `unverifiable` 并阻断（退出码 3）。53 个正反控制全部通过；在 v6 的 228 个已见候选上做回顾性复评（非样本外），TP/FP/FN 为 134/0/8，v6 冻结规则为 104/11/38。真正的样本外评估留给 v7。

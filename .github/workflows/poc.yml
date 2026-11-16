@@ -48,6 +48,11 @@ jobs:
         shell: bash
       - name: Extension verifier interception on archived v4/v4b/v5/v5b candidates (no model calls)
         run: python3 research/verifier_extension_rules.py --out reports/verifier-extension-rules
+      - name: Catalog-bound operation verifier controls on v6 and platform exports (no model calls)
+        run: python3 tests/operation_controls.py | tee reports/operation-controls.json
+        shell: bash
+      - name: Catalog-bound verifier retrospective replay on 228 archived v6 candidates (not out-of-sample)
+        run: python3 research/operation_semantics_replay.py --out reports/operation-semantics
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -180,6 +185,13 @@ jobs:
         run: python3 benchmark/phase5/driver_smoke.py
       - name: v5b required-event controls (real PostgreSQL, fake Kiro, no model calls)
         run: python3 benchmark/phase5b/driver_smoke.py
+      - name: Catalog kernel (opkernel) on PostgreSQL, all catalog entries
+        env:
+          POC_REQUIRE_DB: '1'
+        run: |
+          mkdir -p reports
+          go test -race -count=1 -v ./internal/opkernel/ | tee reports/opkernel-db.txt
+        shell: bash
       - uses: actions/upload-artifact@v4
         if: always()
         with:
