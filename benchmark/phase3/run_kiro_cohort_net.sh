@@ -27,6 +27,9 @@ for t in $ORDER; do
       --allow-write "$H/Library/Application Support/kiro-cli" --allow-write "$H/.aws/sso/cache" \
       > "$W/ops/$t.txt" 2>&1
   rc=$?; echo "$(date -u +%FT%TZ) $t worker_rc=$rc" >> "$STATUS"
+  # Stop the lane when the preflight is blocked (quota/region): the trial never started,
+  # and continuing would only mark every remaining trial blocked (v6 appendix E/F).
+  if [ ! -f "$W/results/$t/outcome.json" ]; then echo "$(date -u +%FT%TZ) $t PREFLIGHT-BLOCKED lane-stopped" >> "$STATUS"; exit 3; fi
   if [ -f "$W/results/$t/receipt.json" ]; then
     python3 "$CTL" restore --plan "$W/plan.json" --trial "$t" --bundle "$W/results/$t/candidate.bundle" \
       --receipt "$W/results/$t/receipt.json" --manifest "$W/kits/$t/manifest.json" --candidate "$W/eval/$t" >> "$W/ops/$t.txt" 2>&1
