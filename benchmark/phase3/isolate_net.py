@@ -30,7 +30,10 @@ from isolate import profile  # noqa: E402  (file rules stay identical)
 # Hosts kiro-cli 3.3.0 needs for READY + a tool-calling task (discovery in docs/network-isolation.md).
 # Telemetry hosts it also contacts (telemetry.eu-central-1.kiro.dev,
 # client-telemetry.us-east-1.amazonaws.com) are deliberately not allowed.
-DEFAULT_ALLOW = ('management.eu-central-1.kiro.dev', 'runtime.eu-central-1.kiro.dev')
+_DISCOVERED = ('management.eu-central-1.kiro.dev', 'runtime.eu-central-1.kiro.dev')
+# The account's service region can change (2026-11-16: eu-central-1 -> us-east-1); re-run
+# discovery + isolation_net_control.py and set KIRO_ALLOW_HOSTS rather than editing this file.
+DEFAULT_ALLOW = tuple(h.strip().lower() for h in os.environ.get('KIRO_ALLOW_HOSTS', '').split(',') if h.strip()) or _DISCOVERED
 PROXY_ENV = ('HTTPS_PROXY', 'HTTP_PROXY', 'ALL_PROXY', 'https_proxy', 'http_proxy', 'all_proxy')
 
 

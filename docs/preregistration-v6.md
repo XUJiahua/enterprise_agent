@@ -102,3 +102,14 @@ v3–v5b 的探索性结果显示，平台内核带来的正确性收益只覆�
 3. 续跑与首轮相隔约 19 小时。服务端模型版本可能已经变化，这一点无法核实。报告中会给出按批次（首轮 / 续跑）拆分的描述性结果，主分析不按批次分层。
 4. 若续跑中再次遇到预检被拒，沿用规则 1，等配额恢复后再执行。
 5. 冻结之后，`benchmark/` 下新增了操作脚本 `run_v6_lanes.sh`，目录树 hash 因此由 `11d2762` 变为 `0861531`。所有冻结计划引用的 harness 文件 hash 没有变化，12 个计划都能在当前 checkout 上通过 `load_plan` 校验。
+
+### 附录 F（2026-11-16 10:10；尚未查看任何 v6 验收结果）：服务区域变更
+
+按附录 E 续跑时，126 个 trial 在预检阶段**全部**失败（HTTP 403），没有一个开始生成。原因是配额恢复后，Kiro 账号的服务端点由 eu-central-1 改到了 us-east-1（management/runtime/telemetry 均变为 `*.us-east-1.kiro.dev`），而网络白名单只放行 eu-central-1。这一轮结果归档到 `<lane>/preflight-blocked-region-20261116/`，按附录 E 第 1、4 条处理：这些 trial 仍视为从未开始生成。
+
+处理过程：
+
+1. `isolate_net.py` 新增环境变量 `KIRO_ALLOW_HOSTS`，未设置时默认值不变。该脚本不在任何冻结计划的 hash 范围内，属于操作端隔离。
+2. 用 discover 模式确认 us-east-1 下的主机：management、runtime、telemetry、client-telemetry、`app.kiro.dev`。
+3. 以 `management.us-east-1.kiro.dev,runtime.us-east-1.kiro.dev` 为白名单，重跑完整的网络隔离控制（含 Kiro 真实探针），21/21 通过，见 `docs/evidence/network-isolation/control-us-east-1-2026-11-16.json`。`app.kiro.dev` 不在白名单内，READY 和工具调用都能正常工作。
+4. 续跑批次统一使用 us-east-1 白名单。首轮（eu-central-1）与续跑（us-east-1）的服务区域不同，报告中会按批次另作描述性拆分（与附录 E 第 3 条一致）。遥测主机被拒的认定扩展到 `telemetry.us-east-1.kiro.dev` 和 `app.kiro.dev`，均不计入 `network-denied`。
