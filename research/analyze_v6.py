@@ -122,13 +122,14 @@ def holm(ps):
 
 def tests(blocks):
     def pair(metric):
-        w = l = 0
+        w = l = n = 0
         for m, a in blocks:
             if m[metric] is None or a[metric] is None:
                 continue
+            n += 1
             w += a[metric] and not m[metric]
             l += m[metric] and not a[metric]
-        return {'action_only': w, 'manual_only': l, 'p_one_sided': sign_p(w, l)}
+        return {'blocks_with_both_scored': n, 'action_only': w, 'manual_only': l, 'p_one_sided': sign_p(w, l)}
     diffs = [a['S'] - m['S'] for m, a in blocks if a['S'] is not None and m['S'] is not None]
     res = {'H1_K': pair('K'), 'H2_E': pair('E'),
            'H3_S': {'n': len(diffs), 'median_diff_seconds': statistics.median(diffs) if diffs else None,
