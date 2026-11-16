@@ -79,6 +79,7 @@
 | v4b Kiro 队列（2026-11-15） | 扩展点提示 | haiku/qwen action 7/10、6/10（v4 为 0/10） | 见 PR #19 / docs/phase4b-kiro-cohort-001-results.md |
 | v5 Kiro 队列 001（2026-11-15） | 分散约定 reopen；四模型各 10 块 | 80 个；全过 manual 0/2/3/3，action 10/2/0/0（opus/haiku/luna/qwen） | 内核封装的约定 action 117/117 遵守、manual 有自然违反；未封装的 outbox（可省略 Event 字段）action 弱模型 2/29。见 [v5 队列 001](phase5-kiro-cohort-001-results.md) |
 | v5b Kiro 队列（2026-11-15） | Event 必填（NoEvent）+ 统一拒绝线索去冲突 | 80 个；全过 manual 9/3/4/5，action 10/8/9/1 | 必填字段让 haiku/luna outbox 2/10、0/10→8/10、9/10，qwen 改为主动选 NoEvent；opus manual 统一拒绝 0→10/10。见 [v5b](phase5b-kiro-cohort-001-results.md)；**全部实验汇总见 [experiment-summary-2026-11-15.md](experiment-summary-2026-11-15.md)** |
+| **v6 确认性（预注册，2026-11-16）** | T1 reopen / T2 countersign / T3 reassign × 4 模型 × 10 块；网络受限 | 240 个；115 个可配对块 | H1、H2、H3 均成立（Holm）；A 持平；需要声明的事件字段 action 0.39；Verifier 样本外 FP 11 / FN 38。见 [v6 结果](v6-confirmatory-results.md) |
 
 已完成真实生成合计为 3 + 9 + 4 = 16 个候选；条件不同，**不能合并计算成一个统一处理条件的成功率**。早期 9 个 trial 的环境阻塞计划仍保留为未测量，不是 0/9 通过。
 

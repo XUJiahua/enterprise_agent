@@ -1,0 +1,51 @@
+{
+ "T1/claude-opus-5.5": {
+  "\"purchase.reopened\"": 10
+ },
+ "T1/claude-haiku-4.5": {
+  "action.NoEvent": 3,
+  "\"none\"": 1,
+  "\"purchase.reopened\"": 6
+ },
+ "T1/gpt-5.6-luna": {
+  "\"purchase.reopened\"": 10
+ },
+ "T1/qwen3-coder-next": {
+  "\"purchase.reopened\"": 2,
+  "action.NoEvent": 4,
+  "\"none\"": 3
+ },
+ "T2/claude-opus-5.5": {
+  "\"purchase.countersigned\"": 6,
+  "action.NoEvent": 4
+ },
+ "T2/claude-haiku-4.5": {
+  "\"purchase.countersigned\"": 1,
+  "action.NoEvent": 9
+ },
+ "T2/gpt-5.6-luna": {
+  "\"purchase.countersigned\"": 3,
+  "action.NoEvent": 7
+ },
+ "T2/qwen3-coder-next": {
+  "action.NoEvent": 7,
+  "MISSING": 1
+ },
+ "T3/claude-opus-5.5": {
+  "action.NoEvent": 9,
+  "\"purchase.reassigned\"": 1
+ },
+ "T3/claude-haiku-4.5": {
+  "\"purchase.reassigned\"": 3,
+  "action.NoEvent": 7
+ },
+ "T3/gpt-5.6-luna": {
+  "action.NoEvent": 9,
+  "\"purchase.reassigned\"": 1
+ },
+ "T3/qwen3-coder-next": {
+  "action.NoEvent": 5,
+  "\"purchase.reassigned\"": 1,
+  "\"none\"": 2
+ }
+}

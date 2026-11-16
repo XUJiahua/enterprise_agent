@@ -1,0 +1,74 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index 05a1474..d2f706c 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -9,6 +9,7 @@ import (
+ 	"github.com/XUJiahua/enterprise_agent/internal/action"
+ 	"github.com/XUJiahua/enterprise_agent/internal/app"
+ 	"github.com/XUJiahua/enterprise_agent/internal/protocol"
++	"github.com/jackc/pgx/v5"
+ 	"github.com/jackc/pgx/v5/pgxpool"
+ )
+ 
+@@ -43,5 +44,47 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		}
+ 		return protocol.ItemResult{ID: done[0], Status: reopenOp.To}, replayed, nil
+ 	}
+-	return protocol.Item("reopen", "requester", reopen, protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": batch(executor, approveOp), "/purchases/bulk-reject": batch(executor, rejectOp)}, fallback)), nil
++	countersign := func(ctx context.Context, u app.Identity, key, id string, amount int) (protocol.ItemResult, bool, error) {
++		done, replayed, err := executor.Run(ctx, u, countersignOp, key, action.Request{IDs: []string{id}, Amount: amount})
++		if err != nil {
++			return protocol.ItemResult{}, false, adapt(err)
++		}
++		// The kernel's request fingerprint covers only the target IDs, so a
++		// replay with another amount must be refused here. The amount is
++		// immutable for the runtime role, so the stored purchase amount is
++		// the amount the original request confirmed.
++		if replayed {
++			same, err := confirmedAmount(ctx, pool, u, done[0], amount)
++			if err != nil {
++				return protocol.ItemResult{}, false, err
++			}
++			if !same {
++				return protocol.ItemResult{}, false, &protocol.Rejection{Status: 409}
++			}
++		}
++		return protocol.ItemResult{ID: done[0], Status: countersignOp.To}, replayed, nil
++	}
++	routes := protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": batch(executor, approveOp), "/purchases/bulk-reject": batch(executor, rejectOp)}, fallback)
++	return protocol.Confirm("countersign", "approver", countersign, protocol.Item("reopen", "requester", reopen, routes)), nil
++}
++
++// confirmedAmount reports whether the purchase visible to u under RLS has the given amount.
++func confirmedAmount(ctx context.Context, pool *pgxpool.Pool, u app.Identity, id string, amount int) (bool, error) {
++	tx, err := pool.BeginTx(ctx, pgx.TxOptions{AccessMode: pgx.ReadOnly})
++	if err != nil {
++		return false, err
++	}
++	defer func() { _ = tx.Rollback(ctx) }()
++	if _, err = tx.Exec(ctx, `SELECT set_config('app.tenant',$1,true),set_config('app.user',$2,true),set_config('app.role',$3,true)`, u.Tenant, u.User, u.Role); err != nil {
++		return false, err
++	}
++	var stored int
++	err = tx.QueryRow(ctx, `SELECT amount FROM "Purchase" WHERE id=$1 AND "tenantId"=$2`, id, u.Tenant).Scan(&stored)
++	if errors.Is(err, pgx.ErrNoRows) {
++		return false, nil
++	}
++	if err != nil {
++		return false, err
++	}
++	return stored == amount, tx.Commit(ctx)
+ }
+diff --git a/internal/candidate/operations.go b/internal/candidate/operations.go
+index f9c0953..2f1ff5a 100644
+--- a/internal/candidate/operations.go
++++ b/internal/candidate/operations.go
+@@ -10,4 +10,8 @@ var (
+ 		From: "submitted", To: "rejected", Field: "rejectedIds", Event: "purchase.rejected"}
+ 	reopenOp = action.Operation{Name: "reopen.v5", Role: "requester", Own: true,
+ 		From: "rejected", To: "submitted", Event: "purchase.reopened"}
++	// countersignOp is the second approval of a tiered purchase: a different
++	// approver than the one who moved it to pending-second confirms the amount.
++	countersignOp = action.Operation{Name: "countersign.v6", Role: "approver", Own: false,
++		From: "pending-second", To: "approved", Separate: true, Confirm: true, Event: action.NoEvent}
+ )

@@ -1,0 +1,44 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index 482017d..2145b74 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -31,6 +31,16 @@ func batch(executor *action.Executor, op action.Operation) protocol.Handler {
+ 	}
+ }
+ 
++func reassign(executor *action.Executor, op action.Update) protocol.AssignHandler {
++	return func(ctx context.Context, u app.Identity, key string, ids []string, assignee string) (protocol.AssignResult, bool, error) {
++		done, replayed, err := executor.Set(ctx, u, op, key, ids, assignee)
++		if err != nil {
++			return protocol.AssignResult{}, false, adapt(err)
++		}
++		return protocol.AssignResult{Field: op.Field, IDs: done, Assignee: assignee}, replayed, nil
++	}
++}
++
+ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
+ 	executor, err := action.New(ctx, pool)
+ 	if err != nil {
+@@ -44,5 +54,7 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		return protocol.ItemResult{ID: done[0], Status: reopenOp.To}, replayed, nil
+ 	}
+ 	batches := protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": batch(executor, approveOp), "/purchases/bulk-reject": batch(executor, rejectOp)}, fallback)
+-	return protocol.Item("reopen", "requester", reopen, batches), nil
++	withReopen := protocol.Item("reopen", "requester", reopen, batches)
++	withReassign := protocol.Assign("/purchases/bulk-reassign", reassign(executor, reassignUpdate), withReopen)
++	return withReassign, nil
+ }
+diff --git a/internal/candidate/operations.go b/internal/candidate/operations.go
+index a8fa0a0..91cbf46 100644
+--- a/internal/candidate/operations.go
++++ b/internal/candidate/operations.go
+@@ -11,3 +11,9 @@ var (
+ 	reopenOp = action.Operation{Name: "reopen.v5", Role: "requester", Own: true,
+ 		From: "rejected", To: "submitted", Event: "purchase.reopened"}
+ )
++
++// Updates of the purchase service, executed by the platform Action kernel.
++var (
++	reassignUpdate = action.Update{Name: "bulk-reassign.v6", Role: "approver", Own: false,
++		Status: "submitted", Column: "assigneeId", Field: "reassignedIds", Event: action.NoEvent}
++)

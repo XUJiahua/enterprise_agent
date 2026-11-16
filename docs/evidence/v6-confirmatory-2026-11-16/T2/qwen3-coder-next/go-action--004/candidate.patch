@@ -1,0 +1,31 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index 05a1474..1bc7bca 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -43,5 +43,14 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		}
+ 		return protocol.ItemResult{ID: done[0], Status: reopenOp.To}, replayed, nil
+ 	}
+-	return protocol.Item("reopen", "requester", reopen, protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": batch(executor, approveOp), "/purchases/bulk-reject": batch(executor, rejectOp)}, fallback)), nil
++	countersign := func(ctx context.Context, u app.Identity, key, id string, amount int) (protocol.ItemResult, bool, error) {
++		done, replayed, err := executor.Run(ctx, u, countersignOp, key, action.Request{IDs: []string{id}, Amount: amount})
++		if err != nil {
++			return protocol.ItemResult{}, false, adapt(err)
++		}
++		return protocol.ItemResult{ID: done[0], Status: countersignOp.To}, replayed, nil
++	}
++	return protocol.Confirm("countersign", "approver", countersign,
++		protocol.Item("reopen", "requester", reopen,
++			protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": batch(executor, approveOp), "/purchases/bulk-reject": batch(executor, rejectOp)}, fallback))), nil
+ }
+diff --git a/internal/candidate/operations.go b/internal/candidate/operations.go
+index f9c0953..b73d0b2 100644
+--- a/internal/candidate/operations.go
++++ b/internal/candidate/operations.go
+@@ -10,4 +10,6 @@ var (
+ 		From: "submitted", To: "rejected", Field: "rejectedIds", Event: "purchase.rejected"}
+ 	reopenOp = action.Operation{Name: "reopen.v5", Role: "requester", Own: true,
+ 		From: "rejected", To: "submitted", Event: "purchase.reopened"}
++	countersignOp = action.Operation{Name: "countersign.v6", Role: "approver", Own: false,
++		From: "pending-second", To: "approved", Confirm: true, Field: "", Event: action.NoEvent}
+ )

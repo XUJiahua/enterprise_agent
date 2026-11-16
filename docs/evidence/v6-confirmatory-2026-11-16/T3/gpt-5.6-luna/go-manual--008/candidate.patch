@@ -1,0 +1,147 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index cf92f72..8bbbc49 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -109,5 +109,6 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		return result, false, nil
+ 	}
+ 	batches := protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve, "/purchases/bulk-reject": newReject(pool)}, fallback)
+-	return protocol.Item("reopen", "requester", newReopen(pool), batches), nil
++	assign := protocol.Assign("/purchases/bulk-reassign", newReassign(pool), batches)
++	return protocol.Item("reopen", "requester", newReopen(pool), assign), nil
+ }
+diff --git a/internal/candidate/reassign.go b/internal/candidate/reassign.go
+new file mode 100644
+index 0000000..b6d81f8
+--- /dev/null
++++ b/internal/candidate/reassign.go
+@@ -0,0 +1,129 @@
++package candidate
++
++import (
++	"context"
++	"encoding/json"
++	"errors"
++
++	"github.com/XUJiahua/enterprise_agent/internal/app"
++	"github.com/XUJiahua/enterprise_agent/internal/ledger"
++	"github.com/XUJiahua/enterprise_agent/internal/protocol"
++	"github.com/jackc/pgx/v5"
++	"github.com/jackc/pgx/v5/pgxpool"
++)
++
++const opReassign = "bulk-reassign.v6"
++
++func newReassign(pool *pgxpool.Pool) protocol.AssignHandler {
++	return func(ctx context.Context, u app.Identity, key string, ids []string, assignee string) (protocol.AssignResult, bool, error) {
++		tx, err := pool.Begin(ctx)
++		if err != nil {
++			return protocol.AssignResult{}, false, err
++		}
++		defer tx.Rollback(ctx)
++
++		if _, err = tx.Exec(ctx, `SELECT set_config('app.tenant',$1,true),set_config('app.user',$2,true),set_config('app.role',$3,true)`, u.Tenant, u.User, u.Role); err != nil {
++			return protocol.AssignResult{}, false, err
++		}
++		lock, _ := json.Marshal([]string{opReassign, u.Tenant, u.User, key})
++		if _, err = tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1,0))`, string(lock)); err != nil {
++			return protocol.AssignResult{}, false, err
++		}
++
++		hash := ledger.Fingerprint(opReassign+"\n"+assignee, ids)
++		var savedHash string
++		var saved []byte
++		err = tx.QueryRow(ctx, `SELECT "requestHash",response FROM "ActionRequest"
++			WHERE "tenantId"=$1 AND "actorId"=$2 AND operation=$3 AND key=$4`, u.Tenant, u.User, opReassign, key).Scan(&savedHash, &saved)
++		if err == nil {
++			if savedHash != hash {
++				return protocol.AssignResult{}, false, &protocol.Rejection{Status: 409}
++			}
++			var body struct {
++				IDs      []string `json:"reassignedIds"`
++				Assignee string   `json:"assignee"`
++			}
++			if err = json.Unmarshal(saved, &body); err != nil {
++				return protocol.AssignResult{}, false, err
++			}
++			if err = tx.Commit(ctx); err != nil {
++				return protocol.AssignResult{}, false, err
++			}
++			return protocol.AssignResult{Field: "reassignedIds", IDs: body.IDs, Assignee: body.Assignee}, true, nil
++		}
++		if !errors.Is(err, pgx.ErrNoRows) {
++			return protocol.AssignResult{}, false, err
++		}
++
++		var memberExists bool
++		if err = tx.QueryRow(ctx, `SELECT EXISTS(
++			SELECT 1 FROM "TenantMember"
++			WHERE "tenantId"=$1 AND "userId"=$2 AND role='approver' AND active
++		)`, u.Tenant, assignee).Scan(&memberExists); err != nil {
++			return protocol.AssignResult{}, false, err
++		}
++		if !memberExists {
++			return protocol.AssignResult{}, false, &protocol.Rejection{Status: 409}
++		}
++
++		rows, err := tx.Query(ctx, `SELECT id,"assigneeId" FROM "Purchase"
++			WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'
++			ORDER BY id FOR UPDATE`, ids, u.Tenant, u.User)
++		if err != nil {
++			return protocol.AssignResult{}, false, err
++		}
++		type target struct {
++			id           string
++			fromAssignee *string
++		}
++		targets := make([]target, 0, len(ids))
++		for rows.Next() {
++			var t target
++			if err = rows.Scan(&t.id, &t.fromAssignee); err != nil {
++				rows.Close()
++				return protocol.AssignResult{}, false, err
++			}
++			targets = append(targets, t)
++		}
++		if err = rows.Err(); err != nil {
++			rows.Close()
++			return protocol.AssignResult{}, false, err
++		}
++		rows.Close()
++		if len(targets) != len(ids) {
++			return protocol.AssignResult{}, false, &protocol.Rejection{Status: 409}
++		}
++
++		tag, err := tx.Exec(ctx, `UPDATE "Purchase" SET "assigneeId"=$1
++			WHERE id=ANY($2::text[]) AND "tenantId"=$3 AND "createdBy"<>$4 AND status='submitted'`, assignee, ids, u.Tenant, u.User)
++		if err != nil {
++			return protocol.AssignResult{}, false, err
++		}
++		if tag.RowsAffected() != int64(len(ids)) {
++			return protocol.AssignResult{}, false, &protocol.Rejection{Status: 409}
++		}
++
++		for _, t := range targets {
++			if _, err = tx.Exec(ctx, `INSERT INTO "AssignmentHistory"
++				("tenantId","purchaseId","fromAssignee","toAssignee","changedBy",operation,"idempotencyKey")
++				VALUES ($1,$2,$3,$4,$5,$6,$7)`, u.Tenant, t.id, t.fromAssignee, assignee, u.User, opReassign, key); err != nil {
++				return protocol.AssignResult{}, false, err
++			}
++		}
++
++		result := protocol.AssignResult{Field: "reassignedIds", IDs: ids, Assignee: assignee}
++		response, err := json.Marshal(result)
++		if err != nil {
++			return protocol.AssignResult{}, false, err
++		}
++		if _, err = tx.Exec(ctx, `INSERT INTO "ActionRequest"
++			("tenantId","actorId",operation,key,"requestHash",response)
++			VALUES ($1,$2,$3,$4,$5,$6::jsonb)`, u.Tenant, u.User, opReassign, key, hash, string(response)); err != nil {
++			return protocol.AssignResult{}, false, err
++		}
++		if err = tx.Commit(ctx); err != nil {
++			return protocol.AssignResult{}, false, err
++		}
++		return result, false, nil
++	}
++}

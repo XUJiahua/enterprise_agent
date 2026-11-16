@@ -1,0 +1,35 @@
+{
+  "status": "budget-exceeded",
+  "usage": null,
+  "turn_started": true,
+  "run_finished": false,
+  "reported_model": "qwen3-coder-next",
+  "event_count": 158,
+  "agent_messages": [],
+  "errors": [
+    "the run was ended by a signal"
+  ],
+  "engine": "kiro",
+  "generation_seconds": 602.489,
+  "requested_model": "qwen3-coder-next",
+  "reasoning_effort": "medium",
+  "sandbox": "workspace-write",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "qwen3-coder-next",
+    "--effort",
+    "medium",
+    "--trust-all-tools"
+  ],
+  "returncode": 143,
+  "timed_out": true
+}

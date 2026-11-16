@@ -1,0 +1,36 @@
+diff --git a/SCHEMA.sql b/SCHEMA.sql
+index 216f09d..d99a0e8 100644
+--- a/SCHEMA.sql
++++ b/SCHEMA.sql
+@@ -171,3 +171,7 @@ BEGIN
+  RETURN NEW;
+ END $$;
+ CREATE TRIGGER purchase_tier_guard BEFORE UPDATE OF status ON "Purchase" FOR EACH ROW EXECUTE FUNCTION purchase_tier_guard();
++
++-- v6b additive disposable POC schema, applied after the v6a schema.
++-- The second approver may countersign pending-second purchases.
++-- v6b uses the same operation name and policies as v6a; only the handler changes.
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index 9702a45..888b8f4 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -21,8 +21,8 @@ const opApprove = "bulk-approve.v3"
+ // only moves them to pending-second, and they stay listed in approvedIds.
+ const secondApprovalOver = 50000
+ 
+-func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
+-	approve := func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
++	func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
++	approveHandler := func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
+ 		for _, id := range ids {
+ 			if strings.ContainsRune(id, 0) {
+ 				return protocol.Result{}, false, &protocol.Rejection{Status: 404}
+@@ -127,5 +127,7 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		}
+ 		return result, false, nil
+ 	}
+-	return protocol.Item("reopen", "requester", newReopen(pool), protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve, "/purchases/bulk-reject": newReject(pool)}, fallback)), nil
++	return protocol.Confirm("countersign", "approver", newCountersign(pool),
++		protocol.Item("reopen", "requester", newReopen(pool),
++			protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approveHandler, "/purchases/bulk-reject": newReject(pool)}, fallback))), nil
+ }

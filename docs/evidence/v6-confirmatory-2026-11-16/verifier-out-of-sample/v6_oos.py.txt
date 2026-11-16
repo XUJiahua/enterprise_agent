@@ -1,0 +1,46 @@
+"""Out-of-sample run of the frozen Verifier rules (prereg appendix D) on v6 candidates.
+Reuses research/verifier_extension_rules.py at the frozen commit unchanged."""
+import importlib.util, json, subprocess, sys, tempfile
+from pathlib import Path
+F = Path('/tmp/vrf-frozen'); C = Path(sys.argv[1]); OUT = Path(sys.argv[2])
+spec = importlib.util.spec_from_file_location('vrf', F / 'research/verifier_extension_rules.py')
+v = importlib.util.module_from_spec(spec); spec.loader.exec_module(v)
+EV = C / 'docs/evidence/v6-confirmatory-2026-11-16'
+PH = {'T1': 'benchmark/phase5b/ctl.py', 'T2': 'benchmark/phase6a/ctl.py', 'T3': 'benchmark/phase6b/ctl.py'}
+rows = []
+with tempfile.TemporaryDirectory(prefix='v6oos-') as temp:
+    temp = Path(temp)
+    for task, ctl_path in PH.items():
+        ctl = v.load_ctl(str(C / ctl_path), 'ctl_' + task)
+        for model in sorted(d for d in (EV / task).iterdir() if d.is_dir()):
+            plan = json.loads((model / 'plan.json').read_text())
+            for trial in sorted(model.glob('go-*--*')):
+                outcome = json.loads((trial / 'outcome.json').read_text())['outcome'] if (trial / 'outcome.json').exists() else None
+                if not (trial / 'evaluation.json').exists() and outcome != 'scope-violation':
+                    continue  # unmeasured / budget-exceeded without candidate
+                checkout, base, note = v.restore(trial, plan, ctl, temp / task)
+                res = v.run(F / 'bin/appctl', 'extensions', '--root', checkout, '--base', base, check=False)
+                rep = json.loads(res.stdout)
+                if res.returncode not in (0, 1) or 'error' in rep: raise RuntimeError((trial, res.stdout, res.stderr))
+                t = v.truth(trial)
+                rows.append({'task': task, 'model': model.name, 'trial': trial.name, 'cell': trial.name.split('--')[0],
+                             'reconstruction': note, **t, 'rules': sorted({f['rule'] for f in rep['findings']}), 'findings': rep['findings']})
+silent = lambda r: bool(r['explicit_passed'] and not r['passed'])
+union = lambda r: bool(r['rules'])
+c = {'TP': 0, 'FP': 0, 'FN': 0, 'TN': 0}
+for r in rows: c[('T' if union(r) == (not r['passed']) else 'F') + ('P' if union(r) else 'N')] += 1
+by_rule = {rule: {'vs_targeted_frozen_result': v.confusion(rows, rule, lambda r, rule=rule: v.failed_target(rule, r)),
+                  'silent_failures_caught': sum(rule in r['rules'] for r in rows if silent(r))} for rule in v.RULES}
+groups = {}
+for task in PH:
+    for cell in ('go-manual', 'go-action'):
+        sub = [r for r in rows if r['task'] == task and r['cell'] == cell]
+        groups[task + '/' + cell] = {'trials': len(sub), 'failed': sum(not r['passed'] for r in sub), 'silent': sum(map(silent, sub)),
+            'silent_caught': sum(union(r) for r in sub if silent(r)), 'flagged_passed': sum(union(r) for r in sub if r['passed'])}
+summary = {'kind': 'out-of-sample-verifier-interception', 'frozen_verifier_commit': '4e286c9f256c29b98d7684156ad5c28c99dd3d03',
+           'trials': len(rows), 'silent_failures': sum(map(silent, rows)), 'silent_caught': sum(union(r) for r in rows if silent(r)),
+           'any_rule_vs_any_frozen_failure': c, 'rules': by_rule, 'groups': groups,
+           'false_positives': [{k: r[k] for k in ('task', 'model', 'trial', 'rules')} for r in rows if r['passed'] and union(r)]}
+OUT.mkdir(parents=True, exist_ok=True)
+(OUT / 'trials.json').write_text(json.dumps(rows, indent=1) + '\n'); (OUT / 'summary.json').write_text(json.dumps(summary, indent=1) + '\n')
+print(json.dumps({k: v_ for k, v_ in summary.items() if k != 'rules'}, indent=1))

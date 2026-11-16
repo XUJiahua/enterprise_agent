@@ -1,0 +1,11 @@
+2026/11/16 10:04:12 Action transaction failed: can't scan into dest[3] (col: approvedBy): cannot scan NULL into *string
+2026/11/16 10:04:12 Action transaction failed: ERROR: controlled phase6a write failure (SQLSTATE P0001)
+2026/11/16 10:04:12 Action transaction failed: ERROR: controlled phase6a write failure (SQLSTATE P0001)
+2026/11/16 10:04:12 Action transaction failed: can't scan into dest[3] (col: approvedBy): cannot scan NULL into *string
+2026/11/16 10:04:13 Action transaction failed: ERROR: controlled phase6a write failure (SQLSTATE P0001)
+2026/11/16 10:04:13 Action transaction failed: ERROR: controlled phase6a write failure (SQLSTATE P0001)
+2026/11/16 10:04:13 Action transaction failed: ERROR: controlled phase6a write failure (SQLSTATE P0001)
+2026/11/16 10:04:14 Action transaction failed: ERROR: controlled phase6a write failure (SQLSTATE P0001)
+2026/11/16 10:04:14 Action transaction failed: ERROR: controlled phase6a write failure (SQLSTATE P0001)
+2026/11/16 10:04:17 Action transaction failed: ERROR: controlled phase6a write failure (SQLSTATE P0001)
+2026/11/16 10:04:17 Action transaction failed: ERROR: controlled phase6a write failure (SQLSTATE P0001)

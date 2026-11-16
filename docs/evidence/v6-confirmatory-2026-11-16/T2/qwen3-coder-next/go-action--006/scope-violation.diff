@@ -1,0 +1,56 @@
+diff --git a/SCHEMA.sql b/SCHEMA.sql
+index 216f09d..903389c 100644
+--- a/SCHEMA.sql
++++ b/SCHEMA.sql
+@@ -31,7 +31,7 @@ CREATE UNIQUE INDEX purchase_tenant_id_unique ON "Purchase" ("tenantId", id);
+ CREATE TABLE "ActionRequest" (
+   "tenantId" text NOT NULL,
+   "actorId" text NOT NULL,
+-  operation text NOT NULL CHECK (operation='bulk-approve.v3'),
++  operation text NOT NULL CHECK (operation IN ('bulk-approve.v3','bulk-reject.v4','reopen.v5','countersign.v6')),
+   key text NOT NULL CHECK (length(key) BETWEEN 1 AND 128),
+   "requestHash" text NOT NULL CHECK ("requestHash" ~ '^[0-9a-f]{64}$'),
+   response jsonb NOT NULL,
+@@ -42,10 +42,10 @@ CREATE TABLE "ApprovalAudit" (
+   "tenantId" text NOT NULL,
+   "purchaseId" text NOT NULL,
+   "approvedBy" text NOT NULL,
+-  operation text NOT NULL CHECK (operation='bulk-approve.v3'),
++  operation text NOT NULL CHECK (operation IN ('bulk-approve.v3','bulk-reject.v4','reopen.v5','countersign.v6')),
+   "idempotencyKey" text NOT NULL,
+-  "fromStatus" text NOT NULL CHECK ("fromStatus"='submitted'),
+-  "toStatus" text NOT NULL CHECK ("toStatus"='approved'),
++  "fromStatus" text NOT NULL CHECK ("fromStatus" IN ('submitted','rejected','pending-second')),
++  "toStatus" text NOT NULL CHECK ("toStatus" IN ('approved','rejected','submitted','pending-second')),
+   "createdAt" timestamptz NOT NULL DEFAULT now(),
+   PRIMARY KEY ("tenantId","purchaseId"),
+   FOREIGN KEY ("tenantId","purchaseId") REFERENCES "Purchase" ("tenantId",id),
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index 05a1474..46184ca 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -43,5 +43,12 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		}
+ 		return protocol.ItemResult{ID: done[0], Status: reopenOp.To}, replayed, nil
+ 	}
+-	return protocol.Item("reopen", "requester", reopen, protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": batch(executor, approveOp), "/purchases/bulk-reject": batch(executor, rejectOp)}, fallback)), nil
++	countersign := func(ctx context.Context, u app.Identity, key, id string, amount int) (protocol.ItemResult, bool, error) {
++		done, replayed, err := executor.Run(ctx, u, countersignOp, key, action.Request{IDs: []string{id}, Amount: amount})
++		if err != nil {
++			return protocol.ItemResult{}, false, adapt(err)
++		}
++		return protocol.ItemResult{ID: done[0], Status: countersignOp.To}, replayed, nil
++	}
++	return protocol.Confirm("countersign", "approver", countersign, protocol.Item("reopen", "requester", reopen, protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": batch(executor, approveOp), "/purchases/bulk-reject": batch(executor, rejectOp)}, fallback))), nil
+ }
+diff --git a/internal/candidate/operations.go b/internal/candidate/operations.go
+index f9c0953..b73d0b2 100644
+--- a/internal/candidate/operations.go
++++ b/internal/candidate/operations.go
+@@ -10,4 +10,6 @@ var (
+ 		From: "submitted", To: "rejected", Field: "rejectedIds", Event: "purchase.rejected"}
+ 	reopenOp = action.Operation{Name: "reopen.v5", Role: "requester", Own: true,
+ 		From: "rejected", To: "submitted", Event: "purchase.reopened"}
++	countersignOp = action.Operation{Name: "countersign.v6", Role: "approver", Own: false,
++		From: "pending-second", To: "approved", Confirm: true, Field: "", Event: action.NoEvent}
+ )

@@ -1,0 +1,36 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index cf92f72..0fe48ea 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -109,5 +109,6 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		return result, false, nil
+ 	}
+ 	batches := protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve, "/purchases/bulk-reject": newReject(pool)}, fallback)
+-	return protocol.Item("reopen", "requester", newReopen(pool), batches), nil
++	reassign := protocol.Assign("/purchases/bulk-reassign", newReassign(pool), batches)
++	return protocol.Item("reopen", "requester", newReopen(pool), reassign), nil
+ }
+diff --git a/internal/ledger/ledger.go b/internal/ledger/ledger.go
+index 3f0c088..27c11db 100644
+--- a/internal/ledger/ledger.go
++++ b/internal/ledger/ledger.go
+@@ -16,7 +16,8 @@ import (
+ 
+ // Fingerprint is the request digest shared by every Action operation: the
+ // operation name is the domain separator, IDs are length-prefixed and sorted.
+-func Fingerprint(operation string, ids []string) string {
++// For assign operations, the assignee is appended to the domain.
++func Fingerprint(operation string, ids []string, assignee ...string) string {
+ 	sorted := append([]string(nil), ids...)
+ 	sort.Strings(sorted)
+ 	h := sha256.New()
+@@ -24,6 +25,9 @@ func Fingerprint(operation string, ids []string) string {
+ 	for _, id := range sorted {
+ 		fmt.Fprintf(h, "%d:%s", len(id), id)
+ 	}
++	if len(assignee) > 0 {
++		fmt.Fprint(h, "\n"+assignee[0])
++	}
+ 	return hex.EncodeToString(h.Sum(nil))
+ }
+ 

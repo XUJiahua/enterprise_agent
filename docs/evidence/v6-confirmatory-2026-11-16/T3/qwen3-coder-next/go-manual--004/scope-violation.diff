@@ -1,0 +1,63 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index cf92f72..8110c83 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -108,6 +108,10 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		}
+ 		return result, false, nil
+ 	}
+-	batches := protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve, "/purchases/bulk-reject": newReject(pool)}, fallback)
+-	return protocol.Item("reopen", "requester", newReopen(pool), batches), nil
++	batches := protocol.HTTP(protocol.Routes{
++		"/purchases/bulk-approve": approve,
++		"/purchases/bulk-reject":  newReject(pool),
++	}, fallback)
++	reassign := protocol.Assign("/purchases/bulk-reassign", newReassign(pool), fallback)
++	return protocol.Item("reopen", "requester", newReopen(pool), protocol.RoutesHandler{reassign, batches}), nil
+ }
+diff --git a/internal/ledger/ledger.go b/internal/ledger/ledger.go
+index 3f0c088..0ac7266 100644
+--- a/internal/ledger/ledger.go
++++ b/internal/ledger/ledger.go
+@@ -16,13 +16,21 @@ import (
+ 
+ // Fingerprint is the request digest shared by every Action operation: the
+ // operation name is the domain separator, IDs are length-prefixed and sorted.
+-func Fingerprint(operation string, ids []string) string {
+-	sorted := append([]string(nil), ids...)
+-	sort.Strings(sorted)
++// For operations with an additional parameter (e.g., assignee), include it after IDs.
++func Fingerprint(operation string, params ...any) string {
+ 	h := sha256.New()
+ 	fmt.Fprint(h, operation, "\n")
+-	for _, id := range sorted {
+-		fmt.Fprintf(h, "%d:%s", len(id), id)
++	for _, p := range params {
++		switch v := p.(type) {
++		case string:
++			fmt.Fprintf(h, "%d:%s", len(v), v)
++		case []string:
++			sorted := append([]string(nil), v...)
++			sort.Strings(sorted)
++			for _, s := range sorted {
++				fmt.Fprintf(h, "%d:%s", len(s), s)
++			}
++		}
+ 	}
+ 	return hex.EncodeToString(h.Sum(nil))
+ }
+diff --git a/internal/protocol/protocol.go b/internal/protocol/protocol.go
+index 1c0c09c..d858a53 100644
+--- a/internal/protocol/protocol.go
++++ b/internal/protocol/protocol.go
+@@ -139,7 +139,9 @@ type AssignResult struct {
+ }
+ 
+ func (r AssignResult) MarshalJSON() ([]byte, error) {
+-	return json.Marshal(map[string]any{r.Field: r.IDs, "assignee": r.Assignee})
++	ids := append([]string(nil), r.IDs...)
++	sort.Strings(ids)
++	return json.Marshal(map[string]any{r.Field: ids, "assignee": r.Assignee})
+ }
+ 
+ // AssignHandler receives an authenticated approver, one valid Idempotency-Key,
