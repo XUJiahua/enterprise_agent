@@ -81,6 +81,8 @@
 | v5b Kiro 队列（2026-11-15） | Event 必填（NoEvent）+ 统一拒绝线索去冲突 | 80 个；全过 manual 9/3/4/5，action 10/8/9/1 | 必填字段让 haiku/luna outbox 2/10、0/10→8/10、9/10，qwen 改为主动选 NoEvent；opus manual 统一拒绝 0→10/10。见 [v5b](phase5b-kiro-cohort-001-results.md)；**全部实验汇总见 [experiment-summary-2026-11-15.md](experiment-summary-2026-11-15.md)** |
 | **v6 确认性（预注册，2026-11-16）** | T1 reopen / T2 countersign / T3 reassign × 4 模型 × 10 块；网络受限 | 240 个；115 个可配对块 | H1、H2、H3 均成立（Holm）；A 持平；需要声明的事件字段 action 0.39；Verifier 样本外 FP 11 / FN 38。见 [v6 结果](v6-confirmatory-results.md) |
 | **v7 确认性（预注册，私有 Oracle，2026-11-16）** | 2 个未公开任务 × 3 组（手写 / 手写 + 目录文档 / 内核按目录执行）× 4 模型 × 10 块；生成与验收分主机 | 240 个；A：55% / 76% / 99% | H1、H2、H3 均成立；credit/正确 2.32 → 0.81；手写组 double_apply 8 个 trial，opdef 组 0；Verifier 样本外误拦 0/184。见 [v7 结果](v7-confirmatory-results.md) |
+| **v8b 确认性（预注册，2026-11-17）** | 3 个更开放的未公开任务 × manual/given × 3 模型 × 8 块 | 144 个；A：46% → 97% | H1 37:0，p≈7×10⁻¹²；每个正确结果的 credit 4.51 → 1.16。见 [v8b](v8b-confirmatory-results.md) |
+| **v8a 确认性（预注册，两阶段，2026-11-17）** | 2 个未公开任务 × manual/given/drafted/drafted-review × 3 模型 | 288 个；A：60/98/75/92% | H1（drafted-review 不劣于 given）不成立，差 −7.3 pp；H2、H3 成立；错误全部在 event 字段。见 [v8a](v8a-confirmatory-results.md) |
 
 已完成真实生成合计为 3 + 9 + 4 = 16 个候选；条件不同，**不能合并计算成一个统一处理条件的成功率**。早期 9 个 trial 的环境阻塞计划仍保留为未测量，不是 0/9 通过。
 

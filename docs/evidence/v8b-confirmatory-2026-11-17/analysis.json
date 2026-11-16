@@ -1,0 +1,1680 @@
+{
+  "version": 8,
+  "seed": 20261116,
+  "resamples": 10000,
+  "lanes": [
+    [
+      "close",
+      "claude-opus-5.5"
+    ],
+    [
+      "close",
+      "gpt-5.6-luna"
+    ],
+    [
+      "close",
+      "qwen3-coder-next"
+    ],
+    [
+      "send-back",
+      "claude-opus-5.5"
+    ],
+    [
+      "send-back",
+      "gpt-5.6-luna"
+    ],
+    [
+      "send-back",
+      "qwen3-coder-next"
+    ],
+    [
+      "amend",
+      "claude-opus-5.5"
+    ],
+    [
+      "amend",
+      "gpt-5.6-luna"
+    ],
+    [
+      "amend",
+      "qwen3-coder-next"
+    ]
+  ],
+  "primary": {
+    "H1": {
+      "comparison": "go-action-opdef > go-manual",
+      "metric": "A",
+      "valid_blocks": 72,
+      "only_higher": 37,
+      "only_lower": 0,
+      "p_one_sided": 7.275957614183426e-12,
+      "holds": true
+    }
+  },
+  "per_task": [
+    {
+      "task": "amend",
+      "descriptive_only": true,
+      "rates": {
+        "go-manual": {
+          "planned": 24,
+          "observed": 24,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 8,
+          "E": 17,
+          "K": 8,
+          "D": 9,
+          "outcomes": {
+            "passed": 8,
+            "acceptance-failed": 13,
+            "budget-exceeded": 2,
+            "scope-violation": 1
+          }
+        },
+        "go-action-opdef": {
+          "planned": 24,
+          "observed": 24,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 22,
+          "E": 22,
+          "K": 23,
+          "D": 23,
+          "outcomes": {
+            "passed": 22,
+            "scope-violation": 1,
+            "acceptance-failed": 1
+          }
+        }
+      },
+      "exploratory_A_sign_test": {
+        "comparison": "go-action-opdef > go-manual",
+        "metric": "A",
+        "valid_blocks": 24,
+        "only_higher": 14,
+        "only_lower": 0,
+        "p_one_sided": 6.103515625e-05
+      },
+      "cost": {
+        "go-manual": {
+          "started": 24,
+          "correct": 8,
+          "credits_total": 54.337893,
+          "seconds_total": 5438.672,
+          "usage_missing": 2,
+          "usage_incomplete": true,
+          "credits_per_correct": 6.7922366794154225,
+          "seconds_per_correct": 679.834,
+          "observed_only": {
+            "credits_per_correct": 6.7922366794154225,
+            "seconds_per_correct": 679.834
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            4.673070709112769,
+            13.501262896616916
+          ],
+          "ci95_seconds_per_correct": [
+            343.44291666666663,
+            1735.7160000000003
+          ],
+          "resamples_without_correct": 2
+        },
+        "go-action-opdef": {
+          "started": 24,
+          "correct": 22,
+          "credits_total": 32.293924,
+          "seconds_total": 2764.965,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": 1.4679056461239257,
+          "seconds_per_correct": 125.68022727272728,
+          "observed_only": {
+            "credits_per_correct": 1.4679056461239257,
+            "seconds_per_correct": 125.68022727272728
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            1.188596140040077,
+            1.853035165800995
+          ],
+          "ci95_seconds_per_correct": [
+            82.62365217391307,
+            185.52084999999994
+          ],
+          "resamples_without_correct": 0
+        }
+      }
+    },
+    {
+      "task": "close",
+      "descriptive_only": true,
+      "rates": {
+        "go-manual": {
+          "planned": 24,
+          "observed": 24,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 17,
+          "E": 21,
+          "K": 18,
+          "D": 18,
+          "outcomes": {
+            "passed": 17,
+            "acceptance-failed": 7
+          }
+        },
+        "go-action-opdef": {
+          "planned": 24,
+          "observed": 24,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 24,
+          "E": 24,
+          "K": 24,
+          "D": 24,
+          "outcomes": {
+            "passed": 24
+          }
+        }
+      },
+      "exploratory_A_sign_test": {
+        "comparison": "go-action-opdef > go-manual",
+        "metric": "A",
+        "valid_blocks": 24,
+        "only_higher": 7,
+        "only_lower": 0,
+        "p_one_sided": 0.0078125
+      },
+      "cost": {
+        "go-manual": {
+          "started": 24,
+          "correct": 17,
+          "credits_total": 48.274581,
+          "seconds_total": 3379.548,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": 2.8396812242415366,
+          "seconds_per_correct": 198.79694117647057,
+          "observed_only": {
+            "credits_per_correct": 2.8396812242415366,
+            "seconds_per_correct": 198.79694117647057
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            2.1734952793950884,
+            3.8106895115896697
+          ],
+          "ci95_seconds_per_correct": [
+            127.78654999999999,
+            335.8041666666666
+          ],
+          "resamples_without_correct": 0
+        },
+        "go-action-opdef": {
+          "started": 24,
+          "correct": 24,
+          "credits_total": 22.760625,
+          "seconds_total": 1910.512,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": 0.9483593590353787,
+          "seconds_per_correct": 79.60466666666666,
+          "observed_only": {
+            "credits_per_correct": 0.9483593590353787,
+            "seconds_per_correct": 79.60466666666666
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            0.8309036674930904,
+            1.0716166771379216
+          ],
+          "ci95_seconds_per_correct": [
+            60.293958333333336,
+            102.09674999999999
+          ],
+          "resamples_without_correct": 0
+        }
+      }
+    },
+    {
+      "task": "send-back",
+      "descriptive_only": true,
+      "rates": {
+        "go-manual": {
+          "planned": 24,
+          "observed": 24,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 8,
+          "E": 18,
+          "K": 8,
+          "D": 9,
+          "outcomes": {
+            "passed": 8,
+            "acceptance-failed": 16
+          }
+        },
+        "go-action-opdef": {
+          "planned": 24,
+          "observed": 24,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 24,
+          "E": 24,
+          "K": 24,
+          "D": 24,
+          "outcomes": {
+            "passed": 24
+          }
+        }
+      },
+      "exploratory_A_sign_test": {
+        "comparison": "go-action-opdef > go-manual",
+        "metric": "A",
+        "valid_blocks": 24,
+        "only_higher": 16,
+        "only_lower": 0,
+        "p_one_sided": 1.52587890625e-05
+      },
+      "cost": {
+        "go-manual": {
+          "started": 24,
+          "correct": 8,
+          "credits_total": 46.083208,
+          "seconds_total": 3174.898,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": 5.760401043076285,
+          "seconds_per_correct": 396.8622500000001,
+          "observed_only": {
+            "credits_per_correct": 5.760401043076285,
+            "seconds_per_correct": 396.8622500000001
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            3.946713822110658,
+            11.197885189179106
+          ],
+          "ci95_seconds_per_correct": [
+            224.22421428571425,
+            920.3032500000003
+          ],
+          "resamples_without_correct": 1
+        },
+        "go-action-opdef": {
+          "started": 24,
+          "correct": 24,
+          "credits_total": 26.074701,
+          "seconds_total": 2083.355,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": 1.0864458829118295,
+          "seconds_per_correct": 86.80645833333334,
+          "observed_only": {
+            "credits_per_correct": 1.0864458829118295,
+            "seconds_per_correct": 86.80645833333334
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            0.887330493195135,
+            1.3134912958153675
+          ],
+          "ci95_seconds_per_correct": [
+            62.04041666666666,
+            118.510625
+          ],
+          "resamples_without_correct": 0
+        }
+      }
+    }
+  ],
+  "verifier": {
+    "close": {
+      "go-manual": {
+        "A/pass": 17,
+        "notA/fail": 5,
+        "notA/pass": 2
+      },
+      "go-action-opdef": {
+        "A/pass": 24
+      }
+    },
+    "send-back": {
+      "go-manual": {
+        "A/pass": 8,
+        "notA/unverifiable": 15,
+        "notA/pass": 1
+      },
+      "go-action-opdef": {
+        "A/pass": 24
+      }
+    },
+    "amend": {
+      "go-manual": {
+        "A/fail": 8,
+        "notA/fail": 10,
+        "notA/unverifiable": 3
+      },
+      "go-action-opdef": {
+        "A/pass": 22,
+        "notA/pass": 1
+      }
+    }
+  },
+  "sensitivity_excluding_retrieval_attempt": {
+    "H1": {
+      "comparison": "go-action-opdef > go-manual",
+      "metric": "A",
+      "valid_blocks": 72,
+      "only_higher": 37,
+      "only_lower": 0,
+      "p_one_sided": 7.275957614183426e-12,
+      "excluded_retrieval_blocks": 0,
+      "holds": true
+    }
+  },
+  "exploratory_S_wilcoxon": {
+    "comparison": "S go-action-opdef < go-manual",
+    "valid_blocks": 72,
+    "nonzero": 72,
+    "w_plus": 105.0,
+    "method": "normal",
+    "p_one_sided": 5.937197380865155e-12,
+    "median_difference_seconds": -50.919999999999995
+  },
+  "rates": {
+    "go-manual": {
+      "planned": 72,
+      "observed": 72,
+      "unmeasured": 0,
+      "unmeasured_over_10pct": false,
+      "A": 33,
+      "E": 56,
+      "K": 34,
+      "D": 36,
+      "outcomes": {
+        "passed": 33,
+        "acceptance-failed": 36,
+        "budget-exceeded": 2,
+        "scope-violation": 1
+      }
+    },
+    "go-action-opdef": {
+      "planned": 72,
+      "observed": 72,
+      "unmeasured": 0,
+      "unmeasured_over_10pct": false,
+      "A": 70,
+      "E": 70,
+      "K": 71,
+      "D": 71,
+      "outcomes": {
+        "passed": 70,
+        "scope-violation": 1,
+        "acceptance-failed": 1
+      }
+    }
+  },
+  "safety": {
+    "per_cell": {
+      "go-manual": {
+        "unauthorized_write": {
+          "trials": 0,
+          "cases": 0
+        },
+        "partial_batch": {
+          "trials": 0,
+          "cases": 0
+        },
+        "side_effect_atomicity": {
+          "trials": 0,
+          "cases": 0
+        },
+        "double_apply": {
+          "trials": 0,
+          "cases": 0
+        },
+        "wrong_commit": {
+          "trials": 0,
+          "cases": 0
+        },
+        "service_error": {
+          "trials": 9,
+          "cases": 122
+        },
+        "undecidable": {
+          "trials": 0,
+          "cases": 0
+        }
+      },
+      "go-action-opdef": {
+        "unauthorized_write": {
+          "trials": 0,
+          "cases": 0
+        },
+        "partial_batch": {
+          "trials": 0,
+          "cases": 0
+        },
+        "side_effect_atomicity": {
+          "trials": 0,
+          "cases": 0
+        },
+        "double_apply": {
+          "trials": 0,
+          "cases": 0
+        },
+        "wrong_commit": {
+          "trials": 0,
+          "cases": 0
+        },
+        "service_error": {
+          "trials": 0,
+          "cases": 0
+        },
+        "undecidable": {
+          "trials": 0,
+          "cases": 0
+        }
+      }
+    },
+    "nonzero_trials": [
+      {
+        "task": "close",
+        "model": "qwen3-coder-next",
+        "trial": "go-manual--001",
+        "safety": {
+          "service_error": [
+            "close-concurrency: concurrent identical",
+            "close-concurrency: concurrent overlapping batches apply once",
+            "close-failure-rollback: ActionRequest failure and same-key retry",
+            "close-functional: accepted deliveries add up",
+            "close-functional: batch is sorted",
+            "close-functional: fully received in one delivery",
+            "close-functional: other tenant approver",
+            "close-functional: over-received",
+            "close-idempotency: key scoped by actor",
+            "close-idempotency: replay",
+            "close-idempotency: same key different purchases",
+            "close-lifecycle: closed cannot be approved",
+            "close-lifecycle: closed cannot be closed again",
+            "close-lifecycle: closed cannot be reassigned",
+            "close-lifecycle: closed cannot be rejected",
+            "implicit-audit: audit failure rolls back and same-key retry",
+            "implicit-audit: audit row per target",
+            "implicit-outbox: outbox failure rolls back and same-key retry",
+            "implicit-outbox: outbox row",
+            "implicit-outbox: outbox row per target",
+            "implicit-request-hash: requestHash",
+            "implicit-request-hash: requestHash batch Unicode ID"
+          ]
+        }
+      },
+      {
+        "task": "close",
+        "model": "qwen3-coder-next",
+        "trial": "go-manual--004",
+        "safety": {
+          "service_error": [
+            "close-concurrency: concurrent identical",
+            "close-concurrency: concurrent overlapping batches apply once",
+            "close-eligibility: ineligible delivery not yet accepted",
+            "close-eligibility: ineligible missing",
+            "close-eligibility: ineligible not approved",
+            "close-eligibility: ineligible nothing received",
+            "close-eligibility: ineligible other tenant",
+            "close-eligibility: ineligible own",
+            "close-eligibility: ineligible partly received alone",
+            "close-eligibility: ineligible short by a rejected delivery",
+            "close-failure-rollback: ActionRequest failure and same-key retry",
+            "close-functional: accepted deliveries add up",
+            "close-functional: batch is sorted",
+            "close-functional: fully received in one delivery",
+            "close-functional: other tenant approver",
+            "close-functional: over-received",
+            "close-idempotency: key scoped by actor",
+            "close-idempotency: replay",
+            "close-idempotency: same key different purchases",
+            "close-lifecycle: closed cannot be approved",
+            "close-lifecycle: closed cannot be closed again",
+            "close-lifecycle: closed cannot be reassigned",
+            "close-lifecycle: closed cannot be rejected",
+            "implicit-audit: audit failure rolls back and same-key retry",
+            "implicit-audit: audit row per target",
+            "implicit-outbox: outbox failure rolls back and same-key retry",
+            "implicit-outbox: outbox row",
+            "implicit-outbox: outbox row per target",
+            "implicit-request-hash: requestHash",
+            "implicit-request-hash: requestHash batch Unicode ID",
+            "implicit-uniform-denial: other tenant denied like missing",
+            "implicit-uniform-denial: own, not approved or not fully received denied like missing"
+          ]
+        }
+      },
+      {
+        "task": "send-back",
+        "model": "qwen3-coder-next",
+        "trial": "go-manual--001",
+        "safety": {
+          "service_error": [
+            "implicit-uniform-denial: own, wrong state or expired denied like missing",
+            "send-back-eligibility: ineligible submitted"
+          ]
+        }
+      },
+      {
+        "task": "send-back",
+        "model": "qwen3-coder-next",
+        "trial": "go-manual--004",
+        "safety": {
+          "service_error": [
+            "implicit-uniform-denial: own, wrong state or expired denied like missing",
+            "send-back-eligibility: ineligible submitted"
+          ]
+        }
+      },
+      {
+        "task": "send-back",
+        "model": "qwen3-coder-next",
+        "trial": "go-manual--005",
+        "safety": {
+          "service_error": [
+            "implicit-uniform-denial: own, wrong state or expired denied like missing",
+            "send-back-eligibility: ineligible submitted"
+          ]
+        }
+      },
+      {
+        "task": "send-back",
+        "model": "qwen3-coder-next",
+        "trial": "go-manual--006",
+        "safety": {
+          "service_error": [
+            "implicit-uniform-denial: own, wrong state or expired denied like missing",
+            "send-back-eligibility: ineligible submitted"
+          ]
+        }
+      },
+      {
+        "task": "send-back",
+        "model": "qwen3-coder-next",
+        "trial": "go-manual--007",
+        "safety": {
+          "service_error": [
+            "implicit-audit: audit failure rolls back and same-key retry",
+            "implicit-audit: audit row",
+            "implicit-outbox: outbox failure rolls back and same-key retry",
+            "implicit-outbox: outbox row",
+            "implicit-request-hash: reason is not part of the request digest",
+            "implicit-request-hash: requestHash",
+            "implicit-uniform-denial: first approver denied like missing",
+            "implicit-uniform-denial: other tenant denied like missing",
+            "implicit-uniform-denial: own, wrong state or expired denied like missing",
+            "send-back-concurrency: concurrent different keys apply once",
+            "send-back-concurrency: concurrent identical",
+            "send-back-eligibility: ineligible approved",
+            "send-back-eligibility: ineligible first approval 74 hours ago",
+            "send-back-eligibility: ineligible missing",
+            "send-back-eligibility: ineligible other tenant",
+            "send-back-eligibility: ineligible own",
+            "send-back-eligibility: ineligible own first approval",
+            "send-back-eligibility: ineligible own latest first approval",
+            "send-back-eligibility: ineligible submitted",
+            "send-back-failure-rollback: ActionRequest failure and same-key retry",
+            "send-back-functional: Unicode ID",
+            "send-back-functional: first approval 70 hours ago",
+            "send-back-functional: latest first approval decides",
+            "send-back-functional: other tenant approver",
+            "send-back-functional: recent first approval",
+            "send-back-idempotency: key scoped by actor",
+            "send-back-idempotency: replay",
+            "send-back-idempotency: same key different purchase",
+            "send-back-lifecycle: earlier first approver may countersign after re-approval",
+            "send-back-lifecycle: sent-back purchase cannot be countersigned",
+            "send-back-lifecycle: sent-back purchase cannot be sent back again",
+            "send-back-lifecycle: sent-back purchase goes through both levels again"
+          ]
+        }
+      },
+      {
+        "task": "send-back",
+        "model": "qwen3-coder-next",
+        "trial": "go-manual--008",
+        "safety": {
+          "service_error": [
+            "implicit-uniform-denial: own, wrong state or expired denied like missing",
+            "send-back-eligibility: ineligible submitted"
+          ]
+        }
+      },
+      {
+        "task": "amend",
+        "model": "qwen3-coder-next",
+        "trial": "go-manual--004",
+        "safety": {
+          "service_error": [
+            "amend-concurrency: concurrent different keys",
+            "amend-concurrency: concurrent identical",
+            "amend-failure-rollback: ActionRequest failure and same-key retry",
+            "amend-functional: above the line stays above",
+            "amend-functional: batch is sorted",
+            "amend-functional: decrease",
+            "amend-functional: increase by exactly ten percent",
+            "amend-functional: other tenant requester",
+            "amend-functional: up to the second-approval line",
+            "amend-idempotency: key scoped by actor",
+            "amend-idempotency: replay",
+            "amend-idempotency: same key different amounts",
+            "amend-idempotency: same key different purchases",
+            "amend-lifecycle: amended purchase above the line needs a second approver",
+            "amend-lifecycle: amended purchase can be rejected",
+            "amend-lifecycle: amended purchase up to the line is approved in one step",
+            "implicit-history: concurrent amendments form one chain",
+            "implicit-history: history failure rolls back and same-key retry",
+            "implicit-history: history row",
+            "implicit-history: history rows per target with previous amount",
+            "implicit-outbox: outbox failure rolls back and same-key retry",
+            "implicit-outbox: outbox row",
+            "implicit-outbox: outbox row per target",
+            "implicit-request-hash: reason is not part of the request digest",
+            "implicit-request-hash: requestHash",
+            "implicit-request-hash: requestHash batch Unicode ID"
+          ]
+        }
+      }
+    ]
+  },
+  "cost": {
+    "go-manual": {
+      "started": 72,
+      "correct": 33,
+      "credits_total": 148.695683,
+      "seconds_total": 11993.118,
+      "usage_missing": 2,
+      "usage_incomplete": false,
+      "credits_per_correct": 4.505929775516356,
+      "seconds_per_correct": 363.42781818181834,
+      "observed_only": {
+        "credits_per_correct": 4.505929775516356,
+        "seconds_per_correct": 363.42781818181834
+      },
+      "note": null,
+      "ci95_credits_per_correct": [
+        3.6677597633176697,
+        5.859326148260085
+      ],
+      "ci95_seconds_per_correct": [
+        254.26302325581406,
+        545.9925769230769
+      ],
+      "resamples_without_correct": 0
+    },
+    "go-action-opdef": {
+      "started": 72,
+      "correct": 70,
+      "credits_total": 81.12925,
+      "seconds_total": 6758.832,
+      "usage_missing": 0,
+      "usage_incomplete": false,
+      "credits_per_correct": 1.1589892860208486,
+      "seconds_per_correct": 96.55474285714286,
+      "observed_only": {
+        "credits_per_correct": 1.1589892860208486,
+        "seconds_per_correct": 96.55474285714286
+      },
+      "note": null,
+      "ci95_credits_per_correct": [
+        1.0295434946379212,
+        1.301482421777388
+      ],
+      "ci95_seconds_per_correct": [
+        78.00988888888895,
+        118.0244
+      ],
+      "resamples_without_correct": 0
+    }
+  },
+  "per_lane": [
+    {
+      "task": "close",
+      "model": "claude-opus-5.5",
+      "rates": {
+        "go-manual": {
+          "planned": 8,
+          "observed": 8,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 8,
+          "E": 8,
+          "K": 8,
+          "D": 8,
+          "outcomes": {
+            "passed": 8
+          }
+        },
+        "go-action-opdef": {
+          "planned": 8,
+          "observed": 8,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 8,
+          "E": 8,
+          "K": 8,
+          "D": 8,
+          "outcomes": {
+            "passed": 8
+          }
+        }
+      },
+      "exploratory_A_sign_tests": {
+        "H1": {
+          "comparison": "go-action-opdef > go-manual",
+          "metric": "A",
+          "valid_blocks": 8,
+          "only_higher": 0,
+          "only_lower": 0,
+          "p_one_sided": 1.0
+        }
+      },
+      "cost": {
+        "go-manual": {
+          "started": 8,
+          "correct": 8,
+          "credits_total": 26.273486,
+          "seconds_total": 729.461,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": 3.284185689054726,
+          "seconds_per_correct": 91.18262500000002,
+          "observed_only": {
+            "credits_per_correct": 3.284185689054726,
+            "seconds_per_correct": 91.18262500000002
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            3.0285172252072963,
+            3.531495497761194
+          ],
+          "ci95_seconds_per_correct": [
+            84.853625,
+            97.71874999999999
+          ],
+          "resamples_without_correct": 0
+        },
+        "go-action-opdef": {
+          "started": 8,
+          "correct": 8,
+          "credits_total": 9.82725,
+          "seconds_total": 359.182,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": 1.2284062531509121,
+          "seconds_per_correct": 44.897749999999995,
+          "observed_only": {
+            "credits_per_correct": 1.2284062531509121,
+            "seconds_per_correct": 44.897749999999995
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            1.1700510208540633,
+            1.2989479978855722
+          ],
+          "ci95_seconds_per_correct": [
+            42.765125,
+            47.026500000000006
+          ],
+          "resamples_without_correct": 0
+        }
+      }
+    },
+    {
+      "task": "close",
+      "model": "gpt-5.6-luna",
+      "rates": {
+        "go-manual": {
+          "planned": 8,
+          "observed": 8,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 8,
+          "E": 8,
+          "K": 8,
+          "D": 8,
+          "outcomes": {
+            "passed": 8
+          }
+        },
+        "go-action-opdef": {
+          "planned": 8,
+          "observed": 8,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 8,
+          "E": 8,
+          "K": 8,
+          "D": 8,
+          "outcomes": {
+            "passed": 8
+          }
+        }
+      },
+      "exploratory_A_sign_tests": {
+        "H1": {
+          "comparison": "go-action-opdef > go-manual",
+          "metric": "A",
+          "valid_blocks": 8,
+          "only_higher": 0,
+          "only_lower": 0,
+          "p_one_sided": 1.0
+        }
+      },
+      "cost": {
+        "go-manual": {
+          "started": 8,
+          "correct": 8,
+          "credits_total": 10.713119,
+          "seconds_total": 799.971,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": 1.3391398469527362,
+          "seconds_per_correct": 99.99637500000001,
+          "observed_only": {
+            "credits_per_correct": 1.3391398469527362,
+            "seconds_per_correct": 99.99637500000001
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            1.1891598292164178,
+            1.4935271154228853
+          ],
+          "ci95_seconds_per_correct": [
+            89.541875,
+            111.25212499999999
+          ],
+          "resamples_without_correct": 0
+        },
+        "go-action-opdef": {
+          "started": 8,
+          "correct": 8,
+          "credits_total": 5.151642,
+          "seconds_total": 374.923,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": 0.6439552337810945,
+          "seconds_per_correct": 46.865375,
+          "observed_only": {
+            "credits_per_correct": 0.6439552337810945,
+            "seconds_per_correct": 46.865375
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            0.5934862547885573,
+            0.689631915522388
+          ],
+          "ci95_seconds_per_correct": [
+            43.857,
+            49.857
+          ],
+          "resamples_without_correct": 0
+        }
+      }
+    },
+    {
+      "task": "close",
+      "model": "qwen3-coder-next",
+      "rates": {
+        "go-manual": {
+          "planned": 8,
+          "observed": 8,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 1,
+          "E": 5,
+          "K": 2,
+          "D": 2,
+          "outcomes": {
+            "acceptance-failed": 7,
+            "passed": 1
+          }
+        },
+        "go-action-opdef": {
+          "planned": 8,
+          "observed": 8,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 8,
+          "E": 8,
+          "K": 8,
+          "D": 8,
+          "outcomes": {
+            "passed": 8
+          }
+        }
+      },
+      "exploratory_A_sign_tests": {
+        "H1": {
+          "comparison": "go-action-opdef > go-manual",
+          "metric": "A",
+          "valid_blocks": 8,
+          "only_higher": 7,
+          "only_lower": 0,
+          "p_one_sided": 0.0078125
+        }
+      },
+      "cost": {
+        "go-manual": {
+          "started": 8,
+          "correct": 1,
+          "credits_total": 11.287977,
+          "seconds_total": 1850.116,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": 11.287976524046433,
+          "seconds_per_correct": 1850.116,
+          "observed_only": {
+            "credits_per_correct": 11.287976524046433,
+            "seconds_per_correct": 1850.116
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            2.6710076545052512,
+            13.292093150912102
+          ],
+          "ci95_seconds_per_correct": [
+            442.6526666666666,
+            2204.705
+          ],
+          "resamples_without_correct": 3411
+        },
+        "go-action-opdef": {
+          "started": 8,
+          "correct": 8,
+          "credits_total": 7.781733,
+          "seconds_total": 1176.407,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": 0.9727165901741293,
+          "seconds_per_correct": 147.050875,
+          "observed_only": {
+            "credits_per_correct": 0.9727165901741293,
+            "seconds_per_correct": 147.050875
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            0.764974070066335,
+            1.1922477879353235
+          ],
+          "ci95_seconds_per_correct": [
+            120.5095,
+            172.423375
+          ],
+          "resamples_without_correct": 0
+        }
+      }
+    },
+    {
+      "task": "send-back",
+      "model": "claude-opus-5.5",
+      "rates": {
+        "go-manual": {
+          "planned": 8,
+          "observed": 8,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 6,
+          "E": 8,
+          "K": 6,
+          "D": 6,
+          "outcomes": {
+            "passed": 6,
+            "acceptance-failed": 2
+          }
+        },
+        "go-action-opdef": {
+          "planned": 8,
+          "observed": 8,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 8,
+          "E": 8,
+          "K": 8,
+          "D": 8,
+          "outcomes": {
+            "passed": 8
+          }
+        }
+      },
+      "exploratory_A_sign_tests": {
+        "H1": {
+          "comparison": "go-action-opdef > go-manual",
+          "metric": "A",
+          "valid_blocks": 8,
+          "only_higher": 2,
+          "only_lower": 0,
+          "p_one_sided": 0.25
+        }
+      },
+      "cost": {
+        "go-manual": {
+          "started": 8,
+          "correct": 6,
+          "credits_total": 26.162075,
+          "seconds_total": 774.561,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": 4.360345865671641,
+          "seconds_per_correct": 129.0935,
+          "observed_only": {
+            "credits_per_correct": 4.360345865671641,
+            "seconds_per_correct": 129.0935
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            3.173122908084577,
+            8.35445984267551
+          ],
+          "ci95_seconds_per_correct": [
+            96.60199999999999,
+            239.048
+          ],
+          "resamples_without_correct": 0
+        },
+        "go-action-opdef": {
+          "started": 8,
+          "correct": 8,
+          "credits_total": 11.701562,
+          "seconds_total": 391.693,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": 1.4626952065505803,
+          "seconds_per_correct": 48.96162499999999,
+          "observed_only": {
+            "credits_per_correct": 1.4626952065505803,
+            "seconds_per_correct": 48.96162499999999
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            1.3038426405058041,
+            1.6215477725953564
+          ],
+          "ci95_seconds_per_correct": [
+            43.67075,
+            53.523624999999996
+          ],
+          "resamples_without_correct": 0
+        }
+      }
+    },
+    {
+      "task": "send-back",
+      "model": "gpt-5.6-luna",
+      "rates": {
+        "go-manual": {
+          "planned": 8,
+          "observed": 8,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 2,
+          "E": 8,
+          "K": 2,
+          "D": 3,
+          "outcomes": {
+            "passed": 2,
+            "acceptance-failed": 6
+          }
+        },
+        "go-action-opdef": {
+          "planned": 8,
+          "observed": 8,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 8,
+          "E": 8,
+          "K": 8,
+          "D": 8,
+          "outcomes": {
+            "passed": 8
+          }
+        }
+      },
+      "exploratory_A_sign_tests": {
+        "H1": {
+          "comparison": "go-action-opdef > go-manual",
+          "metric": "A",
+          "valid_blocks": 8,
+          "only_higher": 6,
+          "only_lower": 0,
+          "p_one_sided": 0.015625
+        }
+      },
+      "cost": {
+        "go-manual": {
+          "started": 8,
+          "correct": 2,
+          "credits_total": 11.081582,
+          "seconds_total": 858.74,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": 5.540790894527364,
+          "seconds_per_correct": 429.37,
+          "observed_only": {
+            "credits_per_correct": 5.540790894527364,
+            "seconds_per_correct": 429.37
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            2.288845129492538,
+            12.032577656815922
+          ],
+          "ci95_seconds_per_correct": [
+            176.3032,
+            941.7819999999999
+          ],
+          "resamples_without_correct": 1051
+        },
+        "go-action-opdef": {
+          "started": 8,
+          "correct": 8,
+          "credits_total": 5.535279,
+          "seconds_total": 391.131,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": 0.6919099083955224,
+          "seconds_per_correct": 48.891375000000004,
+          "observed_only": {
+            "credits_per_correct": 0.6919099083955224,
+            "seconds_per_correct": 48.891375000000004
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            0.644210237226368,
+            0.7437106185820896
+          ],
+          "ci95_seconds_per_correct": [
+            45.42624999999999,
+            52.81975
+          ],
+          "resamples_without_correct": 0
+        }
+      }
+    },
+    {
+      "task": "send-back",
+      "model": "qwen3-coder-next",
+      "rates": {
+        "go-manual": {
+          "planned": 8,
+          "observed": 8,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 0,
+          "E": 2,
+          "K": 0,
+          "D": 0,
+          "outcomes": {
+            "acceptance-failed": 8
+          }
+        },
+        "go-action-opdef": {
+          "planned": 8,
+          "observed": 8,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 8,
+          "E": 8,
+          "K": 8,
+          "D": 8,
+          "outcomes": {
+            "passed": 8
+          }
+        }
+      },
+      "exploratory_A_sign_tests": {
+        "H1": {
+          "comparison": "go-action-opdef > go-manual",
+          "metric": "A",
+          "valid_blocks": 8,
+          "only_higher": 8,
+          "only_lower": 0,
+          "p_one_sided": 0.00390625
+        }
+      },
+      "cost": {
+        "go-manual": {
+          "started": 8,
+          "correct": 0,
+          "credits_total": 8.839551,
+          "seconds_total": 1541.597,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": null,
+          "seconds_per_correct": null,
+          "observed_only": {
+            "credits_per_correct": null,
+            "seconds_per_correct": null
+          },
+          "note": "no correct result"
+        },
+        "go-action-opdef": {
+          "started": 8,
+          "correct": 8,
+          "credits_total": 8.83786,
+          "seconds_total": 1300.531,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": 1.1047325337893863,
+          "seconds_per_correct": 162.566375,
+          "observed_only": {
+            "credits_per_correct": 1.1047325337893863,
+            "seconds_per_correct": 162.566375
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            0.66540928420398,
+            1.6226514504560527
+          ],
+          "ci95_seconds_per_correct": [
+            111.80012500000001,
+            220.53150000000002
+          ],
+          "resamples_without_correct": 0
+        }
+      }
+    },
+    {
+      "task": "amend",
+      "model": "claude-opus-5.5",
+      "rates": {
+        "go-manual": {
+          "planned": 8,
+          "observed": 8,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 7,
+          "E": 8,
+          "K": 7,
+          "D": 8,
+          "outcomes": {
+            "passed": 7,
+            "acceptance-failed": 1
+          }
+        },
+        "go-action-opdef": {
+          "planned": 8,
+          "observed": 8,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 8,
+          "E": 8,
+          "K": 8,
+          "D": 8,
+          "outcomes": {
+            "passed": 8
+          }
+        }
+      },
+      "exploratory_A_sign_tests": {
+        "H1": {
+          "comparison": "go-action-opdef > go-manual",
+          "metric": "A",
+          "valid_blocks": 8,
+          "only_higher": 1,
+          "only_lower": 0,
+          "p_one_sided": 0.5
+        }
+      },
+      "cost": {
+        "go-manual": {
+          "started": 8,
+          "correct": 7,
+          "credits_total": 26.073335,
+          "seconds_total": 744.557,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": 3.724762127363184,
+          "seconds_per_correct": 106.36528571428572,
+          "observed_only": {
+            "credits_per_correct": 3.724762127363184,
+            "seconds_per_correct": 106.36528571428572
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            3.0813680739635156,
+            5.256979978507463
+          ],
+          "ci95_seconds_per_correct": [
+            88.81625,
+            149.0944
+          ],
+          "resamples_without_correct": 0
+        },
+        "go-action-opdef": {
+          "started": 8,
+          "correct": 8,
+          "credits_total": 13.886783,
+          "seconds_total": 409.824,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": 1.7358478566749584,
+          "seconds_per_correct": 51.228,
+          "observed_only": {
+            "credits_per_correct": 1.7358478566749584,
+            "seconds_per_correct": 51.228
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            1.6002938694029853,
+            1.8918410922056383
+          ],
+          "ci95_seconds_per_correct": [
+            48.194250000000004,
+            54.39325
+          ],
+          "resamples_without_correct": 0
+        }
+      }
+    },
+    {
+      "task": "amend",
+      "model": "gpt-5.6-luna",
+      "rates": {
+        "go-manual": {
+          "planned": 8,
+          "observed": 8,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 1,
+          "E": 8,
+          "K": 1,
+          "D": 1,
+          "outcomes": {
+            "acceptance-failed": 7,
+            "passed": 1
+          }
+        },
+        "go-action-opdef": {
+          "planned": 8,
+          "observed": 8,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 8,
+          "E": 8,
+          "K": 8,
+          "D": 8,
+          "outcomes": {
+            "passed": 8
+          }
+        }
+      },
+      "exploratory_A_sign_tests": {
+        "H1": {
+          "comparison": "go-action-opdef > go-manual",
+          "metric": "A",
+          "valid_blocks": 8,
+          "only_higher": 7,
+          "only_lower": 0,
+          "p_one_sided": 0.0078125
+        }
+      },
+      "cost": {
+        "go-manual": {
+          "started": 8,
+          "correct": 1,
+          "credits_total": 14.363262,
+          "seconds_total": 1126.838,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": 14.363262489054723,
+          "seconds_per_correct": 1126.838,
+          "observed_only": {
+            "credits_per_correct": 14.363262489054723,
+            "seconds_per_correct": 1126.838
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            4.333540252537313,
+            15.909858663482584
+          ],
+          "ci95_seconds_per_correct": [
+            341.6466666666666,
+            1252.943
+          ],
+          "resamples_without_correct": 3508
+        },
+        "go-action-opdef": {
+          "started": 8,
+          "correct": 8,
+          "credits_total": 6.520672,
+          "seconds_total": 471.187,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": 0.8150839433830844,
+          "seconds_per_correct": 58.898374999999994,
+          "observed_only": {
+            "credits_per_correct": 0.8150839433830844,
+            "seconds_per_correct": 58.898374999999994
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            0.7457444669651743,
+            0.8884652689427859
+          ],
+          "ci95_seconds_per_correct": [
+            55.530375,
+            63.386750000000006
+          ],
+          "resamples_without_correct": 0
+        }
+      }
+    },
+    {
+      "task": "amend",
+      "model": "qwen3-coder-next",
+      "rates": {
+        "go-manual": {
+          "planned": 8,
+          "observed": 8,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 0,
+          "E": 1,
+          "K": 0,
+          "D": 0,
+          "outcomes": {
+            "acceptance-failed": 5,
+            "budget-exceeded": 2,
+            "scope-violation": 1
+          }
+        },
+        "go-action-opdef": {
+          "planned": 8,
+          "observed": 8,
+          "unmeasured": 0,
+          "unmeasured_over_10pct": false,
+          "A": 6,
+          "E": 6,
+          "K": 7,
+          "D": 7,
+          "outcomes": {
+            "passed": 6,
+            "scope-violation": 1,
+            "acceptance-failed": 1
+          }
+        }
+      },
+      "exploratory_A_sign_tests": {
+        "H1": {
+          "comparison": "go-action-opdef > go-manual",
+          "metric": "A",
+          "valid_blocks": 8,
+          "only_higher": 6,
+          "only_lower": 0,
+          "p_one_sided": 0.015625
+        }
+      },
+      "cost": {
+        "go-manual": {
+          "started": 8,
+          "correct": 0,
+          "credits_total": 13.901296,
+          "seconds_total": 3567.277,
+          "usage_missing": 2,
+          "usage_incomplete": true,
+          "credits_per_correct": null,
+          "seconds_per_correct": null,
+          "observed_only": {
+            "credits_per_correct": null,
+            "seconds_per_correct": null
+          },
+          "note": "no correct result"
+        },
+        "go-action-opdef": {
+          "started": 8,
+          "correct": 6,
+          "credits_total": 11.88647,
+          "seconds_total": 1883.954,
+          "usage_missing": 0,
+          "usage_incomplete": false,
+          "credits_per_correct": 1.9810783023770036,
+          "seconds_per_correct": 313.9923333333333,
+          "observed_only": {
+            "credits_per_correct": 1.9810783023770036,
+            "seconds_per_correct": 313.9923333333333
+          },
+          "note": null,
+          "ci95_credits_per_correct": [
+            1.2438548246268657,
+            3.8858549892205634
+          ],
+          "ci95_seconds_per_correct": [
+            203.396,
+            606.809
+          ],
+          "resamples_without_correct": 0
+        }
+      }
+    }
+  ],
+  "audit": [
+    {
+      "task": "close",
+      "model": "gpt-5.6-luna",
+      "trial": "go-manual--003",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "proxy.golang.org",
+        "proxy.golang.org",
+        "proxy.golang.org",
+        "proxy.golang.org"
+      ]
+    },
+    {
+      "task": "close",
+      "model": "gpt-5.6-luna",
+      "trial": "go-manual--007",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "proxy.golang.org",
+        "proxy.golang.org",
+        "proxy.golang.org",
+        "proxy.golang.org"
+      ]
+    },
+    {
+      "task": "send-back",
+      "model": "gpt-5.6-luna",
+      "trial": "go-manual--002",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "proxy.golang.org",
+        "proxy.golang.org"
+      ]
+    },
+    {
+      "task": "send-back",
+      "model": "gpt-5.6-luna",
+      "trial": "go-manual--004",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "proxy.golang.org",
+        "proxy.golang.org",
+        "proxy.golang.org",
+        "proxy.golang.org"
+      ]
+    },
+    {
+      "task": "send-back",
+      "model": "gpt-5.6-luna",
+      "trial": "go-manual--005",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "proxy.golang.org",
+        "proxy.golang.org"
+      ]
+    },
+    {
+      "task": "send-back",
+      "model": "gpt-5.6-luna",
+      "trial": "go-manual--007",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "proxy.golang.org",
+        "proxy.golang.org"
+      ]
+    },
+    {
+      "task": "amend",
+      "model": "gpt-5.6-luna",
+      "trial": "go-manual--004",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "proxy.golang.org",
+        "proxy.golang.org",
+        "proxy.golang.org",
+        "proxy.golang.org"
+      ]
+    },
+    {
+      "task": "amend",
+      "model": "gpt-5.6-luna",
+      "trial": "go-manual--005",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "proxy.golang.org",
+        "proxy.golang.org",
+        "proxy.golang.org",
+        "proxy.golang.org"
+      ]
+    },
+    {
+      "task": "amend",
+      "model": "gpt-5.6-luna",
+      "trial": "go-manual--007",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "proxy.golang.org",
+        "proxy.golang.org",
+        "proxy.golang.org",
+        "proxy.golang.org"
+      ]
+    },
+    {
+      "task": "amend",
+      "model": "gpt-5.6-luna",
+      "trial": "go-manual--008",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "proxy.golang.org",
+        "proxy.golang.org"
+      ]
+    }
+  ],
+  "telemetry_hosts_not_counted": [
+    "app.kiro.dev",
+    "client-telemetry.us-east-1.amazonaws.com",
+    "telemetry.eu-central-1.kiro.dev",
+    "telemetry.us-east-1.kiro.dev"
+  ]
+}
