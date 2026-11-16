@@ -17,7 +17,8 @@ UNMEASURED = {'runtime-blocked', 'provider-error', 'protocol-error', 'infrastruc
 T1_ENFORCEMENT = {'implicit-audit': 'kernel', 'implicit-request-hash': 'kernel',
                   'implicit-uniform-denial': 'kernel', 'implicit-outbox': 'declared'}  # appendix C
 PHASE = {'T1': 'phase5b', 'T2': 'phase6a', 'T3': 'phase6b'}
-TELEMETRY = {'telemetry.eu-central-1.kiro.dev', 'client-telemetry.us-east-1.amazonaws.com'}
+TELEMETRY = {'telemetry.eu-central-1.kiro.dev', 'client-telemetry.us-east-1.amazonaws.com',
+             'telemetry.us-east-1.kiro.dev', 'app.kiro.dev'}  # appendix C, F
 RETRIEVAL = re.compile(r'kiro-cli|\bq chat\b|web_search|\bcurl\b|\bwget\b|git clone|https?://(?!127\.0\.0\.1|localhost)')
 ROOT = Path(__file__).resolve().parents[1]
 
