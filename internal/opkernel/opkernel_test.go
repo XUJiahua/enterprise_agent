@@ -249,3 +249,29 @@ func TestFingerprintMatchesLedger(t *testing.T) {
 		}
 	}
 }
+
+// Under a linguistic collation (glibc en_US, ICU) ORDER BY p.id differs from the
+// Go byte order of ids ("B2" < "a1" in bytes, "a1" < "B2" in en-US). Old column
+// values must still be paired with their own target in AssignmentHistory.
+func TestFieldUpdatePairsOldValuesByIDUnderLinguisticCollation(t *testing.T) {
+	d := open(t)
+	ctx := context.Background()
+	var icu bool
+	if err := d.admin.QueryRow(ctx, `SELECT EXISTS (SELECT 1 FROM pg_collation WHERE collname='en-US-x-icu')`).Scan(&icu); err != nil || !icu {
+		t.Skip("ICU collation en-US-x-icu not available")
+	}
+	if _, err := d.admin.Exec(ctx, `ALTER TABLE "Purchase" ALTER COLUMN id TYPE text COLLATE "en-US-x-icu"`); err != nil {
+		t.Fatal(err)
+	}
+	d.purchase("a1", "alice", 9, "submitted")
+	d.purchase("B2", "alice", 9, "submitted")
+	if _, err := d.admin.Exec(ctx, `UPDATE "Purchase" SET "assigneeId"=CASE id WHEN 'a1' THEN 'carol' ELSE 'hana' END WHERE id IN ('a1','B2')`); err != nil {
+		t.Fatal(err)
+	}
+	if _, _, err := d.exec.Run(ctx, bob, opdef.BulkReassign, "kc", Request{IDs: []string{"a1", "B2"}, Value: "carol"}); err != nil {
+		t.Fatal(err)
+	}
+	d.want("history pairs old value with its own target",
+		d.rows(`SELECT "purchaseId","fromAssignee","toAssignee" FROM "AssignmentHistory" WHERE "idempotencyKey"='kc' ORDER BY "purchaseId" COLLATE "C"`),
+		"B2 hana carol", "a1 carol carol")
+}
