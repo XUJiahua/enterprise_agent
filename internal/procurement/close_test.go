@@ -166,7 +166,10 @@ func TestCloseBeforeReceiveRefusesReceipt(t *testing.T) {
 		t.Fatal(err)
 	}
 	locked, release := barrier(t, procurement.CloseRef)
-	closing := async(func() error { _, err := op(r, bob, procurement.CloseRef, "c", `{"ids":["p2"],"reason":"done"}`); return err })
+	closing := async(func() error {
+		_, err := op(r, bob, procurement.CloseRef, "c", `{"ids":["p2"],"reason":"done"}`)
+		return err
+	})
 	<-locked
 	receiving := async(func() error {
 		_, err := op(r, ann, procurement.ReceiveRef, "r1", `{"purchaseId":"p2","amount":50}`)
@@ -196,7 +199,10 @@ func TestReceiveBeforeCloseCountsReceipt(t *testing.T) {
 		return err
 	})
 	<-locked
-	closing := async(func() error { _, err := op(r, bob, procurement.CloseRef, "c", `{"ids":["p1"],"reason":"done"}`); return err })
+	closing := async(func() error {
+		_, err := op(r, bob, procurement.CloseRef, "c", `{"ids":["p1"],"reason":"done"}`)
+		return err
+	})
 	waitBlocked(t, d)
 	close(release)
 	if err := <-receiving; err != nil {
