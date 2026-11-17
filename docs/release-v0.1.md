@@ -8,9 +8,9 @@
 |---|---|---|
 | 操作内核契约 | `kernel/` | Principal、版本化 Definition、Input/Outcome、错误分类、请求指纹；只依赖标准库 |
 | PostgreSQL 执行 | `kernel/pg/` | `Runner.Run` 唯一受管写入口、`Read`、`Drain/Consume`、`Describe`；`schema.sql` + `inbox.sql` |
-| 采购参考应用 | `internal/procurement/`、`cmd/product` | approve@1、receive@1、close@2，通知消费者，HTTP API，golang-migrate migrations |
+| 采购参考应用 | `internal/procurement/`、`cmd/product` | create@1、approve@1、receive@1、close@2，通知消费者（独立角色），HTTP API，golang-migrate migrations；本地运行见 [getting-started](getting-started.md#运行-v01-产品cmdproduct) |
 | 开发工具 | `cmd/appctl` | `migrate up`、`describe`、`validate [--base]`、`verify --base`（含产品 migration 基线） |
-| 界面 | `apps/web/app/procurement` | 验收登记、批量关闭（必填原因）、审计、通知 |
+| 界面 | `apps/web/app/procurement` | 创建、批准、验收登记、批量关闭（必填原因）、审计、通知 |
 | 外部导入示例 | `examples/external` | 独立 module，非 owner 角色运行 |
 
 ## 在其他 Go 项目中使用
@@ -54,7 +54,8 @@ go get github.com/XUJiahua/enterprise_agent@<tag 或 commit>
 | 事件与注册消费者一致；崩溃恢复；重复消费不重复投影 | `TestRegistryMatchesEventsAndConsumers`、`TestDrainProjectsOnceAndRecovers`、`TestConcurrentDrainsProjectOnce`、`TestDrainRejectsVersionAndPayloadMismatch`；smoke 中消费者关闭→重启→再重启 |
 | 产品 migrations 从空库初始化、重复运行、dirty 拒绝、历史篡改识别 | `TestMigrateIsRepeatableAndRefusesDirty`、`TestProductMigrationsAgainstBaseline`、smoke |
 | 原 API/UI、历史回放、干净启动、一次真实扩展 | CI `runtime` ×3、`cohort-controls`、`verifier` 未改动且通过；干净浅克隆中构建、测试、`validate`、smoke 通过；close@2 变更 |
-| 浏览器 E2E | `scripts/product_browser.sh`，4 项用例 |
+| 浏览器 E2E | `scripts/product_browser.sh`，5 项用例，含创建→批准→验收→关闭→通知的完整流程 |
+| 管理员/应用/消费者角色分离 | `TestConsumerRoleSeparation`：应用角色 drain 被拒，消费者角色不能执行业务操作 |
 
 ## 已知限制
 
@@ -65,6 +66,6 @@ go get github.com/XUJiahua/enterprise_agent@<tag 或 commit>
 - `kernel.pending_tenants` 的 owner 必须是 superuser 或 BYPASSRLS 的迁移角色。
 - 单消费者进程、轮询间隔 1 秒；没有租约、Worker 池或外部投递。毒消息会在每次轮询时重新报错。
 - 跨表不变量依赖采购模块的父单锁协议（Read Committed）。新增影响金额、状态或验收的写路径必须遵守它。
-- 采购示例使用固定 demo 身份；原 `/` 页面的创建/审批仍走旧 API，旧 `internal/opkernel` 保留用于历史回放。
+- 采购示例使用固定 demo 身份。原 `/` 页面仍是三条 POC 路线的共享界面、走旧 API，未迁移；产品的完整流程在 `/procurement`。旧 `internal/opkernel` 保留用于历史回放。
 - golang-migrate 用 v4.19.1（v4.20.1 会连带升级 pgx 与 Go 版本，见 kernel.md）。
 - 第二业务域、多合法事件、多轮维护成本属于后续研究，不在 v0.1。

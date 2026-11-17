@@ -23,6 +23,14 @@
     },
     {
       "ref": {
+        "name": "procurement.create",
+        "version": 1
+      },
+      "maxTargets": 1,
+      "noEventReason": "new purchases are seen through the list; no consumer"
+    },
+    {
+      "ref": {
         "name": "procurement.receive",
         "version": 1
       },

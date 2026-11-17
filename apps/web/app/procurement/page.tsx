@@ -29,6 +29,7 @@ const identities = {
 type Actor = keyof typeof identities;
 const statusLabel = { submitted: "待审批", approved: "已批准", closed: "已关闭" };
 const operationLabel: Record<string, string> = {
+  "procurement.create": "创建",
   "procurement.approve": "批准",
   "procurement.receive": "登记验收",
   "procurement.close": "关闭",
@@ -48,6 +49,8 @@ export default function Procurement() {
   const [selected, setSelected] = useState<string[]>([]);
   const [receipt, setReceipt] = useState<Record<string, string>>({});
   const [reason, setReason] = useState("");
+  const [title, setTitle] = useState("");
+  const [amount, setAmount] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -133,6 +136,21 @@ export default function Procurement() {
       await api("operations/procurement.receive/1", { purchaseId: id, amount });
       setReceipt((v) => ({ ...v, [id]: "" }));
       return `已登记 ${id} 的验收金额 ${money(amount)}`;
+    });
+  const create = (event: React.FormEvent) => {
+    event.preventDefault();
+    return act(async () => {
+      const id = "po-" + crypto.randomUUID().slice(0, 8);
+      await api("operations/procurement.create/1", { id, title: title.trim(), amount: Number(amount) });
+      setTitle("");
+      setAmount("");
+      return `已提交采购单 ${id}`;
+    });
+  };
+  const approveOne = (id: string) =>
+    act(async () => {
+      await api("operations/procurement.approve/1", { ids: [id] });
+      return `已批准 ${id}`;
     });
   const toggle = (id: string) =>
     setSelected((v) => (v.includes(id) ? v.filter((x) => x !== id) : [...v, id]));
@@ -260,7 +278,11 @@ export default function Procurement() {
                         <span className={"status " + row.status}>{statusLabel[row.status]}</span>
                       </td>
                       <td>
-                        {current.role === "requester" && row.status === "approved" ? (
+                        {current.role === "approver" && row.status === "submitted" && row.createdBy !== actor ? (
+                          <button className="approve" disabled={busy} onClick={() => approveOne(row.id)}>
+                            批准
+                          </button>
+                        ) : current.role === "requester" && row.status === "approved" ? (
                           <span>
                             <input
                               type="number"
@@ -289,6 +311,21 @@ export default function Procurement() {
               </table>
             </div>
           </section>
+          {current.role === "requester" && (
+            <section className="create panel" aria-label="新建采购单">
+              <form onSubmit={create}>
+                <label htmlFor="title">采购项目</label>
+                <input id="title" value={title} maxLength={200} required disabled={busy}
+                  onChange={(e) => setTitle(e.target.value)} />
+                <label htmlFor="amount">申请金额</label>
+                <input id="amount" type="number" min="1" step="1" value={amount} required disabled={busy}
+                  onChange={(e) => setAmount(e.target.value)} />
+                <button className="primary" type="submit" disabled={busy}>
+                  提交采购单
+                </button>
+              </form>
+            </section>
+          )}
           <div className="workspace-grid">
             <section className="requests panel" aria-label="我的通知">
               <div className="panel-heading">

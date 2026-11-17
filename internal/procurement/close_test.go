@@ -216,7 +216,7 @@ func TestReceiveBeforeCloseCountsReceipt(t *testing.T) {
 
 func TestMigrateIsRepeatableAndRefusesDirty(t *testing.T) {
 	d, _ := setup(t)
-	if v, applied, err := procurement.Migrate(d.AdminURL); err != nil || applied || v != 5 {
+	if v, applied, err := procurement.Migrate(d.AdminURL); err != nil || applied || v != 6 {
 		t.Fatal("second run:", v, applied, err)
 	}
 	d.Exec(t, `UPDATE procurement_schema_migrations SET dirty = true`)
@@ -299,6 +299,7 @@ func itoa(n int) string { b, _ := json.Marshal(n); return string(b) }
 
 func TestCloseNotifiesCreatorOnce(t *testing.T) {
 	d, r := approved(t)
+	c := consumer(t, d)
 	ctx := context.Background()
 	for _, id := range []string{"p1", "p2"} {
 		amount := map[string]string{"p1": "900", "p2": "300"}[id]
@@ -306,14 +307,14 @@ func TestCloseNotifiesCreatorOnce(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	if n, err := r.Drain(ctx, procurement.Notifier); n != 0 || err != nil {
+	if n, err := c.Drain(ctx, procurement.Notifier); n != 0 || err != nil {
 		t.Fatal("events before close:", n, err)
 	}
 	if _, err := op(r, bob, procurement.CloseRef, "c", `{"ids":["p1","p2"],"reason":"done"}`); err != nil {
 		t.Fatal(err)
 	}
 	for i, wantN := range []int{2, 0} {
-		if n, err := r.Drain(ctx, procurement.Notifier); n != wantN || err != nil {
+		if n, err := c.Drain(ctx, procurement.Notifier); n != wantN || err != nil {
 			t.Fatalf("drain %d: %d %v", i, n, err)
 		}
 	}
@@ -328,8 +329,78 @@ func TestCloseNotifiesCreatorOnce(t *testing.T) {
 	// A closed event whose payload does not match closed@1 is reported and left pending.
 	d.Exec(t, `INSERT INTO kernel.outbox (tenant_id, actor_id, operation, version, key, event_type, event_version, target_id, payload)
 	 VALUES ('t1','bob','procurement.close',2,'c','procurement.purchase.closed',1,'p1','{"id":"p1","amount":900}')`)
-	if n, err := r.Drain(ctx, procurement.Notifier); n != 0 || err == nil || !strings.Contains(err.Error(), "payload does not match") {
+	if n, err := c.Drain(ctx, procurement.Notifier); n != 0 || err == nil || !strings.Contains(err.Error(), "payload does not match") {
 		t.Fatal(n, err)
 	}
 	want(t, "still two", d.Strings(t, `SELECT count(*) FROM procurement.notification`), "2")
+}
+
+// Role separation: the application role cannot act as the consumer, and the
+// consumer role cannot change business data.
+func TestConsumerRoleSeparation(t *testing.T) {
+	d, r := approved(t)
+	ctx := context.Background()
+	if _, err := op(r, ann, procurement.ReceiveRef, "r", `{"purchaseId":"p2","amount":300}`); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := op(r, bob, procurement.CloseRef, "c", `{"ids":["p2"],"reason":"done"}`); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := r.Drain(ctx, procurement.Notifier); err == nil || !strings.Contains(err.Error(), "permission denied") {
+		t.Fatal("application role drained:", err)
+	}
+	c := consumer(t, d)
+	if n, err := c.Drain(ctx, procurement.Notifier); n != 1 || err != nil {
+		t.Fatal(n, err)
+	}
+	if _, err := op(c, bob, procurement.ApproveRef, "x", `{"ids":["own"]}`); err == nil {
+		t.Fatal("consumer role ran a business operation")
+	}
+	want(t, "unchanged", d.Strings(t, `SELECT status FROM procurement.purchase WHERE id='own'`), "submitted")
+}
+
+func TestCreate(t *testing.T) {
+	d, r := setup(t)
+	res, err := op(r, ann, procurement.CreateRef, "n1", `{"id":"new-1","title":"  monitor ","amount":250}`)
+	if err != nil || string(res.Body) != `{"id":"new-1","status":"submitted"}` {
+		t.Fatal(res, err)
+	}
+	want(t, "row", d.Strings(t, `SELECT tenant_id, created_by, title, amount, status FROM procurement.purchase WHERE id='new-1'`), "t1 ann monitor 250 submitted")
+	for name, c := range map[string]struct {
+		p    kernel.Principal
+		raw  string
+		code kernel.Code
+	}{
+		"approver":       {bob, `{"id":"n2","title":"x","amount":1}`, kernel.Denied},
+		"taken id":       {ann, `{"id":"p1","title":"x","amount":1}`, kernel.Denied},
+		"zero amount":    {ann, `{"id":"n2","title":"x","amount":0}`, kernel.Invalid},
+		"blank title":    {ann, `{"id":"n2","title":"  ","amount":1}`, kernel.Invalid},
+		"bad id":         {ann, `{"id":"a b","title":"x","amount":1}`, kernel.Invalid},
+		"status in body": {ann, `{"id":"n2","title":"x","amount":1,"status":"approved"}`, kernel.Invalid},
+	} {
+		if _, err := op(r, c.p, procurement.CreateRef, "n2", c.raw); kernel.CodeOf(err) != c.code {
+			t.Errorf("%s: %v", name, err)
+		}
+	}
+	// Same id in another tenant is a different purchase.
+	dave := kernel.Principal{Tenant: "t2", Actor: "dave", Roles: []string{procurement.Requester}}
+	if _, err := op(r, dave, procurement.CreateRef, "n1", `{"id":"new-1","title":"y","amount":1}`); err != nil {
+		t.Fatal(err)
+	}
+	// Full lifecycle on the created purchase.
+	steps := []struct {
+		p   kernel.Principal
+		ref kernel.Ref
+		raw string
+	}{
+		{bob, procurement.ApproveRef, `{"ids":["new-1"]}`},
+		{ann, procurement.ReceiveRef, `{"purchaseId":"new-1","amount":250}`},
+		{bob, procurement.CloseRef, `{"ids":["new-1"],"reason":"done"}`},
+	}
+	for i, s := range steps {
+		if _, err := op(r, s.p, s.ref, "life-"+itoa(i), s.raw); err != nil {
+			t.Fatal(s.ref, err)
+		}
+	}
+	want(t, "closed", d.Strings(t, `SELECT tenant_id, status FROM procurement.purchase WHERE id='new-1' ORDER BY 1`), "t1 closed", "t2 submitted")
 }

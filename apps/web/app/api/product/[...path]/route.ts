@@ -7,6 +7,7 @@ const identities = new Set(["alice", "bob", "carol", "dave", "erin"]);
 const reads = new Set(["purchases", "activity"]);
 // Current operation versions; retired versions (procurement.close@1) are not proxied.
 const operations: Record<string, string> = {
+  "procurement.create": "1",
   "procurement.approve": "1",
   "procurement.receive": "1",
   "procurement.close": "2",

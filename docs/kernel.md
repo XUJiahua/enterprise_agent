@@ -9,7 +9,7 @@
 | `kernel` | `Principal`、`Ref`、`Definition`、`Input`、`Outcome`、错误分类、请求指纹 | 仅标准库 |
 | `kernel/pg` | `Runner`（唯一受管写入口）、`Session`、`Schema`（kernel.request/audit/outbox）、`CheckRuntime` | `kernel`、pgx v5 |
 | `kernel/pg/pgtest` | 测试用一次性数据库 | pgx v5 |
-| `internal/procurement` | `approve@1`、`receive@1`、`close@2`、产品 migrations 与 `Migrate`、HTTP `Handler` | `kernel`、`kernel/pg`、golang-migrate v4.19.1 |
+| `internal/procurement` | `create@1`、`approve@1`、`receive@1`、`close@2`、产品 migrations 与 `Migrate`、HTTP `Handler` | `kernel`、`kernel/pg`、golang-migrate v4.19.1 |
 | `examples/external` | 仓库外 module 导入内核的最小示例 | `kernel`、`kernel/pg` |
 
 `kernel/...` 不 import 本仓库任何其他包，`TestKernelImportsNoInternalCode` 检查这一点。
@@ -39,6 +39,7 @@
 
 | 操作 | 角色 | 规则 | 事件 |
 |---|---|---|---|
+| `procurement.create@1` | requester | 新建 submitted 采购单（客户端给定 id，同租户 id 已占用则 Denied） | 无 |
 | `procurement.approve@1` | approver | submitted → approved，不能批自己创建的 | 无（`NoEventReason`） |
 | `procurement.receive@1` | requester | 对一个 approved 采购单追加验收记录（amount > 0） | 无 |
 | `procurement.close@2` | approver | 1–100 个 approved 采购单，验收合计 ≥ 采购金额，整批 approved → closed；`reason` 必填（`close@1` 已退役） | `procurement.purchase.closed@1`，载荷 `{id, amount, received}` |
@@ -52,7 +53,7 @@
 
 **HTTP**（`bin/product`，demo 身份；独立于 `cmd/server`，因为冻结的 benchmark 会原样导出 `cmd/server/main.go`）：`POST /v1/operations/{name}/{version}`（`Idempotency-Key` 头），`GET /v1/purchases`。错误映射：Invalid 400、Denied 403、Conflict 409、Retryable 503、Internal 500；响应头 `Idempotent-Replayed`。列表只序列化 `id,title,amount,status,createdBy,received`。
 
-**迁移**：`ADMIN_DATABASE_URL=... bin/appctl migrate up`，用 golang-migrate v4.19.1（版本表 `procurement_schema_migrations`），重复运行返回 `applied:false`，dirty 拒绝继续。前置条件：集群中已有 NOLOGIN 角色 `enterprise_runtime`，应用登录角色是其成员（非 owner、NOSUPERUSER、NOBYPASSRLS）。
+**迁移**：`ADMIN_DATABASE_URL=... bin/appctl migrate up`，用 golang-migrate v4.19.1（版本表 `procurement_schema_migrations`），重复运行返回 `applied:false`，dirty 拒绝继续。前置条件：集群中已有 NOLOGIN 角色 `enterprise_runtime` 与 `enterprise_consumer`，应用和消费者登录角色分别是其成员（非 owner、NOSUPERUSER、NOBYPASSRLS）。运行步骤见 [本地运行](getting-started.md#运行-v01-产品cmdproduct)。
 `appctl verify --base REF` 额外检查 `internal/procurement/migrations`：基线中已发布文件必须逐字节一致且存在，新增文件必须排在已发布文件之后（golang-migrate 不会执行低于当前版本的文件）。version/dirty 不代表内容未漂移，也不发现线上手工 DDL。
 
 选用 v4.19.1 而不是 issue 中核对过的 v4.20.1：后者要求 pgx v5.9.2 和 go 1.25.11，会顺带升级整个仓库的 pgx 与 Go 版本；它的变更集中在其他数据库驱动和构建链，PostgreSQL 驱动只是跟随升级 pgx。需要时可单独升级。
@@ -65,6 +66,7 @@
 - `pg.New(ctx, pool, pg.Registry{Operations, Consumers})`：每个操作声明的事件必须有注册的消费者，每个消费者处理的事件必须有操作声明，否则启动失败。
 - `Runner.Drain(ctx, name)`：按租户绑定身份，每个事件一个事务。先 `INSERT kernel.inbox ... ON CONFLICT DO NOTHING` 认领，再调用 `Handle`，最后一起提交。`Handle` 失败或进程崩溃都会回滚，事件保持待处理；并发或重复投递时只有一方生效。事件版本不在消费者声明中、或载荷不符的事件会报错且不记为已处理，不阻塞其他事件。
 - `Runner.Consume`：启动时立即 drain，之后每秒一次；`cmd/product` 在同一进程以 goroutine 运行它（`PRODUCT_CONSUMER=off` 可关闭）。不做租约、Worker 池或外部投递。
+- 角色分离（migration `0006`）：消费者用独立登录角色（`enterprise_consumer` 成员，`CONSUMER_DATABASE_URL`），只能读 outbox、写 inbox 和通知、读采购单的 id/创建人；应用角色不能写 inbox/通知、不能调用 `pending_tenants`。`TestConsumerRoleSeparation` 做正反控制。
 - `procurement.notify` 把 `procurement.purchase.closed@1` 投影为 `procurement.notification`（`event_id` 唯一），收件人为采购单创建人。
 - `GET /v1/activity`：当前租户最近 50 条审计和当前用户的通知。
 

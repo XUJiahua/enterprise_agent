@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"io/fs"
+	"net/url"
 	"slices"
 	"testing"
 
@@ -11,6 +12,7 @@ import (
 	"github.com/XUJiahua/enterprise_agent/kernel"
 	"github.com/XUJiahua/enterprise_agent/kernel/pg"
 	"github.com/XUJiahua/enterprise_agent/kernel/pg/pgtest"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 var (
@@ -31,7 +33,10 @@ func setup(t *testing.T, beforeSeed ...string) (*pgtest.DB, *pg.Runner) {
 	d := pgtest.New(t)
 	d.Exec(t, `DO $$ BEGIN CREATE ROLE enterprise_runtime NOLOGIN; EXCEPTION WHEN duplicate_object THEN NULL; END $$`)
 	d.Exec(t, `GRANT enterprise_runtime TO `+pgtest.Runtime+` WITH INHERIT TRUE`)
-	if v, applied, err := procurement.Migrate(d.AdminURL); err != nil || !applied || v != 5 {
+	d.Exec(t, `DO $$ BEGIN CREATE ROLE enterprise_consumer NOLOGIN; EXCEPTION WHEN duplicate_object THEN NULL; END $$`)
+	d.Exec(t, `DO $$ BEGIN CREATE ROLE `+consumerRole+` LOGIN PASSWORD 'test-only' NOSUPERUSER NOBYPASSRLS; EXCEPTION WHEN duplicate_object THEN NULL; END $$`)
+	d.Exec(t, `GRANT enterprise_consumer TO `+consumerRole+` WITH INHERIT TRUE`)
+	if v, applied, err := procurement.Migrate(d.AdminURL); err != nil || !applied || v != 6 {
 		t.Fatal("migrate:", v, applied, err)
 	}
 	for _, sql := range beforeSeed {
@@ -51,6 +56,25 @@ func setup(t *testing.T, beforeSeed ...string) (*pgtest.DB, *pg.Runner) {
 		t.Fatal(err)
 	}
 	return d, r
+}
+
+const consumerRole = "kernel_test_consumer"
+
+// consumer opens a Runner as the consumer role, which alone may write the
+// inbox and notifications.
+func consumer(t *testing.T, d *pgtest.DB) *pg.Runner {
+	u, _ := url.Parse(d.RuntimeURL)
+	u.User = url.UserPassword(consumerRole, "test-only")
+	pool, err := pgxpool.New(context.Background(), u.String())
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(pool.Close)
+	r, err := pg.New(context.Background(), pool, procurement.Registry())
+	if err != nil {
+		t.Fatal(err)
+	}
+	return r
 }
 
 func approve(r *pg.Runner, p kernel.Principal, key, raw string) (pg.Result, error) {
