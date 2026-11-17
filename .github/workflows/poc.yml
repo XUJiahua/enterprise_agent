@@ -225,10 +225,10 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
-      - name: v0.1 kernel, kernel/pg and procurement on PostgreSQL 17 (no skips)
+      - name: v0.1 kernel, kernel/pg, procurement and appctl on PostgreSQL 17 (no skips)
         run: |
           mkdir -p reports
-          go test -race -count=1 -v ./kernel/... ./internal/procurement/ | tee reports/kernel-db.txt
+          go test -race -count=1 -v ./kernel/... ./internal/procurement/ ./cmd/appctl/ | tee reports/kernel-db.txt
           ! grep -E -- '--- SKIP' reports/kernel-db.txt
         shell: bash
       - name: External module imports the kernel and runs it as a non-owner role
@@ -242,6 +242,11 @@ jobs:
           export EXAMPLE_DATABASE_URL=postgres://kernel_test_runtime:test-only@127.0.0.1:5432/example_ext?sslmode=disable
           /tmp/external | tee -a ../../reports/kernel-db.txt | grep -q 'replayed=false'
           /tmp/external | tee -a ../../reports/kernel-db.txt | grep -q 'replayed=true'
+        shell: bash
+      - name: Product end-to-end smoke (empty DB, appctl migrate up twice, server, HTTP)
+        run: |
+          mkdir -p bin && go build -o bin/server ./cmd/server && go build -o bin/appctl ./cmd/appctl
+          scripts/product_smoke.sh 2>&1 | tee -a reports/kernel-db.txt
         shell: bash
       - uses: actions/upload-artifact@v4
         if: always()

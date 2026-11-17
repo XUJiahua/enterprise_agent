@@ -143,6 +143,32 @@ func (r *Runner) Describe() []kernel.Definition {
 	return out
 }
 
+// Read runs fn in a READ ONLY transaction bound to p, for queries that must
+// see only the principal's tenant through row level security.
+func (r *Runner) Read(ctx context.Context, p kernel.Principal, fn func(*Session) error) error {
+	if p.Tenant == "" || p.Actor == "" {
+		return kernel.Deniedf("no identity")
+	}
+	tx, err := r.pool.BeginTx(ctx, pgx.TxOptions{AccessMode: pgx.ReadOnly})
+	if err != nil {
+		return classify(err)
+	}
+	defer func() { _ = tx.Rollback(context.WithoutCancel(ctx)) }()
+	if err = bind(ctx, tx, p); err != nil {
+		return classify(err)
+	}
+	if err = fn(&Session{tx, p}); err != nil {
+		return classify(err)
+	}
+	return classify(tx.Commit(ctx))
+}
+
+func bind(ctx context.Context, tx pgx.Tx, p kernel.Principal) error {
+	_, err := tx.Exec(ctx, `SELECT set_config('app.tenant',$1,true), set_config('app.actor',$2,true), set_config('app.roles',$3,true)`,
+		p.Tenant, p.Actor, strings.Join(p.Roles, ","))
+	return err
+}
+
 // Run executes ref for principal p under idempotency key. A repeat of the same
 // key and request returns the stored result (Replayed); the same key with a
 // different request is a Conflict. If commit fails the outcome is unknown and
@@ -183,8 +209,7 @@ func (r *Runner) Run(ctx context.Context, p kernel.Principal, ref kernel.Ref, ke
 		return Result{}, classify(err)
 	}
 	defer func() { _ = tx.Rollback(context.WithoutCancel(ctx)) }()
-	if _, err = tx.Exec(ctx, `SELECT set_config('app.tenant',$1,true), set_config('app.actor',$2,true), set_config('app.roles',$3,true)`,
-		p.Tenant, p.Actor, strings.Join(p.Roles, ",")); err != nil {
+	if err = bind(ctx, tx, p); err != nil {
 		return Result{}, classify(err)
 	}
 	scope, _ := json.Marshal([]any{ref.Name, ref.Version, p.Tenant, p.Actor, key})
@@ -298,6 +323,9 @@ func isObject(b json.RawMessage) bool {
 // classify keeps kernel errors, marks transient PostgreSQL failures
 // (serialization 40001, deadlock 40P01) Retryable and everything else Internal.
 func classify(err error) error {
+	if err == nil {
+		return nil
+	}
 	var ke *kernel.Error
 	if errors.As(err, &ke) {
 		return err

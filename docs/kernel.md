@@ -1,4 +1,4 @@
-# v0.1 操作内核（M1a）
+# v0.1 操作内核（M1a + M1b）
 
 设计与里程碑见 [issue #36](https://github.com/XUJiahua/enterprise_agent/issues/36)。本文只记录已实现的部分。
 
@@ -9,7 +9,7 @@
 | `kernel` | `Principal`、`Ref`、`Definition`、`Input`、`Outcome`、错误分类、请求指纹 | 仅标准库 |
 | `kernel/pg` | `Runner`（唯一受管写入口）、`Session`、`Schema`（kernel.request/audit/outbox）、`CheckRuntime` | `kernel`、pgx v5 |
 | `kernel/pg/pgtest` | 测试用一次性数据库 | pgx v5 |
-| `internal/procurement` | `procurement.approve@1`、产品 migrations | `kernel`、`kernel/pg` |
+| `internal/procurement` | `approve@1`、`receive@1`、`close@1`、产品 migrations 与 `Migrate`、HTTP `Handler` | `kernel`、`kernel/pg`、golang-migrate v4.19.1 |
 | `examples/external` | 仓库外 module 导入内核的最小示例 | `kernel`、`kernel/pg` |
 
 `kernel/...` 不 import 本仓库任何其他包，`TestKernelImportsNoInternalCode` 检查这一点。
@@ -35,18 +35,44 @@
 - `pg.New` 和 `pg.CheckRuntime` 拒绝 superuser、BYPASSRLS、表 owner 以及未强制 RLS 的表。
 - `Session` 不暴露 pool、Begin、Commit、Rollback。这防止误用，不是对同进程 Go 代码的沙箱；直接写 SQL 的代码不会自动获得操作级约束，只受上面的数据库兜底约束。
 
+## 采购纵切（M1b）
+
+| 操作 | 角色 | 规则 | 事件 |
+|---|---|---|---|
+| `procurement.approve@1` | approver | submitted → approved，不能批自己创建的 | 无（`NoEventReason`） |
+| `procurement.receive@1` | requester | 对一个 approved 采购单追加验收记录（amount > 0） | 无 |
+| `procurement.close@1` | approver | 1–100 个 approved 采购单，验收合计 ≥ 采购金额，整批 approved → closed | `procurement.purchase.closed@1`，载荷 `{id, amount, received}` |
+
+**父单锁协议**：每个修改采购单或其验收依据的操作，先用 `lockPurchases` 按 `id COLLATE "C"` 顺序 `FOR UPDATE` 锁住全部目标采购单，再在之后的语句里读取状态与验收合计。Read Committed 下，后续语句能看到加锁前已提交的所有验收记录，而被锁采购单在此期间不会再提交新验收。验收记录只有 INSERT 授权（append-only）。以后新增影响金额、状态或验收的写路径必须遵守同一协议，或改用 Serializable 并设计重试。
+
+受控并发测试用测试钩子在持锁后暂停一方，等另一方在 `pg_stat_activity` 中出现锁等待后再放行：
+
+- `TestCloseBeforeReceiveRefusesReceipt`：关闭先持锁，验收等待后看到 closed 被拒。把 receive 改为不加锁读状态，该测试失败（验收落在已关闭单上）。
+- `TestReceiveBeforeCloseCountsReceipt`：验收先持锁，关闭等待后计入该验收并成功。把求和挪到加锁之前，该测试失败。
+
+**HTTP**（`bin/server --mode product`，demo 身份）：`POST /v1/operations/{name}/{version}`（`Idempotency-Key` 头），`GET /v1/purchases`。错误映射：Invalid 400、Denied 403、Conflict 409、Retryable 503、Internal 500；响应头 `Idempotent-Replayed`。列表只序列化 `id,title,amount,status,createdBy,received`。
+
+**迁移**：`ADMIN_DATABASE_URL=... bin/appctl migrate up`，用 golang-migrate v4.19.1（版本表 `procurement_schema_migrations`），重复运行返回 `applied:false`，dirty 拒绝继续。前置条件：集群中已有 NOLOGIN 角色 `enterprise_runtime`，应用登录角色是其成员（非 owner、NOSUPERUSER、NOBYPASSRLS）。
+`appctl verify --base REF` 额外检查 `internal/procurement/migrations`：基线中已发布文件必须逐字节一致且存在，新增文件必须排在已发布文件之后（golang-migrate 不会执行低于当前版本的文件）。version/dirty 不代表内容未漂移，也不发现线上手工 DDL。
+
+选用 v4.19.1 而不是 issue 中核对过的 v4.20.1：后者要求 pgx v5.9.2 和 go 1.25.11，会顺带升级整个仓库的 pgx 与 Go 版本；它的变更集中在其他数据库驱动和构建链，PostgreSQL 驱动只是跟随升级 pgx。需要时可单独升级。
+
+端到端：`scripts/product_smoke.sh`（空库 → 两次 migrate → 启动 server → HTTP 验收、关闭、重放、冲突、列表、outbox）。
+
 ## 运行测试
 
 ```bash
 docker run -d --name ea-pg17 -p 127.0.0.1:55417:5432 -e POSTGRES_PASSWORD=postgres postgres:17.6
 export KERNEL_TEST_ADMIN_URL='postgres://postgres:postgres@127.0.0.1:55417/postgres?sslmode=disable'
-KERNEL_REQUIRE_DB=1 go test -race -count=1 ./kernel/... ./internal/procurement/
+KERNEL_REQUIRE_DB=1 go test -race -count=1 ./kernel/... ./internal/procurement/ ./cmd/appctl/
+make build && scripts/product_smoke.sh
 ```
 
 每个测试新建并删除自己的数据库，并创建集群级角色 `kernel_test_runtime`、`enterprise_runtime`。只对可销毁的服务器使用。未设置变量时 DB 测试跳过；`KERNEL_REQUIRE_DB=1`（CI `kernel` job）下跳过视为失败。
 
-## M1a 未包含
+## 尚未包含
 
-- `procurement.approve@1` 暂用 `NoEventReason`：同库通知消费者（M2）落地时再声明版本化事件，并在注册时校验消费者。
-- migrations 采用 golang-migrate 的文件命名，测试按序直接执行；golang-migrate v4 运行器、dirty 状态与 checksum 基线检查在 M1b 加入。
-- HTTP 入口、验收记录、批量关闭与父单锁协议属于 M1b；旧 `internal/opkernel`、`cmd/server` 未改动。
+- 同库通知投影消费者、consumer inbox、事件版本/载荷校验与注册时消费者校验：M2。`close@1` 已写 outbox，目前无人消费。
+- UI 接入新 API、浏览器 E2E：M2。旧 `internal/opkernel`、guarded/baseline 模式与原 UI 未改动。
+- 验收记录的冲正/撤销：未开放 UPDATE/DELETE，需要时另做需求。
+- 直接用 SQL 写 `procurement.receipt` 的代码不受父单锁协议约束（数据库只兜底租户与列权限）。

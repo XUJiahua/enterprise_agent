@@ -12,6 +12,7 @@ import (
 
 	"github.com/XUJiahua/enterprise_agent/internal/extcheck"
 	"github.com/XUJiahua/enterprise_agent/internal/policy"
+	"github.com/XUJiahua/enterprise_agent/internal/procurement"
 )
 
 type Finding struct {
@@ -23,7 +24,7 @@ type Finding struct {
 func main() { os.Exit(run()) }
 func run() int {
 	if len(os.Args) < 2 {
-		fmt.Fprintln(os.Stderr, "usage: appctl compile|check|plan|verify|extensions|operations [--base REF] [--root DIR]")
+		fmt.Fprintln(os.Stderr, "usage: appctl compile|check|plan|verify|extensions|operations|migrate [--base REF] [--root DIR]")
 		return 1
 	}
 	command := os.Args[1]
@@ -32,6 +33,9 @@ func run() int {
 	}
 	if command == "operations" {
 		return operations(os.Args[2:])
+	}
+	if command == "migrate" {
+		return migrateProduct(os.Args[2:])
 	}
 	f := flag.NewFlagSet(command, flag.ContinueOnError)
 	root := f.String("root", ".", "application root")
@@ -126,9 +130,49 @@ func run() int {
 					findings = append(findings, Finding{"PUBLISHED_MIGRATION_CHANGED", path, "differs from trusted git baseline, even if lock was rewritten"})
 				}
 			}
+			findings = append(findings, productMigrations(*root, *base)...)
 		}
 	}
 	return report(findings)
+}
+
+// productDir holds the v0.1 golang-migrate files (NNNN_name.up.sql).
+const productDir = "internal/procurement/migrations"
+
+// productMigrations requires every product migration published at base to be
+// byte-identical and present, and every new one to sort after them, since
+// golang-migrate never applies a file below the database's current version.
+func productMigrations(root, base string) []Finding {
+	var findings []Finding
+	paths, e := git(root, "ls-tree", "-r", "--name-only", base, "--", productDir)
+	if e != nil {
+		return []Finding{{"BASE_READ", productDir, e.Error()}}
+	}
+	published := strings.Fields(string(paths))
+	latest := ""
+	for _, path := range published {
+		latest = max(latest, filepath.Base(path))
+		old, e := git(root, "show", base+":"+path)
+		if e != nil {
+			findings = append(findings, Finding{"BASE_READ", path, e.Error()})
+			continue
+		}
+		now, e := os.ReadFile(filepath.Join(root, path))
+		switch {
+		case e != nil:
+			findings = append(findings, Finding{"MIGRATION_REMOVED", path, "published migration is missing"})
+		case policy.Digest(now) != policy.Digest(old):
+			findings = append(findings, Finding{"PUBLISHED_MIGRATION_CHANGED", path, "differs from trusted git baseline"})
+		}
+	}
+	files, _ := filepath.Glob(filepath.Join(root, productDir, "*.sql"))
+	for _, file := range files {
+		path := productDir + "/" + filepath.Base(file)
+		if !slices.Contains(published, path) && filepath.Base(file) <= latest {
+			findings = append(findings, Finding{"MIGRATION_OUT_OF_ORDER", path, "new migration sorts before published " + latest})
+		}
+	}
+	return findings
 }
 func git(root string, args ...string) ([]byte, error) {
 	return exec.Command("git", append([]string{"-C", root}, args...)...).Output()
@@ -194,4 +238,24 @@ func operations(args []string) int {
 	_ = json.NewEncoder(os.Stdout).Encode(map[string]any{"ok": rep.Verdict == "pass", "catalog": rep.Catalog, "entries": rep.Entries,
 		"verdict": rep.Verdict, "findings": rep.Findings})
 	return rep.Exit()
+}
+
+// migrateProduct applies the v0.1 product migrations as the admin role in
+// ADMIN_DATABASE_URL. It refuses a dirty database.
+func migrateProduct(args []string) int {
+	url := os.Getenv("ADMIN_DATABASE_URL")
+	if len(args) != 1 || args[0] != "up" || url == "" {
+		fmt.Fprintln(os.Stderr, "usage: ADMIN_DATABASE_URL=... appctl migrate up")
+		return 2
+	}
+	version, applied, err := procurement.Migrate(url)
+	out := map[string]any{"ok": err == nil, "version": version, "applied": applied}
+	if err != nil {
+		out["error"] = err.Error()
+	}
+	_ = json.NewEncoder(os.Stdout).Encode(out)
+	if err != nil {
+		return 1
+	}
+	return 0
 }

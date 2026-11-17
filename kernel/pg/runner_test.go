@@ -349,3 +349,37 @@ func deref(s *string) string {
 	}
 	return *s
 }
+
+func TestReadIsTenantBoundAndReadOnly(t *testing.T) {
+	_, r, _ := setup(t)
+	ctx := context.Background()
+	var ids []string
+	err := r.Read(ctx, ann, func(s *pg.Session) error {
+		rows, err := s.Query(ctx, `SELECT id FROM toy.item ORDER BY id`)
+		if err != nil {
+			return err
+		}
+		defer rows.Close()
+		for rows.Next() {
+			var id string
+			if err := rows.Scan(&id); err != nil {
+				return err
+			}
+			ids = append(ids, id)
+		}
+		return rows.Err()
+	})
+	if err != nil || strings.Join(ids, ",") != "a,b,c,d" {
+		t.Fatal(ids, err)
+	}
+	err = r.Read(ctx, ann, func(s *pg.Session) error {
+		_, err := s.Exec(ctx, `UPDATE toy.item SET marked = true`)
+		return err
+	})
+	if kernel.CodeOf(err) != kernel.Internal || !strings.Contains(err.Error(), "read-only") {
+		t.Fatal("write inside Read:", err)
+	}
+	if err = r.Read(ctx, kernel.Principal{}, func(*pg.Session) error { return nil }); kernel.CodeOf(err) != kernel.Denied {
+		t.Fatal("Read without identity:", err)
+	}
+}
