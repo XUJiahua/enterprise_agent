@@ -245,7 +245,7 @@ jobs:
         shell: bash
       - name: Product end-to-end smoke (empty DB, appctl migrate up twice, server, HTTP)
         run: |
-          mkdir -p bin && go build -o bin/server ./cmd/server && go build -o bin/appctl ./cmd/appctl
+          mkdir -p bin && go build -o bin/product ./cmd/product && go build -o bin/appctl ./cmd/appctl
           scripts/product_smoke.sh 2>&1 | tee -a reports/kernel-db.txt
         shell: bash
       - uses: actions/upload-artifact@v4

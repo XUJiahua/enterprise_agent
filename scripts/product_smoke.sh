@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # End-to-end smoke for the v0.1 product: empty database -> appctl migrate up
-# (twice) -> bin/server --mode product -> receive, close, replay, list over HTTP.
+# (twice) -> bin/product -> receive, close, replay, list over HTTP.
 # Needs a disposable PostgreSQL superuser URL in KERNEL_TEST_ADMIN_URL and
-# built bin/server and bin/appctl. Creates and drops database product_smoke.
+# built bin/product and bin/appctl. Creates and drops database product_smoke.
 set -euo pipefail
 : "${KERNEL_TEST_ADMIN_URL:?}"
 root=$(cd "$(dirname "$0")/.." && pwd)
@@ -20,7 +20,7 @@ psql -q "$admin_db" -c "INSERT INTO procurement.purchase (tenant_id,id,created_b
   VALUES ('tenant-a','po-1','alice','laptop',900,'approved','bank-1'), ('tenant-b','po-9','dave','server',50,'approved','secret')"
 
 app_url="postgres://product_smoke_app:smoke-only@${admin_db#*@}"
-DATABASE_URL="$app_url" POC_HTTP_PORT=$port "$root/bin/server" --mode product &
+DATABASE_URL="$app_url" POC_HTTP_PORT=$port "$root/bin/product" &
 pid=$!
 for _ in $(seq 50); do curl -s "http://127.0.0.1:$port/v1/purchases" >/dev/null && break; sleep 0.1; done
 

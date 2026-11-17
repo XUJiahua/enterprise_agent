@@ -50,7 +50,7 @@
 - `TestCloseBeforeReceiveRefusesReceipt`：关闭先持锁，验收等待后看到 closed 被拒。把 receive 改为不加锁读状态，该测试失败（验收落在已关闭单上）。
 - `TestReceiveBeforeCloseCountsReceipt`：验收先持锁，关闭等待后计入该验收并成功。把求和挪到加锁之前，该测试失败。
 
-**HTTP**（`bin/server --mode product`，demo 身份）：`POST /v1/operations/{name}/{version}`（`Idempotency-Key` 头），`GET /v1/purchases`。错误映射：Invalid 400、Denied 403、Conflict 409、Retryable 503、Internal 500；响应头 `Idempotent-Replayed`。列表只序列化 `id,title,amount,status,createdBy,received`。
+**HTTP**（`bin/product`，demo 身份；独立于 `cmd/server`，因为冻结的 benchmark 会原样导出 `cmd/server/main.go`）：`POST /v1/operations/{name}/{version}`（`Idempotency-Key` 头），`GET /v1/purchases`。错误映射：Invalid 400、Denied 403、Conflict 409、Retryable 503、Internal 500；响应头 `Idempotent-Replayed`。列表只序列化 `id,title,amount,status,createdBy,received`。
 
 **迁移**：`ADMIN_DATABASE_URL=... bin/appctl migrate up`，用 golang-migrate v4.19.1（版本表 `procurement_schema_migrations`），重复运行返回 `applied:false`，dirty 拒绝继续。前置条件：集群中已有 NOLOGIN 角色 `enterprise_runtime`，应用登录角色是其成员（非 owner、NOSUPERUSER、NOBYPASSRLS）。
 `appctl verify --base REF` 额外检查 `internal/procurement/migrations`：基线中已发布文件必须逐字节一致且存在，新增文件必须排在已发布文件之后（golang-migrate 不会执行低于当前版本的文件）。version/dirty 不代表内容未漂移，也不发现线上手工 DDL。
