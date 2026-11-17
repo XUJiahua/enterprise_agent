@@ -83,6 +83,7 @@
 | **v7 确认性（预注册，私有 Oracle，2026-11-16）** | 2 个未公开任务 × 3 组（手写 / 手写 + 目录文档 / 内核按目录执行）× 4 模型 × 10 块；生成与验收分主机 | 240 个；A：55% / 76% / 99% | H1、H2、H3 均成立；credit/正确 2.32 → 0.81；手写组 double_apply 8 个 trial，opdef 组 0；Verifier 样本外误拦 0/184。见 [v7 结果](v7-confirmatory-results.md) |
 | **v8b 确认性（预注册，2026-11-17）** | 3 个更开放的未公开任务 × manual/given × 3 模型 × 8 块 | 144 个；A：46% → 97% | H1 37:0，p≈7×10⁻¹²；每个正确结果的 credit 4.51 → 1.16。见 [v8b](v8b-confirmatory-results.md) |
 | **v8a 确认性（预注册，两阶段，2026-11-17）** | 2 个未公开任务 × manual/given/drafted/drafted-review × 3 模型 | 288 个；A：60/98/75/92% | H1（drafted-review 不劣于 given）不成立，差 −7.3 pp；H2、H3 成立；错误全部在 event 字段。见 [v8a](v8a-confirmatory-results.md) |
+| **v9 确认性（预注册，2026-11-17）** | 2 个未公开任务（hold / bulk-project）× given / drafted-norule / drafted-rule × 3 模型 × 16 块；事件规则 R1、R2 和消费者注册表 | 288 个；A：96 / 70 / 97% | H1 成立（drafted-rule 不劣于 given，+1.0 pp，区间 [−4.6, 7.0]）；H2 27:1；event 错误 28 → 0；382.8 credit。见 [v9 结果](v9-confirmatory-results.md) |
 
 已完成真实生成合计为 3 + 9 + 4 = 16 个候选；条件不同，**不能合并计算成一个统一处理条件的成功率**。早期 9 个 trial 的环境阻塞计划仍保留为未测量，不是 0/9 通过。
 
@@ -358,6 +359,16 @@ python3 benchmark/phase3/ctl.py summarize \
 #5/#6 尚未全部完成，不能仅因新增一个控制或 pilot 就关闭。下一项最有价值的交付是新的真实 v3 证据，或在缺少 Codex 的情况下完成有验证的 Kiro 适配，不是再写一轮平台愿景。
 
 **2026-11-15 更新：** Kiro 后端已实现（`plan --engine kiro` + worker）。pilot 001 暴露了 Oracle 依赖未写入契约的 requestHash 公式；修正契约后注册的队列 002（10 块 × 2 组，Seatbelt 文件隔离）全部 20 个候选 66/66 通过，见 [队列 002](phase3-kiro-cohort-002-results.md)。仍待：网络与宿主级隔离（VM/容器）、更难的任务以区分两组、多模型重复、P1 各项。本次本地 PostgreSQL 为 17.11（17.6 镜像拉取阻塞）。
+
+**2026-11-17 更新（v9 之后）：**
+- 事件规则已在私有叠加层上验证。移植到公开 `internal/opdef` 的工作在单独的 PR 里，分支为 `poc/v9-event-rules`。
+- v9 的局限：每个任务的注册表里只有一个可用事件。下一步如果继续，可考虑以下方向：
+  - 注册表里放多个候选事件，看模型能否做出正确的业务选择；
+  - 把同样的“确定性约定规则”推广到指纹、职责分离、拒绝语义上；
+  - 扩展到第二个业务域。
+- 运行注意事项：
+  - READY 预检的 30 秒探针偶尔会超时，v9 中发生了 5 次。续跑脚本 `scripts/resume_v9.sh` 的归档目录名会冲突，已在附录 E 记录；下次应给归档目录加序号。
+  - 验收主机根盘使用率已达 97%，只能使用 `/opt/poc-oracle`，大型归档用完立即删除。
 
 ## 11. 下一次交付的验收清单
 
