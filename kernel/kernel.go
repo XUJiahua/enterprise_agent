@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"slices"
 	"strings"
+	"unicode"
 	"unicode/utf8"
 )
 
@@ -201,8 +202,25 @@ func RequestFingerprint(ref Ref, targetsField string, raw []byte, targets []stri
 	return FingerprintVersion + Fingerprint(ref, Input{Targets: sorted, Payload: canonical}), nil
 }
 
+// foldKey maps each rune to the smallest rune of its Unicode simple-fold
+// orbit, so keys encoding/json would match to the same field (e.g. "reason",
+// "Reason", "reaſon") get the same key.
+func foldKey(s string) string {
+	var b strings.Builder
+	for _, r := range s {
+		min := r
+		for f := unicode.SimpleFold(r); f != r; f = unicode.SimpleFold(f) {
+			if f < min {
+				min = f
+			}
+		}
+		b.WriteRune(min)
+	}
+	return b.String()
+}
+
 // noDuplicateKeys rejects any object, at any depth, with two keys that are
-// equal ignoring case.
+// equal under Unicode simple case folding.
 func noDuplicateKeys(raw []byte) error {
 	dec := json.NewDecoder(bytes.NewReader(raw))
 	var walk func() error
@@ -219,7 +237,7 @@ func noDuplicateKeys(raw []byte) error {
 				if err != nil {
 					return err
 				}
-				key := strings.ToLower(k.(string))
+				key := foldKey(k.(string))
 				if seen[key] {
 					return Invalidf("duplicate field %q", k)
 				}
