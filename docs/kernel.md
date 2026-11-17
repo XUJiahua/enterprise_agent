@@ -1,4 +1,4 @@
-# v0.1 操作内核（M1a + M1b）
+# v0.1 操作内核（M1a + M1b + M2）
 
 设计与里程碑见 [issue #36](https://github.com/XUJiahua/enterprise_agent/issues/36)。本文只记录已实现的部分。
 
@@ -59,20 +59,33 @@
 
 端到端：`scripts/product_smoke.sh`（空库 → 两次 migrate → 启动 server → HTTP 验收、关闭、重放、冲突、列表、outbox）。
 
+## 同库通知消费者（M2）
+
+- `kernel/pg/inbox.sql`（产品 migration `0004` 逐字复制）：`kernel.inbox (consumer, event_id)` 主键，以及 SECURITY DEFINER 函数 `kernel.pending_tenants`。运行角色借助它找出有待处理事件的租户，不读别的租户的行。函数 owner（迁移角色）必须是 superuser 或 BYPASSRLS，因为 kernel 表对 owner 也强制 RLS。
+- `pg.New(ctx, pool, pg.Registry{Operations, Consumers})`：每个操作声明的事件必须有注册的消费者，每个消费者处理的事件必须有操作声明，否则启动失败。
+- `Runner.Drain(ctx, name)`：按租户绑定身份，每个事件一个事务。先 `INSERT kernel.inbox ... ON CONFLICT DO NOTHING` 认领，再调用 `Handle`，最后一起提交。`Handle` 失败或进程崩溃都会回滚，事件保持待处理；并发或重复投递时只有一方生效。事件版本不在消费者声明中、或载荷不符的事件会报错且不记为已处理，不阻塞其他事件。
+- `Runner.Consume`：启动时立即 drain，之后每秒一次；`cmd/product` 在同一进程以 goroutine 运行它（`PRODUCT_CONSUMER=off` 可关闭）。不做租约、Worker 池或外部投递。
+- `procurement.notify` 把 `procurement.purchase.closed@1` 投影为 `procurement.notification`（`event_id` 唯一），收件人为采购单创建人。
+- `GET /v1/activity`：当前租户最近 50 条审计和当前用户的通知。
+
+界面：`apps/web/app/procurement`（`/procurement`），通过 `/api/product/*` 代理到 `cmd/product`（`PRODUCT_HTTP_PORT`，默认 8090），只放行列出的读路径和三个操作。原有 `/` 页面与三条路线的 6 项浏览器用例不变。
+
 ## 运行测试
 
 ```bash
 docker run -d --name ea-pg17 -p 127.0.0.1:55417:5432 -e POSTGRES_PASSWORD=postgres postgres:17.6
 export KERNEL_TEST_ADMIN_URL='postgres://postgres:postgres@127.0.0.1:55417/postgres?sslmode=disable'
 KERNEL_REQUIRE_DB=1 go test -race -count=1 ./kernel/... ./internal/procurement/ ./cmd/appctl/
-make build && scripts/product_smoke.sh
+make build && scripts/product_smoke.sh   # 含消费者关闭→重启→再重启
+(cd apps/web && npm ci && npm run build && npx playwright install chromium)
+scripts/product_browser.sh               # 4 项浏览器用例
 ```
 
 每个测试新建并删除自己的数据库，并创建集群级角色 `kernel_test_runtime`、`enterprise_runtime`。只对可销毁的服务器使用。未设置变量时 DB 测试跳过；`KERNEL_REQUIRE_DB=1`（CI `kernel` job）下跳过视为失败。
 
 ## 尚未包含
 
-- 同库通知投影消费者、consumer inbox、事件版本/载荷校验与注册时消费者校验：M2。`close@1` 已写 outbox，目前无人消费。
-- UI 接入新 API、浏览器 E2E：M2。旧 `internal/opkernel`、guarded/baseline 模式与原 UI 未改动。
+- 旧 `internal/opkernel`、guarded/baseline 模式与原 `/` 页面未迁移到新内核；原页面的创建/审批仍走旧 API。
+- approve/receive 没有事件（`NoEventReason`）；只有 close 有消费者。
 - 验收记录的冲正/撤销：未开放 UPDATE/DELETE，需要时另做需求。
 - 直接用 SQL 写 `procurement.receipt` 的代码不受父单锁协议约束（数据库只兜底租户与列权限）。

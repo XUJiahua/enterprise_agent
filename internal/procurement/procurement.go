@@ -30,7 +30,7 @@ import (
 var Migrations embed.FS
 
 // Tables are checked with pg.CheckRuntime at startup.
-var Tables = []string{"procurement.purchase", "procurement.receipt"}
+var Tables = []string{"procurement.purchase", "procurement.receipt", "procurement.notification"}
 
 // Role names carried in kernel.Principal.Roles.
 const (
@@ -49,8 +49,10 @@ var (
 	ClosedEvent = kernel.EventType{Type: "procurement.purchase.closed", Version: 1}
 )
 
-// Operations returns every procurement operation for pg.New.
-func Operations() []pg.Operation { return []pg.Operation{approve{}, receive{}, closeOp{}} }
+// Registry returns every procurement operation and consumer for pg.New.
+func Registry() pg.Registry {
+	return pg.Registry{Operations: []pg.Operation{approve{}, receive{}, closeOp{}}, Consumers: []pg.Consumer{notifier{}}}
+}
 
 // afterLock, when set by tests, runs right after an operation holds its
 // purchase locks; it lets tests order concurrent operations deterministically.
@@ -289,4 +291,31 @@ func (closeOp) Execute(ctx context.Context, s *pg.Session, in kernel.Input) (ker
 		out.Events = append(out.Events, kernel.Event{EventType: ClosedEvent, Target: id, Payload: payload})
 	}
 	return out, nil
+}
+
+// Notifier is the consumer name of the notification projection.
+const Notifier = "procurement.notify"
+
+// notifier turns each procurement.purchase.closed@1 into a notification for
+// the purchase's creator.
+type notifier struct{}
+
+func (notifier) Name() string               { return Notifier }
+func (notifier) Events() []kernel.EventType { return []kernel.EventType{ClosedEvent} }
+
+func (notifier) Handle(ctx context.Context, s *pg.Session, d pg.Delivery) error {
+	var p struct {
+		ID       string `json:"id"`
+		Amount   int64  `json:"amount"`
+		Received int64  `json:"received"`
+	}
+	if err := strict(d.Event.Payload, &p); err != nil || p.ID != d.Event.Target || p.Amount < 1 || p.Received < p.Amount {
+		return kernel.Internalf("%s: payload does not match %s: %s", Notifier, ClosedEvent, d.Event.Payload)
+	}
+	tag, err := s.Exec(ctx, `INSERT INTO procurement.notification (tenant_id, event_id, recipient, purchase_id, kind)
+	 SELECT tenant_id, $2, created_by, id, 'closed' FROM procurement.purchase WHERE id = $1`, p.ID, d.ID)
+	if err == nil && tag.RowsAffected() != 1 {
+		err = kernel.Internalf("%s: purchase %q not found", Notifier, p.ID)
+	}
+	return err
 }

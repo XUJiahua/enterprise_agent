@@ -52,7 +52,7 @@ func main() {
 		log.Fatal(err)
 	}
 	defer pool.Close()
-	r, err := pg.New(ctx, pool, ping{})
+	r, err := pg.New(ctx, pool, pg.Registry{Operations: []pg.Operation{ping{}}})
 	if err != nil {
 		log.Fatal(err)
 	}

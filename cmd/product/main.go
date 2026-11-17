@@ -1,7 +1,8 @@
 // Command product serves the v0.1 procurement API on the kernel runner. It is
 // separate from cmd/server, whose source the frozen benchmarks export as-is.
 // Apply migrations first with `appctl migrate up`; DATABASE_URL is the
-// runtime role and POC_HTTP_PORT the port (default 8090).
+// runtime role and POC_HTTP_PORT the port (default 8090). The notification
+// consumer runs as a goroutine of the same process.
 package main
 
 import (
@@ -36,9 +37,14 @@ func product(port string) error {
 	if err = pg.CheckRuntime(ctx, pool, procurement.Tables...); err != nil {
 		return err
 	}
-	r, err := pg.New(ctx, pool, procurement.Operations()...)
+	r, err := pg.New(ctx, pool, procurement.Registry())
 	if err != nil {
 		return err
+	}
+	// The notification consumer runs in this process; on start it first drains
+	// whatever a previous process left pending. PRODUCT_CONSUMER=off disables it.
+	if os.Getenv("PRODUCT_CONSUMER") != "off" {
+		go r.Consume(ctx, procurement.Notifier, time.Second, func(err error) { log.Printf("consumer: %v", err) })
 	}
 	// Demo identities only; production authentication replaces this adapter.
 	auth := func(req *http.Request) (kernel.Principal, bool) {

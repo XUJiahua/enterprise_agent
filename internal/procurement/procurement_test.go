@@ -18,10 +18,11 @@ var (
 	bob = kernel.Principal{Tenant: "t1", Actor: "bob", Roles: []string{procurement.Approver}}
 )
 
-func TestKernelMigrationIsVerbatimSchema(t *testing.T) {
-	b, err := fs.ReadFile(procurement.Migrations, "migrations/0001_kernel.up.sql")
-	if err != nil || string(b) != pg.Schema {
-		t.Fatal("0001_kernel.up.sql must equal kernel/pg/schema.sql", err)
+func TestKernelMigrationsAreVerbatimSchema(t *testing.T) {
+	for file, schema := range map[string]string{"0001_kernel.up.sql": pg.Schema, "0004_kernel_inbox.up.sql": pg.InboxSchema} {
+		if b, err := fs.ReadFile(procurement.Migrations, "migrations/"+file); err != nil || string(b) != schema {
+			t.Errorf("%s must equal the kernel/pg schema it copies: %v", file, err)
+		}
 	}
 }
 
@@ -30,7 +31,7 @@ func setup(t *testing.T, beforeSeed ...string) (*pgtest.DB, *pg.Runner) {
 	d := pgtest.New(t)
 	d.Exec(t, `DO $$ BEGIN CREATE ROLE enterprise_runtime NOLOGIN; EXCEPTION WHEN duplicate_object THEN NULL; END $$`)
 	d.Exec(t, `GRANT enterprise_runtime TO `+pgtest.Runtime+` WITH INHERIT TRUE`)
-	if v, applied, err := procurement.Migrate(d.AdminURL); err != nil || !applied || v != 3 {
+	if v, applied, err := procurement.Migrate(d.AdminURL); err != nil || !applied || v != 5 {
 		t.Fatal("migrate:", v, applied, err)
 	}
 	for _, sql := range beforeSeed {
@@ -45,7 +46,7 @@ func setup(t *testing.T, beforeSeed ...string) (*pgtest.DB, *pg.Runner) {
 	if err := pg.CheckRuntime(ctx, pool, procurement.Tables...); err != nil {
 		t.Fatal(err)
 	}
-	r, err := pg.New(ctx, pool, procurement.Operations()...)
+	r, err := pg.New(ctx, pool, procurement.Registry())
 	if err != nil {
 		t.Fatal(err)
 	}

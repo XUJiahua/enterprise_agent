@@ -1,0 +1,189 @@
+package pg
+
+import (
+	"context"
+	_ "embed"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"slices"
+	"time"
+
+	"github.com/XUJiahua/enterprise_agent/kernel"
+	"github.com/jackc/pgx/v5"
+)
+
+// InboxSchema creates kernel.inbox and kernel.pending_tenants; apply it after
+// Schema.
+//
+//go:embed inbox.sql
+var InboxSchema string
+
+// Consumer projects outbox events inside the same database. Handle runs in
+// the transaction that also records the event in kernel.inbox, so its writes
+// commit exactly once per event even if delivery repeats. A Handle error
+// (including an unexpected payload) rolls back and leaves the event pending.
+type Consumer interface {
+	Name() string
+	Events() []kernel.EventType
+	Handle(ctx context.Context, s *Session, d Delivery) error
+}
+
+// Delivery is one outbox event as a consumer sees it.
+type Delivery struct {
+	ID        int64
+	Event     kernel.Event
+	Operation kernel.Ref
+	Actor     string // who ran the operation
+}
+
+// Registry is everything a Runner executes. Every event an operation declares
+// must have a consumer, and every consumer event must be declared.
+type Registry struct {
+	Operations []Operation
+	Consumers  []Consumer
+}
+
+type consumerReg struct {
+	c      Consumer
+	events []kernel.EventType
+	types  []string
+}
+
+func (r *Runner) registerConsumers(cs []Consumer) error {
+	declared := map[kernel.EventType]bool{}
+	for _, o := range r.ops {
+		for _, e := range o.def.Events {
+			declared[e] = true
+		}
+	}
+	consumed := map[kernel.EventType]bool{}
+	r.consumers = map[string]consumerReg{}
+	for _, c := range cs {
+		name := c.Name()
+		probe := kernel.Definition{Ref: kernel.Ref{Name: name, Version: 1}, MaxTargets: 1, Events: c.Events()}
+		if err := probe.Validate(); err != nil {
+			return fmt.Errorf("pg: consumer %q: %w", name, err)
+		}
+		if _, dup := r.consumers[name]; dup {
+			return fmt.Errorf("pg: consumer %q registered twice", name)
+		}
+		reg := consumerReg{c: c, events: slices.Clone(c.Events())}
+		for _, e := range reg.events {
+			if !declared[e] {
+				return fmt.Errorf("pg: consumer %q handles %s, which no registered operation declares", name, e)
+			}
+			consumed[e] = true
+			if !slices.Contains(reg.types, e.Type) {
+				reg.types = append(reg.types, e.Type)
+			}
+		}
+		r.consumers[name] = reg
+	}
+	for e := range declared {
+		if !consumed[e] {
+			return fmt.Errorf("pg: event %s is declared but has no registered consumer", e)
+		}
+	}
+	return nil
+}
+
+// Drain handles every pending event of the named consumer once, oldest first,
+// each in its own transaction, and returns how many it handled. Failed events
+// stay pending; their errors are joined into err and the rest still run.
+// Running Drain concurrently is safe: the inbox key lets one win per event.
+func (r *Runner) Drain(ctx context.Context, name string) (handled int, err error) {
+	reg, ok := r.consumers[name]
+	if !ok {
+		return 0, kernel.Invalidf("unknown consumer %q", name)
+	}
+	rows, err := r.pool.Query(ctx, `SELECT kernel.pending_tenants($1, $2)`, name, reg.types)
+	if err != nil {
+		return 0, classify(err)
+	}
+	tenants, err := pgx.CollectRows(rows, pgx.RowTo[string])
+	if err != nil {
+		return 0, classify(err)
+	}
+	var errs []error
+	for _, tenant := range tenants {
+		p := kernel.Principal{Tenant: tenant, Actor: "consumer:" + name}
+		var ids []int64
+		if err := r.Read(ctx, p, func(s *Session) error {
+			rows, err := s.Query(ctx, `SELECT o.id FROM kernel.outbox o WHERE o.event_type = ANY ($2)
+			 AND NOT EXISTS (SELECT 1 FROM kernel.inbox i WHERE i.consumer = $1 AND i.event_id = o.id) ORDER BY o.id LIMIT 1000`, name, reg.types)
+			if err != nil {
+				return err
+			}
+			ids, err = pgx.CollectRows(rows, pgx.RowTo[int64])
+			return err
+		}); err != nil {
+			errs = append(errs, err)
+			continue
+		}
+		for _, id := range ids {
+			done, err := r.deliver(ctx, reg, p, id)
+			if err != nil {
+				errs = append(errs, fmt.Errorf("consumer %s event %d: %w", name, id, err))
+			} else if done {
+				handled++
+			}
+		}
+	}
+	return handled, errors.Join(errs...)
+}
+
+// deliver handles one event; done=false means another delivery already did.
+func (r *Runner) deliver(ctx context.Context, reg consumerReg, p kernel.Principal, id int64) (done bool, err error) {
+	tx, err := r.pool.Begin(ctx)
+	if err != nil {
+		return false, classify(err)
+	}
+	defer func() { _ = tx.Rollback(context.WithoutCancel(ctx)) }()
+	if err = bind(ctx, tx, p); err != nil {
+		return false, classify(err)
+	}
+	// Claim first: a concurrent claim of the same event waits here, then skips.
+	tag, err := tx.Exec(ctx, `INSERT INTO kernel.inbox (consumer, event_id, tenant_id) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING`,
+		reg.c.Name(), id, p.Tenant)
+	if err != nil {
+		return false, classify(err)
+	}
+	if tag.RowsAffected() == 0 {
+		return false, nil
+	}
+	var d Delivery
+	var payload []byte
+	if err = tx.QueryRow(ctx, `SELECT id, event_type, event_version, target_id, payload, operation, version, actor_id FROM kernel.outbox WHERE id = $1`, id).
+		Scan(&d.ID, &d.Event.Type, &d.Event.Version, &d.Event.Target, &payload, &d.Operation.Name, &d.Operation.Version, &d.Actor); err != nil {
+		return false, classify(err)
+	}
+	d.Event.Payload = json.RawMessage(payload)
+	if !slices.Contains(reg.events, d.Event.EventType) {
+		return false, kernel.Internalf("unsupported event %s", d.Event.EventType)
+	}
+	if err = reg.c.Handle(ctx, &Session{tx, p}, d); err != nil {
+		return false, classify(err)
+	}
+	if err = tx.Commit(ctx); err != nil {
+		return false, &kernel.Error{Code: kernel.Retryable, Msg: "commit outcome unknown", Err: err}
+	}
+	return true, nil
+}
+
+// Consume runs Drain for the named consumer every interval until ctx ends,
+// starting immediately, so events left by a crash are picked up on restart.
+func (r *Runner) Consume(ctx context.Context, name string, every time.Duration, onErr func(error)) {
+	t := time.NewTicker(every)
+	defer t.Stop()
+	for {
+		if _, err := r.Drain(ctx, name); err != nil && ctx.Err() == nil {
+			onErr(err)
+		}
+		select {
+		case <-ctx.Done():
+			return
+		case <-t.C:
+		}
+	}
+}

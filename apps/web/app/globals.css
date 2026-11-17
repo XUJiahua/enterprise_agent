@@ -701,3 +701,7 @@ footer span {
     font-size: 9px;
   }
 }
+.closed {
+  color: #5d6670;
+  background: #eef0f2;
+}
