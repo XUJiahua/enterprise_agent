@@ -13,6 +13,7 @@ import (
 	"github.com/XUJiahua/enterprise_agent/internal/extcheck"
 	"github.com/XUJiahua/enterprise_agent/internal/policy"
 	"github.com/XUJiahua/enterprise_agent/internal/procurement"
+	"github.com/XUJiahua/enterprise_agent/kernel/pg"
 )
 
 type Finding struct {
@@ -24,7 +25,7 @@ type Finding struct {
 func main() { os.Exit(run()) }
 func run() int {
 	if len(os.Args) < 2 {
-		fmt.Fprintln(os.Stderr, "usage: appctl compile|check|plan|verify|extensions|operations|migrate [--base REF] [--root DIR]")
+		fmt.Fprintln(os.Stderr, "usage: appctl compile|check|plan|verify|extensions|operations|migrate|describe|validate [--base REF] [--root DIR]")
 		return 1
 	}
 	command := os.Args[1]
@@ -36,6 +37,20 @@ func run() int {
 	}
 	if command == "migrate" {
 		return migrateProduct(os.Args[2:])
+	}
+	if command == "describe" {
+		return describe()
+	}
+	if command == "validate" {
+		// Separate from verify, whose POC probes (tests/verifier.py) run on
+		// partial checkouts without the product registry.
+		f := flag.NewFlagSet("validate", flag.ContinueOnError)
+		root := f.String("root", ".", "checkout")
+		base := f.String("base", "", "trusted git baseline ref")
+		if f.Parse(os.Args[2:]) != nil {
+			return 1
+		}
+		return report(append([]Finding{}, contractFindings(*root, *base)...))
 	}
 	f := flag.NewFlagSet(command, flag.ContinueOnError)
 	root := f.String("root", ".", "application root")
@@ -258,4 +273,60 @@ func migrateProduct(args []string) int {
 		return 1
 	}
 	return 0
+}
+
+// contractFile is the committed output of `appctl describe`.
+const contractFile = "internal/procurement/contract.json"
+
+// describe prints the operation/consumer contract of the procurement registry,
+// the same one cmd/product hands to pg.New.
+func describe() int {
+	c, err := pg.Describe(procurement.Registry())
+	if err != nil {
+		return report([]Finding{{"REGISTRY_INVALID", "internal/procurement", err.Error()}})
+	}
+	b, _ := json.MarshalIndent(c, "", "  ")
+	fmt.Println(string(b))
+	return 0
+}
+
+// contractFindings checks that the registry is valid and that contractFile is
+// its current description. With base, every operation version published there
+// must keep an identical definition: changing events, MaxTargets or the
+// exemption needs a new version. It cannot see behavior changes inside
+// Normalize/Execute; those still need review and tests.
+func contractFindings(root, base string) []Finding {
+	c, err := pg.Describe(procurement.Registry())
+	if err != nil {
+		return []Finding{{"REGISTRY_INVALID", "internal/procurement", err.Error()}}
+	}
+	want, _ := json.MarshalIndent(c, "", "  ")
+	var findings []Finding
+	got, err := os.ReadFile(filepath.Join(root, contractFile))
+	if err != nil || strings.TrimSpace(string(got)) != string(want) {
+		findings = append(findings, Finding{"CONTRACT_DRIFT", contractFile, "differs from the registry; run appctl describe > " + contractFile})
+	}
+	if base == "" {
+		return findings
+	}
+	old, err := git(root, "show", base+":"+contractFile)
+	if err != nil {
+		return findings // not published at base yet
+	}
+	var prev pg.Contract
+	if err := json.Unmarshal(old, &prev); err != nil {
+		return append(findings, Finding{"BASE_CONTRACT_INVALID", contractFile, err.Error()})
+	}
+	for _, p := range prev.Operations {
+		for _, d := range c.Operations {
+			if d.Ref == p.Ref {
+				a, _ := json.Marshal(p)
+				b, _ := json.Marshal(d)
+				if string(a) != string(b) {
+					findings = append(findings, Finding{"CONTRACT_CHANGED_WITHOUT_VERSION", contractFile, d.Ref.String() + " changed; publish it as a new version"})
+				}
+			}
+		}
+	}
+	return findings
 }
