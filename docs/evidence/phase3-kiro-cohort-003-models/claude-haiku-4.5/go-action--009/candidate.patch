@@ -1,0 +1,90 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index ad14a29..0f076ae 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -1,63 +1,46 @@
+-// Shared starting point: atomic batch approval, without audit or idempotency.
++// Package candidate implements the evolved batch approval with audit and scoped idempotency.
+ package candidate
+ 
+ import (
+ 	"context"
++	"errors"
++	"strings"
++
++	"github.com/XUJiahua/enterprise_agent/internal/action"
+ 	"github.com/XUJiahua/enterprise_agent/internal/app"
+ 	"github.com/XUJiahua/enterprise_agent/internal/protocol"
+ 	"github.com/jackc/pgx/v5/pgxpool"
+ 	"net/http"
+-	"strings"
+ )
+ 
+ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
++	executor, err := action.New(ctx, pool, "")
++	if err != nil {
++		return nil, err
++	}
++
+ 	approve := func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
++		// Check for null bytes in IDs before passing to action layer
+ 		for _, id := range ids {
+ 			if strings.ContainsRune(id, 0) {
+ 				return protocol.Result{}, false, &protocol.Rejection{Status: 404}
+ 			}
+ 		}
+-		tx, err := pool.Begin(ctx)
+-		if err != nil {
+-			return protocol.Result{}, false, err
+-		}
+-		defer tx.Rollback(ctx)
+-		_, err = tx.Exec(ctx, `SELECT set_config('app.tenant',$1,true),set_config('app.user',$2,true),set_config('app.role',$3,true)`, u.Tenant, u.User, u.Role)
+-		if err != nil {
+-			return protocol.Result{}, false, err
+-		}
+-		rows, err := tx.Query(ctx, `SELECT id FROM "Purchase" WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted' ORDER BY id FOR UPDATE`, ids, u.Tenant, u.User)
++
++		// Call the action executor with idempotency and audit support
++		result, replayed, err := executor.BulkApprove(ctx, u, key, ids)
+ 		if err != nil {
+-			return protocol.Result{}, false, err
+-		}
+-		eligible := []string{}
+-		for rows.Next() {
+-			var id string
+-			if err = rows.Scan(&id); err != nil {
+-				rows.Close()
+-				return protocol.Result{}, false, err
++			// Adapt action.Rejection to protocol.Rejection
++			var actionRejection *action.Rejection
++			if ok := errors.As(err, &actionRejection); ok {
++				return protocol.Result{}, false, &protocol.Rejection{Status: actionRejection.Status}
+ 			}
+-			eligible = append(eligible, id)
+-		}
+-		err = rows.Err()
+-		rows.Close()
+-		if err != nil {
+-			return protocol.Result{}, false, err
+-		}
+-		if len(eligible) != len(ids) {
+-			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+-		}
+-		tag, err := tx.Exec(ctx, `UPDATE "Purchase" SET status='approved' WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'`, ids, u.Tenant, u.User)
+-		if err != nil {
+-			return protocol.Result{}, false, err
+-		}
+-		if tag.RowsAffected() != int64(len(ids)) {
+-			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+-		}
+-		if err = tx.Commit(ctx); err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+-		return protocol.Result{ApprovedIDs: ids}, false, nil
++
++		// Adapt action.Result to protocol.Result
++		return protocol.Result{ApprovedIDs: result.ApprovedIDs}, replayed, nil
+ 	}
++
+ 	return protocol.HTTP(approve, fallback), nil
+ }

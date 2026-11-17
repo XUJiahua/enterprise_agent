@@ -1,0 +1,5364 @@
+[
+ {
+  "task": "T1",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": false
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 37,
+    "detail": "requestHash call ledger.Fingerprint(opReopen, []string{id, reason}) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": false
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 33,
+    "detail": "requestHash call fingerprintReopen(id, reason) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": false
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": false
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": false,
+   "implicit-request-hash": false,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": false
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 36,
+    "detail": "requestHash call reopenFingerprint(id, reason) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": false,
+   "implicit-request-hash": false,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": false
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 35,
+    "detail": "requestHash call reopenFingerprint(id, reason) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 38,
+    "detail": "requestHash call reopenHash(id, reason) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 33,
+    "detail": "requestHash call advisoryKey(opReopen, u.Tenant, u.User, key) includes non-target request field \"key\""
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 41,
+    "detail": "requestHash call ledger.Fingerprint(opReopen, []string{id, reason}) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 36,
+    "detail": "requestHash call reopenHash(id, reason) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 35,
+    "detail": "requestHash call ledger.Fingerprint(opReopen, []string{id, reason}) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": false,
+   "implicit-request-hash": false,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": false
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": false,
+   "implicit-request-hash": false,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": false
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reopen.go",
+    "line": 35,
+    "detail": "requestHash call ledger.Fingerprint(opReopen, []string{id, reason}) includes non-target request field \"reason\""
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "candidate-error",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "event-consumer",
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/protocol/protocol.go",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 11,
+    "detail": "reopen.v5 declares no event but internal/notify handles \"purchase.reopened\""
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": false
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T1",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T1",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation reopen.v5 writes no \"purchase.reopened\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation countersign.v6 writes no \"purchase.countersigned\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation countersign.v6 writes no \"purchase.countersigned\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": false,
+   "implicit-request-hash": false,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": false
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation countersign.v6 writes no \"purchase.countersigned\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation countersign.v6 writes no \"purchase.countersigned\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation countersign.v6 writes no \"purchase.countersigned\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation countersign.v6 writes no \"purchase.countersigned\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": false
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation countersign.v6 writes no \"purchase.countersigned\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/countersign.go",
+    "line": 40,
+    "detail": "requestHash call countersignHash(id, amount) includes non-target request field \"amount\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 15,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 15,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 15,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 15,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation countersign.v6 writes no \"purchase.countersigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/countersign.go",
+    "line": 36,
+    "detail": "requestHash call ledger.Fingerprint(opCountersign, []string{id, strconv.Itoa(amount)}) includes non-target request field \"amount\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation countersign.v6 writes no \"purchase.countersigned\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation countersign.v6 writes no \"purchase.countersigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/countersign.go",
+    "line": 34,
+    "detail": "requestHash call ledger.Fingerprint(opCountersign, []string{id, strconv.Itoa(amount)}) includes non-target request field \"amount\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/countersign.go",
+    "line": 36,
+    "detail": "requestHash call ledger.Fingerprint(opCountersign, []string{id, strconv.Itoa(amount)}) includes non-target request field \"amount\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation countersign.v6 writes no \"purchase.countersigned\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation countersign.v6 writes no \"purchase.countersigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/countersign.go",
+    "line": 33,
+    "detail": "requestHash call ledger.Fingerprint(opCountersign, []string{id, strconv.Itoa(amount)}) includes non-target request field \"amount\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation countersign.v6 writes no \"purchase.countersigned\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": false
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": false
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": false
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "event-consumer",
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "SCHEMA.sql",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "event-consumer",
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "SCHEMA.sql",
+    "detail": "only internal/candidate/ may change"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": false
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-audit": false,
+   "implicit-request-hash": false,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": false
+  },
+  "rules": [
+   "event-consumer",
+   "operation-declaration"
+  ],
+  "findings": [
+   {
+    "rule": "operation-declaration",
+    "code": "FIELD_MISSING",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "Operation.Event is required"
+   },
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "countersign.v6 declares no event but internal/notify handles \"purchase.countersigned\""
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation countersign.v6 writes no \"purchase.countersigned\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "export+diff (untracked not archived: internal/candidate/countersign.go)",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "SCHEMA.sql",
+    "detail": "only internal/candidate/ may change"
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": false
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation countersign.v6 writes no \"purchase.countersigned\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": false
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T2",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "candidate-error",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation countersign.v6 writes no \"purchase.countersigned\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": false
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation countersign.v6 writes no \"purchase.countersigned\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T2",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-audit": true,
+   "implicit-request-hash": false,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "claude-haiku-4.5",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-history": false,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation bulk-reassign.v6 writes no \"purchase.reassigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 114,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-history": false,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation bulk-reassign.v6 writes no \"purchase.reassigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 106,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": false,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation bulk-reassign.v6 writes no \"purchase.reassigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 108,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": false,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation bulk-reassign.v6 writes no \"purchase.reassigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 108,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-history": false,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation bulk-reassign.v6 writes no \"purchase.reassigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 103,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": false,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 148,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-history": false,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation bulk-reassign.v6 writes no \"purchase.reassigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 115,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-history": false,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation bulk-reassign.v6 writes no \"purchase.reassigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 114,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-history": false,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation bulk-reassign.v6 writes no \"purchase.reassigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 119,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "claude-haiku-4.5",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-history": false,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation bulk-reassign.v6 writes no \"purchase.reassigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 141,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "claude-opus-5.5",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 118,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 112,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation bulk-reassign.v6 writes no \"purchase.reassigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 110,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 115,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 115,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 117,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation bulk-reassign.v6 writes no \"purchase.reassigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 112,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 112,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 113,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "claude-opus-5.5",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation bulk-reassign.v6 writes no \"purchase.reassigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 115,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--009",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "gpt-5.6-luna",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--001",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 117,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--002",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 127,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation bulk-reassign.v6 writes no \"purchase.reassigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 128,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--004",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 128,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--005",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 117,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--006",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation bulk-reassign.v6 writes no \"purchase.reassigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 120,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation bulk-reassign.v6 writes no \"purchase.reassigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 117,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation bulk-reassign.v6 writes no \"purchase.reassigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 119,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation bulk-reassign.v6 writes no \"purchase.reassigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 111,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "gpt-5.6-luna",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation bulk-reassign.v6 writes no \"purchase.reassigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_OPERATION_MISSING",
+    "path": "internal/candidate/reassign.go",
+    "line": 120,
+    "detail": "ActionRequest write whose requestHash is not computed from the same operation (ledger.Fingerprint(op, ids))"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--001",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--002",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "passed",
+  "passed": true,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": true,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--003",
+  "cell": "go-action",
+  "reconstruction": "export+diff",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "SCHEMA.sql",
+    "detail": "only internal/candidate/ may change"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--004",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--005",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate/operations.go",
+    "line": 13,
+    "detail": "bulk-reassign.v6 declares no event but internal/notify handles \"purchase.reassigned\""
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--006",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--007",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--008",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "qwen3-coder-next",
+  "trial": "go-action--010",
+  "cell": "go-action",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": true,
+  "conventions": {
+   "implicit-history": true,
+   "implicit-request-hash": true,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [],
+  "findings": []
+ },
+ {
+  "task": "T3",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--003",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "acceptance-failed",
+  "passed": false,
+  "explicit_passed": false,
+  "conventions": {
+   "implicit-history": false,
+   "implicit-request-hash": false,
+   "implicit-outbox": false,
+   "implicit-uniform-denial": true
+  },
+  "rules": [
+   "manual-event-consumer"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation bulk-reassign.v6 writes no \"purchase.reassigned\" event but internal/notify handles it"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--007",
+  "cell": "go-manual",
+  "reconstruction": "export+diff (untracked not archived: internal/candidate/reassign.go)",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/ledger/ledger.go",
+    "detail": "only internal/candidate/ may change"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--008",
+  "cell": "go-manual",
+  "reconstruction": "export+diff (untracked not archived: internal/candidate/reassign.go)",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/ledger/ledger.go",
+    "detail": "only internal/candidate/ may change"
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--009",
+  "cell": "go-manual",
+  "reconstruction": "bundle",
+  "outcome": "candidate-error",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "manual-event-consumer",
+   "manual-fingerprint"
+  ],
+  "findings": [
+   {
+    "rule": "manual-event-consumer",
+    "code": "EVENT_EXPECTED_BY_CONSUMER",
+    "path": "internal/candidate",
+    "detail": "new operation bulk-reassign.v6 writes no \"purchase.reassigned\" event but internal/notify handles it"
+   },
+   {
+    "rule": "manual-fingerprint",
+    "code": "FINGERPRINT_EXTRA_INPUT",
+    "path": "internal/candidate/reassign.go",
+    "line": 40,
+    "detail": "requestHash call ledger.Fingerprint(opReassign, append(ids, assignee)) includes non-target request field \"assignee\""
+   }
+  ]
+ },
+ {
+  "task": "T3",
+  "model": "qwen3-coder-next",
+  "trial": "go-manual--010",
+  "cell": "go-manual",
+  "reconstruction": "export+diff (untracked not archived: internal/candidate/reassign.go)",
+  "outcome": "scope-violation",
+  "passed": false,
+  "explicit_passed": null,
+  "conventions": {},
+  "rules": [
+   "extension-scope"
+  ],
+  "findings": [
+   {
+    "rule": "extension-scope",
+    "code": "PROTECTED_PATH_CHANGED",
+    "path": "internal/ledger/ledger.go",
+    "detail": "only internal/candidate/ may change"
+   }
+  ]
+ }
+]

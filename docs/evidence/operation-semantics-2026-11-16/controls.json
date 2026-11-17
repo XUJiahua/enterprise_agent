@@ -1,0 +1,848 @@
+{
+ "ok": true,
+ "kind": "operation-verifier-controls",
+ "model_calls": 0,
+ "catalog": "sha256:98abea36467340ad3702d12341beb3894e649d42d9129cfac4e45e46a9de0055",
+ "controls": 53,
+ "negative_detected": 34,
+ "positive_clean": 12,
+ "uncovered_clean": 7,
+ "unverifiable_detected": 4,
+ "results": [
+  {
+   "task": "T1",
+   "cell": "go-manual",
+   "control": "correct",
+   "kind": "positive",
+   "expected": [],
+   "codes": [],
+   "verdict": "pass",
+   "exit": 0,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T1",
+   "cell": "go-manual",
+   "control": "omit-audit",
+   "kind": "negative",
+   "expected": [
+    "RECORD_NOT_WRITTEN"
+   ],
+   "codes": [
+    "RECORD_NOT_WRITTEN"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T1",
+   "cell": "go-manual",
+   "control": "reason-hash",
+   "kind": "negative",
+   "expected": [
+    "FINGERPRINT_EXTRA_INPUT"
+   ],
+   "codes": [
+    "FINGERPRINT_EXTRA_INPUT"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T1",
+   "cell": "go-manual",
+   "control": "omit-event",
+   "kind": "negative",
+   "expected": [
+    "EVENT_NOT_WRITTEN"
+   ],
+   "codes": [
+    "EVENT_NOT_WRITTEN"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T1",
+   "cell": "go-manual",
+   "control": "distinguish",
+   "kind": "uncovered",
+   "expected": [],
+   "codes": [],
+   "verdict": "pass",
+   "exit": 0,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T1",
+   "cell": "go-manual",
+   "control": "unchanged",
+   "kind": "positive",
+   "expected": [],
+   "codes": [],
+   "verdict": "pass",
+   "exit": 0,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T1",
+   "cell": "go-action",
+   "control": "correct",
+   "kind": "positive",
+   "expected": [],
+   "codes": [],
+   "verdict": "pass",
+   "exit": 0,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T1",
+   "cell": "go-action",
+   "control": "noevent",
+   "kind": "negative",
+   "expected": [
+    "EVENT_EXEMPTION_NOT_IN_CATALOG"
+   ],
+   "codes": [
+    "EVENT_EXEMPTION_NOT_IN_CATALOG"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T1",
+   "cell": "go-action",
+   "control": "omit-event",
+   "kind": "negative",
+   "expected": [
+    "EVENT_MISMATCH"
+   ],
+   "codes": [
+    "EVENT_MISMATCH"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T1",
+   "cell": "go-action",
+   "control": "own-false",
+   "kind": "negative",
+   "expected": [
+    "DECLARATION_MISMATCH"
+   ],
+   "codes": [
+    "DECLARATION_MISMATCH"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T1",
+   "cell": "go-action",
+   "control": "unknown-name",
+   "kind": "negative",
+   "expected": [
+    "OPERATION_NOT_IN_CATALOG"
+   ],
+   "codes": [
+    "OPERATION_NOT_IN_CATALOG"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T1",
+   "cell": "go-action",
+   "control": "bypass-omit-audit",
+   "kind": "negative",
+   "expected": [
+    "RECORD_NOT_WRITTEN"
+   ],
+   "codes": [
+    "RECORD_NOT_WRITTEN"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T1",
+   "cell": "go-action",
+   "control": "bypass-reason-hash",
+   "kind": "negative",
+   "expected": [
+    "FINGERPRINT_EXTRA_INPUT"
+   ],
+   "codes": [
+    "FINGERPRINT_EXTRA_INPUT"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T1",
+   "cell": "go-action",
+   "control": "bypass-distinguish",
+   "kind": "uncovered",
+   "expected": [],
+   "codes": [],
+   "verdict": "pass",
+   "exit": 0,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T2",
+   "cell": "go-manual",
+   "control": "correct",
+   "kind": "positive",
+   "expected": [],
+   "codes": [],
+   "verdict": "pass",
+   "exit": 0,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T2",
+   "cell": "go-manual",
+   "control": "omit-audit",
+   "kind": "negative",
+   "expected": [
+    "RECORD_NOT_WRITTEN"
+   ],
+   "codes": [
+    "RECORD_NOT_WRITTEN"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T2",
+   "cell": "go-manual",
+   "control": "amount-hash",
+   "kind": "negative",
+   "expected": [
+    "FINGERPRINT_EXTRA_INPUT"
+   ],
+   "codes": [
+    "FINGERPRINT_EXTRA_INPUT"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T2",
+   "cell": "go-manual",
+   "control": "omit-event",
+   "kind": "negative",
+   "expected": [
+    "EVENT_NOT_WRITTEN"
+   ],
+   "codes": [
+    "EVENT_NOT_WRITTEN"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T2",
+   "cell": "go-manual",
+   "control": "distinguish",
+   "kind": "uncovered",
+   "expected": [],
+   "codes": [],
+   "verdict": "pass",
+   "exit": 0,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T2",
+   "cell": "go-manual",
+   "control": "unchanged",
+   "kind": "positive",
+   "expected": [],
+   "codes": [],
+   "verdict": "pass",
+   "exit": 0,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T2",
+   "cell": "go-action",
+   "control": "correct",
+   "kind": "positive",
+   "expected": [],
+   "codes": [],
+   "verdict": "pass",
+   "exit": 0,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T2",
+   "cell": "go-action",
+   "control": "no-event",
+   "kind": "negative",
+   "expected": [
+    "EVENT_EXEMPTION_NOT_IN_CATALOG"
+   ],
+   "codes": [
+    "EVENT_EXEMPTION_NOT_IN_CATALOG"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T2",
+   "cell": "go-action",
+   "control": "empty-event",
+   "kind": "negative",
+   "expected": [
+    "EVENT_MISMATCH"
+   ],
+   "codes": [
+    "EVENT_MISMATCH"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T2",
+   "cell": "go-action",
+   "control": "no-separate",
+   "kind": "negative",
+   "expected": [
+    "DECLARATION_MISMATCH"
+   ],
+   "codes": [
+    "DECLARATION_MISMATCH"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T2",
+   "cell": "go-action",
+   "control": "bypass-amount-hash",
+   "kind": "negative",
+   "expected": [
+    "FINGERPRINT_EXTRA_INPUT"
+   ],
+   "codes": [
+    "FINGERPRINT_EXTRA_INPUT"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T2",
+   "cell": "go-action",
+   "control": "bypass-distinguish",
+   "kind": "uncovered",
+   "expected": [],
+   "codes": [],
+   "verdict": "pass",
+   "exit": 0,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T3",
+   "cell": "go-manual",
+   "control": "correct",
+   "kind": "positive",
+   "expected": [],
+   "codes": [],
+   "verdict": "pass",
+   "exit": 0,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T3",
+   "cell": "go-manual",
+   "control": "now-timestamp",
+   "kind": "uncovered",
+   "expected": [],
+   "codes": [],
+   "verdict": "pass",
+   "exit": 0,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T3",
+   "cell": "go-manual",
+   "control": "omit-history",
+   "kind": "negative",
+   "expected": [
+    "RECORD_NOT_WRITTEN"
+   ],
+   "codes": [
+    "RECORD_NOT_WRITTEN"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T3",
+   "cell": "go-manual",
+   "control": "param-hash",
+   "kind": "negative",
+   "expected": [
+    "FINGERPRINT_SHAPE"
+   ],
+   "codes": [
+    "FINGERPRINT_SHAPE"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T3",
+   "cell": "go-manual",
+   "control": "drop-assignee-hash",
+   "kind": "negative",
+   "expected": [
+    "FINGERPRINT_INPUT_MISSING"
+   ],
+   "codes": [
+    "FINGERPRINT_INPUT_MISSING"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T3",
+   "cell": "go-manual",
+   "control": "omit-event",
+   "kind": "negative",
+   "expected": [
+    "EVENT_NOT_WRITTEN"
+   ],
+   "codes": [
+    "EVENT_NOT_WRITTEN"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T3",
+   "cell": "go-manual",
+   "control": "distinguish",
+   "kind": "uncovered",
+   "expected": [],
+   "codes": [],
+   "verdict": "pass",
+   "exit": 0,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T3",
+   "cell": "go-manual",
+   "control": "unchanged",
+   "kind": "positive",
+   "expected": [],
+   "codes": [],
+   "verdict": "pass",
+   "exit": 0,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T3",
+   "cell": "go-action",
+   "control": "correct",
+   "kind": "positive",
+   "expected": [],
+   "codes": [],
+   "verdict": "pass",
+   "exit": 0,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T3",
+   "cell": "go-action",
+   "control": "no-event",
+   "kind": "negative",
+   "expected": [
+    "EVENT_EXEMPTION_NOT_IN_CATALOG"
+   ],
+   "codes": [
+    "EVENT_EXEMPTION_NOT_IN_CATALOG"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T3",
+   "cell": "go-action",
+   "control": "omit-event",
+   "kind": "negative",
+   "expected": [
+    "EVENT_MISMATCH"
+   ],
+   "codes": [
+    "EVENT_MISMATCH"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T3",
+   "cell": "go-action",
+   "control": "own-true",
+   "kind": "negative",
+   "expected": [
+    "DECLARATION_MISMATCH"
+   ],
+   "codes": [
+    "DECLARATION_MISMATCH"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T3",
+   "cell": "go-action",
+   "control": "bypass-omit-history",
+   "kind": "negative",
+   "expected": [
+    "RECORD_NOT_WRITTEN"
+   ],
+   "codes": [
+    "RECORD_NOT_WRITTEN"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T3",
+   "cell": "go-action",
+   "control": "bypass-param-hash",
+   "kind": "negative",
+   "expected": [
+    "FINGERPRINT_SHAPE"
+   ],
+   "codes": [
+    "FINGERPRINT_SHAPE"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T3",
+   "cell": "go-action",
+   "control": "bypass-distinguish",
+   "kind": "uncovered",
+   "expected": [],
+   "codes": [],
+   "verdict": "pass",
+   "exit": 0,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "T3",
+   "cell": "go-action",
+   "control": "unknown-kind-correct",
+   "kind": "negative",
+   "expected": [
+    "UNVERIFIABLE"
+   ],
+   "codes": [
+    "UNVERIFIABLE"
+   ],
+   "verdict": "unverifiable",
+   "exit": 3,
+   "builds": true,
+   "passed": true,
+   "args": [
+    "--legacy",
+    "Operation"
+   ]
+  },
+  {
+   "task": "T3",
+   "cell": "go-action",
+   "control": "unknown-kind-no-event",
+   "kind": "negative",
+   "expected": [
+    "UNVERIFIABLE"
+   ],
+   "codes": [
+    "UNVERIFIABLE"
+   ],
+   "verdict": "unverifiable",
+   "exit": 3,
+   "builds": true,
+   "passed": true,
+   "args": [
+    "--legacy",
+    "Operation"
+   ]
+  },
+  {
+   "task": "P",
+   "cell": "platform",
+   "control": "unchanged",
+   "kind": "positive",
+   "expected": [],
+   "codes": [],
+   "verdict": "pass",
+   "exit": 0,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "P",
+   "cell": "platform",
+   "control": "reference-reassign",
+   "kind": "positive",
+   "expected": [],
+   "codes": [],
+   "verdict": "pass",
+   "exit": 0,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "P",
+   "cell": "platform",
+   "control": "reference-lookup",
+   "kind": "positive",
+   "expected": [],
+   "codes": [],
+   "verdict": "pass",
+   "exit": 0,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "P",
+   "cell": "platform",
+   "control": "self-declared",
+   "kind": "negative",
+   "expected": [
+    "DECLARATION_LITERAL"
+   ],
+   "codes": [
+    "DECLARATION_LITERAL"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "P",
+   "cell": "platform",
+   "control": "self-exempted",
+   "kind": "negative",
+   "expected": [
+    "DECLARATION_LITERAL",
+    "EVENT_EXEMPTION_NOT_IN_CATALOG"
+   ],
+   "codes": [
+    "DECLARATION_LITERAL",
+    "EVENT_EXEMPTION_NOT_IN_CATALOG"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "P",
+   "cell": "platform",
+   "control": "catalog-exempted",
+   "kind": "negative",
+   "expected": [
+    "CATALOG_DRIFT",
+    "PROTECTED_PATH_CHANGED"
+   ],
+   "codes": [
+    "CATALOG_DRIFT",
+    "PROTECTED_PATH_CHANGED"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "P",
+   "cell": "platform",
+   "control": "unknown-name-literal",
+   "kind": "negative",
+   "expected": [
+    "OPERATION_NOT_IN_CATALOG"
+   ],
+   "codes": [
+    "OPERATION_NOT_IN_CATALOG"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "P",
+   "cell": "platform",
+   "control": "unknown-name-conversion",
+   "kind": "negative",
+   "expected": [
+    "OPERATION_NOT_IN_CATALOG"
+   ],
+   "codes": [
+    "OPERATION_NOT_IN_CATALOG"
+   ],
+   "verdict": "fail",
+   "exit": 1,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "P",
+   "cell": "platform",
+   "control": "non-constant-name",
+   "kind": "negative",
+   "expected": [
+    "UNVERIFIABLE"
+   ],
+   "codes": [
+    "UNVERIFIABLE"
+   ],
+   "verdict": "unverifiable",
+   "exit": 3,
+   "builds": true,
+   "passed": true,
+   "args": []
+  },
+  {
+   "task": "P",
+   "cell": "platform",
+   "control": "unknown-kernel-type",
+   "kind": "negative",
+   "expected": [
+    "UNVERIFIABLE"
+   ],
+   "codes": [
+    "UNVERIFIABLE"
+   ],
+   "verdict": "unverifiable",
+   "exit": 3,
+   "builds": true,
+   "passed": true,
+   "args": []
+  }
+ ]
+}

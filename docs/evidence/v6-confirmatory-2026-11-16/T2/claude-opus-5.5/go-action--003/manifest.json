@@ -1,0 +1,24 @@
+{
+  "version": 6,
+  "trial_id": "go-action--003",
+  "plan_sha256": "aa5f46a0f51c1584f091c27324c3c4a97bffa71e76c86060e7705fe3cf18363c",
+  "initial_sha": "39bf3e7e1815479f4eb68c4f33d7cb56478af314",
+  "source_base_sha": "d8a5c576cc3c293ee2da884f5c618958df407b51",
+  "files": {
+    "go.mod": "648c40a4bf80a1cb567029bbf31c771963254e92aa8712da903eb8a883fe3217",
+    "go.sum": "e718bd4e6664b6aa2d808d7bf1f72ca1b2e36316db23235318c9e20a8705f0c4",
+    "internal/app/server.go": "128f710c1d022e50ba925fda4a2a9d8c88f4233cccc9f57c3eae6704c3d0b53f",
+    "internal/app/demo_identity.go": "1b49e429ba1a98236fea3bc84a626a4698d276dc6d55758462c0e40a97eda2fb",
+    "cmd/server/main.go": "cec57aacd74de3bb2a95d3aa504abcf8cde3661fa38fc1f8421728b47ab04e14",
+    "internal/protocol/protocol.go": "c5a4d9cb280762feff2b215014ec8cb3d35ef6196b3cff039efc71a724160382",
+    "internal/ledger/ledger.go": "450f32b6ea7d2d645ab669cd459ee7bf8099b9bf6180ec65b9f61a9666249725",
+    "internal/ledger/reconcile.go": "006c06313f1325ff17f4790850e5839863fbd188e7904cf4d7944b86298bbd02",
+    "internal/notify/notify.go": "0ea24a3c78648f57e1643d2462f037c743a38e0cf7336b6c87b9ae33d89c2754",
+    "internal/candidate/approval.go": "a829e41669078974cf23766c23a3f46b6c283799fdbefb3e32bf3441a8b9d27c",
+    "internal/candidate/operations.go": "b9b888946430909acb7b721cf9b1528e00b4ae677606d1daa784c133f2bb367a",
+    "internal/action/action.go": "e152c228d3df41eaf8a67b5961a12091c5ae50959a909b23d61af81eb0b1a6fb",
+    "TASK.md": "b3461845e23ab6d7b9e5ca5c48077ab2618b69397ed05cf010e0ddb733b2ccc0",
+    "SCHEMA.sql": "0cde1643b88512e21321c6e5608b073ddad832be7fc1e5caffb947d3dae3604c",
+    ".gitignore": "12a897501ac2360137d17d7b5dabb56661447cc7cccc68a7e3a5b7a49729f6da"
+  }
+}

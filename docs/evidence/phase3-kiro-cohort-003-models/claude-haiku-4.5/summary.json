@@ -1,0 +1,158 @@
+{
+  "version": 3,
+  "kind": "model-trial",
+  "plan_sha256": "c37135fffbe259fb06ac5a373f76390ad3f394ae06223ec6f1747d82e92937ee",
+  "rows": [
+    {
+      "cell": "go-manual",
+      "planned": 10,
+      "observed": 10,
+      "passed": 5,
+      "unmeasured": 0,
+      "first_pass_rate": 0.5,
+      "outcomes": {
+        "passed": 5,
+        "scope-violation": 1,
+        "acceptance-failed": 4
+      },
+      "usage": [
+        {
+          "trial": "go-manual--001",
+          "usage": {
+            "credits": 0.6295123652404643
+          }
+        },
+        {
+          "trial": "go-manual--002",
+          "usage": {
+            "credits": 0.39258400364842455
+          }
+        },
+        {
+          "trial": "go-manual--003",
+          "usage": {
+            "credits": 0.47048533737976794
+          }
+        },
+        {
+          "trial": "go-manual--004",
+          "usage": {
+            "credits": 0.9162426272636816
+          }
+        },
+        {
+          "trial": "go-manual--005",
+          "usage": {
+            "credits": 0.698099320066335
+          }
+        },
+        {
+          "trial": "go-manual--006",
+          "usage": {
+            "credits": 0.6921687310779436
+          }
+        },
+        {
+          "trial": "go-manual--007",
+          "usage": {
+            "credits": 1.2216746293200664
+          }
+        },
+        {
+          "trial": "go-manual--008",
+          "usage": {
+            "credits": 0.5572392249419569
+          }
+        },
+        {
+          "trial": "go-manual--009",
+          "usage": {
+            "credits": 0.6883744594361525
+          }
+        },
+        {
+          "trial": "go-manual--010",
+          "usage": {
+            "credits": 1.252806246633499
+          }
+        }
+      ]
+    },
+    {
+      "cell": "go-action",
+      "planned": 10,
+      "observed": 10,
+      "passed": 8,
+      "unmeasured": 0,
+      "first_pass_rate": 0.8,
+      "outcomes": {
+        "passed": 8,
+        "scope-violation": 1,
+        "acceptance-failed": 1
+      },
+      "usage": [
+        {
+          "trial": "go-action--001",
+          "usage": {
+            "credits": 0.8340851241127696
+          }
+        },
+        {
+          "trial": "go-action--002",
+          "usage": {
+            "credits": 0.9621766949917084
+          }
+        },
+        {
+          "trial": "go-action--003",
+          "usage": {
+            "credits": 0.6723541283582091
+          }
+        },
+        {
+          "trial": "go-action--004",
+          "usage": {
+            "credits": 0.6984317629850746
+          }
+        },
+        {
+          "trial": "go-action--005",
+          "usage": {
+            "credits": 0.6207872148590382
+          }
+        },
+        {
+          "trial": "go-action--006",
+          "usage": {
+            "credits": 0.763204758872305
+          }
+        },
+        {
+          "trial": "go-action--007",
+          "usage": {
+            "credits": 0.5750771042122719
+          }
+        },
+        {
+          "trial": "go-action--008",
+          "usage": {
+            "credits": 0.43579215601990046
+          }
+        },
+        {
+          "trial": "go-action--009",
+          "usage": {
+            "credits": 0.5480480028524046
+          }
+        },
+        {
+          "trial": "go-action--010",
+          "usage": {
+            "credits": 0.6059924212271974
+          }
+        }
+      ]
+    }
+  ],
+  "note": "No inference of model benefit from synthetic controls. Missing/infrastructure trials remain unmeasured; absent usage is unknown."
+}

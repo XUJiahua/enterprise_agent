@@ -1,0 +1,59 @@
+diff --git a/internal/ledger/ledger.go b/internal/ledger/ledger.go
+index 3f0c088..94baabe 100644
+--- a/internal/ledger/ledger.go
++++ b/internal/ledger/ledger.go
+@@ -16,11 +16,15 @@ import (
+ 
+ // Fingerprint is the request digest shared by every Action operation: the
+ // operation name is the domain separator, IDs are length-prefixed and sorted.
+-func Fingerprint(operation string, ids []string) string {
++// For assignee operations, the assignee is included as operation+"\n"+assignee.
++func Fingerprint(operation string, ids []string, assignee ...string) string {
+ 	sorted := append([]string(nil), ids...)
+ 	sort.Strings(sorted)
+ 	h := sha256.New()
+ 	fmt.Fprint(h, operation, "\n")
++	if len(assignee) > 0 {
++		fmt.Fprint(h, assignee[0], "\n")
++	}
+ 	for _, id := range sorted {
+ 		fmt.Fprintf(h, "%d:%s", len(id), id)
+ 	}
+@@ -48,12 +52,13 @@ func subject(operation string, response []byte) (string, []string, bool) {
+ 		var id string
+ 		return operation, []string{id}, json.Unmarshal(raw, &id) == nil && id != ""
+ 	}
+-	if raw, ok := body["assignee"]; ok {
+-		var assignee string
+-		if json.Unmarshal(raw, &assignee) != nil || assignee == "" {
++	assignee, hasAssignee := body["assignee"]
++	if hasAssignee {
++		var assigneeID string
++		if json.Unmarshal(assignee, &assigneeID) != nil || assigneeID == "" {
+ 			return "", nil, false
+ 		}
+-		operation += "\n" + assignee
++		operation += "\n" + assigneeID
+ 		delete(body, "assignee")
+ 	}
+ 	if len(body) != 1 {
+@@ -61,7 +66,18 @@ func subject(operation string, response []byte) (string, []string, bool) {
+ 	}
+ 	for _, raw := range body {
+ 		var ids []string
+-		return operation, ids, json.Unmarshal(raw, &ids) == nil
++		if hasAssignee {
++			// For assignee operations, IDs are the reassignedIds array
++			if err := json.Unmarshal(raw, &ids); err != nil {
++				return "", nil, false
++			}
++		} else {
++			// For non-assignee operations, IDs are from the single array field
++			if err := json.Unmarshal(raw, &ids); err != nil {
++				return "", nil, false
++			}
++		}
++		return operation, ids, true
+ 	}
+ 	return "", nil, false
+ }

@@ -1,0 +1,86 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index c928b73..c5e71e9 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -16,6 +16,7 @@ import (
+ )
+ 
+ const opApprove = "bulk-approve.v3"
++const opReopen = "reopen.v5"
+ 
+ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
+ 	approve := func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
+@@ -108,5 +109,72 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		}
+ 		return result, false, nil
+ 	}
+-	return protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve, "/purchases/bulk-reject": newReject(pool)}, fallback), nil
++	reopen := func(ctx context.Context, u app.Identity, key, id, reason string) (protocol.ItemResult, bool, error) {
++		if strings.ContainsRune(id, 0) {
++			return protocol.ItemResult{}, false, &protocol.Rejection{Status: 404}
++		}
++		tx, err := pool.Begin(ctx)
++		if err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		defer tx.Rollback(ctx)
++		if _, err = tx.Exec(ctx, `SELECT set_config('app.tenant',$1,true),set_config('app.user',$2,true),set_config('app.role',$3,true)`, u.Tenant, u.User, u.Role); err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		lock, _ := json.Marshal([]string{opReopen, u.Tenant, u.User, key})
++		if _, err = tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1,0))`, string(lock)); err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		hash := ledger.Fingerprint(opReopen, []string{id})
++		var savedHash string
++		var saved []byte
++		err = tx.QueryRow(ctx, `SELECT "requestHash",response FROM "ActionRequest"
++		 WHERE "tenantId"=$1 AND "actorId"=$2 AND operation=$3 AND key=$4`, u.Tenant, u.User, opReopen, key).Scan(&savedHash, &saved)
++		if err == nil {
++			if savedHash != hash {
++				return protocol.ItemResult{}, false, &protocol.Rejection{Status: 409}
++			}
++			var body map[string]string
++			if err = json.Unmarshal(saved, &body); err != nil {
++				return protocol.ItemResult{}, false, err
++			}
++			if err = tx.Commit(ctx); err != nil {
++				return protocol.ItemResult{}, false, err
++			}
++			return protocol.ItemResult{ID: body["id"], Status: body["status"]}, true, nil
++		}
++		if !errors.Is(err, pgx.ErrNoRows) {
++			return protocol.ItemResult{}, false, err
++		}
++		row := tx.QueryRow(ctx, `UPDATE "Purchase" SET status='submitted' WHERE id=$1 AND "tenantId"=$2 AND "createdBy"=$3 AND status='rejected' RETURNING id`, id, u.Tenant, u.User)
++		var resultID string
++		err = row.Scan(&resultID)
++		if err != nil {
++			if errors.Is(err, pgx.ErrNoRows) {
++				return protocol.ItemResult{}, false, &protocol.Rejection{Status: 404}
++			}
++			return protocol.ItemResult{}, false, err
++		}
++		_, err = tx.Exec(ctx, `INSERT INTO "ApprovalAudit" ("tenantId","purchaseId","approvedBy",operation,"idempotencyKey","fromStatus","toStatus",reason)
++		 VALUES ($1,$2,$3,$4,$5,'rejected','submitted',$6)`, u.Tenant, id, u.User, opReopen, key, reason)
++		if err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		response := protocol.ItemResult{ID: resultID, Status: "submitted"}
++		jsonResp, err := json.Marshal(response)
++		if err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		_, err = tx.Exec(ctx, `INSERT INTO "ActionRequest" ("tenantId","actorId",operation,key,"requestHash",response)
++		 VALUES ($1,$2,$3,$4,$5,$6::jsonb)`, u.Tenant, u.User, opReopen, key, hash, string(jsonResp))
++		if err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		if err = tx.Commit(ctx); err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		return response, false, nil
++	}
++	return protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve, "/purchases/bulk-reject": newReject(pool)},
++		protocol.Item("reopen", "requester", reopen, fallback)), nil
+ }

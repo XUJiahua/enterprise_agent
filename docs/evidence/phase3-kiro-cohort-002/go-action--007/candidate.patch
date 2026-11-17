@@ -1,0 +1,96 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index ad14a29..91b134c 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -1,63 +1,47 @@
+-// Shared starting point: atomic batch approval, without audit or idempotency.
++// Atomic batch approval with same-transaction audit and scoped idempotency.
++//
++// The transactional work (guarded RLS binding, scoped key lock, replay lookup,
++// all-or-nothing approval, ApprovalAudit and ActionRequest inserts) is owned by
++// the protected internal/action Executor. This package only adapts its values
++// and errors to the shared protocol adapter.
+ package candidate
+ 
+ import (
+ 	"context"
++	"errors"
++	"net/http"
++
++	"github.com/XUJiahua/enterprise_agent/internal/action"
+ 	"github.com/XUJiahua/enterprise_agent/internal/app"
+ 	"github.com/XUJiahua/enterprise_agent/internal/protocol"
+ 	"github.com/jackc/pgx/v5/pgxpool"
+-	"net/http"
+-	"strings"
+ )
+ 
+ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
++	// Empty mutation: no controlled faults. New also verifies the guarded
++	// Purchase runtime and the append-only RLS configuration of the new tables.
++	exec, err := action.New(ctx, pool, "")
++	if err != nil {
++		return nil, err
++	}
+ 	approve := func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
+-		for _, id := range ids {
+-			if strings.ContainsRune(id, 0) {
+-				return protocol.Result{}, false, &protocol.Rejection{Status: 404}
+-			}
+-		}
+-		tx, err := pool.Begin(ctx)
+-		if err != nil {
+-			return protocol.Result{}, false, err
+-		}
+-		defer tx.Rollback(ctx)
+-		_, err = tx.Exec(ctx, `SELECT set_config('app.tenant',$1,true),set_config('app.user',$2,true),set_config('app.role',$3,true)`, u.Tenant, u.User, u.Role)
+-		if err != nil {
+-			return protocol.Result{}, false, err
+-		}
+-		rows, err := tx.Query(ctx, `SELECT id FROM "Purchase" WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted' ORDER BY id FOR UPDATE`, ids, u.Tenant, u.User)
++		// u is the identity bound by the adapter from Authorization only;
++		// no client-supplied context header is consulted.
++		result, replayed, err := exec.BulkApprove(ctx, u, key, ids)
+ 		if err != nil {
+-			return protocol.Result{}, false, err
+-		}
+-		eligible := []string{}
+-		for rows.Next() {
+-			var id string
+-			if err = rows.Scan(&id); err != nil {
+-				rows.Close()
+-				return protocol.Result{}, false, err
++			var rejected *action.Rejection
++			if errors.As(err, &rejected) {
++				return protocol.Result{}, false, &protocol.Rejection{Status: rejected.Status}
+ 			}
+-			eligible = append(eligible, id)
+-		}
+-		err = rows.Err()
+-		rows.Close()
+-		if err != nil {
++			// Database errors pass through unchanged so the adapter can map
++			// unique violations (23505) to 409 and everything else to 503.
+ 			return protocol.Result{}, false, err
+ 		}
+-		if len(eligible) != len(ids) {
+-			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+-		}
+-		tag, err := tx.Exec(ctx, `UPDATE "Purchase" SET status='approved' WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'`, ids, u.Tenant, u.User)
+-		if err != nil {
+-			return protocol.Result{}, false, err
+-		}
+-		if tag.RowsAffected() != int64(len(ids)) {
+-			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+-		}
+-		if err = tx.Commit(ctx); err != nil {
+-			return protocol.Result{}, false, err
++		approved := result.ApprovedIDs
++		if approved == nil {
++			approved = []string{}
+ 		}
+-		return protocol.Result{ApprovedIDs: ids}, false, nil
++		return protocol.Result{ApprovedIDs: approved}, replayed, nil
+ 	}
+ 	return protocol.HTTP(approve, fallback), nil
+ }

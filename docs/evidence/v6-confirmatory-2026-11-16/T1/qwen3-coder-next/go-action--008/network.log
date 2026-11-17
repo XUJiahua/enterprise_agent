@@ -1,0 +1,77 @@
+{"event": "start", "proxy": "127.0.0.1:18902", "allow": ["management.eu-central-1.kiro.dev", "runtime.eu-central-1.kiro.dev"], "discover": false}
+{"ts": 1794724243.503, "method": "CONNECT", "host": "client-telemetry.us-east-1.amazonaws.com", "port": "443", "decision": "deny", "reason": "not-allowlisted"}
+{"ts": 1794724245.123, "method": "CONNECT", "host": "management.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.87", "decision": "allow", "bytes_sent": 2764, "bytes_received": 7095, "seconds": 1.178}
+{"ts": 1794724245.137, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 2822, "bytes_received": 17567, "seconds": 1.192}
+{"ts": 1794724245.192, "method": "CONNECT", "host": "management.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.87", "decision": "allow", "bytes_sent": 2853, "bytes_received": 5882, "seconds": 1.242}
+{"ts": 1794724245.194, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 2788, "bytes_received": 6334, "seconds": 1.249}
+{"ts": 1794724245.194, "method": "CONNECT", "host": "management.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.87", "decision": "allow", "bytes_sent": 2801, "bytes_received": 5842, "seconds": 1.229}
+{"ts": 1794724245.196, "method": "CONNECT", "host": "management.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.87", "decision": "allow", "bytes_sent": 2794, "bytes_received": 16640, "seconds": 1.251}
+{"ts": 1794724246.35, "method": "CONNECT", "host": "management.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.87", "decision": "allow", "bytes_sent": 2789, "bytes_received": 6665, "seconds": 1.141}
+{"ts": 1794724246.97, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 4287, "bytes_received": 6810, "seconds": 1.632}
+{"ts": 1794724247.703, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 25425, "bytes_received": 69863, "seconds": 2.343}
+{"ts": 1794724247.729, "method": "CONNECT", "host": "client-telemetry.us-east-1.amazonaws.com", "port": "443", "decision": "deny", "reason": "not-allowlisted"}
+{"ts": 1794724248.255, "method": "CONNECT", "host": "telemetry.eu-central-1.kiro.dev", "port": "443", "decision": "deny", "reason": "not-allowlisted"}
+{"ts": 1794724249.364, "method": "CONNECT", "host": "telemetry.eu-central-1.kiro.dev", "port": "443", "decision": "deny", "reason": "not-allowlisted"}
+{"ts": 1794724250.321, "method": "CONNECT", "host": "client-telemetry.us-east-1.amazonaws.com", "port": "443", "decision": "deny", "reason": "not-allowlisted"}
+{"ts": 1794724251.944, "method": "CONNECT", "host": "management.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.87", "decision": "allow", "bytes_sent": 2853, "bytes_received": 5882, "seconds": 1.191}
+{"ts": 1794724251.954, "method": "CONNECT", "host": "management.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.87", "decision": "allow", "bytes_sent": 2764, "bytes_received": 7095, "seconds": 1.195}
+{"ts": 1794724251.963, "method": "CONNECT", "host": "management.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.87", "decision": "allow", "bytes_sent": 2825, "bytes_received": 5842, "seconds": 1.21}
+{"ts": 1794724252.003, "method": "CONNECT", "host": "management.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.87", "decision": "allow", "bytes_sent": 2794, "bytes_received": 16640, "seconds": 1.244}
+{"ts": 1794724252.007, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 2788, "bytes_received": 6334, "seconds": 1.248}
+{"ts": 1794724252.034, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 2822, "bytes_received": 17567, "seconds": 1.259}
+{"ts": 1794724253.091, "method": "CONNECT", "host": "management.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.87", "decision": "allow", "bytes_sent": 2789, "bytes_received": 6665, "seconds": 1.126}
+{"ts": 1794724253.762, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 6560, "bytes_received": 7365, "seconds": 1.622}
+{"ts": 1794724254.711, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 28308, "bytes_received": 72441, "seconds": 2.551}
+{"ts": 1794724257.401, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 28814, "bytes_received": 70199, "seconds": 2.659}
+{"ts": 1794724259.99, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 29341, "bytes_received": 70236, "seconds": 2.577}
+{"ts": 1794724262.604, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 29845, "bytes_received": 70343, "seconds": 2.593}
+{"ts": 1794724265.247, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 30895, "bytes_received": 70284, "seconds": 2.626}
+{"ts": 1794724267.793, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 31268, "bytes_received": 70299, "seconds": 2.535}
+{"ts": 1794724270.782, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 31714, "bytes_received": 70333, "seconds": 2.963}
+{"ts": 1794724273.366, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 39378, "bytes_received": 70306, "seconds": 2.572}
+{"ts": 1794724276.2, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 39749, "bytes_received": 70256, "seconds": 2.824}
+{"ts": 1794724278.904, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 40189, "bytes_received": 70316, "seconds": 2.694}
+{"ts": 1794724281.79, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 49548, "bytes_received": 70141, "seconds": 2.872}
+{"ts": 1794724284.726, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 50009, "bytes_received": 70297, "seconds": 2.916}
+{"ts": 1794724287.744, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 50933, "bytes_received": 70277, "seconds": 3.006}
+{"ts": 1794724290.795, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 60209, "bytes_received": 70164, "seconds": 3.039}
+{"ts": 1794724294.191, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 60568, "bytes_received": 70237, "seconds": 3.365}
+{"ts": 1794724297.173, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 60980, "bytes_received": 70236, "seconds": 2.972}
+{"ts": 1794724300.203, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 61408, "bytes_received": 70260, "seconds": 3.019}
+{"ts": 1794724303.201, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 62820, "bytes_received": 70274, "seconds": 2.987}
+{"ts": 1794724306.179, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 63292, "bytes_received": 70359, "seconds": 2.968}
+{"ts": 1794724309.116, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 65181, "bytes_received": 70208, "seconds": 2.915}
+{"ts": 1794724310.195, "method": "CONNECT", "host": "telemetry.eu-central-1.kiro.dev", "port": "443", "decision": "deny", "reason": "not-allowlisted"}
+{"ts": 1794724311.406, "method": "CONNECT", "host": "telemetry.eu-central-1.kiro.dev", "port": "443", "decision": "deny", "reason": "not-allowlisted"}
+{"ts": 1794724312.199, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 75922, "bytes_received": 73518, "seconds": 3.07}
+{"ts": 1794724313.599, "method": "CONNECT", "host": "telemetry.eu-central-1.kiro.dev", "port": "443", "decision": "deny", "reason": "not-allowlisted"}
+{"ts": 1794724315.311, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 76612, "bytes_received": 70234, "seconds": 3.085}
+{"ts": 1794724318.425, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 77075, "bytes_received": 70339, "seconds": 3.087}
+{"ts": 1794724323.011, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 79977, "bytes_received": 79025, "seconds": 4.556}
+{"ts": 1794724329.845, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 82082, "bytes_received": 85397, "seconds": 6.811}
+{"ts": 1794724341.072, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 86207, "bytes_received": 99696, "seconds": 11.21}
+{"ts": 1794724344.15, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 93498, "bytes_received": 72522, "seconds": 3.061}
+{"ts": 1794724360.9, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 103542, "bytes_received": 115196, "seconds": 16.733}
+{"ts": 1794724364.356, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 114739, "bytes_received": 72432, "seconds": 3.423}
+{"ts": 1794724370.221, "method": "CONNECT", "host": "telemetry.eu-central-1.kiro.dev", "port": "443", "decision": "deny", "reason": "not-allowlisted"}
+{"ts": 1794724371.44, "method": "CONNECT", "host": "telemetry.eu-central-1.kiro.dev", "port": "443", "decision": "deny", "reason": "not-allowlisted"}
+{"ts": 1794724373.642, "method": "CONNECT", "host": "telemetry.eu-central-1.kiro.dev", "port": "443", "decision": "deny", "reason": "not-allowlisted"}
+{"ts": 1794724380.0, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 115373, "bytes_received": 110625, "seconds": 15.152}
+{"ts": 1794724383.822, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 125413, "bytes_received": 70631, "seconds": 3.785}
+{"ts": 1794724387.814, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 125793, "bytes_received": 72286, "seconds": 3.481}
+{"ts": 1794724391.54, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 127116, "bytes_received": 70279, "seconds": 3.704}
+{"ts": 1794724395.352, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 129594, "bytes_received": 72468, "seconds": 3.795}
+{"ts": 1794724398.888, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 139698, "bytes_received": 73313, "seconds": 3.511}
+{"ts": 1794724418.737, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 140840, "bytes_received": 128190, "seconds": 19.664}
+{"ts": 1794724422.53, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 154037, "bytes_received": 70660, "seconds": 3.769}
+{"ts": 1794724426.768, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 154417, "bytes_received": 72132, "seconds": 3.687}
+{"ts": 1794724430.231, "method": "CONNECT", "host": "telemetry.eu-central-1.kiro.dev", "port": "443", "decision": "deny", "reason": "not-allowlisted"}
+{"ts": 1794724430.652, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 155125, "bytes_received": 70344, "seconds": 3.869}
+{"ts": 1794724431.322, "method": "CONNECT", "host": "telemetry.eu-central-1.kiro.dev", "port": "443", "decision": "deny", "reason": "not-allowlisted"}
+{"ts": 1794724433.559, "method": "CONNECT", "host": "telemetry.eu-central-1.kiro.dev", "port": "443", "decision": "deny", "reason": "not-allowlisted"}
+{"ts": 1794724434.436, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 155761, "bytes_received": 72673, "seconds": 3.771}
+{"ts": 1794724439.306, "method": "CONNECT", "host": "runtime.eu-central-1.kiro.dev", "port": "443", "peer": "198.19.2.92", "decision": "allow", "bytes_sent": 156777, "bytes_received": 77814, "seconds": 4.669}
+{"ts": 1794724439.354, "method": "CONNECT", "host": "client-telemetry.us-east-1.amazonaws.com", "port": "443", "decision": "deny", "reason": "not-allowlisted"}
+{"ts": 1794724439.886, "method": "CONNECT", "host": "telemetry.eu-central-1.kiro.dev", "port": "443", "decision": "deny", "reason": "not-allowlisted"}
+{"ts": 1794724441.112, "method": "CONNECT", "host": "telemetry.eu-central-1.kiro.dev", "port": "443", "decision": "deny", "reason": "not-allowlisted"}
+{"ts": 1794724442.115, "event": "stop", "returncode": 0, "interrupted": false}

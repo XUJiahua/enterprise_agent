@@ -1,0 +1,65 @@
+// Package ledger is the reconciliation side of Action metadata. The nightly
+// reconciliation job calls Verify over every tenant: it recomputes each
+// ActionRequest.requestHash from the row's own operation and the IDs in its
+// stored response, and reports rows that do not match as tampered.
+package ledger
+
+import (
+	"context"
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
+	"fmt"
+	"sort"
+
+	"github.com/jackc/pgx/v5"
+)
+
+// Fingerprint is the request digest shared by every Action operation: the
+// operation name is the domain separator, IDs are length-prefixed and sorted.
+func Fingerprint(operation string, ids []string) string {
+	sorted := append([]string(nil), ids...)
+	sort.Strings(sorted)
+	h := sha256.New()
+	fmt.Fprint(h, operation, "\n")
+	for _, id := range sorted {
+		fmt.Fprintf(h, "%d:%s", len(id), id)
+	}
+	return hex.EncodeToString(h.Sum(nil))
+}
+
+type Mismatch struct{ TenantID, ActorID, Operation, Key string }
+
+type Querier interface {
+	Query(context.Context, string, ...any) (pgx.Rows, error)
+}
+
+// Verify returns every ActionRequest whose requestHash differs from
+// Fingerprint(operation, IDs of the single response field).
+func Verify(ctx context.Context, q Querier) ([]Mismatch, error) {
+	rows, err := q.Query(ctx, `SELECT "tenantId","actorId",operation,key,"requestHash",response FROM "ActionRequest"`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var bad []Mismatch
+	for rows.Next() {
+		var m Mismatch
+		var hash string
+		var response []byte
+		if err = rows.Scan(&m.TenantID, &m.ActorID, &m.Operation, &m.Key, &hash, &response); err != nil {
+			return nil, err
+		}
+		var body map[string][]string
+		if json.Unmarshal(response, &body) != nil || len(body) != 1 {
+			bad = append(bad, m)
+			continue
+		}
+		for _, ids := range body {
+			if Fingerprint(m.Operation, ids) != hash {
+				bad = append(bad, m)
+			}
+		}
+	}
+	return bad, rows.Err()
+}

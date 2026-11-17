@@ -1,0 +1,277 @@
+{
+ "kind": "retrospective-catalog-verifier-replay-run1-before-change-log",
+ "out_of_sample": false,
+ "note": "first run, before changes 1 and 2 of the change log in docs/operation-semantics.md; superseded by summary.json",
+ "catalog": "sha256:98abea36467340ad3702d12341beb3894e649d42d9129cfac4e45e46a9de0055",
+ "verifier_commit": "f28947f4208043a380ac8b939ce207984ac74a41",
+ "new_model_generations": 0,
+ "frozen_scores_modified": false,
+ "configs": {
+  "full": {
+   "trials": 228,
+   "semantic_findings_vs_any_frozen_failure": {
+    "TP": 128,
+    "FP": 0,
+    "FN": 14,
+    "TN": 86
+   },
+   "blocked_vs_any_frozen_failure": {
+    "TP": 134,
+    "FP": 2,
+    "FN": 8,
+    "TN": 84
+   },
+   "silent_failures": 110,
+   "silent_caught": 102,
+   "unverifiable": {
+    "passed": 2,
+    "failed": 6
+   },
+   "rules": {
+    "extension-scope": {
+     "TP": 8,
+     "FP": 0,
+     "FN": 0,
+     "TN": 220,
+     "excluded": 0
+    },
+    "catalog": {
+     "TP": 7,
+     "FP": 0,
+     "FN": 132,
+     "TN": 86,
+     "excluded": 3
+    },
+    "catalog-event": {
+     "TP": 112,
+     "FP": 0,
+     "FN": 4,
+     "TN": 101,
+     "excluded": 11
+    },
+    "catalog-fingerprint": {
+     "TP": 9,
+     "FP": 0,
+     "FN": 10,
+     "TN": 198,
+     "excluded": 11
+    },
+    "catalog-record": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 17,
+     "TN": 200,
+     "excluded": 11
+    },
+    "unverifiable": {
+     "TP": 6,
+     "FP": 2,
+     "FN": 133,
+     "TN": 84,
+     "excluded": 3
+    }
+   },
+   "groups": {
+    "T1/go-manual": {
+     "trials": 38,
+     "failed": 20,
+     "silent": 14,
+     "silent_caught": 10,
+     "flagged_passed": 0,
+     "unverifiable_passed": 0,
+     "unverifiable_failed": 5
+    },
+    "T1/go-action": {
+     "trials": 40,
+     "failed": 12,
+     "silent": 10,
+     "silent_caught": 10,
+     "flagged_passed": 0,
+     "unverifiable_passed": 0,
+     "unverifiable_failed": 0
+    },
+    "T2/go-manual": {
+     "trials": 36,
+     "failed": 23,
+     "silent": 18,
+     "silent_caught": 15,
+     "flagged_passed": 0,
+     "unverifiable_passed": 2,
+     "unverifiable_failed": 1
+    },
+    "T2/go-action": {
+     "trials": 40,
+     "failed": 30,
+     "silent": 24,
+     "silent_caught": 24,
+     "flagged_passed": 0,
+     "unverifiable_passed": 0,
+     "unverifiable_failed": 0
+    },
+    "T3/go-manual": {
+     "trials": 35,
+     "failed": 24,
+     "silent": 12,
+     "silent_caught": 11,
+     "flagged_passed": 0,
+     "unverifiable_passed": 0,
+     "unverifiable_failed": 0
+    },
+    "T3/go-action": {
+     "trials": 39,
+     "failed": 33,
+     "silent": 32,
+     "silent_caught": 32,
+     "flagged_passed": 0,
+     "unverifiable_passed": 0,
+     "unverifiable_failed": 0
+    }
+   },
+   "false_positives": [],
+   "codes": {
+    "DECLARATION_MISMATCH": 7,
+    "EVENT_EXEMPTION_NOT_IN_CATALOG": 73,
+    "EVENT_MISMATCH": 1,
+    "EVENT_NOT_WRITTEN": 44,
+    "FINGERPRINT_EXTRA_INPUT": 8,
+    "FINGERPRINT_INPUT_MISSING": 1,
+    "FINGERPRINT_SHAPE": 1,
+    "PROTECTED_PATH_CHANGED": 8,
+    "UNVERIFIABLE": 8
+   }
+  },
+  "ablation": {
+   "trials": 228,
+   "semantic_findings_vs_any_frozen_failure": {
+    "TP": 97,
+    "FP": 0,
+    "FN": 45,
+    "TN": 86
+   },
+   "blocked_vs_any_frozen_failure": {
+    "TP": 134,
+    "FP": 8,
+    "FN": 8,
+    "TN": 78
+   },
+   "silent_failures": 110,
+   "silent_caught": 71,
+   "unverifiable": {
+    "passed": 8,
+    "failed": 39
+   },
+   "rules": {
+    "extension-scope": {
+     "TP": 8,
+     "FP": 0,
+     "FN": 0,
+     "TN": 220,
+     "excluded": 0
+    },
+    "catalog": {
+     "TP": 7,
+     "FP": 0,
+     "FN": 132,
+     "TN": 86,
+     "excluded": 3
+    },
+    "catalog-event": {
+     "TP": 80,
+     "FP": 0,
+     "FN": 36,
+     "TN": 101,
+     "excluded": 11
+    },
+    "catalog-fingerprint": {
+     "TP": 9,
+     "FP": 0,
+     "FN": 10,
+     "TN": 198,
+     "excluded": 11
+    },
+    "catalog-record": {
+     "TP": 0,
+     "FP": 0,
+     "FN": 17,
+     "TN": 200,
+     "excluded": 11
+    },
+    "unverifiable": {
+     "TP": 39,
+     "FP": 8,
+     "FN": 100,
+     "TN": 78,
+     "excluded": 3
+    }
+   },
+   "groups": {
+    "T1/go-manual": {
+     "trials": 38,
+     "failed": 20,
+     "silent": 14,
+     "silent_caught": 10,
+     "flagged_passed": 0,
+     "unverifiable_passed": 0,
+     "unverifiable_failed": 5
+    },
+    "T1/go-action": {
+     "trials": 40,
+     "failed": 12,
+     "silent": 10,
+     "silent_caught": 10,
+     "flagged_passed": 0,
+     "unverifiable_passed": 0,
+     "unverifiable_failed": 0
+    },
+    "T2/go-manual": {
+     "trials": 36,
+     "failed": 23,
+     "silent": 18,
+     "silent_caught": 15,
+     "flagged_passed": 0,
+     "unverifiable_passed": 2,
+     "unverifiable_failed": 1
+    },
+    "T2/go-action": {
+     "trials": 40,
+     "failed": 30,
+     "silent": 24,
+     "silent_caught": 24,
+     "flagged_passed": 0,
+     "unverifiable_passed": 0,
+     "unverifiable_failed": 0
+    },
+    "T3/go-manual": {
+     "trials": 35,
+     "failed": 24,
+     "silent": 12,
+     "silent_caught": 11,
+     "flagged_passed": 0,
+     "unverifiable_passed": 0,
+     "unverifiable_failed": 0
+    },
+    "T3/go-action": {
+     "trials": 39,
+     "failed": 33,
+     "silent": 32,
+     "silent_caught": 1,
+     "flagged_passed": 0,
+     "unverifiable_passed": 6,
+     "unverifiable_failed": 33
+    }
+   },
+   "false_positives": [],
+   "codes": {
+    "DECLARATION_MISMATCH": 7,
+    "EVENT_EXEMPTION_NOT_IN_CATALOG": 41,
+    "EVENT_MISMATCH": 1,
+    "EVENT_NOT_WRITTEN": 44,
+    "FINGERPRINT_EXTRA_INPUT": 8,
+    "FINGERPRINT_INPUT_MISSING": 1,
+    "FINGERPRINT_SHAPE": 1,
+    "PROTECTED_PATH_CHANGED": 8,
+    "UNVERIFIABLE": 47
+   }
+  }
+ }
+}

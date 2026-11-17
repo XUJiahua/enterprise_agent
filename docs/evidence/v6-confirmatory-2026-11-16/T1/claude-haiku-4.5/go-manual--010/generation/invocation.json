@@ -1,0 +1,35 @@
+{
+  "status": "provider-error",
+  "usage": null,
+  "turn_started": true,
+  "run_finished": false,
+  "reported_model": "claude-haiku-4.5",
+  "event_count": 142,
+  "agent_messages": [],
+  "errors": [
+    "You've reached your monthly usage limit. Please return next month to continue building. (Request ID: 15c02f9a-661e-4753-9a49-26764bc2a6e2) (code -32000): {\"errorType\":\"UsageLimitReachedError\",\"retryErrorType\":\"CLIENT_ERROR\",\"requestId\":\"15c02f9a-661e-4753-9a49-26764bc2a6e2\",\"actions\":[\"viewUsage\"]}"
+  ],
+  "engine": "kiro",
+  "generation_seconds": 37.385,
+  "requested_model": "claude-haiku-4.5",
+  "reasoning_effort": "medium",
+  "sandbox": "workspace-write",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "claude-haiku-4.5",
+    "--effort",
+    "medium",
+    "--trust-all-tools"
+  ],
+  "returncode": 1,
+  "timed_out": false
+}

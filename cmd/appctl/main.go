@@ -10,6 +10,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/XUJiahua/enterprise_agent/internal/extcheck"
 	"github.com/XUJiahua/enterprise_agent/internal/policy"
 )
 
@@ -22,10 +23,16 @@ type Finding struct {
 func main() { os.Exit(run()) }
 func run() int {
 	if len(os.Args) < 2 {
-		fmt.Fprintln(os.Stderr, "usage: appctl compile|check|plan|verify [--base REF] [--root DIR]")
+		fmt.Fprintln(os.Stderr, "usage: appctl compile|check|plan|verify|extensions|operations [--base REF] [--root DIR]")
 		return 1
 	}
 	command := os.Args[1]
+	if command == "extensions" {
+		return extensions(os.Args[2:])
+	}
+	if command == "operations" {
+		return operations(os.Args[2:])
+	}
 	f := flag.NewFlagSet(command, flag.ContinueOnError)
 	root := f.String("root", ".", "application root")
 	base := f.String("base", "", "trusted git baseline ref")
@@ -132,4 +139,59 @@ func report(f []Finding) int {
 		return 1
 	}
 	return 0
+}
+
+// extensions statically checks a candidate checkout against its trusted
+// baseline commit; exit 0 only with no findings, 2 when it cannot run.
+func extensions(args []string) int {
+	f := flag.NewFlagSet("extensions", flag.ContinueOnError)
+	root := f.String("root", ".", "candidate checkout")
+	base := f.String("base", "", "trusted baseline commit (required)")
+	if f.Parse(args) != nil || *base == "" {
+		fmt.Fprintln(os.Stderr, "usage: appctl extensions --base REF [--root DIR]")
+		return 2
+	}
+	findings, err := extcheck.Check(*root, *base, extcheck.Default)
+	if err != nil {
+		_ = json.NewEncoder(os.Stdout).Encode(map[string]any{"ok": false, "error": err.Error()})
+		return 2
+	}
+	_ = json.NewEncoder(os.Stdout).Encode(map[string]any{"ok": len(findings) == 0, "findings": findings})
+	if len(findings) > 0 {
+		return 1
+	}
+	return 0
+}
+
+// operations checks a candidate checkout against the reviewed operation
+// catalog compiled into this binary: exit 0 pass, 1 findings, 2 cannot run,
+// 3 unverifiable (blocks the gate). --legacy limits the v6 declaration types
+// the Verifier knows (for the knowledge-ablation replay).
+func operations(args []string) int {
+	f := flag.NewFlagSet("operations", flag.ContinueOnError)
+	root := f.String("root", ".", "candidate checkout")
+	base := f.String("base", "", "trusted baseline commit (required)")
+	legacy := f.String("legacy", "Operation,Update", "known internal/action declaration types")
+	if f.Parse(args) != nil || *base == "" {
+		fmt.Fprintln(os.Stderr, "usage: appctl operations --base REF [--root DIR] [--legacy Operation,Update]")
+		return 2
+	}
+	cfg := extcheck.DefaultOps
+	cfg.Kernels = extcheck.Kernels{}
+	for dir, roles := range extcheck.DefaultOps.Kernels {
+		cfg.Kernels[dir] = map[string]extcheck.Role{}
+		for typ, role := range roles {
+			if role != extcheck.RoleLegacy || slices.Contains(strings.Split(*legacy, ","), typ) {
+				cfg.Kernels[dir][typ] = role
+			}
+		}
+	}
+	rep, err := extcheck.CheckOperations(*root, *base, cfg)
+	if err != nil {
+		_ = json.NewEncoder(os.Stdout).Encode(map[string]any{"ok": false, "catalog": rep.Catalog, "error": err.Error()})
+		return 2
+	}
+	_ = json.NewEncoder(os.Stdout).Encode(map[string]any{"ok": rep.Verdict == "pass", "catalog": rep.Catalog, "entries": rep.Entries,
+		"verdict": rep.Verdict, "findings": rep.Findings})
+	return rep.Exit()
 }

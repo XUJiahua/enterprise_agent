@@ -1,0 +1,126 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index ad14a29..a76b760 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -3,8 +3,13 @@ package candidate
+ 
+ import (
+ 	"context"
++	"crypto/sha256"
++	"encoding/hex"
++	"fmt"
+ 	"github.com/XUJiahua/enterprise_agent/internal/app"
+ 	"github.com/XUJiahua/enterprise_agent/internal/protocol"
++	"github.com/jackc/pgx/v5"
++	"github.com/jackc/pgx/v5/pgconn"
+ 	"github.com/jackc/pgx/v5/pgxpool"
+ 	"net/http"
+ 	"strings"
+@@ -26,6 +31,24 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
++		// Check idempotency first
++		var responseBytes []byte
++		err = tx.QueryRow(ctx, `SELECT response FROM "ActionRequest" WHERE "tenantId"=$1 AND "actorId"=$2 AND operation=$3 AND key=$4`, u.Tenant, u.User, "bulk-approve.v3", key).Scan(&responseBytes)
++		if err != pgx.ErrNoRows {
++			if err != nil {
++				return protocol.Result{}, false, err
++			}
++			// Found existing action, check if it's the same target set
++			var existingResult protocol.Result
++			if err := protocol.JSONUnmarshal(responseBytes, &existingResult); err != nil {
++				return protocol.Result{}, false, err
++			}
++			if !sameSet(existingResult.ApprovedIDs, ids) {
++				return protocol.Result{}, false, &protocol.Rejection{Status: 409}
++			}
++			// Same target set, return replayed
++			return protocol.Result{ApprovedIDs: existingResult.ApprovedIDs}, true, nil
++		}
+ 		rows, err := tx.Query(ctx, `SELECT id FROM "Purchase" WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted' ORDER BY id FOR UPDATE`, ids, u.Tenant, u.User)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+@@ -54,6 +77,34 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		if tag.RowsAffected() != int64(len(ids)) {
+ 			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+ 		}
++		// Create ActionRequest first (to establish idempotency record)
++		requestHash := computeRequestHash(ids)
++		responseJSON := protocol.JSONMarshal(protocol.Result{ApprovedIDs: ids})
++		_, err = tx.Exec(ctx, `INSERT INTO "ActionRequest" ("tenantId","actorId",operation,key,"requestHash",response) VALUES ($1,$2,$3,$4,$5,$6)`, u.Tenant, u.User, "bulk-approve.v3", key, requestHash, responseJSON)
++		if err != nil {
++			// Check if it's a duplicate key error (concurrent same key)
++			if pgErr, ok := err.(*pgconn.PgError); ok && pgErr.Code == "23505" {
++				// Concurrent attempt won or lost; check what happened
++				var responseBytes []byte
++				err2 := tx.QueryRow(ctx, `SELECT response FROM "ActionRequest" WHERE "tenantId"=$1 AND "actorId"=$2 AND operation=$3 AND key=$4`, u.Tenant, u.User, "bulk-approve.v3", key).Scan(&responseBytes)
++				if err2 != nil {
++					return protocol.Result{}, false, err // original error is the real failure
++				}
++				var existingResult protocol.Result
++				if err2 := protocol.JSONUnmarshal(responseBytes, &existingResult); err2 != nil {
++					return protocol.Result{}, false, err
++				}
++				return protocol.Result{ApprovedIDs: existingResult.ApprovedIDs}, true, nil
++			}
++			return protocol.Result{}, false, err
++		}
++		// Create ApprovalAudit entries
++		for _, id := range ids {
++			_, err = tx.Exec(ctx, `INSERT INTO "ApprovalAudit" ("tenantId","purchaseId","approvedBy",operation,"idempotencyKey","fromStatus","toStatus") VALUES ($1,$2,$3,$4,$5,'submitted','approved')`, u.Tenant, id, u.User, "bulk-approve.v3", key)
++			if err != nil {
++				return protocol.Result{}, false, err
++			}
++		}
+ 		if err = tx.Commit(ctx); err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+@@ -61,3 +112,25 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 	}
+ 	return protocol.HTTP(approve, fallback), nil
+ }
++
++func sameSet(a, b []string) bool {
++	if len(a) != len(b) {
++		return false
++	}
++	for i := range a {
++		if a[i] != b[i] {
++			return false
++		}
++	}
++	return true
++}
++
++func computeRequestHash(ids []string) string {
++	// SHA-256 of "bulk-approve.v3\n" + sorted IDs as "<length>:<ID>"
++	h := sha256.New()
++	h.Write([]byte("bulk-approve.v3\n"))
++	for _, id := range ids {
++		fmt.Fprintf(h, "%d:%s", len(id), id)
++	}
++	return hex.EncodeToString(h.Sum(nil))
++}
+diff --git a/internal/protocol/protocol.go b/internal/protocol/protocol.go
+index 9bc6da1..f27736d 100644
+--- a/internal/protocol/protocol.go
++++ b/internal/protocol/protocol.go
+@@ -20,6 +20,17 @@ import (
+ 
+ const MaxBodyBytes = 65536
+ 
++// JSONMarshal returns the JSON encoding of v.
++func JSONMarshal(v any) []byte {
++	b, _ := json.Marshal(v)
++	return b
++}
++
++// JSONUnmarshal parses the JSON-encoded data and stores the result in v.
++func JSONUnmarshal(data []byte, v any) error {
++	return json.Unmarshal(data, v)
++}
++
+ // HTTP adds one versioned POC Action endpoint; existing APIs use the old server.
+ func HTTP(approve Approve, fallback http.Handler) http.Handler {
+ 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

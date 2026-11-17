@@ -1,0 +1,37 @@
+{
+  "status": "completed",
+  "usage": {
+    "credits": 0.35983317744610277
+  },
+  "turn_started": true,
+  "run_finished": true,
+  "reported_model": "qwen3-coder-next",
+  "event_count": 127,
+  "agent_messages": [
+    "I'll analyze the existing code structure first to understand how the bulk-approve action is implemented, then add the bulk-reject functionality following the same patterns.\n\nNow I understand the structure. Let me also check the ledger package to understand the fingerprint function:\n\nNow I have all the information I need. Let me implement the bulk-reject action:\n\n1. Add a `Reject` transition in `internal/candidate/approval.go`\n2. Update the `Routes` to register the `/purchases/bulk-reject` endpoint\n3. Update the `ActionRequest` and `ApprovalAudit` table constraints (in schema, already done per SCHEMA.sql)\n\nLet me implement the changes:\n\nNow let me verify the implementation by running go build and go test:\n\nBuild and tests pass. Let me verify the final implementation:\n\nImplementation complete. The `/purchases/bulk-reject` endpoint has been added with the following behavior:\n\n**Added:**\n- `Reject` transition constant: `Transition{Operation: \"bulk-reject.v4\", From: \"submitted\", To: \"rejected\", Field: \"rejectedIds\"}`\n- `reject` handler that:\n  - Calls `executor.Run(ctx, u, Reject, key, ids)` through the shared Action kernel\n  - Returns 4xx on eligibility failures (409), auth failures (403/401), or other errors\n  - Sorts `rejectedIds` by UTF-8 lexicographical order before returning\n  - Returns 200 with `{\"rejectedIds\":[sorted IDs]}` on success\n  - Sets `Idempotency-Replayed: true/false` header appropriately\n\n**Protocol handling (shared via `protocol.HTTP`):**\n- Validates `Idempotency-Key` header\n- Enforces body size limit (65536 bytes)\n- Authenticates approver via Bearer token\n- Parses JSON `{\"ids\":[...]}` request body\n- Registers route `/purchases/bulk-reject` in `protocol.Routes`\n\n**Action kernel (shared via `action.Executor.Run`):**\n- Uses guarded RLS with `app.tenant`, `app.user`, `app.role` settings\n- Applies advisory lock for concurrency control on (operation, tenant, actor, key)\n- Checks idempotency: replay with same key+ids returns stored result; same key+different ids returns 409\n- Verifies all targets are in `tenantId`, `status='submitted'`, `createdBy<>actor`\n- Updates `Purchase.status` from `'submitted'` to `'rejected'`\n- Writes to `ActionRequest` with operation `\"bulk-reject.v4\"` and response JSON\n- Writes to `ApprovalAudit` for each rejected purchase\n- All operations in a single transaction; failure returns 503"
+  ],
+  "errors": [],
+  "engine": "kiro",
+  "generation_seconds": 35.416,
+  "requested_model": "qwen3-coder-next",
+  "reasoning_effort": "medium",
+  "sandbox": "workspace-write",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "qwen3-coder-next",
+    "--effort",
+    "medium",
+    "--trust-all-tools"
+  ],
+  "returncode": 0,
+  "timed_out": false
+}

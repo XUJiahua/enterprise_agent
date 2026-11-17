@@ -1,0 +1,164 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index ad14a29..445d851 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -1,63 +1,54 @@
+-// Shared starting point: atomic batch approval, without audit or idempotency.
++// Bulk approval with same-transaction audit and scoped idempotency.
++//
++// The transactional contract (eligibility, all-or-nothing update, one
++// ApprovalAudit per approved target, one completed ActionRequest per
++// operation+tenant+actor+key scope, replay/409 semantics, request hash) is
++// owned by the protected internal/action executor. This package only adapts
++// its values and errors to the shared HTTP protocol types.
+ package candidate
+ 
+ import (
+ 	"context"
++	"errors"
++	"net/http"
++
++	"github.com/XUJiahua/enterprise_agent/internal/action"
+ 	"github.com/XUJiahua/enterprise_agent/internal/app"
+ 	"github.com/XUJiahua/enterprise_agent/internal/protocol"
+ 	"github.com/jackc/pgx/v5/pgxpool"
+-	"net/http"
+-	"strings"
+ )
+ 
++// New preserves the original signature. Requests other than
++// POST /purchases/bulk-approve are served unchanged by fallback.
+ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
+-	approve := func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
+-		for _, id := range ids {
+-			if strings.ContainsRune(id, 0) {
+-				return protocol.Result{}, false, &protocol.Rejection{Status: 404}
+-			}
+-		}
+-		tx, err := pool.Begin(ctx)
+-		if err != nil {
+-			return protocol.Result{}, false, err
+-		}
+-		defer tx.Rollback(ctx)
+-		_, err = tx.Exec(ctx, `SELECT set_config('app.tenant',$1,true),set_config('app.user',$2,true),set_config('app.role',$3,true)`, u.Tenant, u.User, u.Role)
+-		if err != nil {
+-			return protocol.Result{}, false, err
+-		}
+-		rows, err := tx.Query(ctx, `SELECT id FROM "Purchase" WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted' ORDER BY id FOR UPDATE`, ids, u.Tenant, u.User)
+-		if err != nil {
+-			return protocol.Result{}, false, err
+-		}
+-		eligible := []string{}
+-		for rows.Next() {
+-			var id string
+-			if err = rows.Scan(&id); err != nil {
+-				rows.Close()
+-				return protocol.Result{}, false, err
+-			}
+-			eligible = append(eligible, id)
+-		}
+-		err = rows.Err()
+-		rows.Close()
+-		if err != nil {
+-			return protocol.Result{}, false, err
+-		}
+-		if len(eligible) != len(ids) {
+-			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+-		}
+-		tag, err := tx.Exec(ctx, `UPDATE "Purchase" SET status='approved' WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'`, ids, u.Tenant, u.User)
++	executor, err := action.New(ctx, pool, "")
++	if err != nil {
++		return nil, err
++	}
++	return protocol.HTTP(adapt(executor.BulkApprove), fallback), nil
++}
++
++type bulkApprove func(context.Context, app.Identity, string, []string) (action.Result, bool, error)
++
++// adapt converts action.Result/action.Rejection into protocol types. Identity
++// comes only from the authenticated adapter; nothing else is consulted.
++func adapt(approve bulkApprove) protocol.Approve {
++	return func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
++		result, replayed, err := approve(ctx, u, key, ids)
+ 		if err != nil {
+-			return protocol.Result{}, false, err
++			return protocol.Result{}, false, convertError(err)
+ 		}
+-		if tag.RowsAffected() != int64(len(ids)) {
+-			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+-		}
+-		if err = tx.Commit(ctx); err != nil {
+-			return protocol.Result{}, false, err
+-		}
+-		return protocol.Result{ApprovedIDs: ids}, false, nil
++		approved := append([]string{}, result.ApprovedIDs...)
++		return protocol.Result{ApprovedIDs: approved}, replayed, nil
++	}
++}
++
++func convertError(err error) error {
++	var rejected *action.Rejection
++	if errors.As(err, &rejected) {
++		return &protocol.Rejection{Status: rejected.Status}
+ 	}
+-	return protocol.HTTP(approve, fallback), nil
++	// Database and transport errors pass through; protocol.HTTP maps unique
++	// violations to 409 and anything else (including lost commit acks) to 503.
++	return err
+ }
+diff --git a/internal/candidate/approval_test.go b/internal/candidate/approval_test.go
+new file mode 100644
+index 0000000..8a7615e
+--- /dev/null
++++ b/internal/candidate/approval_test.go
+@@ -0,0 +1,50 @@
++package candidate
++
++import (
++	"context"
++	"errors"
++	"fmt"
++	"reflect"
++	"testing"
++
++	"github.com/XUJiahua/enterprise_agent/internal/action"
++	"github.com/XUJiahua/enterprise_agent/internal/app"
++	"github.com/XUJiahua/enterprise_agent/internal/protocol"
++)
++
++func TestAdaptSuccessAndReplay(t *testing.T) {
++	for _, replayed := range []bool{false, true} {
++		approve := adapt(func(context.Context, app.Identity, string, []string) (action.Result, bool, error) {
++			return action.Result{ApprovedIDs: []string{"a", "b"}}, replayed, nil
++		})
++		got, r, err := approve(context.Background(), app.Identity{}, "k", []string{"a", "b"})
++		if err != nil || r != replayed || !reflect.DeepEqual(got.ApprovedIDs, []string{"a", "b"}) {
++			t.Fatalf("replayed=%v: got %v %v %v", replayed, got, r, err)
++		}
++	}
++}
++
++func TestAdaptRejection(t *testing.T) {
++	for _, status := range []int{400, 403, 404, 409} {
++		approve := adapt(func(context.Context, app.Identity, string, []string) (action.Result, bool, error) {
++			return action.Result{}, false, fmt.Errorf("wrapped: %w", &action.Rejection{Status: status})
++		})
++		_, replayed, err := approve(context.Background(), app.Identity{}, "k", []string{"a"})
++		var rejected *protocol.Rejection
++		if replayed || !errors.As(err, &rejected) || rejected.Status != status {
++			t.Fatalf("status %d: got %v", status, err)
++		}
++	}
++}
++
++func TestAdaptPassesThroughOtherErrors(t *testing.T) {
++	sentinel := errors.New("db down")
++	approve := adapt(func(context.Context, app.Identity, string, []string) (action.Result, bool, error) {
++		return action.Result{}, false, sentinel
++	})
++	_, _, err := approve(context.Background(), app.Identity{}, "k", []string{"a"})
++	var rejected *protocol.Rejection
++	if !errors.Is(err, sentinel) || errors.As(err, &rejected) {
++		t.Fatalf("got %v", err)
++	}
++}

@@ -1,0 +1,21 @@
+{
+  "version": 3,
+  "trial_id": "go-action--005",
+  "plan_sha256": "e5751cf4d14d52c80007dff2812979d984e422d27fe270915184ce79b9a909da",
+  "initial_sha": "b3649e06db53753b0d5c7bb62037b41a88f65002",
+  "source_base_sha": "d8a5c576cc3c293ee2da884f5c618958df407b51",
+  "files": {
+    "go.mod": "648c40a4bf80a1cb567029bbf31c771963254e92aa8712da903eb8a883fe3217",
+    "go.sum": "e718bd4e6664b6aa2d808d7bf1f72ca1b2e36316db23235318c9e20a8705f0c4",
+    "internal/app/server.go": "128f710c1d022e50ba925fda4a2a9d8c88f4233cccc9f57c3eae6704c3d0b53f",
+    "internal/app/demo_identity.go": "1b49e429ba1a98236fea3bc84a626a4698d276dc6d55758462c0e40a97eda2fb",
+    "cmd/server/main.go": "cec57aacd74de3bb2a95d3aa504abcf8cde3661fa38fc1f8421728b47ab04e14",
+    "internal/protocol/protocol.go": "ab8242a89deb18e2e5a0b0e4f7a1df154357e41ad2a03a76b10785572e5a9efd",
+    "internal/candidate/approval.go": "8b1a034d7f428c3093228545a5fc9594f40e3dbc08db429af30486c4ae215769",
+    "TASK.md": "a8e0e144c55818bda0a21a053b51a6c2e8f78e3b4fa49a93fb747bf56b88e28f",
+    "visible_smoke.py": "54b1105ac61534fb6450e9fb7fd717c9ca7d83c161f99026bc13e2cf90cee232",
+    "SCHEMA.sql": "c5d981158065379f895f3fcf36aceb929024db9862b2692cfe37cfa936c1bfba",
+    ".gitignore": "21aa65755b85bad0fea1311838fce09b1838eda8b6d94712d0771560dde71a64",
+    "internal/action/approval.go": "c83de0ca587200034b5021e432a2959d1a0ffbd13d74a1e7c34d633a84a48337"
+  }
+}

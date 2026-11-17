@@ -1,0 +1,35 @@
+{
+  "status": "provider-error",
+  "usage": null,
+  "turn_started": true,
+  "run_finished": false,
+  "reported_model": "gpt-5.6-luna",
+  "event_count": 188,
+  "agent_messages": [],
+  "errors": [
+    "You've reached your monthly usage limit. Please return next month to continue building. (Request ID: 57549f38-5290-4dc6-b8a2-c50351220771) (code -32000): {\"errorType\":\"UsageLimitReachedError\",\"retryErrorType\":\"CLIENT_ERROR\",\"requestId\":\"57549f38-5290-4dc6-b8a2-c50351220771\",\"actions\":[\"viewUsage\"]}"
+  ],
+  "engine": "kiro",
+  "generation_seconds": 23.296,
+  "requested_model": "gpt-5.6-luna",
+  "reasoning_effort": "medium",
+  "sandbox": "workspace-write",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "gpt-5.6-luna",
+    "--effort",
+    "medium",
+    "--trust-all-tools"
+  ],
+  "returncode": 1,
+  "timed_out": false
+}

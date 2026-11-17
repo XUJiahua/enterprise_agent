@@ -1,0 +1,1826 @@
+{
+  "preregistration": "docs/preregistration-v6.md",
+  "primary": {
+    "H1_K": {
+      "blocks_with_both_scored": 98,
+      "action_only": 32,
+      "manual_only": 1,
+      "p_one_sided": 3.958120942115784e-09,
+      "p_holm": 7.916241884231567e-09
+    },
+    "H2_E": {
+      "blocks_with_both_scored": 115,
+      "action_only": 26,
+      "manual_only": 7,
+      "p_one_sided": 0.0006593635771423578,
+      "p_holm": 0.0006593635771423578
+    },
+    "H3_S": {
+      "n": 115,
+      "median_diff_seconds": -21.913999999999994,
+      "p_one_sided": 1.3118881698964504e-16,
+      "p_holm": 3.935664509689351e-16
+    },
+    "A_pair": {
+      "blocks_with_both_scored": 115,
+      "action_only": 21,
+      "manual_only": 21,
+      "p_one_sided": 0.5611928356238423
+    },
+    "blocks": 115
+  },
+  "sensitivity_excluding_retrieval_attempt_blocks": {
+    "H1_K": {
+      "blocks_with_both_scored": 98,
+      "action_only": 32,
+      "manual_only": 1,
+      "p_one_sided": 3.958120942115784e-09,
+      "p_holm": 7.916241884231567e-09
+    },
+    "H2_E": {
+      "blocks_with_both_scored": 115,
+      "action_only": 26,
+      "manual_only": 7,
+      "p_one_sided": 0.0006593635771423578,
+      "p_holm": 0.0006593635771423578
+    },
+    "H3_S": {
+      "n": 115,
+      "median_diff_seconds": -21.913999999999994,
+      "p_one_sided": 1.3118881698964504e-16,
+      "p_holm": 3.935664509689351e-16
+    },
+    "A_pair": {
+      "blocks_with_both_scored": 115,
+      "action_only": 21,
+      "manual_only": 21,
+      "p_one_sided": 0.5611928356238423
+    },
+    "blocks": 115
+  },
+  "U_unsafe_trials": [],
+  "flags": [
+    {
+      "task": "T2",
+      "model": "gpt-5.6-luna",
+      "trial": "go-manual--009",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "proxy.golang.org",
+        "proxy.golang.org"
+      ]
+    },
+    {
+      "task": "T2",
+      "model": "qwen3-coder-next",
+      "trial": "go-action--003",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com"
+      ]
+    },
+    {
+      "task": "T2",
+      "model": "qwen3-coder-next",
+      "trial": "go-manual--004",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com"
+      ]
+    },
+    {
+      "task": "T3",
+      "model": "claude-haiku-4.5",
+      "trial": "go-manual--008",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com"
+      ]
+    },
+    {
+      "task": "T3",
+      "model": "claude-haiku-4.5",
+      "trial": "go-action--008",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com"
+      ]
+    },
+    {
+      "task": "T3",
+      "model": "claude-haiku-4.5",
+      "trial": "go-manual--009",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com"
+      ]
+    },
+    {
+      "task": "T3",
+      "model": "claude-haiku-4.5",
+      "trial": "go-action--009",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com"
+      ]
+    },
+    {
+      "task": "T3",
+      "model": "claude-haiku-4.5",
+      "trial": "go-action--010",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com"
+      ]
+    },
+    {
+      "task": "T3",
+      "model": "claude-opus-5.5",
+      "trial": "go-manual--009",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com"
+      ]
+    },
+    {
+      "task": "T3",
+      "model": "claude-opus-5.5",
+      "trial": "go-action--009",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com"
+      ]
+    },
+    {
+      "task": "T3",
+      "model": "claude-opus-5.5",
+      "trial": "go-manual--010",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com"
+      ]
+    },
+    {
+      "task": "T3",
+      "model": "claude-opus-5.5",
+      "trial": "go-action--010",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com"
+      ]
+    },
+    {
+      "task": "T3",
+      "model": "gpt-5.6-luna",
+      "trial": "go-manual--006",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com"
+      ]
+    },
+    {
+      "task": "T3",
+      "model": "gpt-5.6-luna",
+      "trial": "go-manual--007",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com"
+      ]
+    },
+    {
+      "task": "T3",
+      "model": "gpt-5.6-luna",
+      "trial": "go-action--007",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com"
+      ]
+    },
+    {
+      "task": "T3",
+      "model": "gpt-5.6-luna",
+      "trial": "go-manual--008",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com"
+      ]
+    },
+    {
+      "task": "T3",
+      "model": "gpt-5.6-luna",
+      "trial": "go-action--008",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com"
+      ]
+    },
+    {
+      "task": "T3",
+      "model": "gpt-5.6-luna",
+      "trial": "go-action--009",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com"
+      ]
+    },
+    {
+      "task": "T3",
+      "model": "gpt-5.6-luna",
+      "trial": "go-manual--009",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com"
+      ]
+    },
+    {
+      "task": "T3",
+      "model": "qwen3-coder-next",
+      "trial": "go-action--002",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com"
+      ]
+    },
+    {
+      "task": "T3",
+      "model": "qwen3-coder-next",
+      "trial": "go-manual--003",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "oidc.us-east-1.amazonaws.com",
+        "oidc.us-east-1.amazonaws.com",
+        "oidc.us-east-1.amazonaws.com"
+      ]
+    },
+    {
+      "task": "T3",
+      "model": "qwen3-coder-next",
+      "trial": "go-action--010",
+      "retrieval_attempt": [],
+      "network_denied": [
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com",
+        "cognito-identity.us-east-1.amazonaws.com"
+      ]
+    }
+  ],
+  "strata": {
+    "T1/claude-haiku-4.5": {
+      "cells": {
+        "go-manual": {
+          "planned": 10,
+          "unmeasured": 1,
+          "A": 2,
+          "E": 8,
+          "K": [
+            4,
+            9
+          ],
+          "D": [
+            6,
+            9
+          ],
+          "conventions": {
+            "implicit-audit": [
+              9,
+              9
+            ],
+            "implicit-request-hash": [
+              7,
+              9
+            ],
+            "implicit-uniform-denial": [
+              5,
+              9
+            ],
+            "implicit-outbox": [
+              6,
+              9
+            ]
+          },
+          "scope_violation": 0,
+          "median_S": 79.79499999999999,
+          "median_credits": 0.6796977988723051,
+          "outcomes": {
+            "acceptance-failed": 7,
+            "passed": 2,
+            "provider-error": 1
+          }
+        },
+        "go-action": {
+          "planned": 10,
+          "unmeasured": 0,
+          "A": 6,
+          "E": 10,
+          "K": [
+            10,
+            10
+          ],
+          "D": [
+            6,
+            10
+          ],
+          "conventions": {
+            "implicit-audit": [
+              10,
+              10
+            ],
+            "implicit-request-hash": [
+              10,
+              10
+            ],
+            "implicit-uniform-denial": [
+              10,
+              10
+            ],
+            "implicit-outbox": [
+              6,
+              10
+            ]
+          },
+          "scope_violation": 0,
+          "median_S": 61.664,
+          "median_credits": 0.5489981695190713,
+          "outcomes": {
+            "acceptance-failed": 4,
+            "passed": 6
+          }
+        }
+      },
+      "unmeasured_fraction": 0.05,
+      "exploratory_pair_tests": {
+        "H1_K": {
+          "blocks_with_both_scored": 9,
+          "action_only": 5,
+          "manual_only": 0,
+          "p_one_sided": 0.03125,
+          "p_holm": 0.0625
+        },
+        "H2_E": {
+          "blocks_with_both_scored": 9,
+          "action_only": 1,
+          "manual_only": 0,
+          "p_one_sided": 0.5,
+          "p_holm": 0.5
+        },
+        "H3_S": {
+          "n": 9,
+          "median_diff_seconds": -14.309000000000005,
+          "p_one_sided": 0.013671875,
+          "p_holm": 0.041015625
+        },
+        "A_pair": {
+          "blocks_with_both_scored": 9,
+          "action_only": 4,
+          "manual_only": 1,
+          "p_one_sided": 0.1875
+        },
+        "blocks": 9
+      }
+    },
+    "T1/claude-opus-5.5": {
+      "cells": {
+        "go-manual": {
+          "planned": 10,
+          "unmeasured": 0,
+          "A": 10,
+          "E": 10,
+          "K": [
+            10,
+            10
+          ],
+          "D": [
+            10,
+            10
+          ],
+          "conventions": {
+            "implicit-audit": [
+              10,
+              10
+            ],
+            "implicit-request-hash": [
+              10,
+              10
+            ],
+            "implicit-uniform-denial": [
+              10,
+              10
+            ],
+            "implicit-outbox": [
+              10,
+              10
+            ]
+          },
+          "scope_violation": 0,
+          "median_S": 72.126,
+          "median_credits": 2.5221881683250413,
+          "outcomes": {
+            "passed": 10
+          }
+        },
+        "go-action": {
+          "planned": 10,
+          "unmeasured": 0,
+          "A": 10,
+          "E": 10,
+          "K": [
+            10,
+            10
+          ],
+          "D": [
+            10,
+            10
+          ],
+          "conventions": {
+            "implicit-audit": [
+              10,
+              10
+            ],
+            "implicit-request-hash": [
+              10,
+              10
+            ],
+            "implicit-uniform-denial": [
+              10,
+              10
+            ],
+            "implicit-outbox": [
+              10,
+              10
+            ]
+          },
+          "scope_violation": 0,
+          "median_S": 52.355000000000004,
+          "median_credits": 1.8251934885572139,
+          "outcomes": {
+            "passed": 10
+          }
+        }
+      },
+      "unmeasured_fraction": 0.0,
+      "exploratory_pair_tests": {
+        "H1_K": {
+          "blocks_with_both_scored": 10,
+          "action_only": 0,
+          "manual_only": 0,
+          "p_one_sided": 1.0,
+          "p_holm": 1.0
+        },
+        "H2_E": {
+          "blocks_with_both_scored": 10,
+          "action_only": 0,
+          "manual_only": 0,
+          "p_one_sided": 1.0,
+          "p_holm": 1.0
+        },
+        "H3_S": {
+          "n": 10,
+          "median_diff_seconds": -19.825,
+          "p_one_sided": 0.0009765625,
+          "p_holm": 0.0029296875
+        },
+        "A_pair": {
+          "blocks_with_both_scored": 10,
+          "action_only": 0,
+          "manual_only": 0,
+          "p_one_sided": 1.0
+        },
+        "blocks": 10
+      }
+    },
+    "T1/gpt-5.6-luna": {
+      "cells": {
+        "go-manual": {
+          "planned": 10,
+          "unmeasured": 0,
+          "A": 1,
+          "E": 5,
+          "K": [
+            2,
+            10
+          ],
+          "D": [
+            6,
+            10
+          ],
+          "conventions": {
+            "implicit-audit": [
+              6,
+              10
+            ],
+            "implicit-request-hash": [
+              2,
+              10
+            ],
+            "implicit-uniform-denial": [
+              6,
+              10
+            ],
+            "implicit-outbox": [
+              6,
+              10
+            ]
+          },
+          "scope_violation": 0,
+          "median_S": 64.65700000000001,
+          "median_credits": 0.7462480987064677,
+          "outcomes": {
+            "acceptance-failed": 9,
+            "passed": 1
+          }
+        },
+        "go-action": {
+          "planned": 10,
+          "unmeasured": 0,
+          "A": 10,
+          "E": 10,
+          "K": [
+            10,
+            10
+          ],
+          "D": [
+            10,
+            10
+          ],
+          "conventions": {
+            "implicit-audit": [
+              10,
+              10
+            ],
+            "implicit-request-hash": [
+              10,
+              10
+            ],
+            "implicit-uniform-denial": [
+              10,
+              10
+            ],
+            "implicit-outbox": [
+              10,
+              10
+            ]
+          },
+          "scope_violation": 0,
+          "median_S": 46.055,
+          "median_credits": 0.5504559925870647,
+          "outcomes": {
+            "passed": 10
+          }
+        }
+      },
+      "unmeasured_fraction": 0.0,
+      "exploratory_pair_tests": {
+        "H1_K": {
+          "blocks_with_both_scored": 10,
+          "action_only": 8,
+          "manual_only": 0,
+          "p_one_sided": 0.00390625,
+          "p_holm": 0.0078125
+        },
+        "H2_E": {
+          "blocks_with_both_scored": 10,
+          "action_only": 5,
+          "manual_only": 0,
+          "p_one_sided": 0.03125,
+          "p_holm": 0.03125
+        },
+        "H3_S": {
+          "n": 10,
+          "median_diff_seconds": -17.136,
+          "p_one_sided": 0.0009765625,
+          "p_holm": 0.0029296875
+        },
+        "A_pair": {
+          "blocks_with_both_scored": 10,
+          "action_only": 9,
+          "manual_only": 0,
+          "p_one_sided": 0.001953125
+        },
+        "blocks": 10
+      }
+    },
+    "T1/qwen3-coder-next": {
+      "cells": {
+        "go-manual": {
+          "planned": 10,
+          "unmeasured": 1,
+          "A": 5,
+          "E": 9,
+          "K": [
+            8,
+            9
+          ],
+          "D": [
+            5,
+            9
+          ],
+          "conventions": {
+            "implicit-audit": [
+              9,
+              9
+            ],
+            "implicit-request-hash": [
+              9,
+              9
+            ],
+            "implicit-uniform-denial": [
+              8,
+              9
+            ],
+            "implicit-outbox": [
+              5,
+              9
+            ]
+          },
+          "scope_violation": 0,
+          "median_S": 89.1005,
+          "median_credits": 0.6413414759535655,
+          "outcomes": {
+            "acceptance-failed": 4,
+            "passed": 5,
+            "provider-error": 1
+          }
+        },
+        "go-action": {
+          "planned": 10,
+          "unmeasured": 0,
+          "A": 2,
+          "E": 8,
+          "K": [
+            8,
+            8
+          ],
+          "D": [
+            2,
+            8
+          ],
+          "conventions": {
+            "implicit-audit": [
+              8,
+              8
+            ],
+            "implicit-request-hash": [
+              8,
+              8
+            ],
+            "implicit-uniform-denial": [
+              8,
+              8
+            ],
+            "implicit-outbox": [
+              2,
+              8
+            ]
+          },
+          "scope_violation": 1,
+          "median_S": 63.6965,
+          "median_credits": 0.4413948092868988,
+          "outcomes": {
+            "acceptance-failed": 6,
+            "candidate-error": 1,
+            "passed": 2,
+            "scope-violation": 1
+          }
+        }
+      },
+      "unmeasured_fraction": 0.05,
+      "exploratory_pair_tests": {
+        "H1_K": {
+          "blocks_with_both_scored": 7,
+          "action_only": 1,
+          "manual_only": 0,
+          "p_one_sided": 0.5,
+          "p_holm": 1.0
+        },
+        "H2_E": {
+          "blocks_with_both_scored": 9,
+          "action_only": 0,
+          "manual_only": 2,
+          "p_one_sided": 1.0,
+          "p_holm": 1.0
+        },
+        "H3_S": {
+          "n": 9,
+          "median_diff_seconds": -29.548000000000002,
+          "p_one_sided": 0.064453125,
+          "p_holm": 0.193359375
+        },
+        "A_pair": {
+          "blocks_with_both_scored": 9,
+          "action_only": 1,
+          "manual_only": 4,
+          "p_one_sided": 0.96875
+        },
+        "blocks": 9
+      }
+    },
+    "T2/claude-haiku-4.5": {
+      "cells": {
+        "go-manual": {
+          "planned": 10,
+          "unmeasured": 0,
+          "A": 2,
+          "E": 8,
+          "K": [
+            7,
+            10
+          ],
+          "D": [
+            3,
+            10
+          ],
+          "conventions": {
+            "implicit-audit": [
+              9,
+              10
+            ],
+            "implicit-request-hash": [
+              8,
+              10
+            ],
+            "implicit-outbox": [
+              3,
+              10
+            ],
+            "implicit-uniform-denial": [
+              8,
+              10
+            ]
+          },
+          "scope_violation": 0,
+          "median_S": 107.043,
+          "median_credits": 1.0016680703482586,
+          "outcomes": {
+            "acceptance-failed": 8,
+            "passed": 2
+          }
+        },
+        "go-action": {
+          "planned": 10,
+          "unmeasured": 0,
+          "A": 1,
+          "E": 10,
+          "K": [
+            10,
+            10
+          ],
+          "D": [
+            1,
+            10
+          ],
+          "conventions": {
+            "implicit-audit": [
+              10,
+              10
+            ],
+            "implicit-request-hash": [
+              10,
+              10
+            ],
+            "implicit-outbox": [
+              1,
+              10
+            ],
+            "implicit-uniform-denial": [
+              10,
+              10
+            ]
+          },
+          "scope_violation": 0,
+          "median_S": 83.077,
+          "median_credits": 0.7471950595024875,
+          "outcomes": {
+            "acceptance-failed": 9,
+            "passed": 1
+          }
+        }
+      },
+      "unmeasured_fraction": 0.0,
+      "exploratory_pair_tests": {
+        "H1_K": {
+          "blocks_with_both_scored": 10,
+          "action_only": 3,
+          "manual_only": 0,
+          "p_one_sided": 0.125,
+          "p_holm": 0.25
+        },
+        "H2_E": {
+          "blocks_with_both_scored": 10,
+          "action_only": 2,
+          "manual_only": 0,
+          "p_one_sided": 0.25,
+          "p_holm": 0.25
+        },
+        "H3_S": {
+          "n": 10,
+          "median_diff_seconds": -8.405500000000004,
+          "p_one_sided": 0.0419921875,
+          "p_holm": 0.1259765625
+        },
+        "A_pair": {
+          "blocks_with_both_scored": 10,
+          "action_only": 1,
+          "manual_only": 2,
+          "p_one_sided": 0.875
+        },
+        "blocks": 10
+      }
+    },
+    "T2/claude-opus-5.5": {
+      "cells": {
+        "go-manual": {
+          "planned": 10,
+          "unmeasured": 1,
+          "A": 9,
+          "E": 9,
+          "K": [
+            9,
+            9
+          ],
+          "D": [
+            9,
+            9
+          ],
+          "conventions": {
+            "implicit-audit": [
+              9,
+              9
+            ],
+            "implicit-request-hash": [
+              9,
+              9
+            ],
+            "implicit-outbox": [
+              9,
+              9
+            ],
+            "implicit-uniform-denial": [
+              9,
+              9
+            ]
+          },
+          "scope_violation": 0,
+          "median_S": 85.833,
+          "median_credits": 3.046543392371476,
+          "outcomes": {
+            "passed": 9,
+            "provider-error": 1
+          }
+        },
+        "go-action": {
+          "planned": 10,
+          "unmeasured": 0,
+          "A": 6,
+          "E": 10,
+          "K": [
+            10,
+            10
+          ],
+          "D": [
+            6,
+            10
+          ],
+          "conventions": {
+            "implicit-audit": [
+              10,
+              10
+            ],
+            "implicit-request-hash": [
+              10,
+              10
+            ],
+            "implicit-outbox": [
+              6,
+              10
+            ],
+            "implicit-uniform-denial": [
+              10,
+              10
+            ]
+          },
+          "scope_violation": 0,
+          "median_S": 53.3785,
+          "median_credits": 1.9638379983416252,
+          "outcomes": {
+            "acceptance-failed": 4,
+            "passed": 6
+          }
+        }
+      },
+      "unmeasured_fraction": 0.05,
+      "exploratory_pair_tests": {
+        "H1_K": {
+          "blocks_with_both_scored": 9,
+          "action_only": 0,
+          "manual_only": 0,
+          "p_one_sided": 1.0,
+          "p_holm": 1.0
+        },
+        "H2_E": {
+          "blocks_with_both_scored": 9,
+          "action_only": 0,
+          "manual_only": 0,
+          "p_one_sided": 1.0,
+          "p_holm": 1.0
+        },
+        "H3_S": {
+          "n": 9,
+          "median_diff_seconds": -27.22800000000001,
+          "p_one_sided": 0.001953125,
+          "p_holm": 0.005859375
+        },
+        "A_pair": {
+          "blocks_with_both_scored": 9,
+          "action_only": 0,
+          "manual_only": 4,
+          "p_one_sided": 1.0
+        },
+        "blocks": 9
+      }
+    },
+    "T2/gpt-5.6-luna": {
+      "cells": {
+        "go-manual": {
+          "planned": 10,
+          "unmeasured": 1,
+          "A": 1,
+          "E": 8,
+          "K": [
+            4,
+            9
+          ],
+          "D": [
+            3,
+            9
+          ],
+          "conventions": {
+            "implicit-audit": [
+              9,
+              9
+            ],
+            "implicit-request-hash": [
+              5,
+              9
+            ],
+            "implicit-outbox": [
+              3,
+              9
+            ],
+            "implicit-uniform-denial": [
+              8,
+              9
+            ]
+          },
+          "scope_violation": 0,
+          "median_S": 61.985,
+          "median_credits": 0.8837325775124378,
+          "outcomes": {
+            "acceptance-failed": 8,
+            "passed": 1,
+            "provider-error": 1
+          }
+        },
+        "go-action": {
+          "planned": 10,
+          "unmeasured": 0,
+          "A": 3,
+          "E": 10,
+          "K": [
+            10,
+            10
+          ],
+          "D": [
+            3,
+            10
+          ],
+          "conventions": {
+            "implicit-audit": [
+              10,
+              10
+            ],
+            "implicit-request-hash": [
+              10,
+              10
+            ],
+            "implicit-outbox": [
+              3,
+              10
+            ],
+            "implicit-uniform-denial": [
+              10,
+              10
+            ]
+          },
+          "scope_violation": 0,
+          "median_S": 50.6145,
+          "median_credits": 0.6673009303482587,
+          "outcomes": {
+            "acceptance-failed": 7,
+            "passed": 3
+          }
+        }
+      },
+      "unmeasured_fraction": 0.05,
+      "exploratory_pair_tests": {
+        "H1_K": {
+          "blocks_with_both_scored": 9,
+          "action_only": 5,
+          "manual_only": 0,
+          "p_one_sided": 0.03125,
+          "p_holm": 0.0625
+        },
+        "H2_E": {
+          "blocks_with_both_scored": 9,
+          "action_only": 1,
+          "manual_only": 0,
+          "p_one_sided": 0.5,
+          "p_holm": 0.5
+        },
+        "H3_S": {
+          "n": 9,
+          "median_diff_seconds": -12.637,
+          "p_one_sided": 0.009765625,
+          "p_holm": 0.029296875
+        },
+        "A_pair": {
+          "blocks_with_both_scored": 9,
+          "action_only": 2,
+          "manual_only": 0,
+          "p_one_sided": 0.25
+        },
+        "blocks": 9
+      }
+    },
+    "T2/qwen3-coder-next": {
+      "cells": {
+        "go-manual": {
+          "planned": 10,
+          "unmeasured": 1,
+          "A": 1,
+          "E": 6,
+          "K": [
+            2,
+            6
+          ],
+          "D": [
+            3,
+            6
+          ],
+          "conventions": {
+            "implicit-audit": [
+              6,
+              6
+            ],
+            "implicit-request-hash": [
+              5,
+              6
+            ],
+            "implicit-outbox": [
+              3,
+              6
+            ],
+            "implicit-uniform-denial": [
+              3,
+              6
+            ]
+          },
+          "scope_violation": 1,
+          "median_S": 429.443,
+          "median_credits": 0.972685334991708,
+          "outcomes": {
+            "acceptance-failed": 5,
+            "budget-exceeded": 1,
+            "candidate-error": 1,
+            "passed": 1,
+            "provider-error": 1,
+            "scope-violation": 1
+          }
+        },
+        "go-action": {
+          "planned": 10,
+          "unmeasured": 0,
+          "A": 0,
+          "E": 4,
+          "K": [
+            4,
+            8
+          ],
+          "D": [
+            0,
+            8
+          ],
+          "conventions": {
+            "implicit-audit": [
+              7,
+              8
+            ],
+            "implicit-request-hash": [
+              7,
+              8
+            ],
+            "implicit-outbox": [
+              0,
+              8
+            ],
+            "implicit-uniform-denial": [
+              4,
+              8
+            ]
+          },
+          "scope_violation": 2,
+          "median_S": 220.644,
+          "median_credits": 0.5118481127694858,
+          "outcomes": {
+            "acceptance-failed": 8,
+            "scope-violation": 2
+          }
+        }
+      },
+      "unmeasured_fraction": 0.05,
+      "exploratory_pair_tests": {
+        "H1_K": {
+          "blocks_with_both_scored": 4,
+          "action_only": 0,
+          "manual_only": 1,
+          "p_one_sided": 1.0,
+          "p_holm": 1.0
+        },
+        "H2_E": {
+          "blocks_with_both_scored": 9,
+          "action_only": 2,
+          "manual_only": 5,
+          "p_one_sided": 0.9375,
+          "p_holm": 1.0
+        },
+        "H3_S": {
+          "n": 9,
+          "median_diff_seconds": -246.99,
+          "p_one_sided": 0.001953125,
+          "p_holm": 0.005859375
+        },
+        "A_pair": {
+          "blocks_with_both_scored": 9,
+          "action_only": 0,
+          "manual_only": 1,
+          "p_one_sided": 1.0
+        },
+        "blocks": 9
+      }
+    },
+    "T3/claude-haiku-4.5": {
+      "cells": {
+        "go-manual": {
+          "planned": 10,
+          "unmeasured": 0,
+          "A": 0,
+          "E": 3,
+          "K": [
+            0,
+            10
+          ],
+          "D": [
+            1,
+            10
+          ],
+          "conventions": {
+            "implicit-history": [
+              0,
+              10
+            ],
+            "implicit-request-hash": [
+              10,
+              10
+            ],
+            "implicit-outbox": [
+              1,
+              10
+            ],
+            "implicit-uniform-denial": [
+              10,
+              10
+            ]
+          },
+          "scope_violation": 0,
+          "median_S": 85.145,
+          "median_credits": 0.8683079032504146,
+          "outcomes": {
+            "acceptance-failed": 10
+          }
+        },
+        "go-action": {
+          "planned": 10,
+          "unmeasured": 0,
+          "A": 3,
+          "E": 10,
+          "K": [
+            10,
+            10
+          ],
+          "D": [
+            3,
+            10
+          ],
+          "conventions": {
+            "implicit-history": [
+              10,
+              10
+            ],
+            "implicit-request-hash": [
+              10,
+              10
+            ],
+            "implicit-outbox": [
+              3,
+              10
+            ],
+            "implicit-uniform-denial": [
+              10,
+              10
+            ]
+          },
+          "scope_violation": 0,
+          "median_S": 70.4645,
+          "median_credits": 0.7079914040132671,
+          "outcomes": {
+            "acceptance-failed": 7,
+            "passed": 3
+          }
+        }
+      },
+      "unmeasured_fraction": 0.0,
+      "exploratory_pair_tests": {
+        "H1_K": {
+          "blocks_with_both_scored": 10,
+          "action_only": 10,
+          "manual_only": 0,
+          "p_one_sided": 0.0009765625,
+          "p_holm": 0.0029296875
+        },
+        "H2_E": {
+          "blocks_with_both_scored": 10,
+          "action_only": 7,
+          "manual_only": 0,
+          "p_one_sided": 0.0078125,
+          "p_holm": 0.015625
+        },
+        "H3_S": {
+          "n": 10,
+          "median_diff_seconds": -21.461999999999996,
+          "p_one_sided": 0.009765625,
+          "p_holm": 0.015625
+        },
+        "A_pair": {
+          "blocks_with_both_scored": 10,
+          "action_only": 3,
+          "manual_only": 0,
+          "p_one_sided": 0.125
+        },
+        "blocks": 10
+      }
+    },
+    "T3/claude-opus-5.5": {
+      "cells": {
+        "go-manual": {
+          "planned": 10,
+          "unmeasured": 0,
+          "A": 7,
+          "E": 10,
+          "K": [
+            10,
+            10
+          ],
+          "D": [
+            7,
+            10
+          ],
+          "conventions": {
+            "implicit-history": [
+              10,
+              10
+            ],
+            "implicit-request-hash": [
+              10,
+              10
+            ],
+            "implicit-outbox": [
+              7,
+              10
+            ],
+            "implicit-uniform-denial": [
+              10,
+              10
+            ]
+          },
+          "scope_violation": 0,
+          "median_S": 78.2685,
+          "median_credits": 2.9117143281923714,
+          "outcomes": {
+            "acceptance-failed": 3,
+            "passed": 7
+          }
+        },
+        "go-action": {
+          "planned": 10,
+          "unmeasured": 0,
+          "A": 1,
+          "E": 10,
+          "K": [
+            10,
+            10
+          ],
+          "D": [
+            1,
+            10
+          ],
+          "conventions": {
+            "implicit-history": [
+              10,
+              10
+            ],
+            "implicit-request-hash": [
+              10,
+              10
+            ],
+            "implicit-outbox": [
+              1,
+              10
+            ],
+            "implicit-uniform-denial": [
+              10,
+              10
+            ]
+          },
+          "scope_violation": 0,
+          "median_S": 42.918,
+          "median_credits": 1.5681456932006632,
+          "outcomes": {
+            "acceptance-failed": 9,
+            "passed": 1
+          }
+        }
+      },
+      "unmeasured_fraction": 0.0,
+      "exploratory_pair_tests": {
+        "H1_K": {
+          "blocks_with_both_scored": 10,
+          "action_only": 0,
+          "manual_only": 0,
+          "p_one_sided": 1.0,
+          "p_holm": 1.0
+        },
+        "H2_E": {
+          "blocks_with_both_scored": 10,
+          "action_only": 0,
+          "manual_only": 0,
+          "p_one_sided": 1.0,
+          "p_holm": 1.0
+        },
+        "H3_S": {
+          "n": 10,
+          "median_diff_seconds": -35.465500000000006,
+          "p_one_sided": 0.0009765625,
+          "p_holm": 0.0029296875
+        },
+        "A_pair": {
+          "blocks_with_both_scored": 10,
+          "action_only": 0,
+          "manual_only": 6,
+          "p_one_sided": 1.0
+        },
+        "blocks": 10
+      }
+    },
+    "T3/gpt-5.6-luna": {
+      "cells": {
+        "go-manual": {
+          "planned": 10,
+          "unmeasured": 0,
+          "A": 4,
+          "E": 10,
+          "K": [
+            10,
+            10
+          ],
+          "D": [
+            4,
+            10
+          ],
+          "conventions": {
+            "implicit-history": [
+              10,
+              10
+            ],
+            "implicit-request-hash": [
+              10,
+              10
+            ],
+            "implicit-outbox": [
+              4,
+              10
+            ],
+            "implicit-uniform-denial": [
+              10,
+              10
+            ]
+          },
+          "scope_violation": 0,
+          "median_S": 52.044,
+          "median_credits": 0.8017537040796019,
+          "outcomes": {
+            "acceptance-failed": 6,
+            "passed": 4
+          }
+        },
+        "go-action": {
+          "planned": 10,
+          "unmeasured": 0,
+          "A": 1,
+          "E": 10,
+          "K": [
+            10,
+            10
+          ],
+          "D": [
+            1,
+            10
+          ],
+          "conventions": {
+            "implicit-history": [
+              10,
+              10
+            ],
+            "implicit-request-hash": [
+              10,
+              10
+            ],
+            "implicit-outbox": [
+              1,
+              10
+            ],
+            "implicit-uniform-denial": [
+              10,
+              10
+            ]
+          },
+          "scope_violation": 0,
+          "median_S": 45.513,
+          "median_credits": 0.6536442762189054,
+          "outcomes": {
+            "acceptance-failed": 9,
+            "passed": 1
+          }
+        }
+      },
+      "unmeasured_fraction": 0.0,
+      "exploratory_pair_tests": {
+        "H1_K": {
+          "blocks_with_both_scored": 10,
+          "action_only": 0,
+          "manual_only": 0,
+          "p_one_sided": 1.0,
+          "p_holm": 1.0
+        },
+        "H2_E": {
+          "blocks_with_both_scored": 10,
+          "action_only": 0,
+          "manual_only": 0,
+          "p_one_sided": 1.0,
+          "p_holm": 1.0
+        },
+        "H3_S": {
+          "n": 10,
+          "median_diff_seconds": -6.712500000000002,
+          "p_one_sided": 0.0419921875,
+          "p_holm": 0.1259765625
+        },
+        "A_pair": {
+          "blocks_with_both_scored": 10,
+          "action_only": 0,
+          "manual_only": 3,
+          "p_one_sided": 1.0
+        },
+        "blocks": 10
+      }
+    },
+    "T3/qwen3-coder-next": {
+      "cells": {
+        "go-manual": {
+          "planned": 10,
+          "unmeasured": 0,
+          "A": 0,
+          "E": 0,
+          "K": [
+            0,
+            1
+          ],
+          "D": [
+            0,
+            1
+          ],
+          "conventions": {
+            "implicit-history": [
+              0,
+              1
+            ],
+            "implicit-request-hash": [
+              0,
+              1
+            ],
+            "implicit-outbox": [
+              0,
+              1
+            ],
+            "implicit-uniform-denial": [
+              1,
+              1
+            ]
+          },
+          "scope_violation": 3,
+          "median_S": 576.6905,
+          "median_credits": 1.3361933109452737,
+          "outcomes": {
+            "acceptance-failed": 1,
+            "budget-exceeded": 5,
+            "candidate-error": 1,
+            "scope-violation": 3
+          }
+        },
+        "go-action": {
+          "planned": 10,
+          "unmeasured": 0,
+          "A": 1,
+          "E": 8,
+          "K": [
+            8,
+            8
+          ],
+          "D": [
+            1,
+            8
+          ],
+          "conventions": {
+            "implicit-history": [
+              8,
+              8
+            ],
+            "implicit-request-hash": [
+              8,
+              8
+            ],
+            "implicit-outbox": [
+              1,
+              8
+            ],
+            "implicit-uniform-denial": [
+              8,
+              8
+            ]
+          },
+          "scope_violation": 1,
+          "median_S": 253.007,
+          "median_credits": 0.5833280729684909,
+          "outcomes": {
+            "acceptance-failed": 7,
+            "budget-exceeded": 1,
+            "passed": 1,
+            "scope-violation": 1
+          }
+        }
+      },
+      "unmeasured_fraction": 0.0,
+      "exploratory_pair_tests": {
+        "H1_K": {
+          "blocks_with_both_scored": 0,
+          "action_only": 0,
+          "manual_only": 0,
+          "p_one_sided": 1.0,
+          "p_holm": 1.0
+        },
+        "H2_E": {
+          "blocks_with_both_scored": 10,
+          "action_only": 8,
+          "manual_only": 0,
+          "p_one_sided": 0.00390625,
+          "p_holm": 0.01171875
+        },
+        "H3_S": {
+          "n": 10,
+          "median_diff_seconds": -288.8835,
+          "p_one_sided": 0.0419921875,
+          "p_holm": 0.083984375
+        },
+        "A_pair": {
+          "blocks_with_both_scored": 10,
+          "action_only": 1,
+          "manual_only": 0,
+          "p_one_sided": 0.5
+        },
+        "blocks": 10
+      }
+    }
+  }
+}

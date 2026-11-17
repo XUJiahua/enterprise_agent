@@ -1,0 +1,52 @@
+diff --git a/internal/action/action.go b/internal/action/action.go
+index 0019441..c9fa09a 100644
+--- a/internal/action/action.go
++++ b/internal/action/action.go
+@@ -28,6 +28,9 @@ type Transition struct {
+ // Approve is the existing batch approval Action.
+ var Approve = Transition{Operation: "bulk-approve.v3", From: "submitted", To: "approved", Field: "approvedIds"}
+ 
++// Reject is the new batch rejection Action.
++var Reject = Transition{Operation: "bulk-reject.v4", From: "submitted", To: "rejected", Field: "rejectedIds"}
++
+ type Rejection struct{ Status int }
+ 
+ func (r *Rejection) Error() string { return fmt.Sprintf("action rejected: %d", r.Status) }
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+deleted file mode 100644
+index 0fd94e3..0000000
+--- a/internal/candidate/approval.go
++++ /dev/null
+@@ -1,32 +0,0 @@
+-// Existing batch approval through the platform Action kernel.
+-package candidate
+-
+-import (
+-	"context"
+-	"errors"
+-	"net/http"
+-
+-	"github.com/XUJiahua/enterprise_agent/internal/action"
+-	"github.com/XUJiahua/enterprise_agent/internal/app"
+-	"github.com/XUJiahua/enterprise_agent/internal/protocol"
+-	"github.com/jackc/pgx/v5/pgxpool"
+-)
+-
+-func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
+-	executor, err := action.New(ctx, pool)
+-	if err != nil {
+-		return nil, err
+-	}
+-	approve := func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
+-		approved, replayed, err := executor.Run(ctx, u, action.Approve, key, ids)
+-		var denied *action.Rejection
+-		if errors.As(err, &denied) {
+-			return protocol.Result{}, false, &protocol.Rejection{Status: denied.Status}
+-		}
+-		if err != nil {
+-			return protocol.Result{}, false, err
+-		}
+-		return protocol.Result{Field: action.Approve.Field, IDs: approved}, replayed, nil
+-	}
+-	return protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve}, fallback), nil
+-}

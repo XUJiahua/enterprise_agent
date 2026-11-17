@@ -1,0 +1,119 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index 9702a45..4659dff 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -127,5 +127,5 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		}
+ 		return result, false, nil
+ 	}
+-	return protocol.Item("reopen", "requester", newReopen(pool), protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve, "/purchases/bulk-reject": newReject(pool)}, fallback)), nil
++	return protocol.Confirm("countersign", "approver", newCountersign(pool), protocol.Item("reopen", "requester", newReopen(pool), protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve, "/purchases/bulk-reject": newReject(pool)}, fallback))), nil
+ }
+diff --git a/internal/candidate/countersign.go b/internal/candidate/countersign.go
+new file mode 100644
+index 0000000..9ab64bd
+--- /dev/null
++++ b/internal/candidate/countersign.go
+@@ -0,0 +1,102 @@
++package candidate
++
++import (
++	"context"
++	"encoding/json"
++	"errors"
++
++	"github.com/XUJiahua/enterprise_agent/internal/app"
++	"github.com/XUJiahua/enterprise_agent/internal/ledger"
++	"github.com/XUJiahua/enterprise_agent/internal/protocol"
++	"github.com/jackc/pgx/v5"
++	"github.com/jackc/pgx/v5/pgxpool"
++)
++
++const opCountersign = "countersign.v6"
++
++func newCountersign(pool *pgxpool.Pool) protocol.ConfirmHandler {
++	return func(ctx context.Context, u app.Identity, key, id string, amount int) (protocol.ItemResult, bool, error) {
++		tx, err := pool.Begin(ctx)
++		if err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		defer tx.Rollback(ctx)
++		if _, err = tx.Exec(ctx, `SELECT set_config('app.tenant',$1,true),set_config('app.user',$2,true),set_config('app.role',$3,true)`, u.Tenant, u.User, u.Role); err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		lock, _ := json.Marshal([]string{opCountersign, u.Tenant, u.User, key})
++		if _, err = tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1,0))`, string(lock)); err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		hash := ledger.Fingerprint(opCountersign, []string{id})
++		var savedHash string
++		var saved []byte
++		err = tx.QueryRow(ctx, `SELECT "requestHash",response FROM "ActionRequest" WHERE "tenantId"=$1 AND "actorId"=$2 AND operation=$3 AND key=$4`,
++			u.Tenant, u.User, opCountersign, key).Scan(&savedHash, &saved)
++		if err == nil {
++			if savedHash != hash {
++				return protocol.ItemResult{}, false, &protocol.Rejection{Status: 409}
++			}
++			var stored protocol.ItemResult
++			if err = json.Unmarshal(saved, &stored); err != nil {
++				return protocol.ItemResult{}, false, err
++			}
++			return stored, true, tx.Commit(ctx)
++		}
++		if !errors.Is(err, pgx.ErrNoRows) {
++			return protocol.ItemResult{}, false, err
++		}
++		var creator, status string
++		var purchaseAmount int
++		var firstApproverId *string
++		err = tx.QueryRow(ctx, `SELECT "createdBy",status,amount,(SELECT "approvedBy" FROM "ApprovalAudit" WHERE "tenantId"=$2 AND "purchaseId"=$3 AND "toStatus"='pending-second' ORDER BY "createdAt" DESC LIMIT 1) FROM "Purchase" WHERE id=$1 AND "tenantId"=$2 FOR UPDATE`, id, u.Tenant).Scan(&creator, &status, &purchaseAmount, &firstApproverId)
++		if errors.Is(err, pgx.ErrNoRows) {
++			return protocol.ItemResult{}, false, &protocol.Rejection{Status: 409}
++		}
++		if err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		// Target must be in pending-second status
++		if status != "pending-second" {
++			return protocol.ItemResult{}, false, &protocol.Rejection{Status: 409}
++		}
++		// Amount must match
++		if purchaseAmount != amount {
++			return protocol.ItemResult{}, false, &protocol.Rejection{Status: 409}
++		}
++		// Not created by caller
++		if creator == u.User {
++			return protocol.ItemResult{}, false, &protocol.Rejection{Status: 409}
++		}
++		// Cannot be same approver who approved to pending-second
++		if firstApproverId != nil && *firstApproverId == u.User {
++			return protocol.ItemResult{}, false, &protocol.Rejection{Status: 409}
++		}
++		// Update status to approved
++		tag, err := tx.Exec(ctx, `UPDATE "Purchase" SET status='approved' WHERE id=$1 AND "tenantId"=$2 AND status='pending-second'`, id, u.Tenant)
++		if err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		if tag.RowsAffected() != 1 {
++			return protocol.ItemResult{}, false, &protocol.Rejection{Status: 409}
++		}
++		// Insert audit record
++		if _, err = tx.Exec(ctx, `INSERT INTO "ApprovalAudit" ("tenantId","purchaseId","approvedBy",operation,"idempotencyKey","fromStatus","toStatus") VALUES ($1,$2,$3,$4,$5,'pending-second','approved')`,
++			u.Tenant, id, u.User, opCountersign, key); err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		result := protocol.ItemResult{ID: id, Status: "approved"}
++		response, err := json.Marshal(result)
++		if err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		if _, err = tx.Exec(ctx, `INSERT INTO "ActionRequest" ("tenantId","actorId",operation,key,"requestHash",response) VALUES ($1,$2,$3,$4,$5,$6::jsonb)`,
++			u.Tenant, u.User, opCountersign, key, hash, string(response)); err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		if err = tx.Commit(ctx); err != nil {
++			return protocol.ItemResult{}, false, err
++		}
++		return result, false, nil
++	}
++}

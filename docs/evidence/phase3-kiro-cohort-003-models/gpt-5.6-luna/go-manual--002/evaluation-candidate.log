@@ -1,0 +1,7 @@
+2026/11/15 08:37:31 Action transaction failed: ERROR: unsupported Unicode escape sequence (SQLSTATE 22P05)
+2026/11/15 08:37:31 Action transaction failed: ERROR: permission denied for table ActionRequest (SQLSTATE 42501)
+2026/11/15 08:37:31 Action transaction failed: ERROR: permission denied for table ActionRequest (SQLSTATE 42501)
+2026/11/15 08:37:31 Action transaction failed: ERROR: permission denied for table ActionRequest (SQLSTATE 42501)
+2026/11/15 08:37:31 Action transaction failed: ERROR: permission denied for table ActionRequest (SQLSTATE 42501)
+2026/11/15 08:37:32 Action transaction failed: ERROR: controlled phase3 write failure (SQLSTATE P0001)
+2026/11/15 08:37:32 Action transaction failed: ERROR: controlled phase3 write failure (SQLSTATE P0001)

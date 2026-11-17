@@ -1,0 +1,425 @@
+{
+  "version": 3,
+  "kind": "model-trial",
+  "plan_sha256": "e5751cf4d14d52c80007dff2812979d984e422d27fe270915184ce79b9a909da",
+  "trial": {
+    "id": "go-manual--004",
+    "cell": "go-manual",
+    "instance": 4,
+    "prompt": "本版本在批量审批基础上新增同事务审批日志与幂等结果。只有当前已认证 approver 可以审批当前租户内他人创建的 submitted 目标，任何目标无效则全批拒绝且 Purchase/ApprovalAudit/ActionRequest 全部不变。1..100 个不重复非空字符串 ID，每项 UTF-8 长度不超过100字节，严格仅含 ids 的 JSON 对象，未知/重复字段、错误类型和无效 JSON 返回400。匿名401，requester403。认证和角色先于报文检查。最大请求体65536字节，超限413；恰好65536字节的合法输入允许。Idempotency-Key 必需且只能有一个值，长度1..128，字符集A-Z/a-z/0-9/点/下划线/冒号/连字符。成功200，响应仅 approvedIds，按UTF-8字典序排序。首次成功 Idempotency-Replayed=false；同作用域同 key、同目标集合的重放返回相同状态和响应字节，header=true，不产生新写入；同key不同目标409。作用域为 operation+tenant+actor+key。不同key不得再次审批已审批记录。每个成功目标恰好一条完整 ApprovalAudit；每个成功作用域恰好一条完成态 ActionRequest。ActionRequest.requestHash 为小写十六进制 SHA-256，输入为 \"bulk-approve.v3\" 加换行符，再依 UTF-8 字节序排序后的每个 ID 依次拼接 \"<UTF-8字节长度>:<ID>\"（无分隔符）；ActionRequest.response 为 {\"approvedIds\":[排序后ID]}。已确认回滚的失败不占用key；移除受控写入故障后同key可重试。网络或提交确认丢失时不保证未提交，客户端应使用同key重试以读取已提交结果。并发同key同集合两次均200，只提交一次；并发同key不同集合一个200、另一个409；不同key的重叠批次只能一个成功，败者独有目标不变。客户端上下文头不能覆盖认证身份。保留原有API行为；新日志/幂等契约仅适用于本Action，旧单条审批API未迁移。\nEvolve the existing atomic batch approval to add audit and scoped idempotency.\nBoth conditions use guarded RLS. The shared HTTP adapter already validates input and binds demo identity.\nOnly edit/add internal/candidate/ Go code. All other exports, dependencies, Git settings and tests are protected.\nPreserve the original APIs. New returns: protocol.Result, replayed bool, error; protocol.Rejection controls HTTP rejection status.\nDo not commit/push, read credentials, other checkouts or evaluator materials; do not use other agents.\nUse go test ./... and python3 visible_smoke.py only if an independent public test service is supplied.\nPrivate database credentials are unavailable during generation. Public SQL schema is in SCHEMA.sql.\nCapability: no prebuilt Action kernel. Implement the transaction in internal/candidate/.\nThis is a trusted-code pilot; directory export alone does not enforce host or network isolation.",
+    "prompt_sha256": "1bb7c0d8c4b0eea2557663b40f365e2cb9cdfa3d75bd1e7466e435307e53f5a5"
+  },
+  "candidate_sha": "ca50eacdc55a479666a2363f8aebf2cab2a83ff2",
+  "manifest_sha256": "b4c0a8571098631caa5ce892abc3a453d0a300c9591f9dcf0ab03a5ed66f3fed",
+  "generation": {
+    "status": "completed",
+    "usage": {
+      "credits": 0.7902407645771145
+    },
+    "turn_started": true,
+    "run_finished": true,
+    "reported_model": "gpt-5.6-luna",
+    "event_count": 530,
+    "agent_messages": [
+      "我先检查 `internal/candidate/` 的现有实现、`SCHEMA.sql` 及模块测试入口，随后在限定目录内完成事务与协议改动并做可用的本地验证。\n现有 HTTP 适配器已满足认证先行、请求体上限、严格字段/ID/key 校验和协议返回形状；核心缺口在 `approval.go`。我将把 ActionRequest 占位、目标行锁、Purchase 更新、审计写入放进同一事务，并用数据库唯一键串行化同作用域重放。\n事务实现已写入候选目录：新请求先创建受作用域保护的幂等记录，冲突后锁定并复用结果；首次请求按排序目标加锁并在同一事务更新 Purchase、写审计。现在执行格式化与 Go 测试，检查编译及静态行为。\n已完成 `internal/candidate/approval.go` 的批量审批升级：\n\n- 增加 scoped `ActionRequest` 幂等记录与 SHA-256 `requestHash`\n- 同 key、同目标集合支持并发安全重放\n- 同 key、不同目标集合返回 409\n- 目标校验、Purchase 更新、ApprovalAudit 写入均在同一事务中\n- 任一目标无效时整体回滚，不残留幂等记录或审计\n- 通过排序后的目标 ID 进行确定性响应和哈希计算\n- 保留原有 HTTP API 与 fallback 行为\n- 未修改 `internal/candidate/` 之外的代码\n\n验证已通过：\n\n```text\ngo test ./...\n? .../cmd/server [no test files]\n? .../internal/app [no test files]\n? .../internal/candidate [no test files]\n? .../internal/protocol [no test files]\n```\n\n未运行 `visible_smoke.py`，因为当前没有独立提供的公共测试服务。"
+    ],
+    "errors": [],
+    "engine": "kiro",
+    "generation_seconds": 55.991,
+    "requested_model": "gpt-5.6-luna",
+    "reasoning_effort": "medium",
+    "sandbox": "workspace-write",
+    "command": [
+      "kiro-cli",
+      "chat",
+      "--no-interactive",
+      "--output-format",
+      "stream-json",
+      "--agent-engine",
+      "v3",
+      "--agent",
+      "poc-v3-generator",
+      "--model",
+      "gpt-5.6-luna",
+      "--effort",
+      "medium",
+      "--trust-all-tools"
+    ],
+    "returncode": 0,
+    "timed_out": false,
+    "cli_version": "kiro-cli 3.3.0"
+  },
+  "cases": [
+    {
+      "case": "two targets",
+      "group": "functional",
+      "passed": true
+    },
+    {
+      "case": "100 targets",
+      "group": "functional",
+      "passed": true
+    },
+    {
+      "case": "100 byte Unicode ID",
+      "group": "functional",
+      "passed": true
+    },
+    {
+      "case": "quoted ID",
+      "group": "functional",
+      "passed": true
+    },
+    {
+      "case": "another approver",
+      "group": "functional",
+      "passed": true
+    },
+    {
+      "case": "other tenant approver",
+      "group": "functional",
+      "passed": true
+    },
+    {
+      "case": "requester",
+      "group": "authorization",
+      "passed": true
+    },
+    {
+      "case": "anonymous",
+      "group": "authorization",
+      "passed": true
+    },
+    {
+      "case": "cross tenant",
+      "group": "authorization",
+      "passed": true
+    },
+    {
+      "case": "self approval",
+      "group": "authorization",
+      "passed": true
+    },
+    {
+      "case": "forged context",
+      "group": "authorization",
+      "passed": true
+    },
+    {
+      "case": "mixed own",
+      "group": "atomicity",
+      "passed": true
+    },
+    {
+      "case": "mixed other",
+      "group": "atomicity",
+      "passed": true
+    },
+    {
+      "case": "mixed done",
+      "group": "atomicity",
+      "passed": true
+    },
+    {
+      "case": "mixed missing",
+      "group": "atomicity",
+      "passed": true
+    },
+    {
+      "case": "empty list",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "duplicate IDs",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "101 IDs",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "null IDs",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "null member",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "number member",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "empty ID",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "102 byte ID",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "unknown field",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "case sensitive field",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "array root",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "null root",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "malformed JSON",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "duplicate field",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "trailing JSON",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "invalid UTF8",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "missing key",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "empty key",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "bad key",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "129 byte key",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "128 byte key",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "exact 64 KiB body",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "64 KiB plus one",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "NUL absent target",
+      "group": "input",
+      "passed": true
+    },
+    {
+      "case": "reordered replay",
+      "group": "idempotency",
+      "passed": false,
+      "error": "{'status': 503, 'body': {'error': 'Service Unavailable'}, 'raw': '{\"error\":\"Service Unavailable\"}\\n', 'replayed': None}"
+    },
+    {
+      "case": "same key different payload",
+      "group": "idempotency",
+      "passed": false,
+      "error": "{'response': {'status': 503, 'body': {'error': 'Service Unavailable'}, 'raw': '{\"error\":\"Service Unavailable\"}\\n', 'replayed': None}, 'state_changed': False}"
+    },
+    {
+      "case": "new key cannot approve again",
+      "group": "idempotency",
+      "passed": true
+    },
+    {
+      "case": "key scoped by actor",
+      "group": "idempotency",
+      "passed": true
+    },
+    {
+      "case": "key scoped by tenant",
+      "group": "idempotency",
+      "passed": true
+    },
+    {
+      "case": "requester cannot reuse approver key",
+      "group": "idempotency",
+      "passed": true
+    },
+    {
+      "case": "concurrent identical",
+      "group": "concurrency",
+      "passed": false,
+      "error": "[{'status': 503, 'body': {'error': 'Service Unavailable'}, 'raw': '{\"error\":\"Service Unavailable\"}\\n', 'replayed': None}, {'status': 200, 'body': {'approvedIds': ['trial-911ec4e8e6b88e74-v3-a1', 'trial-911ec4e8e6b88e74-v3-a2']}, 'raw': '{\"approvedIds\":[\"trial-911ec4e8e6b88e74-v3-a1\",\"trial-911ec4e8e6b88e74-v3-a2\"]}\\n', 'replayed': 'false'}]"
+    },
+    {
+      "case": "concurrent mismatch",
+      "group": "concurrency",
+      "passed": false,
+      "error": "[{'status': 200, 'body': {'approvedIds': ['trial-911ec4e8e6b88e74-v3-a1', 'trial-911ec4e8e6b88e74-v3-a2']}, 'raw': '{\"approvedIds\":[\"trial-911ec4e8e6b88e74-v3-a1\",\"trial-911ec4e8e6b88e74-v3-a2\"]}\\n', 'replayed': 'false'}, {'status': 503, 'body': {'error': 'Service Unavailable'}, 'raw': '{\"error\":\"Service Unavailable\"}\\n', 'replayed': None}]"
+    },
+    {
+      "case": "concurrent overlap",
+      "group": "concurrency",
+      "passed": true
+    },
+    {
+      "case": "audit failure and same-key retry",
+      "group": "failure-rollback",
+      "passed": true
+    },
+    {
+      "case": "request failure and same-key retry",
+      "group": "failure-rollback",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "anonymous",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "forged_headers",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "tenant_list",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "tenant_detail",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "field_hidden",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "requester_cannot_approve",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "approver_cannot_self_approve",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "cross_tenant_approval",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "valid_create",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "approver_cannot_create",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "valid_approval",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "concurrent_approval",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "mass_assignment",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "bypass_action",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "invalid_amount",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "alternating_context",
+      "passed": true
+    }
+  ],
+  "groups": {
+    "functional": {
+      "passed": 6,
+      "total": 6
+    },
+    "authorization": {
+      "passed": 5,
+      "total": 5
+    },
+    "atomicity": {
+      "passed": 4,
+      "total": 4
+    },
+    "input": {
+      "passed": 24,
+      "total": 24
+    },
+    "idempotency": {
+      "passed": 4,
+      "total": 6
+    },
+    "concurrency": {
+      "passed": 1,
+      "total": 3
+    },
+    "failure-rollback": {
+      "passed": 2,
+      "total": 2
+    },
+    "original-regression": {
+      "passed": 16,
+      "total": 16
+    }
+  },
+  "passed": false,
+  "outcome": "acceptance-failed",
+  "evaluation_seconds": 3.821
+}

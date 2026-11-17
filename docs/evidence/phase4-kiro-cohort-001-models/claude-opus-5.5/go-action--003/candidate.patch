@@ -1,0 +1,76 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index 0fd94e3..82ae4dd 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -1,13 +1,11 @@
+-// Existing batch approval through the platform Action kernel.
++// Existing batch approval and v4 batch rejection through the platform Action kernel.
+ package candidate
+ 
+ import (
+ 	"context"
+-	"errors"
+ 	"net/http"
+ 
+ 	"github.com/XUJiahua/enterprise_agent/internal/action"
+-	"github.com/XUJiahua/enterprise_agent/internal/app"
+ 	"github.com/XUJiahua/enterprise_agent/internal/protocol"
+ 	"github.com/jackc/pgx/v5/pgxpool"
+ )
+@@ -17,16 +15,8 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 	if err != nil {
+ 		return nil, err
+ 	}
+-	approve := func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
+-		approved, replayed, err := executor.Run(ctx, u, action.Approve, key, ids)
+-		var denied *action.Rejection
+-		if errors.As(err, &denied) {
+-			return protocol.Result{}, false, &protocol.Rejection{Status: denied.Status}
+-		}
+-		if err != nil {
+-			return protocol.Result{}, false, err
+-		}
+-		return protocol.Result{Field: action.Approve.Field, IDs: approved}, replayed, nil
+-	}
+-	return protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve}, fallback), nil
++	return protocol.HTTP(protocol.Routes{
++		"/purchases/bulk-approve": actionHandler(executor, action.Approve),
++		"/purchases/bulk-reject":  actionHandler(executor, Reject),
++	}, fallback), nil
+ }
+diff --git a/internal/candidate/reject.go b/internal/candidate/reject.go
+new file mode 100644
+index 0000000..f3749bb
+--- /dev/null
++++ b/internal/candidate/reject.go
+@@ -0,0 +1,30 @@
++// Batch rejection through the platform Action kernel.
++package candidate
++
++import (
++	"context"
++	"errors"
++
++	"github.com/XUJiahua/enterprise_agent/internal/action"
++	"github.com/XUJiahua/enterprise_agent/internal/app"
++	"github.com/XUJiahua/enterprise_agent/internal/protocol"
++)
++
++// Reject is the v4 batch rejection Action: submitted -> rejected.
++var Reject = action.Transition{Operation: "bulk-reject.v4", From: "submitted", To: "rejected", Field: "rejectedIds"}
++
++// actionHandler adapts a kernel Transition to a protocol.Handler, translating
++// action.Rejection into protocol.Rejection at the boundary.
++func actionHandler(executor *action.Executor, t action.Transition) protocol.Handler {
++	return func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
++		done, replayed, err := executor.Run(ctx, u, t, key, ids)
++		var denied *action.Rejection
++		if errors.As(err, &denied) {
++			return protocol.Result{}, false, &protocol.Rejection{Status: denied.Status}
++		}
++		if err != nil {
++			return protocol.Result{}, false, err
++		}
++		return protocol.Result{Field: t.Field, IDs: done}, replayed, nil
++	}
++}

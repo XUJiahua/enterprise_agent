@@ -9,6 +9,36 @@ import unittest
 ROOT=Path(__file__).resolve().parents[2]
 spec=importlib.util.spec_from_file_location('phase3_ctl_tests',ROOT/'benchmark/phase3/ctl.py')
 ctl=importlib.util.module_from_spec(spec);spec.loader.exec_module(ctl)
+wspec=importlib.util.spec_from_file_location('phase3_worker_tests',ROOT/'benchmark/phase3/generation_worker.py')
+worker=importlib.util.module_from_spec(wspec);wspec.loader.exec_module(worker)
+
+def kiro(*events): return '\n'.join(json.dumps(e) for e in events)
+K_START={'type':'runStarted','data':{'engine':'v3'}}
+K_TURN={'type':'sessionUpdate','data':{'update':{'sessionUpdate':'session_info_update','_meta':{'kiro':{'kind':'turn_start'}}}}}
+K_MODEL={'type':'sessionUpdate','data':{'update':{'sessionUpdate':'config_option_update','configOptions':[{'id':'model','currentValue':'m-1'}]}}}
+K_USAGE={'type':'sessionUpdate','data':{'update':{'sessionUpdate':'session_info_update','_meta':{'kiro':{'kind':'session_usage','credits':[{'usage':0.5,'unit':'credit'}]}}}}}
+K_DONE={'type':'runFinished','data':{'status':'success','stopReason':'end_turn','finalText':'READY'}}
+
+class KiroEventTests(unittest.TestCase):
+    def test_success_keeps_credits_model_and_final_text(self):
+        r=worker.parse_kiro(kiro(K_START,K_MODEL,K_TURN,K_USAGE,K_DONE),0,False)
+        self.assertEqual((r['status'],r['usage'],r['reported_model'],r['agent_messages']),('completed',{'credits':0.5},'m-1',['READY']))
+    def test_missing_usage_is_unknown(self):
+        self.assertIsNone(worker.parse_kiro(kiro(K_START,K_TURN,K_DONE),0,False)['usage'])
+    def test_missing_or_duplicate_finish_is_protocol_error(self):
+        self.assertEqual(worker.parse_kiro(kiro(K_START,K_TURN),0,False)['status'],'protocol-error')
+        self.assertEqual(worker.parse_kiro(kiro(K_START,K_TURN,K_DONE,K_DONE),0,False)['status'],'protocol-error')
+        self.assertEqual(worker.parse_kiro('not json\n'+kiro(K_START,K_TURN,K_DONE),0,False)['status'],'protocol-error')
+    def test_errors_and_nonzero_exit(self):
+        err={'type':'runError','data':{'stage':'prompt','message':'quota'}}
+        self.assertEqual(worker.parse_kiro(kiro(K_START,K_TURN,err),1,False)['status'],'provider-error')
+        self.assertEqual(worker.parse_kiro(kiro(K_START,err),1,False)['status'],'runtime-blocked')
+        self.assertEqual(worker.parse_kiro(kiro(K_START,K_TURN,K_DONE),1,False)['status'],'provider-error')
+        failed={'type':'runFinished','data':{'status':'error'}}
+        self.assertEqual(worker.parse_kiro(kiro(K_START,K_TURN,failed),0,False)['status'],'provider-error')
+    def test_timeout_before_and_after_turn_start(self):
+        self.assertEqual(worker.parse_kiro(kiro(K_START,K_TURN),-15,True)['status'],'budget-exceeded')
+        self.assertEqual(worker.parse_kiro(kiro(K_START),-15,True)['status'],'runtime-blocked')
 
 class Phase3Tests(unittest.TestCase):
     def setUp(self):
@@ -16,7 +46,7 @@ class Phase3Tests(unittest.TestCase):
         self.root=Path(self.temp.name);self.private=self.root/'private.json';self.plan=self.root/'plan.json'
         ctl.fixtures(argparse.Namespace(output=self.private))
         ctl.plan(argparse.Namespace(base='d8a5c576cc3c293ee2da884f5c618958df407b51',model='synthetic',fixtures=self.private,
-           output=self.plan,repetitions=1,time_budget=180,reasoning_effort='medium',seed=42,synthetic=True,allow_dirty_harness=True))
+           output=self.plan,repetitions=1,time_budget=180,reasoning_effort='medium',seed=42,synthetic=True,allow_dirty_harness=True,engine='codex'))
 
     def rewrite(self,fn):
         value=json.loads(self.plan.read_text());fn(value);self.plan.write_text(json.dumps(value))
@@ -99,5 +129,14 @@ class Phase3Tests(unittest.TestCase):
         self.rewrite(lambda p:p.update(kind='model-trial'))
         with self.assertRaisesRegex(ValueError,'mismatch'):
             ctl.generate(argparse.Namespace(plan=self.plan,synthetic_test_driver='fake',trial=None))
+
+    def test_engine_is_bound_to_plan_and_kit(self):
+        self.rewrite(lambda p:p.update(engine='other'))
+        with self.assertRaisesRegex(ValueError,'engine'): ctl.load_plan(self.plan)
+        self.rewrite(lambda p:p.update(engine='kiro'))
+        with self.assertRaisesRegex(ValueError,'prepare'):
+            ctl.generate(argparse.Namespace(plan=self.plan,synthetic_test_driver='fake',trial=None))
+        kit=self.root/'kiro-kit';ctl.prepare(argparse.Namespace(plan=self.plan,trial='go-manual--001',output=kit))
+        self.assertEqual(json.loads((kit/'job.json').read_text())['engine'],'kiro')
 
 if __name__=='__main__':unittest.main()

@@ -1,0 +1,37 @@
+{
+  "status": "completed",
+  "usage": {
+    "credits": 2.052080979767827
+  },
+  "turn_started": true,
+  "run_finished": true,
+  "reported_model": "claude-opus-5.5",
+  "event_count": 349,
+  "agent_messages": [
+    "I added `POST /purchases/bulk-reject`, registered through `protocol.Routes` so it uses the same `protocol.HTTP` adapter as bulk-approve. `go build`, `go vet` and `go test` pass, but no package has tests and there were no database credentials, so none of the SQL, RLS or concurrency behaviour has been run against Postgres.\n\nThe only file changed is `internal/candidate/approval.go`. I turned the existing approve handler into one shared function, `action(pool, decision{op, field, status})`, and use it for both routes:\n- **bulk-approve:** `bulk-approve.v3`, `approvedIds`, status `approved`. The SQL and behaviour are the same as before; only the constant values became parameters.\n- **bulk-reject:** `bulk-reject.v4`, `rejectedIds`, status `rejected`.\n\nHow reject meets the spec, all inside one transaction:\n- **Eligibility:** it locks the matching rows that are submitted, in the current tenant and created by someone else. If any target fails that check, the whole batch gets 409 and nothing is written. Rows already rejected or approved fail the check too, so they can't be rejected or approved again.\n- **Idempotency:** a per-actor lock on operation + tenant + actor + key comes first. A replay with the same ID set returns the stored response with `Idempotency-Replayed: true` and writes nothing; the same key with a different set gets 409. The `ActionRequest` row is keyed by operation, so the same key name under a different actor, tenant or operation doesn't collide.\n- **Concurrency:** overlapping batches, and an approve racing a reject on the same purchase, are serialized by the row locks. After the wait, the loser sees fewer eligible rows and gets 409.\n- **Failure:** if the `ActionRequest` insert fails, the transaction rolls back and the adapter returns 503. Nothing was saved, so retrying with the same key works.\n- **Identity:** it comes only from `Authorization` through the adapter, so client context headers can't override it.\n\nTwo choices you may want to check:\n- **Fingerprint:** `fingerprint()` now takes the operation name, so reject hashes with `bulk-reject.v4`. If it had reused the old approve-only hash, the nightly `ledger.Verify` check would flag every reject row as tampered.\n- **Audit rows:** each rejected target gets one `ApprovalAudit` row with `toStatus='rejected'` and `operation='bulk-reject.v4'`. The schema allows this, and the existing code says every status change leaves an audit row. The task didn't ask for it explicitly.\n\n`gofmt` flags `internal/protocol/protocol.go` as unformatted. That was already the case, and the file is protected, so I left it."
+  ],
+  "errors": [],
+  "engine": "kiro",
+  "generation_seconds": 55.033,
+  "requested_model": "claude-opus-5.5",
+  "reasoning_effort": "medium",
+  "sandbox": "workspace-write",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "claude-opus-5.5",
+    "--effort",
+    "medium",
+    "--trust-all-tools"
+  ],
+  "returncode": 0,
+  "timed_out": false
+}

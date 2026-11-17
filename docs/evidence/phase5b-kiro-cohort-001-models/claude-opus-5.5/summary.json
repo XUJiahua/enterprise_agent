@@ -1,0 +1,171 @@
+{
+  "version": 5,
+  "kind": "model-trial",
+  "plan_sha256": "395b6e8ad695f57c7a5568ec05dc045115466ed56eeec324a57a6b292b65a342",
+  "rows": [
+    {
+      "cell": "go-manual",
+      "planned": 10,
+      "observed": 10,
+      "unmeasured": 0,
+      "passed_all": 9,
+      "passed_explicit": 9,
+      "conventions_followed": {
+        "implicit-audit": 10,
+        "implicit-request-hash": 10,
+        "implicit-outbox": 10,
+        "implicit-uniform-denial": 10
+      },
+      "first_pass_rate": 0.9,
+      "explicit_pass_rate": 0.9,
+      "outcomes": {
+        "acceptance-failed": 1,
+        "passed": 9
+      },
+      "usage": [
+        {
+          "trial": "go-manual--001",
+          "usage": {
+            "credits": 2.6868356912106135
+          }
+        },
+        {
+          "trial": "go-manual--002",
+          "usage": {
+            "credits": 2.8395916006633493
+          }
+        },
+        {
+          "trial": "go-manual--003",
+          "usage": {
+            "credits": 2.9256859452736323
+          }
+        },
+        {
+          "trial": "go-manual--004",
+          "usage": {
+            "credits": 2.4936199203980096
+          }
+        },
+        {
+          "trial": "go-manual--005",
+          "usage": {
+            "credits": 2.308117289883914
+          }
+        },
+        {
+          "trial": "go-manual--006",
+          "usage": {
+            "credits": 2.552106886567164
+          }
+        },
+        {
+          "trial": "go-manual--007",
+          "usage": {
+            "credits": 2.7671722394693203
+          }
+        },
+        {
+          "trial": "go-manual--008",
+          "usage": {
+            "credits": 2.498977149253731
+          }
+        },
+        {
+          "trial": "go-manual--009",
+          "usage": {
+            "credits": 2.511498623217247
+          }
+        },
+        {
+          "trial": "go-manual--010",
+          "usage": {
+            "credits": 2.46385072437811
+          }
+        }
+      ]
+    },
+    {
+      "cell": "go-action",
+      "planned": 10,
+      "observed": 10,
+      "unmeasured": 0,
+      "passed_all": 10,
+      "passed_explicit": 10,
+      "conventions_followed": {
+        "implicit-audit": 10,
+        "implicit-request-hash": 10,
+        "implicit-outbox": 10,
+        "implicit-uniform-denial": 10
+      },
+      "first_pass_rate": 1.0,
+      "explicit_pass_rate": 1.0,
+      "outcomes": {
+        "passed": 10
+      },
+      "usage": [
+        {
+          "trial": "go-action--001",
+          "usage": {
+            "credits": 1.896415029187396
+          }
+        },
+        {
+          "trial": "go-action--002",
+          "usage": {
+            "credits": 2.571443594029851
+          }
+        },
+        {
+          "trial": "go-action--003",
+          "usage": {
+            "credits": 1.7944652404643449
+          }
+        },
+        {
+          "trial": "go-action--004",
+          "usage": {
+            "credits": 1.8823249837479268
+          }
+        },
+        {
+          "trial": "go-action--005",
+          "usage": {
+            "credits": 1.7794307313432836
+          }
+        },
+        {
+          "trial": "go-action--006",
+          "usage": {
+            "credits": 1.6989933140961857
+          }
+        },
+        {
+          "trial": "go-action--007",
+          "usage": {
+            "credits": 1.8247021973466
+          }
+        },
+        {
+          "trial": "go-action--008",
+          "usage": {
+            "credits": 2.2155747558872307
+          }
+        },
+        {
+          "trial": "go-action--009",
+          "usage": {
+            "credits": 1.709594183416252
+          }
+        },
+        {
+          "trial": "go-action--010",
+          "usage": {
+            "credits": 2.0723872620232173
+          }
+        }
+      ]
+    }
+  ],
+  "note": "Explicit contract and implicit conventions are reported separately. Synthetic controls are not model evidence. Missing/infrastructure trials remain unmeasured; absent usage is unknown."
+}

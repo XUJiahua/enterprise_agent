@@ -1,0 +1,45 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index cf92f72..bfd838d 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -17,8 +17,8 @@ import (
+ 
+ const opApprove = "bulk-approve.v3"
+ 
+-func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
+-	approve := func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
++func newApprove(pool *pgxpool.Pool) protocol.Handler {
++	return func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
+ 		for _, id := range ids {
+ 			if strings.ContainsRune(id, 0) {
+ 				return protocol.Result{}, false, &protocol.Rejection{Status: 404}
+@@ -108,6 +108,14 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		}
+ 		return result, false, nil
+ 	}
+-	batches := protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve, "/purchases/bulk-reject": newReject(pool)}, fallback)
+-	return protocol.Item("reopen", "requester", newReopen(pool), batches), nil
++}
++
++func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
++	approve := newApprove(pool)
++	reject := newReject(pool)
++	reopen := newReopen(pool)
++	reassign := newReassign(pool)
++	assignHandler := protocol.Assign("/purchases/bulk-reassign", reassign, fallback)
++	batches := protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve, "/purchases/bulk-reject": reject}, assignHandler)
++	return protocol.Item("reopen", "requester", reopen, batches), nil
+ }
+diff --git a/internal/ledger/ledger.go b/internal/ledger/ledger.go
+index 3f0c088..1dcf8fd 100644
+--- a/internal/ledger/ledger.go
++++ b/internal/ledger/ledger.go
+@@ -16,6 +16,8 @@ import (
+ 
+ // Fingerprint is the request digest shared by every Action operation: the
+ // operation name is the domain separator, IDs are length-prefixed and sorted.
++// For bulk-reassign.v6, the assignee is also part of the domain and is embedded
++// in the operation name as operation+"\n"+assignee.
+ func Fingerprint(operation string, ids []string) string {
+ 	sorted := append([]string(nil), ids...)
+ 	sort.Strings(sorted)

@@ -1,0 +1,290 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index ad14a29..e18d5a1 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -3,30 +3,112 @@ package candidate
+ 
+ import (
+ 	"context"
++	"crypto/sha256"
++	"encoding/hex"
++	"errors"
+ 	"github.com/XUJiahua/enterprise_agent/internal/app"
+ 	"github.com/XUJiahua/enterprise_agent/internal/protocol"
++	"github.com/jackc/pgx/v5"
++	"github.com/jackc/pgx/v5/pgconn"
+ 	"github.com/jackc/pgx/v5/pgxpool"
+ 	"net/http"
++	"sort"
++	"strconv"
+ 	"strings"
++	"unicode/utf8"
+ )
+ 
+ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
+ 	approve := func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
+-		for _, id := range ids {
+-			if strings.ContainsRune(id, 0) {
+-				return protocol.Result{}, false, &protocol.Rejection{Status: 404}
++		// Validate IDs: non-empty, non-null, UTF-8 valid, sorted, no duplicates
++		if len(ids) == 0 || len(ids) > 100 {
++			return protocol.Result{}, false, &protocol.Rejection{Status: 400}
++		}
++		
++		for i, id := range ids {
++			if len(id) == 0 || len(id) > 100 || !utf8.ValidString(id) {
++				return protocol.Result{}, false, &protocol.Rejection{Status: 400}
++			}
++			if i > 0 && ids[i-1] == id {
++				return protocol.Result{}, false, &protocol.Rejection{Status: 400}
+ 			}
+ 		}
++
+ 		tx, err := pool.Begin(ctx)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+ 		defer tx.Rollback(ctx)
++
++		// Set context for RLS
+ 		_, err = tx.Exec(ctx, `SELECT set_config('app.tenant',$1,true),set_config('app.user',$2,true),set_config('app.role',$3,true)`, u.Tenant, u.User, u.Role)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+-		rows, err := tx.Query(ctx, `SELECT id FROM "Purchase" WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted' ORDER BY id FOR UPDATE`, ids, u.Tenant, u.User)
++
++		// Check if this idempotency key was already used
++		var existingHash string
++		var existingResponse string
++		err = tx.QueryRow(ctx, `SELECT "requestHash", response::text FROM "ActionRequest" WHERE "tenantId"=$1 AND "actorId"=$2 AND operation=$3 AND key=$4`, u.Tenant, u.User, "bulk-approve.v3", key).Scan(&existingHash, &existingResponse)
++		if err == nil {
++			// Found existing action request - this is a replay scenario
++			// Extract approved IDs from response JSON
++			// Response format: {"approvedIds":[...]}
++			var existingIDs []string
++			err = extractIDsFromJSON(existingResponse, &existingIDs)
++			if err != nil {
++				return protocol.Result{}, false, err
++			}
++
++			// Compare sorted IDs
++			if len(existingIDs) != len(ids) {
++				return protocol.Result{}, false, &protocol.Rejection{Status: 409}
++			}
++			sameIDs := true
++			for i := range ids {
++				if existingIDs[i] != ids[i] {
++					sameIDs = false
++					break
++				}
++			}
++			if !sameIDs {
++				return protocol.Result{}, false, &protocol.Rejection{Status: 409}
++			}
++
++			// Same key and same IDs - return the replay response
++			return protocol.Result{ApprovedIDs: existingIDs}, true, nil
++		} else if err != pgx.ErrNoRows {
++			return protocol.Result{}, false, err
++		}
++		// err == pgx.ErrNoRows means no existing record, continue
++
++		// Check if any of the IDs were already approved (by any key)
++		// Use SELECT FOR UPDATE to serialize concurrent requests with different keys
++		rows, err := tx.Query(ctx, `SELECT id FROM "ApprovalAudit" WHERE "tenantId"=$1 AND "purchaseId"=ANY($2::text[]) FOR UPDATE`, u.Tenant, ids)
++		if err != nil {
++			return protocol.Result{}, false, err
++		}
++
++		alreadyApproved := []string{}
++		for rows.Next() {
++			var id string
++			if err = rows.Scan(&id); err != nil {
++				rows.Close()
++				return protocol.Result{}, false, err
++			}
++			alreadyApproved = append(alreadyApproved, id)
++		}
++		err = rows.Err()
++		rows.Close()
++		if err != nil {
++			return protocol.Result{}, false, err
++		}
++		if len(alreadyApproved) > 0 {
++			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
++		}
++
++		// Check for eligible purchases that can be approved
++		rows, err = tx.Query(ctx, `SELECT id FROM "Purchase" WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted' ORDER BY id FOR UPDATE`, ids, u.Tenant, u.User)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+@@ -44,9 +126,37 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
++
++		// If any target is invalid (not in the eligible set), reject all
+ 		if len(eligible) != len(ids) {
+ 			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+ 		}
++
++		// Calculate request hash for ActionRequest
++		requestHash := calculateRequestHash(ids)
++
++		// Calculate response JSON
++		response := `{"approvedIds":[`
++		for i, id := range ids {
++			if i > 0 {
++				response += ","
++			}
++			response += `"` + escapeJSON(id) + `"`
++		}
++		response += `]}`
++
++		// Insert ActionRequest (the first write to lock the idempotency key)
++		_, err = tx.Exec(ctx, `INSERT INTO "ActionRequest" ("tenantId","actorId",operation,key,"requestHash",response) VALUES ($1,$2,$3,$4,$5,$6)`, u.Tenant, u.User, "bulk-approve.v3", key, requestHash, response)
++		if err != nil {
++			var pgErr *pgconn.PgError
++			if errors.As(err, &pgErr) && pgErr.Code == "23505" {
++				// Concurrent insert with different IDs - check if same IDs were attempted
++				return protocol.Result{}, false, &protocol.Rejection{Status: 409}
++			}
++			return protocol.Result{}, false, err
++		}
++
++		// Update all purchases
+ 		tag, err := tx.Exec(ctx, `UPDATE "Purchase" SET status='approved' WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'`, ids, u.Tenant, u.User)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+@@ -54,6 +164,15 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		if tag.RowsAffected() != int64(len(ids)) {
+ 			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+ 		}
++
++		// Insert ApprovalAudit records
++		for _, id := range ids {
++			_, err = tx.Exec(ctx, `INSERT INTO "ApprovalAudit" ("tenantId","purchaseId","approvedBy",operation,"idempotencyKey","fromStatus","toStatus") VALUES ($1,$2,$3,$4,$5,'submitted','approved')`, u.Tenant, id, u.User, "bulk-approve.v3", key)
++			if err != nil {
++				return protocol.Result{}, false, err
++			}
++		}
++
+ 		if err = tx.Commit(ctx); err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+@@ -61,3 +180,114 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 	}
+ 	return protocol.HTTP(approve, fallback), nil
+ }
++
++// extractIDsFromJSON extracts approvedIds array from JSON response
++func extractIDsFromJSON(jsonStr string, ids *[]string) error {
++	// Simple JSON parsing for {"approvedIds":[...]}
++	start := strings.Index(jsonStr, `["approvedIds":`)
++	if start == -1 {
++		return errors.New("invalid JSON format")
++	}
++	start += len(`["approvedIds":`)
++	
++	if start >= len(jsonStr) || jsonStr[start] != '[' {
++		return errors.New("invalid approvedIds format")
++	}
++	start++
++	
++	*ids = []string{}
++	current := start
++	
++	for current < len(jsonStr) {
++		// Skip whitespace
++		for current < len(jsonStr) && (jsonStr[current] == ' ' || jsonStr[current] == '\n' || jsonStr[current] == '\t' || jsonStr[current] == '\r') {
++			current++
++		}
++		
++		if current >= len(jsonStr) {
++			break
++		}
++		
++		if jsonStr[current] == ']' {
++			break
++		}
++		
++		if jsonStr[current] == ',' {
++			current++
++			continue
++		}
++		
++		if jsonStr[current] != '"' {
++			return errors.New("invalid ID format")
++		}
++		
++		// Extract string
++		current++ // skip opening quote
++		end := current
++		for end < len(jsonStr) {
++			if jsonStr[end] == '\\' && end+1 < len(jsonStr) {
++				end += 2
++				continue
++			}
++			if jsonStr[end] == '"' {
++				break
++			}
++			end++
++		}
++		
++		if end >= len(jsonStr) {
++			return errors.New("unterminated string")
++		}
++		
++		id := jsonStr[current:end]
++		// Unescape
++		unescaped := strings.ReplaceAll(id, `\"`, `"`)
++		unescaped = strings.ReplaceAll(unescaped, `\\`, `\`)
++		unescaped = strings.ReplaceAll(unescaped, `\n`, "\n")
++		unescaped = strings.ReplaceAll(unescaped, `\r`, "\r")
++		unescaped = strings.ReplaceAll(unescaped, `\t`, "\t")
++		*ids = append(*ids, unescaped)
++		
++		current = end + 1
++	}
++	
++	return nil
++}
++
++// calculateRequestHash computes the SHA-256 hash as specified:
++// "bulk-approve.v3\n" followed by sorted IDs with format "<len>:<ID>"
++func calculateRequestHash(ids []string) string {
++	// ids should already be sorted, but sort again to be sure
++	sorted := make([]string, len(ids))
++	copy(sorted, ids)
++	sort.Strings(sorted)
++
++	hasher := sha256.New()
++	hasher.Write([]byte("bulk-approve.v3\n"))
++	for _, id := range sorted {
++		hasher.Write([]byte(strconv.Itoa(len(id)) + ":" + id))
++	}
++	return hex.EncodeToString(hasher.Sum(nil))
++}
++
++// escapeJSON escapes a string for JSON inclusion
++func escapeJSON(s string) string {
++	result := ""
++	for _, r := range s {
++		switch r {
++		case '"':
++			result += `\"`
++		case '\\':
++			result += `\\`
++		case '\n':
++			result += `\n`
++		case '\r':
++			result += `\r`
++		case '\t':
++			result += `\t`
++		default:
++			result += string(r)
++		}
++	}
++	return result
++}

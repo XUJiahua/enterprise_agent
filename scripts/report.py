@@ -53,9 +53,44 @@ assert action['direct_metadata_checks']==12 and len(action['startup_probes'])==7
 cohort=json.loads((root/'phase3-cohort-controls/control.json').read_text())
 assert cohort['kind']=='synthetic-v3-cohort-control' and cohort['new_model_generations']==0
 assert cohort['human_evaluations']==6 and cohort['reference_passed']==2 and cohort['negative_controls_detected']==4
-assert cohort['driver_evaluations']==3 and cohort['bundle_replays']==3 and cohort['cases_per_evaluation']==66
+assert cohort['driver_evaluations']==4 and cohort['kiro_driver_evaluations']==1 and cohort['bundle_replays']==4 and cohort['cases_per_evaluation']==66
 assert cohort['standalone_worker_passed'] and cohort['partial_denominator_checked'] and cohort['duplicate_rejected']
 verifier=json.loads((root/'verifier.json').read_text());assert verifier['ok'] and len(verifier['results'])==7
+for name,kind,cases,isolated,explicit in [('phase4-controls','synthetic-v4-implicit-convention-control',108,8,4),
+        ('phase5-controls','synthetic-v5-scattered-convention-control',145,8,4),('phase5b-controls','synthetic-v5-scattered-convention-control',145,7,5)]:
+    control=json.loads((root/name/'control.json').read_text())
+    assert control['kind']==kind and control['new_model_generations']==0 and control['cases_per_evaluation']==cases
+    assert control['human_evaluations']==14==len(control['controls']) and control['worker_transport_evaluations']==2 and control['reference_passed']==2
+    assert control['implicit_violations_isolated']==isolated and control['explicit_violations_detected']==explicit
+    assert control['crash_control']['outcome']=='candidate-error' and control['partial_denominator_checked'] and control['duplicate_rejected']
+# v5b: omitting Event is an explicit (fail-loud) failure, not an isolated implicit violation as in v5.
+assert next(c for c in json.loads((root/'phase5b-controls/control.json').read_text())['controls'] if c['cell']=='go-action' and c['mode']=='omit-event')['violates'] is None
+for name,kind,cases,explicit,implicit,evaluations,references in [
+        ('phase6a-controls','synthetic-v6a-two-level-approval-control',193,180,13,15,2),
+        ('phase6b-controls','synthetic-v6b-bulk-reassign-control',190,178,12,16,3)]:
+    control=json.loads((root/name/'control.json').read_text())
+    assert control['kind']==kind and control['new_model_generations']==0
+    assert (control['cases_per_evaluation'],control['explicit_cases'],control['implicit_cases'])==(cases,explicit,implicit)
+    assert control['human_evaluations']==evaluations==len(control['controls'])
+    assert control['reference_passed']==references and control['worker_transport_evaluations']==2
+    assert control['implicit_violations_isolated']==8 and control['explicit_violations_detected']==5
+    assert control['crash_control']['outcome']=='candidate-error'
+    assert control['partial_denominator_checked'] and control['duplicate_rejected']
+extension=json.loads((root/'extension-controls.json').read_text())
+assert extension['ok'] and extension['model_calls']==0 and extension['controls']==44 and all(r['passed'] for r in extension['results'])
+assert (extension['negative_detected'],extension['positive_clean'],extension['uncovered_clean'])==(24,7,13)
+interception=json.loads((root/'verifier-extension-rules/summary.json').read_text())
+frozen=json.loads((Path(__file__).resolve().parents[1]/'docs/evidence/verifier-extension-rules-2026-11-15/summary.json').read_text())
+assert interception==frozen and interception['trials']==280 and interception['new_model_generations']==0 and not interception['frozen_scores_modified']
+operations=json.loads((root/'operation-controls.json').read_text())
+assert operations['ok'] and operations['model_calls']==0 and operations['controls']==53 and all(r['passed'] for r in operations['results'])
+assert (operations['negative_detected'],operations['positive_clean'],operations['uncovered_clean'],operations['unverifiable_detected'])==(34,12,7,4)
+replay=json.loads((root/'operation-semantics/summary.json').read_text())
+replay_frozen=json.loads((Path(__file__).resolve().parents[1]/'docs/evidence/operation-semantics-2026-11-16/summary.json').read_text())
+assert replay==replay_frozen and replay['out_of_sample'] is False and replay['configs']['full']['trials']==228 and replay['new_model_generations']==0
+assert operations['catalog']==replay['catalog']
+opkernel=(root/'opkernel-db.txt').read_text()
+assert '--- PASS: TestCatalogOperationsDB' in opkernel and '--- SKIP' not in opkernel and '\nok ' in opkernel
 text='# Controlled POC results\n\n| Path | Healthy acceptance | Faults blocked |\n|---|---:|---:|\n'
 for route,acceptance,blocked in rows:text+=f'| {route} | {acceptance} | {blocked} |\n'
 text+='\nVerifier adversarial probes: 7/7. Direct SQL probes: 6/6. Startup configuration probes: 2/2. Shared browser acceptance: 18/18. Synthetic evaluator controls: 4 committed-candidate evaluations plus 1 driver end-to-end control (not AI measurements).\n\nThese are hand-authored fault injections, not measured AI defect rates or first-pass productivity. A guarded field over-fetch fails closed with 403; ZenStack nullifies the denied field. Disabling the ZenStack policy client is an expected escaping boundary control.\n'
@@ -64,6 +99,11 @@ text+='\nPR 7 archived replay: 9 candidates / 195 frozen cases; 45 post-hoc case
 text+='\nPhase 2 atomic bulk approval: 12 human-authored candidate evaluations, 46 cases each; 4 correct references pass, 8 negative controls are detected. One additional synthetic driver control exercises export, generation protocol, bundle, and evaluation. Zero new model samples. Candidate exports omit evaluator files and prior Git history; this is not a same-host security sandbox.\n'
 text+='\nPR 10 audit: 50 archived files and four candidate bundles verified. New public fixtures: 184 replay cases plus 28 additional checks pass; four candidate-authored Go test suites pass. Four request-capacity observations remain separate from first-pass scoring. Original private seed was not used. No new model generations.\n'
 text+='\nTyped Action mechanism POC: reference passes 66/66; five negative controls detected, each evaluated against 66 cases. Purchase state, audit rows and completed idempotency response commit in one PostgreSQL transaction. Metadata SQL probes: 12/12; startup checks: 7/7. No new model samples or general workflow-engine claim.\n'
-text+='\nAction evolution cohort v3: same guarded RLS, HTTP adapter, schema and starting candidate; only the Action capability differs. Six human controls and three synthetic generation/transfer evaluations, 66 checks each. Two correct references pass; four negative controls detected; three bundle replays pass, including one standalone worker. Zero new model generations. Generation kits contain no Oracle or private seed; actual host/network isolation remains an operator deployment requirement.\n'
+text+='\nImplicit-convention cohort controls v4/v5/v5b (real PostgreSQL 17.6, fake Kiro, no model calls): 14 human candidates and 2 worker-transport evaluations each; references pass; v5b omit-event is an explicit failure.\n'
+text+='\nConfirmatory task harness controls v6a/v6b (real PostgreSQL 17.6, fake Kiro, no model calls): 15/16 human evaluations, 193/190 cases each; 2/3 positive references and two worker-transport evaluations per harness pass. Eight isolated convention violations and five explicit defects are detected per harness.\n'
+text+=f"\nExtension verifier (appctl extensions): {extension['controls']} controls on real exports ({extension['negative_detected']} negatives flagged, {extension['positive_clean']} positives clean, {extension['uncovered_clean']} known-uncovered stay clean). Archived interception (post hoc, {interception['trials']} real candidates): any rule TP/FP/FN = {interception['any_rule']['vs_any_frozen_failure']['TP']}/{interception['any_rule']['vs_any_frozen_failure']['FP']}/{interception['any_rule']['vs_any_frozen_failure']['FN']} against frozen failures; frozen scores unchanged.\n"
+full=replay['configs']['full'];sem=full['semantic_findings_vs_any_frozen_failure']
+text+=f"\nOperation catalog {replay['catalog'][:19]}: catalog kernel passes on PostgreSQL 17.6 for all entries. Catalog-bound verifier (appctl operations): {operations['controls']} controls ({operations['negative_detected']} negatives flagged, of which {operations['unverifiable_detected']} UNVERIFIABLE; {operations['positive_clean']} positives clean; {operations['uncovered_clean']} known-uncovered clean). Retrospective replay on {full['trials']} seen v6 candidates (NOT out-of-sample): TP/FP/FN = {sem['TP']}/{sem['FP']}/{sem['FN']}, silent failures caught {full['silent_caught']}/{full['silent_failures']}.\n"
+text+='\nAction evolution cohort v3: same guarded RLS, HTTP adapter, schema and starting candidate; only the Action capability differs. Six human controls and four synthetic generation/transfer evaluations (one through a fake Kiro CLI), 66 checks each. Two correct references pass; four negative controls detected; four bundle replays pass, including two standalone workers. Zero new model generations. Generation kits contain no Oracle or private seed; actual host/network isolation remains an operator deployment requirement.\n'
 (root/'comparison.md').write_text(text)
 print(text)

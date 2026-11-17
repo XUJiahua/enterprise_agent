@@ -1,0 +1,472 @@
+[
+  {
+    "model": "claude-haiku-4.5",
+    "harness_sha": "5e36007728e19a6d8420a1e64151a3bde926310d",
+    "cells": {
+      "go-manual": {
+        "planned": 10,
+        "observed": 10,
+        "passed_all": 10,
+        "passed_explicit": 10,
+        "outcomes": {
+          "passed": 10
+        },
+        "conventions_followed_of_scored": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-operation-scope": [
+            10,
+            10
+          ],
+          "implicit-request-hash": [
+            10,
+            10
+          ],
+          "implicit-uniform-409": [
+            10,
+            10
+          ]
+        },
+        "conventions_followed_given_explicit_pass": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-operation-scope": [
+            10,
+            10
+          ],
+          "implicit-request-hash": [
+            10,
+            10
+          ],
+          "implicit-uniform-409": [
+            10,
+            10
+          ]
+        },
+        "median_seconds": 53.3985,
+        "median_credits": 0.6637532078938642,
+        "total_credits": 6.746
+      },
+      "go-action": {
+        "planned": 10,
+        "observed": 10,
+        "passed_all": 0,
+        "passed_explicit": 0,
+        "outcomes": {
+          "scope-violation": 10
+        },
+        "conventions_followed_of_scored": {
+          "implicit-audit": [
+            0,
+            0
+          ],
+          "implicit-operation-scope": [
+            0,
+            0
+          ],
+          "implicit-request-hash": [
+            0,
+            0
+          ],
+          "implicit-uniform-409": [
+            0,
+            0
+          ]
+        },
+        "conventions_followed_given_explicit_pass": {
+          "implicit-audit": [
+            0,
+            0
+          ],
+          "implicit-operation-scope": [
+            0,
+            0
+          ],
+          "implicit-request-hash": [
+            0,
+            0
+          ],
+          "implicit-uniform-409": [
+            0,
+            0
+          ]
+        },
+        "median_seconds": 52.305,
+        "median_credits": 0.5574238939303482,
+        "total_credits": 6.024
+      }
+    },
+    "blocks_manual_action": [
+      "PF",
+      "PF",
+      "PF",
+      "PF",
+      "PF",
+      "PF",
+      "PF",
+      "PF",
+      "PF",
+      "PF"
+    ],
+    "action_only_pass": 0,
+    "manual_only_pass": 10,
+    "sign_test_p_exploratory": 0.002
+  },
+  {
+    "model": "claude-opus-5.5",
+    "harness_sha": "5e36007728e19a6d8420a1e64151a3bde926310d",
+    "cells": {
+      "go-manual": {
+        "planned": 10,
+        "observed": 10,
+        "passed_all": 10,
+        "passed_explicit": 10,
+        "outcomes": {
+          "passed": 10
+        },
+        "conventions_followed_of_scored": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-operation-scope": [
+            10,
+            10
+          ],
+          "implicit-request-hash": [
+            10,
+            10
+          ],
+          "implicit-uniform-409": [
+            10,
+            10
+          ]
+        },
+        "conventions_followed_given_explicit_pass": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-operation-scope": [
+            10,
+            10
+          ],
+          "implicit-request-hash": [
+            10,
+            10
+          ],
+          "implicit-uniform-409": [
+            10,
+            10
+          ]
+        },
+        "median_seconds": 59.560500000000005,
+        "median_credits": 2.1217880409618575,
+        "total_credits": 21.467
+      },
+      "go-action": {
+        "planned": 10,
+        "observed": 10,
+        "passed_all": 10,
+        "passed_explicit": 10,
+        "outcomes": {
+          "passed": 10
+        },
+        "conventions_followed_of_scored": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-operation-scope": [
+            10,
+            10
+          ],
+          "implicit-request-hash": [
+            10,
+            10
+          ],
+          "implicit-uniform-409": [
+            10,
+            10
+          ]
+        },
+        "conventions_followed_given_explicit_pass": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-operation-scope": [
+            10,
+            10
+          ],
+          "implicit-request-hash": [
+            10,
+            10
+          ],
+          "implicit-uniform-409": [
+            10,
+            10
+          ]
+        },
+        "median_seconds": 32.019999999999996,
+        "median_credits": 1.2391352995024878,
+        "total_credits": 12.666
+      }
+    },
+    "blocks_manual_action": [
+      "PP",
+      "PP",
+      "PP",
+      "PP",
+      "PP",
+      "PP",
+      "PP",
+      "PP",
+      "PP",
+      "PP"
+    ],
+    "action_only_pass": 0,
+    "manual_only_pass": 0,
+    "sign_test_p_exploratory": 1.0
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "harness_sha": "5e36007728e19a6d8420a1e64151a3bde926310d",
+    "cells": {
+      "go-manual": {
+        "planned": 10,
+        "observed": 10,
+        "passed_all": 9,
+        "passed_explicit": 9,
+        "outcomes": {
+          "acceptance-failed": 1,
+          "passed": 9
+        },
+        "conventions_followed_of_scored": {
+          "implicit-audit": [
+            9,
+            10
+          ],
+          "implicit-operation-scope": [
+            9,
+            10
+          ],
+          "implicit-request-hash": [
+            9,
+            10
+          ],
+          "implicit-uniform-409": [
+            9,
+            10
+          ]
+        },
+        "conventions_followed_given_explicit_pass": {
+          "implicit-audit": [
+            9,
+            9
+          ],
+          "implicit-operation-scope": [
+            9,
+            9
+          ],
+          "implicit-request-hash": [
+            9,
+            9
+          ],
+          "implicit-uniform-409": [
+            9,
+            9
+          ]
+        },
+        "median_seconds": 45.3585,
+        "median_credits": 0.6491295144776119,
+        "total_credits": 6.753
+      },
+      "go-action": {
+        "planned": 10,
+        "observed": 10,
+        "passed_all": 10,
+        "passed_explicit": 10,
+        "outcomes": {
+          "passed": 10
+        },
+        "conventions_followed_of_scored": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-operation-scope": [
+            10,
+            10
+          ],
+          "implicit-request-hash": [
+            10,
+            10
+          ],
+          "implicit-uniform-409": [
+            10,
+            10
+          ]
+        },
+        "conventions_followed_given_explicit_pass": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-operation-scope": [
+            10,
+            10
+          ],
+          "implicit-request-hash": [
+            10,
+            10
+          ],
+          "implicit-uniform-409": [
+            10,
+            10
+          ]
+        },
+        "median_seconds": 34.236000000000004,
+        "median_credits": 0.45631557462686556,
+        "total_credits": 4.682
+      }
+    },
+    "blocks_manual_action": [
+      "PP",
+      "PP",
+      "PP",
+      "PP",
+      "PP",
+      "PP",
+      "PP",
+      "PP",
+      "FP",
+      "PP"
+    ],
+    "action_only_pass": 1,
+    "manual_only_pass": 0,
+    "sign_test_p_exploratory": 1.0
+  },
+  {
+    "model": "qwen3-coder-next",
+    "harness_sha": "5e36007728e19a6d8420a1e64151a3bde926310d",
+    "cells": {
+      "go-manual": {
+        "planned": 10,
+        "observed": 10,
+        "passed_all": 9,
+        "passed_explicit": 10,
+        "outcomes": {
+          "acceptance-failed": 1,
+          "passed": 9
+        },
+        "conventions_followed_of_scored": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-operation-scope": [
+            10,
+            10
+          ],
+          "implicit-request-hash": [
+            9,
+            10
+          ],
+          "implicit-uniform-409": [
+            10,
+            10
+          ]
+        },
+        "conventions_followed_given_explicit_pass": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-operation-scope": [
+            10,
+            10
+          ],
+          "implicit-request-hash": [
+            9,
+            10
+          ],
+          "implicit-uniform-409": [
+            10,
+            10
+          ]
+        },
+        "median_seconds": 62.2535,
+        "median_credits": 0.5029958341625207,
+        "total_credits": 5.052
+      },
+      "go-action": {
+        "planned": 10,
+        "observed": 10,
+        "passed_all": 0,
+        "passed_explicit": 0,
+        "outcomes": {
+          "scope-violation": 10
+        },
+        "conventions_followed_of_scored": {
+          "implicit-audit": [
+            0,
+            0
+          ],
+          "implicit-operation-scope": [
+            0,
+            0
+          ],
+          "implicit-request-hash": [
+            0,
+            0
+          ],
+          "implicit-uniform-409": [
+            0,
+            0
+          ]
+        },
+        "conventions_followed_given_explicit_pass": {
+          "implicit-audit": [
+            0,
+            0
+          ],
+          "implicit-operation-scope": [
+            0,
+            0
+          ],
+          "implicit-request-hash": [
+            0,
+            0
+          ],
+          "implicit-uniform-409": [
+            0,
+            0
+          ]
+        },
+        "median_seconds": 55.703,
+        "median_credits": 0.57781715920398,
+        "total_credits": 5.388
+      }
+    },
+    "blocks_manual_action": [
+      "PF",
+      "PF",
+      "PF",
+      "FF",
+      "PF",
+      "PF",
+      "PF",
+      "PF",
+      "PF",
+      "PF"
+    ],
+    "action_only_pass": 0,
+    "manual_only_pass": 9,
+    "sign_test_p_exploratory": 0.0039
+  }
+]

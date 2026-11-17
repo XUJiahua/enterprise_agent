@@ -1,0 +1,684 @@
+{
+  "version": 4,
+  "kind": "model-trial",
+  "plan_sha256": "df1aa49e1d3ec82495dc10b4f34f37697068c585e231c21d9d4db4564c0cbf0b",
+  "trial": {
+    "id": "go-manual--002",
+    "cell": "go-manual",
+    "instance": 2,
+    "prompt": "本版本在既有批量审批 Action（POST /purchases/bulk-approve，行为保持不变）的基础上新增批量驳回 POST /purchases/bulk-reject。只有当前已认证 approver 可以驳回当前租户内他人创建、状态为 submitted 的采购单，驳回后状态为 rejected。任何目标不符合条件则全批拒绝，返回 4xx，数据库全部不变。请求体、身份、报文上限和 Idempotency-Key 校验与批量审批相同，由共享 HTTP 适配器 protocol.HTTP 完成，新路径通过 protocol.Routes 注册。成功返回 200，响应仅含 rejectedIds，按 UTF-8 字典序排序。首次成功 Idempotency-Replayed=false；同一 actor 以同一 key 重放同一目标集合时，返回相同状态和响应字节，header=true，不产生新写入；同 key 不同目标集合返回 409。不同 actor 或不同租户使用同名 key 互不影响。幂等结果与状态变更在同一事务中写入 ActionRequest：operation 为 \"bulk-reject.v4\"，tenantId、actorId、key 分别为当前租户、当前用户和 Idempotency-Key 原值，response 为响应 JSON 对象 {\"rejectedIds\":[排序后ID]}，每个成功的新请求恰好一行。ActionRequest 写入失败时返回 503 且数据库全部不变，故障移除后同 key 可重试。并发：同 key 同集合两次均 200 且只提交一次；不同 key 的重叠批次只能一个成功，败者独有目标不变；同一目标的并发审批与驳回只能一个成功；并发中失败的一方返回 4xx。已驳回的采购单不能再被审批或驳回，已审批的不能被驳回。客户端上下文头不能覆盖认证身份。批量审批与原有 API 行为保持不变。\nAdd the bulk-reject Action described above to the existing service.\nRead the existing code first and follow its conventions.\nBoth conditions use guarded RLS. The shared HTTP adapter in internal/protocol validates input and binds demo identity; register the new path in protocol.Routes.\nOnly edit/add internal/candidate/ Go code. All other exports, dependencies, Git settings and tests are protected.\nPreserve the existing APIs, including bulk-approve.\nDo not commit/push, read credentials, other checkouts or evaluator materials; do not use other agents.\nUse go build ./... and go test ./... as needed. Private database credentials are unavailable during generation. The public SQL schema is in SCHEMA.sql.\nCapability: no platform Action kernel. The existing batch approval is hand-written in internal/candidate/.\nThis is a trusted-code pilot; directory export alone does not enforce host or network isolation.",
+    "prompt_sha256": "577f8eb41e964d73d053acea84a34f3348446d6243fdf97361fc642a322b8e68"
+  },
+  "candidate_sha": "f71dfa21da56b66818e69ccd8da1699ff8fc60a6",
+  "manifest_sha256": "32dc3a6428aecc3f3106d8ba6c562cfd6ad0af744593c2b56e37368bdd96649f",
+  "generation": {
+    "status": "completed",
+    "usage": {
+      "credits": 0.7918202314427861
+    },
+    "turn_started": true,
+    "run_finished": true,
+    "reported_model": "claude-haiku-4.5",
+    "event_count": 755,
+    "agent_messages": [
+      "I'll start by reading the existing code to understand the structure and conventions for implementing the bulk-reject Action.\nLet me explore the internal directory structure:\nLet me check the candidate directory:\nNow let me read the schema and existing approval code:\nNow let me check the protocol package to understand the HTTP adapter interface:\nNow let me check the app package to understand the Identity structure:\nNow I understand the structure. Let me look at the go.mod to see the dependencies:\nPerfect. Now I have a clear understanding of the structure. Let me implement the bulk-reject Action. I need to:\n\n1. Create a `reject` handler function similar to `approve` in approval.go\n2. Register the new route `/purchases/bulk-reject` in protocol.Routes\n3. The handler should:\n   - Validate that targets are submitted status and created by different users\n   - Update status to 'rejected' instead of 'approved'\n   - Use the new operation \"bulk-reject.v4\"\n   - Sort IDs by UTF-8 dictionary order and return them in \"rejectedIds\" field\n   - Handle idempotency with the same pattern as approve\n\nLet me update approval.go:\nNow I need to update the fingerprint call in the approve handler to use the new function:Let me read the file again to ensure I have the correct content:\nNow I'll update the approve handler to use fingerprintFor and add the reject handler:\nNow let me add the reject handler and update the routes:Let me try with the full file path:\nNow let me verify the updated file looks correct:\nPerfect! The file looks good. Now let me build and test the code:\nGreat! The build succeeded. Now let me run the tests:\nExcellent! The build and tests pass. Let me verify the implementation one more time by checking the critical aspects:\n\n1. **Operation constant**: `opReject = \"bulk-reject.v4\"` ✓\n2. **Route registration**: Both approve and reject routes are registered ✓\n3. **Identity validation**: Only approvers can use these endpoints (enforced by protocol.HTTP) ✓\n4. **Request validation**: \n   - Validates inputs match the protocol (IDs without null characters) ✓\n   - Uses same sorting/canonical validation as approve ✓\n5. **RLS guards**: Uses guarded RLS with:\n   - `\"tenantId\"=$2 AND \"createdBy\"<>$3 AND status='submitted'` (rejects only other's submitted purchases) ✓\n6. **Status updates**: Changes status to 'rejected' instead of 'approved' ✓\n7. **Audit records**: Inserts ApprovalAudit with `fromStatus='submitted'` and `toStatus='rejected'` ✓\n8. **Idempotency**:\n   - Checks ActionRequest for existing result ✓\n   - Compares fingerprints to detect target set mismatches (returns 409) ✓\n   - Returns cached response with `Idempotency-Replayed=true` on success ✓\n   - Uses `pg_advisory_xact_lock` for concurrency control ✓\n9. **Response format**: Returns `{\"rejectedIds\":[...]}` with sorted IDs ✓\n10. **Transaction atomicity**: All operations committed together or rolled back ✓\n11. **Error handling**: \n   - Returns 409 for all eligibility failures (indistinguishable errors) ✓\n   - Returns 503 on ActionRequest write failure (database unchanged) ✓\n\nLet me also verify that the schema matches the constraints properly by reviewing the SCHEMA.sql again:\nPerfect! The schema already includes:\n- ✓ `'rejected'` status in Purchase check constraint\n- ✓ `'bulk-reject.v4'` in ActionRequest operation check constraint\n- ✓ `'bulk-reject.v4'` in ApprovalAudit operation check constraint\n- ✓ `'rejected'` in ApprovalAudit toStatus check constraint\n- ✓ Updated `purchase_decide` RLS policy that allows both `'approved'` and `'rejected'` in the WITH CHECK\n\nNow let me verify that the implementation correctly handles the key requirement about preventing both approval and rejection of the same purchase. The RLS policy and the status checks ensure that:\n- Only `submitted` purchases can be decided\n- Once a purchase is `approved` or `rejected`, it can no longer be decided (status != 'submitted')\n\nLet me check the implementation summary:\n\n## Summary\n\nI've successfully implemented the bulk-reject Action for the existing service. Here's what was added:\n\n### Changes to `/internal/candidate/approval.go`:\n\n1. **Added `opReject` constant** for operation tracking: `\"bulk-reject.v4\"`\n\n2. **Refactored fingerprint generation** with `fingerprintFor(op string, ids []string)` to support both operations while maintaining backward compatibility with the deprecated `fingerprint()` function\n\n3. **Implemented `reject` handler** that mirrors the `approve` handler with:\n   - Same input validation (no null bytes in IDs)\n   - Same idempotency mechanism using ActionRequest table\n   - Same concurrency control using advisory locks\n   - Same RLS guards: `tenantId`, `createdBy<>user`, and `status='submitted'`\n   - Updated status to `'rejected'` instead of `'approved'`\n   - Audit records with `toStatus='rejected'`\n   - Response field `\"rejectedIds\"` with sorted IDs (UTF-8 dictionary order)\n\n4. **Registered new route** `/purchases/bulk-reject` in the HTTP adapter routes\n\n### Key Features:\n\n✓ **Concurrency safety**: Advisory locks prevent concurrent operations on the same key  \n✓ **Idempotency**: Same key+actor combination returns cached results with `Idempotency-Replayed=true` header  \n✓ **Transactional consistency**: Status, audit, and ActionRequest written atomically  \n✓ **Error indistinguishability**: 409 for all eligibility failures (rejected, other-tenant, own, non-existent, already-decided)  \n✓ **RLS compliance**: Guarded runtime enforces tenant, creator, and status constraints  \n✓ **Mutual exclusion**: Once a purchase is approved or rejected, the other operation fails (status != 'submitted')  \n\nThe implementation passes compilation and all tests. The schema already supports the reject operation with proper constraints on status values and operation names."
+    ],
+    "errors": [],
+    "engine": "kiro",
+    "generation_seconds": 63.179,
+    "requested_model": "claude-haiku-4.5",
+    "reasoning_effort": "medium",
+    "sandbox": "workspace-write",
+    "command": [
+      "kiro-cli",
+      "chat",
+      "--no-interactive",
+      "--output-format",
+      "stream-json",
+      "--agent-engine",
+      "v3",
+      "--agent",
+      "poc-v3-generator",
+      "--model",
+      "claude-haiku-4.5",
+      "--effort",
+      "medium",
+      "--trust-all-tools"
+    ],
+    "returncode": 0,
+    "timed_out": false,
+    "cli_version": "kiro-cli 3.3.0"
+  },
+  "cases": [
+    {
+      "case": "two targets",
+      "group": "reject-functional",
+      "passed": true
+    },
+    {
+      "case": "100 targets",
+      "group": "reject-functional",
+      "passed": true
+    },
+    {
+      "case": "100 byte Unicode ID",
+      "group": "reject-functional",
+      "passed": true
+    },
+    {
+      "case": "another approver",
+      "group": "reject-functional",
+      "passed": true
+    },
+    {
+      "case": "other tenant approver",
+      "group": "reject-functional",
+      "passed": true
+    },
+    {
+      "case": "requester",
+      "group": "reject-authorization",
+      "passed": true
+    },
+    {
+      "case": "anonymous",
+      "group": "reject-authorization",
+      "passed": true
+    },
+    {
+      "case": "forged context",
+      "group": "reject-authorization",
+      "passed": true
+    },
+    {
+      "case": "mixed own",
+      "group": "reject-atomicity",
+      "passed": true
+    },
+    {
+      "case": "mixed other",
+      "group": "reject-atomicity",
+      "passed": true
+    },
+    {
+      "case": "mixed done",
+      "group": "reject-atomicity",
+      "passed": true
+    },
+    {
+      "case": "mixed gone",
+      "group": "reject-atomicity",
+      "passed": true
+    },
+    {
+      "case": "mixed missing",
+      "group": "reject-atomicity",
+      "passed": true
+    },
+    {
+      "case": "empty list",
+      "group": "reject-input",
+      "passed": true
+    },
+    {
+      "case": "unknown field",
+      "group": "reject-input",
+      "passed": true
+    },
+    {
+      "case": "missing key",
+      "group": "reject-input",
+      "passed": true
+    },
+    {
+      "case": "64 KiB plus one",
+      "group": "reject-input",
+      "passed": true
+    },
+    {
+      "case": "reordered replay",
+      "group": "reject-idempotency",
+      "passed": true
+    },
+    {
+      "case": "same key different set",
+      "group": "reject-idempotency",
+      "passed": true
+    },
+    {
+      "case": "new key cannot reject again",
+      "group": "reject-idempotency",
+      "passed": true
+    },
+    {
+      "case": "key scoped by actor",
+      "group": "reject-idempotency",
+      "passed": true
+    },
+    {
+      "case": "key scoped by tenant",
+      "group": "reject-idempotency",
+      "passed": true
+    },
+    {
+      "case": "requester cannot reuse approver key",
+      "group": "reject-idempotency",
+      "passed": true
+    },
+    {
+      "case": "concurrent identical",
+      "group": "reject-concurrency",
+      "passed": true
+    },
+    {
+      "case": "concurrent overlap",
+      "group": "reject-concurrency",
+      "passed": true
+    },
+    {
+      "case": "concurrent approve and reject",
+      "group": "reject-concurrency",
+      "passed": true
+    },
+    {
+      "case": "ActionRequest failure and same-key retry",
+      "group": "reject-failure-rollback",
+      "passed": true
+    },
+    {
+      "case": "rejected cannot be approved",
+      "group": "reject-lifecycle",
+      "passed": true
+    },
+    {
+      "case": "approved cannot be rejected",
+      "group": "reject-lifecycle",
+      "passed": true
+    },
+    {
+      "case": "audit rows",
+      "group": "implicit-audit",
+      "passed": true
+    },
+    {
+      "case": "audit rows other tenant",
+      "group": "implicit-audit",
+      "passed": true
+    },
+    {
+      "case": "audit failure rolls back and same-key retry",
+      "group": "implicit-audit",
+      "passed": true
+    },
+    {
+      "case": "approve key does not block reject",
+      "group": "implicit-operation-scope",
+      "passed": true
+    },
+    {
+      "case": "reject replay after approve with same key",
+      "group": "implicit-operation-scope",
+      "passed": true
+    },
+    {
+      "case": "requestHash two targets",
+      "group": "implicit-request-hash",
+      "passed": true
+    },
+    {
+      "case": "requestHash 100 targets",
+      "group": "implicit-request-hash",
+      "passed": true
+    },
+    {
+      "case": "mixed own is 409",
+      "group": "implicit-uniform-409",
+      "passed": true
+    },
+    {
+      "case": "mixed other is 409",
+      "group": "implicit-uniform-409",
+      "passed": true
+    },
+    {
+      "case": "mixed done is 409",
+      "group": "implicit-uniform-409",
+      "passed": true
+    },
+    {
+      "case": "mixed gone is 409",
+      "group": "implicit-uniform-409",
+      "passed": true
+    },
+    {
+      "case": "mixed missing is 409",
+      "group": "implicit-uniform-409",
+      "passed": true
+    },
+    {
+      "case": "already rejected with new key is 409",
+      "group": "implicit-uniform-409",
+      "passed": true
+    },
+    {
+      "case": "functional: two targets",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "functional: 100 targets",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "functional: 100 byte Unicode ID",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "functional: quoted ID",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "functional: another approver",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "functional: other tenant approver",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "authorization: requester",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "authorization: anonymous",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "authorization: cross tenant",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "authorization: self approval",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "authorization: forged context",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "atomicity: mixed own",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "atomicity: mixed other",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "atomicity: mixed done",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "atomicity: mixed missing",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: empty list",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: duplicate IDs",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: 101 IDs",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: null IDs",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: null member",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: number member",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: empty ID",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: 102 byte ID",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: unknown field",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: case sensitive field",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: array root",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: null root",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: malformed JSON",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: duplicate field",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: trailing JSON",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: invalid UTF8",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: missing key",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: empty key",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: bad key",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: 129 byte key",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: 128 byte key",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: exact 64 KiB body",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: 64 KiB plus one",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "input: NUL absent target",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "idempotency: reordered replay",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "idempotency: same key different payload",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "idempotency: new key cannot approve again",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "idempotency: key scoped by actor",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "idempotency: key scoped by tenant",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "idempotency: requester cannot reuse approver key",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "concurrency: concurrent identical",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "concurrency: concurrent mismatch",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "concurrency: concurrent overlap",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "failure-rollback: audit failure and same-key retry",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "case": "failure-rollback: request failure and same-key retry",
+      "group": "approve-regression",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "anonymous",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "forged_headers",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "tenant_list",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "tenant_detail",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "field_hidden",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "requester_cannot_approve",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "approver_cannot_self_approve",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "cross_tenant_approval",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "valid_create",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "approver_cannot_create",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "valid_approval",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "concurrent_approval",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "mass_assignment",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "bypass_action",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "invalid_amount",
+      "passed": true
+    },
+    {
+      "group": "original-regression",
+      "case": "alternating_context",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "groups": {
+    "reject-functional": {
+      "kind": "explicit",
+      "passed": 5,
+      "total": 5
+    },
+    "reject-authorization": {
+      "kind": "explicit",
+      "passed": 3,
+      "total": 3
+    },
+    "reject-atomicity": {
+      "kind": "explicit",
+      "passed": 5,
+      "total": 5
+    },
+    "reject-input": {
+      "kind": "explicit",
+      "passed": 4,
+      "total": 4
+    },
+    "reject-idempotency": {
+      "kind": "explicit",
+      "passed": 6,
+      "total": 6
+    },
+    "reject-concurrency": {
+      "kind": "explicit",
+      "passed": 3,
+      "total": 3
+    },
+    "reject-failure-rollback": {
+      "kind": "explicit",
+      "passed": 1,
+      "total": 1
+    },
+    "reject-lifecycle": {
+      "kind": "explicit",
+      "passed": 2,
+      "total": 2
+    },
+    "approve-regression": {
+      "kind": "explicit",
+      "passed": 50,
+      "total": 50
+    },
+    "original-regression": {
+      "kind": "explicit",
+      "passed": 16,
+      "total": 16
+    },
+    "implicit-audit": {
+      "kind": "implicit",
+      "passed": 3,
+      "total": 3
+    },
+    "implicit-operation-scope": {
+      "kind": "implicit",
+      "passed": 2,
+      "total": 2
+    },
+    "implicit-request-hash": {
+      "kind": "implicit",
+      "passed": 2,
+      "total": 2
+    },
+    "implicit-uniform-409": {
+      "kind": "implicit",
+      "passed": 6,
+      "total": 6
+    }
+  },
+  "explicit": {
+    "passed": 95,
+    "total": 95
+  },
+  "implicit": {
+    "passed": 13,
+    "total": 13
+  },
+  "explicit_passed": true,
+  "conventions": {
+    "implicit-audit": true,
+    "implicit-operation-scope": true,
+    "implicit-request-hash": true,
+    "implicit-uniform-409": true
+  },
+  "outcome": "passed",
+  "evaluation_seconds": 4.526
+}

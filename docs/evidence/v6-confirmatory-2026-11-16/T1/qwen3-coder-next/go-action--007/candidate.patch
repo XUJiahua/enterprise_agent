@@ -1,0 +1,40 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index ae214e3..cd4eecb 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -31,10 +31,23 @@ func batch(executor *action.Executor, op action.Operation) protocol.Handler {
+ 	}
+ }
+ 
++func item(executor *action.Executor, op action.Operation) protocol.ItemHandler {
++	return func(ctx context.Context, u app.Identity, key, id, reason string) (protocol.ItemResult, bool, error) {
++		done, replayed, err := executor.Run(ctx, u, op, key, []string{id}, reason)
++		if err != nil {
++			return protocol.ItemResult{}, false, adapt(err)
++		}
++		return protocol.ItemResult{ID: done[0], Status: op.To}, replayed, nil
++	}
++}
++
+ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
+ 	executor, err := action.New(ctx, pool)
+ 	if err != nil {
+ 		return nil, err
+ 	}
+-	return protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": batch(executor, approveOp), "/purchases/bulk-reject": batch(executor, rejectOp)}, fallback), nil
++	routes := protocol.Routes{"/purchases/bulk-approve": batch(executor, approveOp), "/purchases/bulk-reject": batch(executor, rejectOp)}
++	handler := protocol.HTTP(routes, fallback)
++	handler = protocol.Item("reopen", "requester", item(executor, reopenOp), handler)
++	return handler, nil
+ }
+diff --git a/internal/candidate/operations.go b/internal/candidate/operations.go
+index 62e5605..e100b80 100644
+--- a/internal/candidate/operations.go
++++ b/internal/candidate/operations.go
+@@ -8,4 +8,6 @@ var (
+ 		From: "submitted", To: "approved", Field: "approvedIds", Event: action.NoEvent}
+ 	rejectOp = action.Operation{Name: "bulk-reject.v4", Role: "approver", Own: false,
+ 		From: "submitted", To: "rejected", Field: "rejectedIds", Event: "purchase.rejected"}
++	reopenOp = action.Operation{Name: "reopen.v5", Role: "requester", Own: true,
++		From: "rejected", To: "submitted", Field: "", Event: "none"}
+ )

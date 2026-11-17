@@ -1,0 +1,22 @@
+2026/11/16 12:19:35 http: panic serving 127.0.0.1:60792: interface conversion: interface {} is []interface {}, not []uint8
+goroutine 187 [running]:
+net/http.(*conn).serve.func1()
+	/usr/local/go/src/net/http/server.go:1907 +0xac
+panic({0x101296a60?, 0x55007500b2c0?})
+	/usr/local/go/src/runtime/panic.go:860 +0x12c
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.newReassign.func4({0x101345fc8, 0x550074f1a700}, {{0x100e6fae3, 0x5}, {0x100e70b9b, 0x8}, {0x100e70bab, 0x8}}, {0x550074f1cb80, 0x3}, ...)
+	/Users/administrator/poc-v6-lanes/T3/qwen3-coder-next/eval/go-manual--009/internal/candidate/reassign.go:55 +0x1740
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Assign.func5({0x101344c20, 0x550074f48690}, 0x550074f43040)
+	/Users/administrator/poc-v6-lanes/T3/qwen3-coder-next/eval/go-manual--009/internal/protocol/protocol.go:184 +0x304
+net/http.HandlerFunc.ServeHTTP(0x550074f443f5?, {0x101344c20?, 0x550074f48690?}, 0x100e6ffb6?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+github.com/XUJiahua/enterprise_agent/internal/candidate.New.Item.func7({0x101344c20, 0x550074f48690}, 0x550074f43040)
+	/Users/administrator/poc-v6-lanes/T3/qwen3-coder-next/eval/go-manual--009/internal/protocol/protocol.go:99 +0x228
+net/http.HandlerFunc.ServeHTTP(0x10?, {0x101344c20?, 0x550074f48690?}, 0x550074f48690?)
+	/usr/local/go/src/net/http/server.go:2286 +0x38
+net/http.serverHandler.ServeHTTP({0x1013423a8?}, {0x101344c20?, 0x550074f48690?}, 0x1?)
+	/usr/local/go/src/net/http/server.go:3311 +0xb0
+net/http.(*conn).serve(0x550074f28870, {0x101345f20, 0x550074fe98c0})
+	/usr/local/go/src/net/http/server.go:2073 +0x51c
+created by net/http.(*Server).Serve in goroutine 1
+	/usr/local/go/src/net/http/server.go:3464 +0x37c

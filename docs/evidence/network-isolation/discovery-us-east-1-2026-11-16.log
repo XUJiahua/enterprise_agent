@@ -1,0 +1,16 @@
+{"event": "start", "proxy": "127.0.0.1:18900", "allow": ["management.eu-central-1.kiro.dev", "runtime.eu-central-1.kiro.dev"], "discover": true}
+{"ts": 1794794460.073, "method": "CONNECT", "host": "management.us-east-1.kiro.dev", "port": "443", "peer": "198.19.2.111", "decision": "allow-discover", "bytes_sent": 2755, "bytes_received": 6361, "seconds": 0.997}
+{"ts": 1794794460.086, "method": "CONNECT", "host": "management.us-east-1.kiro.dev", "port": "443", "peer": "198.19.2.111", "decision": "allow-discover", "bytes_sent": 2844, "bytes_received": 5876, "seconds": 1.01}
+{"ts": 1794794460.1, "method": "CONNECT", "host": "management.us-east-1.kiro.dev", "port": "443", "peer": "198.19.2.111", "decision": "allow-discover", "bytes_sent": 2792, "bytes_received": 5836, "seconds": 1.035}
+{"ts": 1794794460.134, "method": "CONNECT", "host": "runtime.us-east-1.kiro.dev", "port": "443", "peer": "198.19.2.114", "decision": "allow-discover", "bytes_sent": 2779, "bytes_received": 6906, "seconds": 1.058}
+{"ts": 1794794460.176, "method": "CONNECT", "host": "runtime.us-east-1.kiro.dev", "port": "443", "peer": "198.19.2.114", "decision": "allow-discover", "bytes_sent": 2813, "bytes_received": 17560, "seconds": 1.1}
+{"ts": 1794794460.218, "method": "CONNECT", "host": "management.us-east-1.kiro.dev", "port": "443", "peer": "198.19.2.111", "decision": "allow-discover", "bytes_sent": 2785, "bytes_received": 18458, "seconds": 1.141}
+{"ts": 1794794461.107, "method": "CONNECT", "host": "management.us-east-1.kiro.dev", "port": "443", "peer": "198.19.2.111", "decision": "allow-discover", "bytes_sent": 2780, "bytes_received": 6654, "seconds": 1.012}
+{"ts": 1794794461.337, "method": "CONNECT", "host": "runtime.us-east-1.kiro.dev", "port": "443", "peer": "198.19.2.114", "decision": "allow-discover", "bytes_sent": 2813, "bytes_received": 17560, "seconds": 1.139}
+{"ts": 1794794461.398, "method": "CONNECT", "host": "app.kiro.dev", "port": "443", "peer": "198.19.2.115", "decision": "allow-discover", "bytes_sent": 2545, "bytes_received": 6086, "seconds": 1.152}
+{"ts": 1794794461.752, "method": "CONNECT", "host": "runtime.us-east-1.kiro.dev", "port": "443", "peer": "198.19.2.114", "decision": "allow-discover", "bytes_sent": 4249, "bytes_received": 6802, "seconds": 1.482}
+{"ts": 1794794462.06, "method": "CONNECT", "host": "app.kiro.dev", "port": "443", "peer": "198.19.2.115", "decision": "allow-discover", "bytes_sent": 2535, "bytes_received": 5919, "seconds": 0.93}
+{"ts": 1794794463.525, "method": "CONNECT", "host": "runtime.us-east-1.kiro.dev", "port": "443", "peer": "198.19.2.114", "decision": "allow-discover", "bytes_sent": 19244, "bytes_received": 51918, "seconds": 2.083}
+{"ts": 1794794465.072, "method": "CONNECT", "host": "telemetry.us-east-1.kiro.dev", "port": "443", "peer": "198.19.2.113", "decision": "allow-discover", "bytes_sent": 9019, "bytes_received": 5804, "seconds": 0.992}
+{"ts": 1794794465.08, "method": "CONNECT", "host": "client-telemetry.us-east-1.amazonaws.com", "port": "443", "peer": "198.19.2.95", "decision": "allow-discover", "bytes_sent": 8879, "bytes_received": 7185, "seconds": 6.606}
+{"ts": 1794794465.591, "event": "stop", "returncode": 0, "interrupted": false}

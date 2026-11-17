@@ -92,6 +92,7 @@ def load_plan(path):
         raise ValueError('invalid generation budget')
     if value['reasoning_effort'] not in ('low','medium','high') or not value['model']:
         raise ValueError('invalid model settings')
+    if value.get('engine','codex') not in ('codex','kiro'): raise ValueError('unknown generation engine')
     cells={c['id']:c for c in contract()['cells']};blocks={};seen=set()
     for t in value['trials']:
         if t['cell'] not in cells or type(t['instance']) is not int or t['instance']<1:
@@ -121,7 +122,7 @@ def plan(args):
      'frozen':{p:digest(ROOT/p) for p in FROZEN},
      'source_files':{p:sha(source(base,p)) for p in BASE+(CAPABILITY,)+('db/migrations/001_purchase.sql','generated/guard.sql','poc/transactional-action/schema.sql')},
      'fixtures_sha256':digest(args.fixtures),'seed':args.seed,'model':args.model,'reasoning_effort':args.reasoning_effort,
-     'generation_budget_seconds':args.time_budget,'trials':[],
+     'engine':args.engine,'generation_budget_seconds':args.time_budget,'trials':[],
      'isolation':'operator must isolate generation from evaluator; commands alone do not enforce it'}
     value['exports']={c['id']:{p:sha(data) for p,data in files(value,c).items()} for c in contract()['cells']}
     for instance in range(1,args.repetitions+1):
@@ -160,7 +161,8 @@ def prepare(args):
     (out/'worker.py').write_bytes((HERE/'generation_worker.py').read_bytes())
     save(out/'job.json',{'version':3,'kind':p['kind'],'plan_sha256':digest(args.plan),'trial':t,
       'manifest_sha256':digest(out/'manifest.json'),'worker_sha256':digest(out/'worker.py'),
-      'model':p['model'],'reasoning_effort':p['reasoning_effort'],'generation_budget_seconds':p['generation_budget_seconds']})
+      'model':p['model'],'reasoning_effort':p['reasoning_effort'],'generation_budget_seconds':p['generation_budget_seconds'],
+      'engine':p.get('engine','codex')})
 
 def validate_candidate(args,p):
     candidate=Path(args.candidate).resolve();manifest=Path(args.manifest).resolve();t=trials(p,args.trial)[0]
@@ -215,6 +217,7 @@ def freeze_candidate(args,p,t,generated,directory):
 def generate(args):
     p=load_plan(args.plan)
     if bool(args.synthetic_test_driver)!=(p['kind']=='synthetic-smoke'): raise ValueError('synthetic/real driver mismatch')
+    if p.get('engine','codex')!='codex': raise ValueError('non-Codex plans run through prepare + worker.py')
     selected=trials(p,args.trial)
     if len(selected)>8: raise ValueError('select at most eight trials per generation batch')
     out=Path(args.output).resolve();out.mkdir(parents=True,exist_ok=False)
@@ -372,6 +375,7 @@ def main():
     for n in ('base','model','fixtures','output'): s.add_argument('--'+n,required=True)
     s.add_argument('--repetitions',type=int,default=1);s.add_argument('--time-budget',type=int,default=180)
     s.add_argument('--reasoning-effort',choices=('low','medium','high'),default='medium');s.add_argument('--seed',type=int,default=20261114)
+    s.add_argument('--engine',choices=('codex','kiro'),default='codex')
     s.add_argument('--synthetic',action='store_true');s.add_argument('--allow-dirty-harness',action='store_true')
     s=sub.add_parser('prepare')
     for n in ('plan','trial','output'):s.add_argument('--'+n,required=True)

@@ -1,0 +1,30 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index cf92f72..89f70ef 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -108,6 +108,9 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		}
+ 		return result, false, nil
+ 	}
+-	batches := protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve, "/purchases/bulk-reject": newReject(pool)}, fallback)
++	reject := newReject(pool)
++	batches := protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve, "/purchases/bulk-reject": reject}, fallback)
++	reassign := newReassign(pool)
++	batches = protocol.Assign("/purchases/bulk-reassign", reassign, batches)
+ 	return protocol.Item("reopen", "requester", newReopen(pool), batches), nil
+ }
+diff --git a/internal/protocol/protocol.go b/internal/protocol/protocol.go
+index 1c0c09c..dec9e06 100644
+--- a/internal/protocol/protocol.go
++++ b/internal/protocol/protocol.go
+@@ -26,7 +26,9 @@ type Result struct {
+ 	IDs   []string
+ }
+ 
+-func (r Result) MarshalJSON() ([]byte, error) { return json.Marshal(map[string][]string{r.Field: r.IDs}) }
++func (r Result) MarshalJSON() ([]byte, error) {
++	return json.Marshal(map[string][]string{r.Field: r.IDs})
++}
+ 
+ type Rejection struct{ Status int }
+ 

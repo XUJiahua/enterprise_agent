@@ -43,6 +43,16 @@ jobs:
       - name: Adversarial verifier probes
         run: python3 tests/verifier.py | tee reports/verifier.json
         shell: bash
+      - name: Extension verifier rule controls on real cohort exports (no model calls)
+        run: python3 tests/extension_controls.py | tee reports/extension-controls.json
+        shell: bash
+      - name: Extension verifier interception on archived v4/v4b/v5/v5b candidates (no model calls)
+        run: python3 research/verifier_extension_rules.py --out reports/verifier-extension-rules
+      - name: Catalog-bound operation verifier controls on v6 and platform exports (no model calls)
+        run: python3 tests/operation_controls.py | tee reports/operation-controls.json
+        shell: bash
+      - name: Catalog-bound verifier retrospective replay on 228 archived v6 candidates (not out-of-sample)
+        run: python3 research/operation_semantics_replay.py --out reports/operation-semantics
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -135,9 +145,65 @@ jobs:
         with:
           name: runtime-${{ matrix.route }}
           path: reports/
+  cohort-controls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:17.6
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: enterprise_agent_poc
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      ADMIN_DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/enterprise_agent_poc
+      DATABASE_URL: postgres://app_runtime:poc-only@127.0.0.1:5432/enterprise_agent_poc
+      POC_DB_RESET: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.11.1'
+          cache: npm
+          cache-dependency-path: apps/zenstack/package-lock.json
+      # db.mjs imports pg from apps/zenstack/node_modules.
+      - run: npm ci --prefix apps/zenstack
+      - name: v4 implicit-convention controls (real PostgreSQL, fake Kiro, no model calls)
+        run: python3 benchmark/phase4/driver_smoke.py
+      - name: v5 scattered-convention controls (real PostgreSQL, fake Kiro, no model calls)
+        run: python3 benchmark/phase5/driver_smoke.py
+      - name: v5b required-event controls (real PostgreSQL, fake Kiro, no model calls)
+        run: python3 benchmark/phase5b/driver_smoke.py
+      - name: v6a countersign controls (real PostgreSQL, fake Kiro, no model calls)
+        run: python3 benchmark/phase6a/driver_smoke.py
+      - name: v6b reassignment controls (real PostgreSQL, fake Kiro, no model calls)
+        run: python3 benchmark/phase6b/driver_smoke.py
+      - name: Catalog kernel (opkernel) on PostgreSQL, all catalog entries
+        env:
+          POC_REQUIRE_DB: '1'
+        run: |
+          mkdir -p reports
+          go test -race -count=1 -v ./internal/opkernel/ | tee reports/opkernel-db.txt
+        shell: bash
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cohort-controls
+          path: reports/
   report:
     if: always()
-    needs: [verifier, runtime]
+    needs: [verifier, runtime, cohort-controls]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:

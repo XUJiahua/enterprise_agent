@@ -1,0 +1,37 @@
+{
+  "status": "completed",
+  "usage": {
+    "credits": 0.013597930348258706
+  },
+  "turn_started": true,
+  "run_finished": true,
+  "reported_model": "qwen3-coder-next",
+  "event_count": 20,
+  "agent_messages": [
+    "READY"
+  ],
+  "errors": [],
+  "engine": "kiro",
+  "generation_seconds": 9.75,
+  "requested_model": "qwen3-coder-next",
+  "reasoning_effort": "medium",
+  "sandbox": "read-only",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "qwen3-coder-next",
+    "--effort",
+    "medium",
+    "--trust-tools="
+  ],
+  "returncode": 0,
+  "timed_out": false
+}

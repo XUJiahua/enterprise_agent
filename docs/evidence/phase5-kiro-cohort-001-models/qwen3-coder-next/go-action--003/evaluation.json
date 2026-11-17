@@ -1,0 +1,57 @@
+{
+  "version": 5,
+  "kind": "model-trial",
+  "plan_sha256": "8fee16719ab8771091a61a634dbe82b27f854c24a24b86cd5dcc81ceceb212d4",
+  "trial": {
+    "id": "go-action--003",
+    "cell": "go-action",
+    "instance": 3,
+    "prompt": "本版本在既有批量审批（POST /purchases/bulk-approve）与批量驳回（POST /purchases/bulk-reject）的基础上，新增重新提交被驳回的采购单：POST /purchases/{id}/reopen，请求体为 {\"reason\":\"...\"}，原因必填，1..200 字节。只有已认证的 requester 可以调用，只能重新提交本人在当前租户创建、状态为 rejected 的采购单；成功后状态变为 submitted，之后可以再次被批量审批或批量驳回。目标不符合条件时返回 4xx，数据库全部不变。请求体、身份、报文上限和 Idempotency-Key 校验由共享 HTTP 适配器 protocol.Item 完成（verb 为 reopen，角色为 requester），新路径通过它注册。成功返回 200，响应为 {\"id\":ID,\"status\":\"submitted\"}。首次成功 Idempotency-Replayed=false；同一 actor 以同一 key 对同一采购单、同一原因重放时，返回相同状态和响应字节，header=true，不产生新写入；同 key 不同采购单返回 409。不同 actor 使用同名 key 互不影响。幂等结果与状态变更在同一事务中写入 ActionRequest：operation 为 \"reopen.v5\"，tenantId、actorId、key 分别为当前租户、当前用户和 Idempotency-Key 原值，response 为响应 JSON 对象，每个成功的新请求恰好一行。ActionRequest 写入失败时返回 503 且数据库全部不变，故障移除后同 key 可重试。并发：同 key 同请求两次均 200 且只提交一次；不同 key 对同一采购单只能一个成功，失败方返回 4xx。approver 调用返回 403，未认证返回 401；客户端上下文头不能覆盖认证身份。批量审批、批量驳回与原有 API 行为保持不变。\nAdd the reopen Action described above to the existing service.\nRead the existing code first and follow its conventions.\nBoth conditions use guarded RLS. The shared HTTP adapter in internal/protocol validates input and binds demo identity; register the new path with protocol.Item.\nOnly edit/add internal/candidate/ Go code. All other exports, dependencies, Git settings and tests are protected.\nPreserve the existing APIs, including bulk-approve and bulk-reject.\nDo not commit/push, read credentials, other checkouts or evaluator materials; do not use other agents.\nUse go build ./... and go test ./... as needed. Private database credentials are unavailable during generation. The public SQL schema is in SCHEMA.sql.\nCapability: protected internal/action is the platform Action kernel: New(ctx,pool), the Operation type and Executor.Run(ctx,identity,operation,key,ids,reason). The existing operations are declared as action.Operation values in internal/candidate/operations.go and served through the kernel; declare new operations in internal/candidate as well. action.Rejection is distinct from protocol.Rejection; adapt at your boundary.\nThis is a trusted-code pilot; directory export alone does not enforce host or network isolation.",
+    "prompt_sha256": "fa7c9a2dddfd9bf7cc03e2283595ff422a7aa10507ea8380010a8f18f5dd38db"
+  },
+  "candidate_sha": "e2cf5f709e81d0da780732ab6ba5e36e8fb377db",
+  "manifest_sha256": "8247d3237f1c28750b120722640bf22cb8ac37fbfd139bfa8031d16028bd2d07",
+  "generation": {
+    "status": "completed",
+    "usage": {
+      "credits": 0.662106
+    },
+    "turn_started": true,
+    "run_finished": true,
+    "reported_model": "qwen3-coder-next",
+    "event_count": 194,
+    "agent_messages": [
+      "I'll implement the reopen action for purchase orders. Let me start by reading the existing code to understand the current implementation.\n\nNow let me check the SCHEMA.sql and the app package to understand the full context:\n\nNow I understand the architecture. Let me check if there are any tests to understand the expected behavior better:\n\nNow I understand the codebase. Let me implement the reopen action:\n\n1. Add the `reopenOp` to `operations.go`\n2. Register the reopen path in `approval.go`\n3. Add a handler function for single-item reopen using the protocol.Item adapter\n\nNow let me update `approval.go` to add the reopen handler and register the new route:\n\nWait, I need to reconsider the implementation. Looking at the task requirements more carefully:\n\n1. The path should be `POST /purchases/{id}/reopen` with `{id}` being the actual purchase ID\n2. The shared HTTP adapter `protocol.Item` should handle the path registration properly\n3. I need to properly use the `protocol.Item` function to register the path\n\nLet me check how the routes should be structured and fix the implementation:\n\nWait, I need to re-read the protocol.Item function more carefully. Looking at it again:\n\n```go\nfunc Item(verb, role string, handle ItemHandler, next http.Handler) http.Handler {\n\treturn http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {\n\t\tid, found := strings.CutSuffix(strings.TrimPrefix(r.URL.Path, \"/purchases/\"), \"/\"+verb)\n```\n\nSo `protocol.Item` expects the path to be like `/purchases/{id}/reopen`, and it will extract `{id}` by trimming `/purchases/` prefix and `/reopen` suffix. The verb parameter should be \"reopen\".\n\nBut I also need to ensure the route registration is correct. Let me look at how this should work - the task says \"new path through it registration\" which means the paths should be registered in the protocol.HTTP routes, not handled separately.\n\nActually, re-reading the task: \"新路径通过它注册\" means the new path should be registered through `protocol.Item`. Looking at the code structure, `protocol.HTTP` handles batch routes, and `protocol.Item` is a separate handler for single-item operations.\n\nThe current approach in my code is wrong. Looking at the task description again, I see that the batch operations use `protocol.HTTP` with routes, but for reopen, I need to register it differently. Let me check if I should add it to the routes map or handle it separately.\n\nActually, looking more carefully at the task: \"新路径通过它注册\" - this means the new path should be registered through `protocol.Item`. The `protocol.Item` function itself handles the path registration internally by checking the URL path.\n\nSo my implementation should work, but I need to make sure the handler is properly set up. Let me simplify:\n\nNow let me build and test to see if the implementation is correct:\n\nThe build succeeded. Now let me run the tests to verify:\n\nGood, there are no test files and no issues. Let me verify my implementation is correct by reviewing the files I modified:\n\nNow let me verify the implementation against all requirements:\n\n**Requirements Check:**\n\n1. ✅ Path: `POST /purchases/{id}/reopen` - handled by `protocol.Item(\"reopen\", \"requester\", ...)`\n2. ✅ Request body: `{\"reason\":\"...\"}` with 1..200 bytes - handled by `protocol.Item` which uses `decodeReason`\n3. ✅ Role: only `requester` can call - set in `reopenOp` and validated by `protocol.Item`\n4. ✅ Own: only purchases created by the requester - `Own: true` in `reopenOp`\n5. ✅ Status condition: only `rejected` purchases can be reopened - `From: \"rejected\"` in `reopenOp`\n6. ✅ Status change: to `submitted` - `To: \"submitted\"` in `reopenOp`\n7. ✅ Response: `{\"id\":ID,\"status\":\"submitted\"}` - handled by `action.Operation.response()` when `Field` is empty\n8. ✅ Idempotency: same key for same purchase+reason returns same result - handled by `executor.Run`\n9. ✅ ActionRequest operation: `reopen.v5` - set in `reopenOp.Name`\n10. ✅ Tenant/actor/key tracking - handled by `executor.Run`\n11. ✅ Concurrent handling - handled by `executor.Run` with advisory lock\n\nThe implementation looks correct. Let me do a final build verification:\n\nImplementation complete. I've added the reopen action to the service:\n\n1. **`internal/candidate/operations.go`**: Added `reopenOp` with:\n   - Name: `\"reopen.v5\"`\n   - Role: `\"requester\"`\n   - Own: `true` (only actor's own purchases)\n   - From: `\"rejected\"` (only rejected purchases)\n   - To: `\"submitted\"`\n   - Field: `\"\"` (single-item response)\n\n2. **`internal/candidate/approval.go`**: Added:\n   - `reopen(executor)` handler that calls `executor.Run` with `reopenOp`\n   - Registered through `protocol.Item(\"reopen\", \"requester\", ...)` which handles the path `/purchases/{id}/reopen`\n   - Integrated into the HTTP handler chain via `protocol.HTTP` fallback\n\nThe implementation follows the existing patterns for batch-approve and batch-reject, uses the shared HTTP adapter `protocol.Item` for validation and identity binding, and integrates with the Action kernel for transactional status changes and idempotency."
+    ],
+    "errors": [],
+    "engine": "kiro",
+    "generation_seconds": 65.907,
+    "requested_model": "qwen3-coder-next",
+    "reasoning_effort": "medium",
+    "sandbox": "workspace-write",
+    "command": [
+      "kiro-cli",
+      "chat",
+      "--no-interactive",
+      "--output-format",
+      "stream-json",
+      "--agent-engine",
+      "v3",
+      "--agent",
+      "poc-v3-generator",
+      "--model",
+      "qwen3-coder-next",
+      "--effort",
+      "medium",
+      "--trust-all-tools"
+    ],
+    "returncode": 0,
+    "timed_out": false,
+    "cli_version": "kiro-cli 3.3.0"
+  },
+  "cases": [],
+  "passed": false,
+  "outcome": "candidate-error",
+  "error": "candidate readiness timeout",
+  "evaluation_seconds": 12.081
+}

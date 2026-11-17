@@ -1,0 +1,37 @@
+{
+  "status": "completed",
+  "usage": {
+    "credits": 2.46385072437811
+  },
+  "turn_started": true,
+  "run_finished": true,
+  "reported_model": "claude-opus-5.5",
+  "event_count": 549,
+  "agent_messages": [
+    "I've added `POST /purchases/{id}/reopen`. `go build`, `go vet` and `go test` all pass, but there are no test files and no database credentials, so none of the database or HTTP behaviour has actually been run.\n\nChanges (only in `internal/candidate/`):\n- **`reopen.go` (new):** the reopen handler. It follows the same pattern as bulk-reject: one transaction, the RLS context set with `set_config`, and an advisory lock on (`reopen.v5`, tenant, user, key).\n  - **Replay:** if a matching `ActionRequest` row exists, it returns the saved response with `Idempotency-Replayed=true` and writes nothing. If the same key was used for a different purchase, it returns 409.\n  - **State change:** it updates the purchase to `submitted` only where `id`, `tenantId`, `createdBy = current user` and `status = 'rejected'` all match. If no row changes, it returns 409, the same as the bulk actions, so callers can't tell whether the purchase exists. With different keys on the same purchase, row locking means only one request succeeds and the other gets 409.\n  - **Writes:** in one batch it inserts an `ApprovalAudit` row (`rejected` \u2192 `submitted`, including the reason), a `PurchaseEvent` row (`purchase.reopened`, which the existing notify audience mapping already handles), and the `ActionRequest` row (`reopen.v5`, response `{\"id\":\u2026,\"status\":\"submitted\"}`). If any insert fails, the whole transaction rolls back and the request returns 503, so the same key can be retried.\n- **`approval.go`:** the existing bulk router is now the fallback behind `protocol.Item(\"reopen\", \"requester\", \u2026)`. Bulk-approve and bulk-reject are unchanged. The shared adapter handles 401/403, the request body, size limit and `Idempotency-Key` checks.\n\nTwo things that go beyond the task text:\n- **Extra audit and event rows:** without the `ApprovalAudit` row, the nightly `ledger.Drift` check would report every reopened purchase, because its latest audit row would still say `rejected`.\n- **The reason isn't checked on replay:** the request hash is `Fingerprint(\"reopen.v5\", [id])` so that the nightly `ledger.Verify` check doesn't flag it. As a result, the same key on the same purchase with a different reason replays the first response instead of returning 409. Requesters can't read `ApprovalAudit` under RLS, so the code has no proper way to compare the reason. If you need that case to return 409, the schema or ledger code (both protected) would have to change."
+  ],
+  "errors": [],
+  "engine": "kiro",
+  "generation_seconds": 64.512,
+  "requested_model": "claude-opus-5.5",
+  "reasoning_effort": "medium",
+  "sandbox": "workspace-write",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "claude-opus-5.5",
+    "--effort",
+    "medium",
+    "--trust-all-tools"
+  ],
+  "returncode": 0,
+  "timed_out": false
+}

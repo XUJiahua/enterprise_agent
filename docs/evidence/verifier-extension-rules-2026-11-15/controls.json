@@ -1,0 +1,603 @@
+{
+ "ok": true,
+ "kind": "extension-verifier-controls",
+ "model_calls": 0,
+ "controls": 44,
+ "negative_detected": 24,
+ "positive_clean": 7,
+ "uncovered_clean": 13,
+ "results": [
+  {
+   "phase": "v4",
+   "cell": "go-action",
+   "control": "correct",
+   "kind": "positive",
+   "expected": [],
+   "codes": [],
+   "exit": 0,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v4",
+   "cell": "go-action",
+   "control": "kernel-reject",
+   "kind": "negative",
+   "expected": [
+    "DECLARATION_OUTSIDE_EXTENSION",
+    "PROTECTED_PATH_CHANGED"
+   ],
+   "codes": [
+    "DECLARATION_OUTSIDE_EXTENSION",
+    "PROTECTED_PATH_CHANGED"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v4",
+   "cell": "go-action",
+   "control": "candidate-reject",
+   "kind": "positive",
+   "expected": [],
+   "codes": [],
+   "exit": 0,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v4",
+   "cell": "go-action",
+   "control": "unversioned",
+   "kind": "negative",
+   "expected": [
+    "NAME_UNVERSIONED"
+   ],
+   "codes": [
+    "NAME_UNVERSIONED"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v4",
+   "cell": "go-action",
+   "control": "duplicate",
+   "kind": "negative",
+   "expected": [
+    "OPERATION_NAME_DUPLICATE"
+   ],
+   "codes": [
+    "OPERATION_NAME_DUPLICATE"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v4",
+   "cell": "go-manual",
+   "control": "correct",
+   "kind": "positive",
+   "expected": [],
+   "codes": [],
+   "exit": 0,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v4",
+   "cell": "go-manual",
+   "control": "approve-hash",
+   "kind": "negative",
+   "expected": [
+    "FINGERPRINT_OPERATION_MISSING"
+   ],
+   "codes": [
+    "FINGERPRINT_OPERATION_MISSING"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v4",
+   "cell": "go-manual",
+   "control": "unchanged",
+   "kind": "uncovered",
+   "expected": [],
+   "codes": [],
+   "exit": 0,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5",
+   "cell": "go-action",
+   "control": "correct",
+   "kind": "positive",
+   "expected": [],
+   "codes": [],
+   "exit": 0,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5",
+   "cell": "go-action",
+   "control": "omit-event",
+   "kind": "negative",
+   "expected": [
+    "EVENT_EXPECTED_BY_CONSUMER",
+    "FIELD_MISSING"
+   ],
+   "codes": [
+    "EVENT_EXPECTED_BY_CONSUMER",
+    "FIELD_MISSING"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5",
+   "cell": "go-action",
+   "control": "own-false",
+   "kind": "uncovered",
+   "expected": [],
+   "codes": [],
+   "exit": 0,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5",
+   "cell": "go-action",
+   "control": "bypass-reason-hash",
+   "kind": "negative",
+   "expected": [
+    "FINGERPRINT_EXTRA_INPUT"
+   ],
+   "codes": [
+    "FINGERPRINT_EXTRA_INPUT"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5",
+   "cell": "go-action",
+   "control": "bypass-omit-event",
+   "kind": "negative",
+   "expected": [
+    "EVENT_EXPECTED_BY_CONSUMER"
+   ],
+   "codes": [
+    "EVENT_EXPECTED_BY_CONSUMER"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5",
+   "cell": "go-action",
+   "control": "bypass-omit-audit",
+   "kind": "uncovered",
+   "expected": [],
+   "codes": [],
+   "exit": 0,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5",
+   "cell": "go-action",
+   "control": "bypass-distinguish",
+   "kind": "uncovered",
+   "expected": [],
+   "codes": [],
+   "exit": 0,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5",
+   "cell": "go-action",
+   "control": "unchanged",
+   "kind": "uncovered",
+   "expected": [],
+   "codes": [],
+   "exit": 0,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5",
+   "cell": "go-manual",
+   "control": "correct",
+   "kind": "positive",
+   "expected": [],
+   "codes": [],
+   "exit": 0,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5",
+   "cell": "go-manual",
+   "control": "reason-hash",
+   "kind": "negative",
+   "expected": [
+    "FINGERPRINT_EXTRA_INPUT"
+   ],
+   "codes": [
+    "FINGERPRINT_EXTRA_INPUT"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5",
+   "cell": "go-manual",
+   "control": "omit-event",
+   "kind": "negative",
+   "expected": [
+    "EVENT_EXPECTED_BY_CONSUMER"
+   ],
+   "codes": [
+    "EVENT_EXPECTED_BY_CONSUMER"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5",
+   "cell": "go-manual",
+   "control": "wrong-event",
+   "kind": "negative",
+   "expected": [
+    "EVENT_EXPECTED_BY_CONSUMER",
+    "EVENT_NO_CONSUMER"
+   ],
+   "codes": [
+    "EVENT_EXPECTED_BY_CONSUMER",
+    "EVENT_NO_CONSUMER"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5",
+   "cell": "go-manual",
+   "control": "literal-op-omit-event",
+   "kind": "negative",
+   "expected": [
+    "EVENT_EXPECTED_BY_CONSUMER"
+   ],
+   "codes": [
+    "EVENT_EXPECTED_BY_CONSUMER"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5",
+   "cell": "go-manual",
+   "control": "omit-audit",
+   "kind": "uncovered",
+   "expected": [],
+   "codes": [],
+   "exit": 0,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5",
+   "cell": "go-manual",
+   "control": "distinguish",
+   "kind": "uncovered",
+   "expected": [],
+   "codes": [],
+   "exit": 0,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5",
+   "cell": "go-manual",
+   "control": "unchanged",
+   "kind": "uncovered",
+   "expected": [],
+   "codes": [],
+   "exit": 0,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5b",
+   "cell": "go-action",
+   "control": "correct",
+   "kind": "positive",
+   "expected": [],
+   "codes": [],
+   "exit": 0,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5b",
+   "cell": "go-action",
+   "control": "omit-event",
+   "kind": "negative",
+   "expected": [
+    "EVENT_EXPECTED_BY_CONSUMER",
+    "FIELD_MISSING"
+   ],
+   "codes": [
+    "EVENT_EXPECTED_BY_CONSUMER",
+    "FIELD_MISSING"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5b",
+   "cell": "go-action",
+   "control": "own-false",
+   "kind": "uncovered",
+   "expected": [],
+   "codes": [],
+   "exit": 0,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5b",
+   "cell": "go-action",
+   "control": "bypass-reason-hash",
+   "kind": "negative",
+   "expected": [
+    "FINGERPRINT_EXTRA_INPUT"
+   ],
+   "codes": [
+    "FINGERPRINT_EXTRA_INPUT"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5b",
+   "cell": "go-action",
+   "control": "bypass-omit-event",
+   "kind": "negative",
+   "expected": [
+    "EVENT_EXPECTED_BY_CONSUMER"
+   ],
+   "codes": [
+    "EVENT_EXPECTED_BY_CONSUMER"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5b",
+   "cell": "go-action",
+   "control": "bypass-omit-audit",
+   "kind": "uncovered",
+   "expected": [],
+   "codes": [],
+   "exit": 0,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5b",
+   "cell": "go-action",
+   "control": "bypass-distinguish",
+   "kind": "uncovered",
+   "expected": [],
+   "codes": [],
+   "exit": 0,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5b",
+   "cell": "go-action",
+   "control": "unchanged",
+   "kind": "uncovered",
+   "expected": [],
+   "codes": [],
+   "exit": 0,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5b",
+   "cell": "go-action",
+   "control": "noevent",
+   "kind": "negative",
+   "expected": [
+    "EVENT_EXPECTED_BY_CONSUMER"
+   ],
+   "codes": [
+    "EVENT_EXPECTED_BY_CONSUMER"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5b",
+   "cell": "go-action",
+   "control": "noevent-literal",
+   "kind": "negative",
+   "expected": [
+    "EVENT_EXPECTED_BY_CONSUMER"
+   ],
+   "codes": [
+    "EVENT_EXPECTED_BY_CONSUMER"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5b",
+   "cell": "go-action",
+   "control": "wrong-event",
+   "kind": "negative",
+   "expected": [
+    "EVENT_NO_CONSUMER"
+   ],
+   "codes": [
+    "EVENT_NO_CONSUMER"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5b",
+   "cell": "go-action",
+   "control": "empty-event",
+   "kind": "negative",
+   "expected": [
+    "EVENT_EXPECTED_BY_CONSUMER",
+    "FIELD_EMPTY"
+   ],
+   "codes": [
+    "EVENT_EXPECTED_BY_CONSUMER",
+    "FIELD_EMPTY"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5b",
+   "cell": "go-action",
+   "control": "non-constant",
+   "kind": "negative",
+   "expected": [
+    "FIELD_NOT_CONSTANT"
+   ],
+   "codes": [
+    "FIELD_NOT_CONSTANT"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5b",
+   "cell": "go-action",
+   "control": "missing-role",
+   "kind": "negative",
+   "expected": [
+    "FIELD_MISSING"
+   ],
+   "codes": [
+    "FIELD_MISSING"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5b",
+   "cell": "go-action",
+   "control": "kernel-reopen",
+   "kind": "negative",
+   "expected": [
+    "DECLARATION_OUTSIDE_EXTENSION",
+    "PROTECTED_PATH_CHANGED"
+   ],
+   "codes": [
+    "DECLARATION_OUTSIDE_EXTENSION",
+    "PROTECTED_PATH_CHANGED"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5b",
+   "cell": "go-manual",
+   "control": "correct",
+   "kind": "positive",
+   "expected": [],
+   "codes": [],
+   "exit": 0,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5b",
+   "cell": "go-manual",
+   "control": "reason-hash",
+   "kind": "negative",
+   "expected": [
+    "FINGERPRINT_EXTRA_INPUT"
+   ],
+   "codes": [
+    "FINGERPRINT_EXTRA_INPUT"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5b",
+   "cell": "go-manual",
+   "control": "omit-event",
+   "kind": "negative",
+   "expected": [
+    "EVENT_EXPECTED_BY_CONSUMER"
+   ],
+   "codes": [
+    "EVENT_EXPECTED_BY_CONSUMER"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5b",
+   "cell": "go-manual",
+   "control": "protocol-edit",
+   "kind": "negative",
+   "expected": [
+    "PROTECTED_PATH_CHANGED"
+   ],
+   "codes": [
+    "PROTECTED_PATH_CHANGED"
+   ],
+   "exit": 1,
+   "builds": true,
+   "passed": true
+  },
+  {
+   "phase": "v5b",
+   "cell": "go-manual",
+   "control": "unchanged",
+   "kind": "uncovered",
+   "expected": [],
+   "codes": [],
+   "exit": 0,
+   "builds": true,
+   "passed": true
+  }
+ ]
+}

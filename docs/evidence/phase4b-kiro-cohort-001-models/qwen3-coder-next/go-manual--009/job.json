@@ -1,0 +1,18 @@
+{
+  "version": 4,
+  "kind": "model-trial",
+  "plan_sha256": "e876939fc276ac081cd6868262e50322b4955a000fd1db1d36b5357428f2d37a",
+  "trial": {
+    "id": "go-manual--009",
+    "cell": "go-manual",
+    "instance": 9,
+    "prompt": "本版本在既有批量审批 Action（POST /purchases/bulk-approve，行为保持不变）的基础上新增批量驳回 POST /purchases/bulk-reject。只有当前已认证 approver 可以驳回当前租户内他人创建、状态为 submitted 的采购单，驳回后状态为 rejected。任何目标不符合条件则全批拒绝，返回 4xx，数据库全部不变。请求体、身份、报文上限和 Idempotency-Key 校验与批量审批相同，由共享 HTTP 适配器 protocol.HTTP 完成，新路径通过 protocol.Routes 注册。成功返回 200，响应仅含 rejectedIds，按 UTF-8 字典序排序。首次成功 Idempotency-Replayed=false；同一 actor 以同一 key 重放同一目标集合时，返回相同状态和响应字节，header=true，不产生新写入；同 key 不同目标集合返回 409。不同 actor 或不同租户使用同名 key 互不影响。幂等结果与状态变更在同一事务中写入 ActionRequest：operation 为 \"bulk-reject.v4\"，tenantId、actorId、key 分别为当前租户、当前用户和 Idempotency-Key 原值，response 为响应 JSON 对象 {\"rejectedIds\":[排序后ID]}，每个成功的新请求恰好一行。ActionRequest 写入失败时返回 503 且数据库全部不变，故障移除后同 key 可重试。并发：同 key 同集合两次均 200 且只提交一次；不同 key 的重叠批次只能一个成功，败者独有目标不变；同一目标的并发审批与驳回只能一个成功；并发中失败的一方返回 4xx。已驳回的采购单不能再被审批或驳回，已审批的不能被驳回。客户端上下文头不能覆盖认证身份。批量审批与原有 API 行为保持不变。\nAdd the bulk-reject Action described above to the existing service.\nRead the existing code first and follow its conventions.\nBoth conditions use guarded RLS. The shared HTTP adapter in internal/protocol validates input and binds demo identity; register the new path in protocol.Routes.\nOnly edit/add internal/candidate/ Go code. All other exports, dependencies, Git settings and tests are protected.\nPreserve the existing APIs, including bulk-approve.\nDo not commit/push, read credentials, other checkouts or evaluator materials; do not use other agents.\nUse go build ./... and go test ./... as needed. Private database credentials are unavailable during generation. The public SQL schema is in SCHEMA.sql.\nCapability: no platform Action kernel. The existing batch approval is hand-written in internal/candidate/.\nThis is a trusted-code pilot; directory export alone does not enforce host or network isolation.",
+    "prompt_sha256": "577f8eb41e964d73d053acea84a34f3348446d6243fdf97361fc642a322b8e68"
+  },
+  "manifest_sha256": "dcc71f3dec922cd1b7ad79dd6a7761b592d220a6af8d0113055f32c65778b13b",
+  "worker_sha256": "d9ab0f895361be310ad84886e38a152c68596dc84746e1887ad5390fa50d0355",
+  "model": "qwen3-coder-next",
+  "reasoning_effort": "medium",
+  "generation_budget_seconds": 600,
+  "engine": "kiro"
+}

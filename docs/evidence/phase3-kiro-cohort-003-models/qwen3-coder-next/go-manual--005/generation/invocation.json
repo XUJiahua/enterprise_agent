@@ -1,0 +1,37 @@
+{
+  "status": "completed",
+  "usage": {
+    "credits": 0.46588833001658375
+  },
+  "turn_started": true,
+  "run_finished": true,
+  "reported_model": "qwen3-coder-next",
+  "event_count": 147,
+  "agent_messages": [
+    "I'll analyze the requirements and implement the batch approval with audit logs and scoped idempotency. Let me start by exploring the existing codebase structure.\n\nNow I understand the full picture. Let me implement the batch approval with audit logs and scoped idempotency.\n\nI need to add the missing imports. Let me fix the code:\n\nThe code has issues. Let me rewrite it properly to match the protocol.Response type:\n\nLet me verify the build works:\n\nThe code builds and passes `go vet`. Let me verify the final implementation:\n\nImplementation complete. The batch approval now includes:\n\n1. **Scoped idempotency**: Uses `operation+tenant+actor+key` as scope; returns replay status with `Idempotency-Replayed` header\n2. **Audit logging**: Creates `ApprovalAudit` entries for each approved purchase and one `ActionRequest` per successful operation\n3. **Request hash**: SHA-256 of `\"bulk-approve.v3\\n\"` concatenated with `<length>:<id>` pairs sorted by UTF-8 bytes\n4. **Transaction safety**: Checks for already-approved purchases, locks rows for update, handles concurrent conflicts with 409\n5. **Guarded RLS**: Uses the existing tenant/user/role session config for access control\n\nAll changes are in `internal/candidate/approval.go` only, preserving the original APIs."
+  ],
+  "errors": [],
+  "engine": "kiro",
+  "generation_seconds": 71.778,
+  "requested_model": "qwen3-coder-next",
+  "reasoning_effort": "medium",
+  "sandbox": "workspace-write",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "qwen3-coder-next",
+    "--effort",
+    "medium",
+    "--trust-all-tools"
+  ],
+  "returncode": 0,
+  "timed_out": false
+}

@@ -1,0 +1,3 @@
+[warn] failed to set effort 'medium': model 'qwen3-coder-next' offers no effort levels
+[INFO] [KRS] <-- GenerateAssistantResponseCommand done totalEvents=9
+[question] the agent asked: I've been using the same tool repeatedly. This might indicate I'm stuck in a loop. What would you like me to do? [options: Cancel | Keep Iterating] — questions cannot be answered in non-interactive mode, so it continues without an answer.

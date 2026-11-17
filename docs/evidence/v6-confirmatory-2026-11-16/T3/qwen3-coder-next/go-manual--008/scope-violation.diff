@@ -1,0 +1,87 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index cf92f72..bc3a3ed 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -108,6 +108,7 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		}
+ 		return result, false, nil
+ 	}
+-	batches := protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve, "/purchases/bulk-reject": newReject(pool)}, fallback)
+-	return protocol.Item("reopen", "requester", newReopen(pool), batches), nil
++	assign := protocol.Assign("/purchases/bulk-reassign", newReassign(pool), fallback)
++	reject := protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve, "/purchases/bulk-reject": newReject(pool)}, assign)
++	return protocol.Item("reopen", "requester", newReopen(pool), reject), nil
+ }
+diff --git a/internal/ledger/ledger.go b/internal/ledger/ledger.go
+index 3f0c088..38f5379 100644
+--- a/internal/ledger/ledger.go
++++ b/internal/ledger/ledger.go
+@@ -10,10 +10,13 @@ import (
+ 	"encoding/json"
+ 	"fmt"
+ 	"sort"
++	"strings"
+ 
+ 	"github.com/jackc/pgx/v5"
+ )
+ 
++const opReassign = "bulk-reassign.v6"
++
+ // Fingerprint is the request digest shared by every Action operation: the
+ // operation name is the domain separator, IDs are length-prefixed and sorted.
+ func Fingerprint(operation string, ids []string) string {
+@@ -27,6 +30,19 @@ func Fingerprint(operation string, ids []string) string {
+ 	return hex.EncodeToString(h.Sum(nil))
+ }
+ 
++// FingerprintAssignee is the fingerprint for assignee-parameterized operations.
++func FingerprintAssignee(operation string, ids []string, assignee string) string {
++	sorted := append([]string(nil), ids...)
++	sort.Strings(sorted)
++	h := sha256.New()
++	fmt.Fprint(h, operation, "\n")
++	for _, id := range sorted {
++		fmt.Fprintf(h, "%d:%s", len(id), id)
++	}
++	fmt.Fprintf(h, "%d:%s", len(assignee), assignee)
++	return hex.EncodeToString(h.Sum(nil))
++}
++
+ type Mismatch struct{ TenantID, ActorID, Operation, Key string }
+ 
+ type Querier interface {
+@@ -67,7 +83,7 @@ func subject(operation string, response []byte) (string, []string, bool) {
+ }
+ 
+ // Verify returns every ActionRequest whose requestHash differs from
+-// Fingerprint(domain, IDs) of the stored response's subject.
++// the fingerprint of the stored response's subject.
+ func Verify(ctx context.Context, q Querier) ([]Mismatch, error) {
+ 	rows, err := q.Query(ctx, `SELECT "tenantId","actorId",operation,key,"requestHash",response FROM "ActionRequest"`)
+ 	if err != nil {
+@@ -83,7 +99,24 @@ func Verify(ctx context.Context, q Querier) ([]Mismatch, error) {
+ 			return nil, err
+ 		}
+ 		domain, ids, ok := subject(m.Operation, response)
+-		if !ok || Fingerprint(domain, ids) != hash {
++		if !ok {
++			bad = append(bad, m)
++			continue
++		}
++		var storedHash string
++		if m.Operation == opReassign {
++			// Extract assignee from domain (operation+"\n"+assignee)
++			parts := strings.SplitN(domain, "\n", 2)
++			if len(parts) != 2 {
++				bad = append(bad, m)
++				continue
++			}
++			assignee := parts[1]
++			storedHash = FingerprintAssignee(parts[0], ids, assignee)
++		} else {
++			storedHash = Fingerprint(domain, ids)
++		}
++		if storedHash != hash {
+ 			bad = append(bad, m)
+ 		}
+ 	}

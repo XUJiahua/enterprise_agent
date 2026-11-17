@@ -1,0 +1,37 @@
+{
+  "status": "completed",
+  "usage": {
+    "credits": 1.4427056417910449
+  },
+  "turn_started": true,
+  "run_finished": true,
+  "reported_model": "claude-opus-5.5",
+  "event_count": 349,
+  "agent_messages": [
+    "The protected `internal/action` executor already implements audit + scoped idempotency in one transaction; the candidate should delegate to it and adapt types at the boundary.\nI've rewritten `internal/candidate/approval.go` so the batch-approval endpoint now hands all its work to the existing `internal/action` executor. That executor adds the approval log (`ApprovalAudit`) and the key-based duplicate protection (`ActionRequest`). It builds and passes vet, but there are no tests in the repo and no database or public test service was supplied, so none of the database behaviour has been run.\n\nWhat changed:\n- **Startup:** `candidate.New` now calls `action.New(ctx, pool, \"\")`, with no fault injection. That call checks the database first: the `Purchase`, `ActionRequest` and `ApprovalAudit` tables must have row-level security on, and the two new tables must be insert-only for the runtime role. If any check fails, the server won't start. This is new: the old code started without checking.\n- **Per request:** the identity from the existing login check, the key and the IDs are passed to `Executor.BulkApprove`. Its result and replay flag are copied into `protocol.Result`. Its rejection status is converted to `protocol.Rejection`, which sets the HTTP status. Other errors pass through unchanged, so the existing rules still apply (a duplicate-row database error gives 409, anything else 503).\n- **Unchanged:** the HTTP entry point and the old routes, including the single-item approval API, are untouched.\n\nFrom reading the executor's code (not from running it), it meets the main requirements:\n- The approvals, audit rows and stored result are written in one transaction, so any failure rolls back everything and leaves the key unused.\n- Requests are scoped to operation, tenant, actor and key, and a database lock makes requests with the same key take turns. A same-key replay with the same IDs returns the stored response with the header set to true and writes nothing new. The same key with different IDs gets 409.\n- Overlapping batches with different keys can't both succeed: rows are locked and status is checked again before updating, and an audit row is unique per purchase. The losing request gets 409 and its other targets stay unchanged.\n- `requestHash` and the stored response follow the format you specified.\n\nChecks run: `gofmt`, `go vet ./...`, `go build ./...` and `go test ./...` all passed. I didn't run `visible_smoke.py`, and I didn't add tests because tests in this repo are marked protected. Nothing has been committed."
+  ],
+  "errors": [],
+  "engine": "kiro",
+  "generation_seconds": 39.761,
+  "requested_model": "claude-opus-5.5",
+  "reasoning_effort": "medium",
+  "sandbox": "workspace-write",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "claude-opus-5.5",
+    "--effort",
+    "medium",
+    "--trust-all-tools"
+  ],
+  "returncode": 0,
+  "timed_out": false
+}

@@ -1,0 +1,170 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index ad14a29..fe18266 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -1,63 +1,155 @@
+-// Shared starting point: atomic batch approval, without audit or idempotency.
++// Enhanced batch approval with audit logging and scoped idempotency.
+ package candidate
+ 
+ import (
+ 	"context"
++	"crypto/sha256"
++	"encoding/hex"
++	"encoding/json"
++	"fmt"
++	"strings"
++
+ 	"github.com/XUJiahua/enterprise_agent/internal/app"
+ 	"github.com/XUJiahua/enterprise_agent/internal/protocol"
++	"github.com/jackc/pgx/v5"
+ 	"github.com/jackc/pgx/v5/pgxpool"
+ 	"net/http"
+-	"strings"
+ )
+ 
+ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
+ 	approve := func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
++		// Validate IDs: no embedded nulls
+ 		for _, id := range ids {
+ 			if strings.ContainsRune(id, 0) {
+ 				return protocol.Result{}, false, &protocol.Rejection{Status: 404}
+ 			}
+ 		}
++
+ 		tx, err := pool.Begin(ctx)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+ 		defer tx.Rollback(ctx)
++
++		// Set RLS context
+ 		_, err = tx.Exec(ctx, `SELECT set_config('app.tenant',$1,true),set_config('app.user',$2,true),set_config('app.role',$3,true)`, u.Tenant, u.User, u.Role)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+-		rows, err := tx.Query(ctx, `SELECT id FROM "Purchase" WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted' ORDER BY id FOR UPDATE`, ids, u.Tenant, u.User)
++
++		// Compute request hash for idempotency tracking
++		requestHash := computeRequestHash(ids)
++
++		// Check for existing ActionRequest with same scope (tenant+actor+operation+key)
++		var existingHash string
++		var existingResponse string
++		err = tx.QueryRow(ctx, 
++			`SELECT "requestHash", response FROM "ActionRequest" WHERE "tenantId"=$1 AND "actorId"=$2 AND operation=$3 AND key=$4`,
++			u.Tenant, u.User, "bulk-approve.v3", key).Scan(&existingHash, &existingResponse)
++
++		if err == nil {
++			// Key exists. Check if it's the same ID set (idempotency replay)
++			if existingHash == requestHash {
++				// Same hash: return cached result as replay
++				var approvedIds []string
++				err := json.Unmarshal([]byte(existingResponse), &map[string]interface{}{"approvedIds": &approvedIds})
++				if err == nil {
++					return protocol.Result{ApprovedIDs: approvedIds}, true, nil
++				}
++				// If JSON parsing fails, treat as internal error
++				return protocol.Result{}, false, err
++			}
++			// Different hash with same key: conflict
++			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
++		} else if err != pgx.ErrNoRows {
++			// Unexpected database error
++			return protocol.Result{}, false, err
++		}
++		// No existing key: proceed with new approval
++
++		// Query eligible purchases: submitted, not created by approver, in same tenant
++		rows, err := tx.Query(ctx, 
++			`SELECT id FROM "Purchase" WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted' ORDER BY id FOR UPDATE`,
++			ids, u.Tenant, u.User)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
++		defer rows.Close()
++
+ 		eligible := []string{}
+ 		for rows.Next() {
+ 			var id string
+-			if err = rows.Scan(&id); err != nil {
+-				rows.Close()
++			if err := rows.Scan(&id); err != nil {
+ 				return protocol.Result{}, false, err
+ 			}
+ 			eligible = append(eligible, id)
+ 		}
+-		err = rows.Err()
+-		rows.Close()
+-		if err != nil {
++		if err := rows.Err(); err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
++
++		// All IDs must be eligible (already sorted by the query)
+ 		if len(eligible) != len(ids) {
+ 			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+ 		}
+-		tag, err := tx.Exec(ctx, `UPDATE "Purchase" SET status='approved' WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'`, ids, u.Tenant, u.User)
++
++		// Update Purchase records
++		tag, err := tx.Exec(ctx,
++			`UPDATE "Purchase" SET status='approved' WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'`,
++			ids, u.Tenant, u.User)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+ 		if tag.RowsAffected() != int64(len(ids)) {
+ 			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+ 		}
+-		if err = tx.Commit(ctx); err != nil {
++
++		// Build response object
++		responseJSON, err := json.Marshal(map[string][]string{"approvedIds": ids})
++		if err != nil {
++			return protocol.Result{}, false, err
++		}
++
++		// Insert ActionRequest record (only once per scope+key, enforced by PK)
++		_, err = tx.Exec(ctx,
++			`INSERT INTO "ActionRequest" ("tenantId", "actorId", operation, key, "requestHash", response) VALUES ($1, $2, $3, $4, $5, $6)`,
++			u.Tenant, u.User, "bulk-approve.v3", key, requestHash, responseJSON)
++		if err != nil {
++			return protocol.Result{}, false, err
++		}
++
++		// Insert ApprovalAudit records for each approved ID
++		for _, id := range ids {
++			_, err := tx.Exec(ctx,
++				`INSERT INTO "ApprovalAudit" ("tenantId", "purchaseId", "approvedBy", operation, "idempotencyKey", "fromStatus", "toStatus") VALUES ($1, $2, $3, $4, $5, $6, $7)`,
++				u.Tenant, id, u.User, "bulk-approve.v3", key, "submitted", "approved")
++			if err != nil {
++				return protocol.Result{}, false, err
++			}
++		}
++
++		// Commit transaction
++		if err := tx.Commit(ctx); err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
++
+ 		return protocol.Result{ApprovedIDs: ids}, false, nil
+ 	}
+ 	return protocol.HTTP(approve, fallback), nil
+ }
++
++// computeRequestHash generates SHA-256 hash of the request content for idempotency.
++// Format: "bulk-approve.v3\n" + sorted IDs in format "<UTF-8 byte length>:<ID>"
++func computeRequestHash(ids []string) string {
++	h := sha256.New()
++	h.Write([]byte("bulk-approve.v3\n"))
++	
++	// IDs are already sorted by protocol.canonical() before reaching here
++	for _, id := range ids {
++		idBytes := []byte(id)
++		idLen := len(idBytes) // UTF-8 byte length
++		fmt.Fprintf(h, "%d:%s", idLen, id)
++	}
++	
++	return hex.EncodeToString(h.Sum(nil))
++}

@@ -1,0 +1,194 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index ae214e3..68ec56d 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -1,4 +1,4 @@
+-// Batch Actions of the purchase service through the platform Action kernel.
++// Batch and single-target Actions of the purchase service through the platform Action kernel.
+ package candidate
+ 
+ import (
+@@ -31,10 +31,24 @@ func batch(executor *action.Executor, op action.Operation) protocol.Handler {
+ 	}
+ }
+ 
++func item(executor *action.Executor, op action.Operation) protocol.ItemHandler {
++	return func(ctx context.Context, u app.Identity, key, id, reason string) (protocol.ItemResult, bool, error) {
++		done, replayed, err := executor.Run(ctx, u, op, key, []string{id}, reason)
++		if err != nil {
++			return protocol.ItemResult{}, false, adapt(err)
++		}
++		return protocol.ItemResult{ID: done[0], Status: op.To}, replayed, nil
++	}
++}
++
+ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
+ 	executor, err := action.New(ctx, pool)
+ 	if err != nil {
+ 		return nil, err
+ 	}
+-	return protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": batch(executor, approveOp), "/purchases/bulk-reject": batch(executor, rejectOp)}, fallback), nil
++	routes := protocol.Routes{"/purchases/bulk-approve": batch(executor, approveOp), "/purchases/bulk-reject": batch(executor, rejectOp)}
++	itemRoutes := []protocol.ItemRoute{
++		{Verb: "reopen", Role: "requester", Handler: item(executor, reopenOp)},
++	}
++	return protocol.HTTPWithItem(routes, itemRoutes, fallback), nil
+ }
+diff --git a/internal/candidate/operations.go b/internal/candidate/operations.go
+index 62e5605..35196f0 100644
+--- a/internal/candidate/operations.go
++++ b/internal/candidate/operations.go
+@@ -8,4 +8,6 @@ var (
+ 		From: "submitted", To: "approved", Field: "approvedIds", Event: action.NoEvent}
+ 	rejectOp = action.Operation{Name: "bulk-reject.v4", Role: "approver", Own: false,
+ 		From: "submitted", To: "rejected", Field: "rejectedIds", Event: "purchase.rejected"}
++	reopenOp = action.Operation{Name: "reopen.v5", Role: "requester", Own: true,
++		From: "rejected", To: "submitted", Field: "", Event: action.NoEvent}
+ )
+diff --git a/internal/protocol/protocol.go b/internal/protocol/protocol.go
+index ca0b028..0ed0152 100644
+--- a/internal/protocol/protocol.go
++++ b/internal/protocol/protocol.go
+@@ -42,41 +42,99 @@ type Routes map[string]Handler
+ // HTTP is the shared adapter for every batch Action endpoint; other requests
+ // go to the original server.
+ func HTTP(routes Routes, fallback http.Handler) http.Handler {
++	return HTTPWithItem(routes, nil, fallback)
++}
++
++// HTTPWithItem is the shared adapter for batch and single-target Action endpoints.
++func HTTPWithItem(routes Routes, itemRoutes []ItemRoute, fallback http.Handler) http.Handler {
+ 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+-		handle, found := routes[r.URL.Path]
+-		if r.Method != http.MethodPost || !found {
+-			fallback.ServeHTTP(w, r)
+-			return
+-		}
+-		u, ok := app.AuthenticateDemo(r.Header.Get("Authorization"))
+-		if !ok {
+-			reject(w, 401)
+-			return
+-		}
+-		if u.Role != "approver" {
+-			reject(w, 403)
+-			return
+-		}
+-		body, err := io.ReadAll(http.MaxBytesReader(w, r.Body, MaxBodyBytes))
+-		if err != nil {
+-			var large *http.MaxBytesError
+-			if errors.As(err, &large) {
+-				reject(w, 413)
+-			} else {
++		// Try batch routes first
++		if handle, found := routes[r.URL.Path]; found {
++			if r.Method != http.MethodPost {
++				fallback.ServeHTTP(w, r)
++				return
++			}
++			u, ok := app.AuthenticateDemo(r.Header.Get("Authorization"))
++			if !ok {
++				reject(w, 401)
++				return
++			}
++			if u.Role != "approver" {
++				reject(w, 403)
++				return
++			}
++			body, err := io.ReadAll(http.MaxBytesReader(w, r.Body, MaxBodyBytes))
++			if err != nil {
++				var large *http.MaxBytesError
++				if errors.As(err, &large) {
++					reject(w, 413)
++				} else {
++					reject(w, 400)
++				}
++				return
++			}
++			ids, ok := decode(body)
++			keys := r.Header.Values("Idempotency-Key")
++			if !ok || len(keys) != 1 || !validKey(keys[0]) {
+ 				reject(w, 400)
++				return
+ 			}
++			ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
++			defer cancel()
++			result, replayed, err := handle(ctx, u, keys[0], ids)
++			respond(w, result, replayed, err)
+ 			return
+ 		}
+-		ids, ok := decode(body)
+-		keys := r.Header.Values("Idempotency-Key")
+-		if !ok || len(keys) != 1 || !validKey(keys[0]) {
+-			reject(w, 400)
+-			return
++
++		// Try item routes
++		for _, ir := range itemRoutes {
++			if strings.HasSuffix(r.URL.Path, "/"+ir.Verb) {
++				id := strings.TrimSuffix(strings.TrimPrefix(r.URL.Path, "/purchases/"), "/"+ir.Verb)
++				if id == "" || strings.Contains(id, "/") {
++					fallback.ServeHTTP(w, r)
++					return
++				}
++
++				if r.Method != http.MethodPost {
++					fallback.ServeHTTP(w, r)
++					return
++				}
++
++				u, ok := app.AuthenticateDemo(r.Header.Get("Authorization"))
++				if !ok {
++					reject(w, 401)
++					return
++				}
++				if u.Role != ir.Role {
++					reject(w, 403)
++					return
++				}
++
++				body, err := io.ReadAll(http.MaxBytesReader(w, r.Body, MaxBodyBytes))
++				if err != nil {
++					var large *http.MaxBytesError
++					if errors.As(err, &large) {
++						reject(w, 413)
++					} else {
++						reject(w, 400)
++					}
++					return
++				}
++				reason, ok := decodeReason(body)
++				keys := r.Header.Values("Idempotency-Key")
++				if !ok || len(id) > 100 || !utf8.ValidString(id) || strings.ContainsRune(id, 0) || len(keys) != 1 || !validKey(keys[0]) {
++					reject(w, 400)
++					return
++				}
++				ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
++				defer cancel()
++				result, replayed, err := ir.Handler(ctx, u, keys[0], id, reason)
++				respond(w, result, replayed, err)
++				return
++			}
+ 		}
+-		ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
+-		defer cancel()
+-		result, replayed, err := handle(ctx, u, keys[0], ids)
+-		respond(w, result, replayed, err)
++
++		fallback.ServeHTTP(w, r)
+ 	})
+ }
+ 
+@@ -86,6 +144,13 @@ type ItemResult struct {
+ 	Status string `json:"status"`
+ }
+ 
++// ItemRoute defines a single-target Action endpoint.
++type ItemRoute struct {
++	Verb    string
++	Role    string
++	Handler ItemHandler
++}
++
+ // ItemHandler receives an identity with the route's role, one valid
+ // Idempotency-Key, the path ID and the request reason.
+ type ItemHandler func(ctx context.Context, u app.Identity, key, id, reason string) (ItemResult, bool, error)

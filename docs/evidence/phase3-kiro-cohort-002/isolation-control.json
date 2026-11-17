@@ -1,0 +1,19 @@
+{
+  "kind": "isolation-control",
+  "checks": {
+    "evaluator unreadable": true,
+    "seed unreadable": true,
+    "evaluator unlistable": true,
+    "home not writable": true,
+    "kit writable": true,
+    "output writable": true,
+    "unreadable: /Users/administrator/.paseo": true,
+    "unreadable: /Users/administrator/cil/ainative/enterprise_agent": true,
+    "unreadable: /Users/administrator/.kiro": true,
+    "unreadable: /Users/administrator/poc-phase3-kiro-002/private": true,
+    "unreadable: /Users/administrator/poc-phase3-kiro-002/evaluations": true,
+    "unreadable: /Users/administrator/poc-phase3-kiro-002/ops": true,
+    "kiro READY inside sandbox": true
+  },
+  "passed": true
+}

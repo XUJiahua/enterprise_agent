@@ -1,0 +1,171 @@
+{
+  "version": 4,
+  "kind": "model-trial",
+  "plan_sha256": "4c0d3e32358138a81f2f8744b7093e594d18dca6e4bae3a29eba5a8878825e93",
+  "rows": [
+    {
+      "cell": "go-manual",
+      "planned": 10,
+      "observed": 10,
+      "unmeasured": 0,
+      "passed_all": 9,
+      "passed_explicit": 9,
+      "conventions_followed": {
+        "implicit-audit": 9,
+        "implicit-operation-scope": 9,
+        "implicit-request-hash": 9,
+        "implicit-uniform-409": 9
+      },
+      "first_pass_rate": 0.9,
+      "explicit_pass_rate": 0.9,
+      "outcomes": {
+        "passed": 9,
+        "acceptance-failed": 1
+      },
+      "usage": [
+        {
+          "trial": "go-manual--001",
+          "usage": {
+            "credits": 0.6148509912437812
+          }
+        },
+        {
+          "trial": "go-manual--002",
+          "usage": {
+            "credits": 0.6728279888557214
+          }
+        },
+        {
+          "trial": "go-manual--003",
+          "usage": {
+            "credits": 0.6657104941293532
+          }
+        },
+        {
+          "trial": "go-manual--004",
+          "usage": {
+            "credits": 0.6325485348258706
+          }
+        },
+        {
+          "trial": "go-manual--005",
+          "usage": {
+            "credits": 0.6100537543283581
+          }
+        },
+        {
+          "trial": "go-manual--006",
+          "usage": {
+            "credits": 0.9093271052736316
+          }
+        },
+        {
+          "trial": "go-manual--007",
+          "usage": {
+            "credits": 0.47452014507462686
+          }
+        },
+        {
+          "trial": "go-manual--008",
+          "usage": {
+            "credits": 0.6128764562189054
+          }
+        },
+        {
+          "trial": "go-manual--009",
+          "usage": {
+            "credits": 0.7992898868656716
+          }
+        },
+        {
+          "trial": "go-manual--010",
+          "usage": {
+            "credits": 0.761139080597015
+          }
+        }
+      ]
+    },
+    {
+      "cell": "go-action",
+      "planned": 10,
+      "observed": 10,
+      "unmeasured": 0,
+      "passed_all": 10,
+      "passed_explicit": 10,
+      "conventions_followed": {
+        "implicit-audit": 10,
+        "implicit-operation-scope": 10,
+        "implicit-request-hash": 10,
+        "implicit-uniform-409": 10
+      },
+      "first_pass_rate": 1.0,
+      "explicit_pass_rate": 1.0,
+      "outcomes": {
+        "passed": 10
+      },
+      "usage": [
+        {
+          "trial": "go-action--001",
+          "usage": {
+            "credits": 0.42926478388059697
+          }
+        },
+        {
+          "trial": "go-action--002",
+          "usage": {
+            "credits": 0.44455546159203985
+          }
+        },
+        {
+          "trial": "go-action--003",
+          "usage": {
+            "credits": 0.5216184578109452
+          }
+        },
+        {
+          "trial": "go-action--004",
+          "usage": {
+            "credits": 0.452399515323383
+          }
+        },
+        {
+          "trial": "go-action--005",
+          "usage": {
+            "credits": 0.4654754227860696
+          }
+        },
+        {
+          "trial": "go-action--006",
+          "usage": {
+            "credits": 0.43394505114427856
+          }
+        },
+        {
+          "trial": "go-action--007",
+          "usage": {
+            "credits": 0.5227317517412935
+          }
+        },
+        {
+          "trial": "go-action--008",
+          "usage": {
+            "credits": 0.46023163393034816
+          }
+        },
+        {
+          "trial": "go-action--009",
+          "usage": {
+            "credits": 0.5092376748258706
+          }
+        },
+        {
+          "trial": "go-action--010",
+          "usage": {
+            "credits": 0.4429621113432835
+          }
+        }
+      ]
+    }
+  ],
+  "note": "Explicit contract and implicit conventions are reported separately. Synthetic controls are not model evidence. Missing/infrastructure trials remain unmeasured; absent usage is unknown."
+}

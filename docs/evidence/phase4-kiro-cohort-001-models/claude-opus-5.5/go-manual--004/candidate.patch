@@ -1,0 +1,161 @@
+diff --git a/internal/candidate/approval.go b/internal/candidate/approval.go
+index 159307c..0942a75 100644
+--- a/internal/candidate/approval.go
++++ b/internal/candidate/approval.go
+@@ -1,5 +1,5 @@
+-// Existing hand-written batch approval: status, per-target audit and the
+-// completed idempotent result commit in one transaction.
++// Hand-written batch decisions (approve and reject): status, per-target audit
++// and the completed idempotent result commit in one transaction.
+ package candidate
+ 
+ import (
+@@ -18,20 +18,40 @@ import (
+ 	"github.com/jackc/pgx/v5/pgxpool"
+ )
+ 
+-const opApprove = "bulk-approve.v3"
++const (
++	opApprove = "bulk-approve.v3"
++	opReject  = "bulk-reject.v4"
++)
+ 
+-// Same digest as ledger.Fingerprint(opApprove, ids); reconciliation recomputes it.
+-func fingerprint(ids []string) string {
++// Same digest as ledger.Fingerprint(op, ids); reconciliation recomputes it.
++// ids are already canonical (sorted, unique).
++func fingerprint(op string, ids []string) string {
+ 	h := sha256.New()
+-	fmt.Fprint(h, opApprove, "\n")
++	fmt.Fprint(h, op, "\n")
+ 	for _, id := range ids {
+ 		fmt.Fprintf(h, "%d:%s", len(id), id)
+ 	}
+ 	return hex.EncodeToString(h.Sum(nil))
+ }
+ 
++// decision describes one batch transition submitted -> toStatus.
++type decision struct {
++	op       string // ActionRequest/ApprovalAudit operation
++	field    string // single response field
++	toStatus string // target Purchase status
++}
++
+ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.Handler, error) {
+-	approve := func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
++	approve := decide(pool, decision{op: opApprove, field: "approvedIds", toStatus: "approved"})
++	reject := decide(pool, decision{op: opReject, field: "rejectedIds", toStatus: "rejected"})
++	return protocol.HTTP(protocol.Routes{
++		"/purchases/bulk-approve": approve,
++		"/purchases/bulk-reject":  reject,
++	}, fallback), nil
++}
++
++func decide(pool *pgxpool.Pool, d decision) protocol.Handler {
++	return func(ctx context.Context, u app.Identity, key string, ids []string) (protocol.Result, bool, error) {
+ 		for _, id := range ids {
+ 			if strings.ContainsRune(id, 0) {
+ 				return protocol.Result{}, false, &protocol.Rejection{Status: 404}
+@@ -46,15 +66,15 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+-		lock, _ := json.Marshal([]string{opApprove, u.Tenant, u.User, key})
++		lock, _ := json.Marshal([]string{d.op, u.Tenant, u.User, key})
+ 		if _, err = tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1,0))`, string(lock)); err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+-		hash := fingerprint(ids)
++		hash := fingerprint(d.op, ids)
+ 		var savedHash string
+ 		var saved []byte
+ 		err = tx.QueryRow(ctx, `SELECT "requestHash",response FROM "ActionRequest"
+-		 WHERE "tenantId"=$1 AND "actorId"=$2 AND operation=$3 AND key=$4`, u.Tenant, u.User, opApprove, key).Scan(&savedHash, &saved)
++		 WHERE "tenantId"=$1 AND "actorId"=$2 AND operation=$3 AND key=$4`, u.Tenant, u.User, d.op, key).Scan(&savedHash, &saved)
+ 		if err == nil {
+ 			if savedHash != hash {
+ 				return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+@@ -66,7 +86,7 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 			if err = tx.Commit(ctx); err != nil {
+ 				return protocol.Result{}, false, err
+ 			}
+-			return protocol.Result{Field: "approvedIds", IDs: body["approvedIds"]}, true, nil
++			return protocol.Result{Field: d.field, IDs: body[d.field]}, true, nil
+ 		}
+ 		if !errors.Is(err, pgx.ErrNoRows) {
+ 			return protocol.Result{}, false, err
+@@ -94,7 +114,7 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		if len(eligible) != len(ids) {
+ 			return protocol.Result{}, false, &protocol.Rejection{Status: 409}
+ 		}
+-		tag, err := tx.Exec(ctx, `UPDATE "Purchase" SET status='approved' WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'`, ids, u.Tenant, u.User)
++		tag, err := tx.Exec(ctx, `UPDATE "Purchase" SET status=$4::text WHERE id=ANY($1::text[]) AND "tenantId"=$2 AND "createdBy"<>$3 AND status='submitted'`, ids, u.Tenant, u.User, d.toStatus)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+@@ -103,17 +123,17 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		}
+ 		// Every status transition leaves one ApprovalAudit row per target.
+ 		_, err = tx.Exec(ctx, `INSERT INTO "ApprovalAudit" ("tenantId","purchaseId","approvedBy",operation,"idempotencyKey","fromStatus","toStatus")
+-		 SELECT $2,id,$3,$4,$5,'submitted','approved' FROM unnest($1::text[]) AS id`, ids, u.Tenant, u.User, opApprove, key)
++		 SELECT $2,id,$3,$4,$5,'submitted',$6::text FROM unnest($1::text[]) AS id`, ids, u.Tenant, u.User, d.op, key, d.toStatus)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+-		result := protocol.Result{Field: "approvedIds", IDs: ids}
++		result := protocol.Result{Field: d.field, IDs: ids}
+ 		response, err := json.Marshal(result)
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+ 		_, err = tx.Exec(ctx, `INSERT INTO "ActionRequest" ("tenantId","actorId",operation,key,"requestHash",response)
+-		 VALUES ($1,$2,$3,$4,$5,$6::jsonb)`, u.Tenant, u.User, opApprove, key, hash, string(response))
++		 VALUES ($1,$2,$3,$4,$5,$6::jsonb)`, u.Tenant, u.User, d.op, key, hash, string(response))
+ 		if err != nil {
+ 			return protocol.Result{}, false, err
+ 		}
+@@ -122,5 +142,4 @@ func New(ctx context.Context, pool *pgxpool.Pool, fallback http.Handler) (http.H
+ 		}
+ 		return result, false, nil
+ 	}
+-	return protocol.HTTP(protocol.Routes{"/purchases/bulk-approve": approve}, fallback), nil
+ }
+diff --git a/internal/candidate/approval_test.go b/internal/candidate/approval_test.go
+new file mode 100644
+index 0000000..c6c60a3
+--- /dev/null
++++ b/internal/candidate/approval_test.go
+@@ -0,0 +1,33 @@
++package candidate
++
++import (
++	"encoding/json"
++	"testing"
++
++	"github.com/XUJiahua/enterprise_agent/internal/ledger"
++	"github.com/XUJiahua/enterprise_agent/internal/protocol"
++)
++
++// The stored requestHash must match what nightly reconciliation recomputes
++// from the row's operation and response IDs.
++func TestFingerprintMatchesLedger(t *testing.T) {
++	ids := []string{"a", "b:1", "é", "中"}
++	for _, op := range []string{opApprove, opReject} {
++		if got, want := fingerprint(op, ids), ledger.Fingerprint(op, ids); got != want {
++			t.Fatalf("%s: fingerprint %s != ledger %s", op, got, want)
++		}
++	}
++	if fingerprint(opApprove, ids) == fingerprint(opReject, ids) {
++		t.Fatal("operations must be domain-separated")
++	}
++}
++
++func TestRejectResponseShape(t *testing.T) {
++	b, err := json.Marshal(protocol.Result{Field: "rejectedIds", IDs: []string{"p1", "p2"}})
++	if err != nil {
++		t.Fatal(err)
++	}
++	if string(b) != `{"rejectedIds":["p1","p2"]}` {
++		t.Fatalf("unexpected response %s", b)
++	}
++}

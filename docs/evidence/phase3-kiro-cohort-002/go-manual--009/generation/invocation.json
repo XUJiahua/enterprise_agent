@@ -1,0 +1,37 @@
+{
+  "status": "completed",
+  "usage": {
+    "credits": 1.853103464013267
+  },
+  "turn_started": true,
+  "run_finished": true,
+  "reported_model": "claude-opus-5.5",
+  "event_count": 442,
+  "agent_messages": [
+    "I added the approval audit and scoped idempotency to the batch approval in `internal/candidate/approval.go`. It builds and passes `go vet`, but it has never run against a database. `go test ./...` passes only because the repo has no test files. I didn't run `visible_smoke.py` because no independent test service was supplied. The audit, idempotency and concurrency behaviour is designed but not yet tested.\n\nIt all happens in one transaction, which sets the tenant, user and role from the authenticated identity only:\n\n1. **Hash and response:** I sort the IDs by UTF-8 byte order, compute the SHA-256 `requestHash` in the format you specified, and build `{\"approvedIds\":[sorted IDs]}`.\n2. **Claim the key first:** it inserts the ActionRequest with `ON CONFLICT DO NOTHING`. A concurrent request with the same scope (operation + tenant + actor + key) waits on that primary key until the first one commits or rolls back:\n   - **Committed:** it reads back the stored hash. If it matches, it returns the stored response with `Idempotency-Replayed: true` and writes nothing. If it doesn't match, it returns 409.\n   - **Rolled back:** the waiting request's insert goes through, so failures that were rolled back don't use up the key and the same key can be retried.\n3. **Lock and check targets:** it locks the target Purchase rows with `FOR UPDATE`, in a fixed order (`ORDER BY id COLLATE \"C\"`). If any target isn't an eligible `submitted` record from another user in the same tenant, the whole batch gets 409 and rolls back. Nothing changes in Purchase, ApprovalAudit or ActionRequest.\n4. **Update and audit:** it updates the targets to `approved` and inserts exactly one ApprovalAudit row per target. ApprovalAudit's primary key is (tenant, purchase), so a different key can't approve an already-approved record again.\n5. **Overlapping batches with different keys:** the later one waits on the row locks. It then finds the targets already `approved`, gets 409 and rolls back, so the records only it targeted are unchanged.\n\n- **Replay bytes:** the replay response is decoded from the stored jsonb and re-encoded the same way as a first success, so it should give identical bytes.\n- **Possible 503:** if Postgres ever reports a deadlock between overlapping batches, that request gets a 503 rather than a 409. The fixed lock order should prevent this.\n\nI only changed that one file. Existing APIs, including the old single-item approval and the ID check that returns 404 for IDs containing a NUL character, behave as before."
+  ],
+  "errors": [],
+  "engine": "kiro",
+  "generation_seconds": 57.588,
+  "requested_model": "claude-opus-5.5",
+  "reasoning_effort": "medium",
+  "sandbox": "workspace-write",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "claude-opus-5.5",
+    "--effort",
+    "medium",
+    "--trust-all-tools"
+  ],
+  "returncode": 0,
+  "timed_out": false
+}

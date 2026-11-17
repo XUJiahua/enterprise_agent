@@ -1,0 +1,2 @@
+[warn] failed to set effort 'medium': model 'qwen3-coder-next' offers no effort levels
+[INFO] [KRS] <-- GenerateAssistantResponseCommand done totalEvents=12

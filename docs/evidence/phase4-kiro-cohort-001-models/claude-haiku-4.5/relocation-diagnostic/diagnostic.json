@@ -1,0 +1,199 @@
+{
+  "kind": "v4-relocation-diagnostic",
+  "model": "claude-haiku-4.5",
+  "frozen_results_unchanged": true,
+  "relocated": 10,
+  "passed_after_relocation": 10,
+  "trials": [
+    {
+      "trial": "go-action--001",
+      "rc": 0,
+      "outcome": "passed",
+      "explicit": {
+        "passed": 95,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 13,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": true,
+        "implicit-operation-scope": true,
+        "implicit-request-hash": true,
+        "implicit-uniform-409": true
+      }
+    },
+    {
+      "trial": "go-action--002",
+      "rc": 0,
+      "outcome": "passed",
+      "explicit": {
+        "passed": 95,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 13,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": true,
+        "implicit-operation-scope": true,
+        "implicit-request-hash": true,
+        "implicit-uniform-409": true
+      }
+    },
+    {
+      "trial": "go-action--003",
+      "rc": 0,
+      "outcome": "passed",
+      "explicit": {
+        "passed": 95,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 13,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": true,
+        "implicit-operation-scope": true,
+        "implicit-request-hash": true,
+        "implicit-uniform-409": true
+      }
+    },
+    {
+      "trial": "go-action--004",
+      "rc": 0,
+      "outcome": "passed",
+      "explicit": {
+        "passed": 95,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 13,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": true,
+        "implicit-operation-scope": true,
+        "implicit-request-hash": true,
+        "implicit-uniform-409": true
+      }
+    },
+    {
+      "trial": "go-action--005",
+      "rc": 0,
+      "outcome": "passed",
+      "explicit": {
+        "passed": 95,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 13,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": true,
+        "implicit-operation-scope": true,
+        "implicit-request-hash": true,
+        "implicit-uniform-409": true
+      }
+    },
+    {
+      "trial": "go-action--006",
+      "rc": 0,
+      "outcome": "passed",
+      "explicit": {
+        "passed": 95,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 13,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": true,
+        "implicit-operation-scope": true,
+        "implicit-request-hash": true,
+        "implicit-uniform-409": true
+      }
+    },
+    {
+      "trial": "go-action--007",
+      "rc": 0,
+      "outcome": "passed",
+      "explicit": {
+        "passed": 95,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 13,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": true,
+        "implicit-operation-scope": true,
+        "implicit-request-hash": true,
+        "implicit-uniform-409": true
+      }
+    },
+    {
+      "trial": "go-action--008",
+      "rc": 0,
+      "outcome": "passed",
+      "explicit": {
+        "passed": 95,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 13,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": true,
+        "implicit-operation-scope": true,
+        "implicit-request-hash": true,
+        "implicit-uniform-409": true
+      }
+    },
+    {
+      "trial": "go-action--009",
+      "rc": 0,
+      "outcome": "passed",
+      "explicit": {
+        "passed": 95,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 13,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": true,
+        "implicit-operation-scope": true,
+        "implicit-request-hash": true,
+        "implicit-uniform-409": true
+      }
+    },
+    {
+      "trial": "go-action--010",
+      "rc": 0,
+      "outcome": "passed",
+      "explicit": {
+        "passed": 95,
+        "total": 95
+      },
+      "implicit": {
+        "passed": 13,
+        "total": 13
+      },
+      "conventions": {
+        "implicit-audit": true,
+        "implicit-operation-scope": true,
+        "implicit-request-hash": true,
+        "implicit-uniform-409": true
+      }
+    }
+  ]
+}

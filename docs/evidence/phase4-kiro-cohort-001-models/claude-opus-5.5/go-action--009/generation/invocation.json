@@ -1,0 +1,37 @@
+{
+  "status": "completed",
+  "usage": {
+    "credits": 1.3076832338308455
+  },
+  "turn_started": true,
+  "run_finished": true,
+  "reported_model": "claude-opus-5.5",
+  "event_count": 282,
+  "agent_messages": [
+    "I added `POST /purchases/bulk-reject`. It builds and vets cleanly, but I haven't run it against a database: no credentials were available and the repo has no tests. So the behaviour below comes from reading the code, not from running it.\n\nThe only file changed is `internal/candidate/approval.go`:\n- **New Action:** I defined `candidate.Reject`, a `Transition` with operation `bulk-reject.v4`, moving `submitted` to `rejected`, with response field `rejectedIds`.\n- **Shared adapter:** a `route` function wraps `executor.Run` for any transition and converts `action.Rejection` into `protocol.Rejection`. Both bulk-approve and bulk-reject now go through it and are registered in `protocol.Routes`. Bulk-approve sends the same values as before, so it should behave the same.\n\nHow the existing code covers the requirements:\n- **Validation:** `protocol.HTTP` checks the token, approver role, body size, body format and `Idempotency-Key`, the same as for bulk-approve.\n- **One transaction:** `action.Executor.Run` scopes RLS (row-level security) to the signed-in user's identity, then locks, checks, updates, writes the audit row and writes the `ActionRequest` row, all in one transaction.\n  - Any target that doesn't qualify fails the whole batch with 409.\n  - Same key and same IDs replays with header `true` and no new write. Same key with different IDs returns 409.\n- **Concurrency:**\n  - Two requests with the same key queue on a lock built from operation, tenant, user and key.\n  - Overlapping batches with different keys, or an approve and a reject on the same purchase, queue on row locks. The second one then sees the status is no longer `submitted` and gets 409.\n  - Rejected purchases can't be approved or rejected again, and approved ones can't be rejected.\n- **`ActionRequest` write failure:** the transaction rolls back and returns 503, so the same key can be retried. One exception: a unique-key conflict (code 23505) returns 409, which is how the adapter already handles it.\n\nThe database side already supports this in `SCHEMA.sql`: status `rejected`, operation `bulk-reject.v4`, the `purchase_decide` update policy, and audit `toStatus` = `rejected`."
+  ],
+  "errors": [],
+  "engine": "kiro",
+  "generation_seconds": 33.938,
+  "requested_model": "claude-opus-5.5",
+  "reasoning_effort": "medium",
+  "sandbox": "workspace-write",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "claude-opus-5.5",
+    "--effort",
+    "medium",
+    "--trust-all-tools"
+  ],
+  "returncode": 0,
+  "timed_out": false
+}

@@ -1,0 +1,35 @@
+{
+  "status": "provider-error",
+  "usage": null,
+  "turn_started": true,
+  "run_finished": false,
+  "reported_model": "qwen3-coder-next",
+  "event_count": 96,
+  "agent_messages": [],
+  "errors": [
+    "You've reached your monthly usage limit. Please return next month to continue building. (Request ID: ca18a5c3-f7e7-463f-912f-5294ae6d19c9) (code -32000): {\"errorType\":\"UsageLimitReachedError\",\"retryErrorType\":\"CLIENT_ERROR\",\"requestId\":\"ca18a5c3-f7e7-463f-912f-5294ae6d19c9\",\"actions\":[\"viewUsage\"]}"
+  ],
+  "engine": "kiro",
+  "generation_seconds": 58.594,
+  "requested_model": "qwen3-coder-next",
+  "reasoning_effort": "medium",
+  "sandbox": "workspace-write",
+  "command": [
+    "kiro-cli",
+    "chat",
+    "--no-interactive",
+    "--output-format",
+    "stream-json",
+    "--agent-engine",
+    "v3",
+    "--agent",
+    "poc-v3-generator",
+    "--model",
+    "qwen3-coder-next",
+    "--effort",
+    "medium",
+    "--trust-all-tools"
+  ],
+  "returncode": 1,
+  "timed_out": false
+}

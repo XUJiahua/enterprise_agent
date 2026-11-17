@@ -1,0 +1,481 @@
+[
+  {
+    "model": "claude-haiku-4.5",
+    "harness_sha": "e56a9e8ee3633daf0869f20e89df1163cae4d95a",
+    "cells": {
+      "go-manual": {
+        "planned": 10,
+        "observed": 10,
+        "passed_all": 3,
+        "passed_explicit": 9,
+        "outcomes": {
+          "acceptance-failed": 7,
+          "passed": 3
+        },
+        "conventions_followed_of_scored": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-outbox": [
+            6,
+            10
+          ],
+          "implicit-request-hash": [
+            7,
+            10
+          ],
+          "implicit-uniform-denial": [
+            6,
+            10
+          ]
+        },
+        "conventions_followed_given_explicit_pass": {
+          "implicit-audit": [
+            9,
+            9
+          ],
+          "implicit-outbox": [
+            5,
+            9
+          ],
+          "implicit-request-hash": [
+            6,
+            9
+          ],
+          "implicit-uniform-denial": [
+            5,
+            9
+          ]
+        },
+        "median_seconds": 56.512,
+        "median_credits": 0.708746279668325,
+        "total_credits": 7.137
+      },
+      "go-action": {
+        "planned": 10,
+        "observed": 10,
+        "passed_all": 8,
+        "passed_explicit": 10,
+        "outcomes": {
+          "acceptance-failed": 2,
+          "passed": 8
+        },
+        "conventions_followed_of_scored": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-outbox": [
+            8,
+            10
+          ],
+          "implicit-request-hash": [
+            10,
+            10
+          ],
+          "implicit-uniform-denial": [
+            10,
+            10
+          ]
+        },
+        "conventions_followed_given_explicit_pass": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-outbox": [
+            8,
+            10
+          ],
+          "implicit-request-hash": [
+            10,
+            10
+          ],
+          "implicit-uniform-denial": [
+            10,
+            10
+          ]
+        },
+        "median_seconds": 49.9905,
+        "median_credits": 0.6245682836152571,
+        "total_credits": 6.142
+      }
+    },
+    "blocks_manual_action": [
+      "FP",
+      "FF",
+      "PP",
+      "PP",
+      "FP",
+      "FF",
+      "PP",
+      "FP",
+      "FP",
+      "FP"
+    ],
+    "action_only_pass": 5,
+    "manual_only_pass": 0,
+    "sign_test_p_exploratory": 0.0625
+  },
+  {
+    "model": "claude-opus-5.5",
+    "harness_sha": "e56a9e8ee3633daf0869f20e89df1163cae4d95a",
+    "cells": {
+      "go-manual": {
+        "planned": 10,
+        "observed": 10,
+        "passed_all": 9,
+        "passed_explicit": 9,
+        "outcomes": {
+          "acceptance-failed": 1,
+          "passed": 9
+        },
+        "conventions_followed_of_scored": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-outbox": [
+            10,
+            10
+          ],
+          "implicit-request-hash": [
+            10,
+            10
+          ],
+          "implicit-uniform-denial": [
+            10,
+            10
+          ]
+        },
+        "conventions_followed_given_explicit_pass": {
+          "implicit-audit": [
+            9,
+            9
+          ],
+          "implicit-outbox": [
+            9,
+            9
+          ],
+          "implicit-request-hash": [
+            9,
+            9
+          ],
+          "implicit-uniform-denial": [
+            9,
+            9
+          ]
+        },
+        "median_seconds": 70.346,
+        "median_credits": 2.5318027548922055,
+        "total_credits": 26.047
+      },
+      "go-action": {
+        "planned": 10,
+        "observed": 10,
+        "passed_all": 10,
+        "passed_explicit": 10,
+        "outcomes": {
+          "passed": 10
+        },
+        "conventions_followed_of_scored": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-outbox": [
+            10,
+            10
+          ],
+          "implicit-request-hash": [
+            10,
+            10
+          ],
+          "implicit-uniform-denial": [
+            10,
+            10
+          ]
+        },
+        "conventions_followed_given_explicit_pass": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-outbox": [
+            10,
+            10
+          ],
+          "implicit-request-hash": [
+            10,
+            10
+          ],
+          "implicit-uniform-denial": [
+            10,
+            10
+          ]
+        },
+        "median_seconds": 47.204,
+        "median_credits": 1.8535135905472635,
+        "total_credits": 19.445
+      }
+    },
+    "blocks_manual_action": [
+      "FP",
+      "PP",
+      "PP",
+      "PP",
+      "PP",
+      "PP",
+      "PP",
+      "PP",
+      "PP",
+      "PP"
+    ],
+    "action_only_pass": 1,
+    "manual_only_pass": 0,
+    "sign_test_p_exploratory": 1.0
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "harness_sha": "e56a9e8ee3633daf0869f20e89df1163cae4d95a",
+    "cells": {
+      "go-manual": {
+        "planned": 10,
+        "observed": 10,
+        "passed_all": 4,
+        "passed_explicit": 8,
+        "outcomes": {
+          "acceptance-failed": 6,
+          "passed": 4
+        },
+        "conventions_followed_of_scored": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-outbox": [
+            9,
+            10
+          ],
+          "implicit-request-hash": [
+            6,
+            10
+          ],
+          "implicit-uniform-denial": [
+            10,
+            10
+          ]
+        },
+        "conventions_followed_given_explicit_pass": {
+          "implicit-audit": [
+            8,
+            8
+          ],
+          "implicit-outbox": [
+            8,
+            8
+          ],
+          "implicit-request-hash": [
+            4,
+            8
+          ],
+          "implicit-uniform-denial": [
+            8,
+            8
+          ]
+        },
+        "median_seconds": 46.073499999999996,
+        "median_credits": 0.6847643624378108,
+        "total_credits": 7.181
+      },
+      "go-action": {
+        "planned": 10,
+        "observed": 10,
+        "passed_all": 9,
+        "passed_explicit": 10,
+        "outcomes": {
+          "acceptance-failed": 1,
+          "passed": 9
+        },
+        "conventions_followed_of_scored": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-outbox": [
+            9,
+            10
+          ],
+          "implicit-request-hash": [
+            10,
+            10
+          ],
+          "implicit-uniform-denial": [
+            10,
+            10
+          ]
+        },
+        "conventions_followed_given_explicit_pass": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-outbox": [
+            9,
+            10
+          ],
+          "implicit-request-hash": [
+            10,
+            10
+          ],
+          "implicit-uniform-denial": [
+            10,
+            10
+          ]
+        },
+        "median_seconds": 37.64,
+        "median_credits": 0.5473652989552238,
+        "total_credits": 5.599
+      }
+    },
+    "blocks_manual_action": [
+      "PP",
+      "FP",
+      "FP",
+      "PP",
+      "FP",
+      "FP",
+      "FF",
+      "FP",
+      "PP",
+      "PP"
+    ],
+    "action_only_pass": 5,
+    "manual_only_pass": 0,
+    "sign_test_p_exploratory": 0.0625
+  },
+  {
+    "model": "qwen3-coder-next",
+    "harness_sha": "e56a9e8ee3633daf0869f20e89df1163cae4d95a",
+    "cells": {
+      "go-manual": {
+        "planned": 10,
+        "observed": 10,
+        "passed_all": 5,
+        "passed_explicit": 7,
+        "outcomes": {
+          "acceptance-failed": 3,
+          "candidate-error": 1,
+          "passed": 5,
+          "scope-violation": 1
+        },
+        "conventions_followed_of_scored": {
+          "implicit-audit": [
+            7,
+            8
+          ],
+          "implicit-outbox": [
+            5,
+            8
+          ],
+          "implicit-request-hash": [
+            6,
+            8
+          ],
+          "implicit-uniform-denial": [
+            7,
+            8
+          ]
+        },
+        "conventions_followed_given_explicit_pass": {
+          "implicit-audit": [
+            7,
+            7
+          ],
+          "implicit-outbox": [
+            5,
+            7
+          ],
+          "implicit-request-hash": [
+            6,
+            7
+          ],
+          "implicit-uniform-denial": [
+            7,
+            7
+          ]
+        },
+        "median_seconds": 88.106,
+        "median_credits": 0.9068291451077943,
+        "total_credits": 9.142
+      },
+      "go-action": {
+        "planned": 10,
+        "observed": 10,
+        "passed_all": 1,
+        "passed_explicit": 8,
+        "outcomes": {
+          "acceptance-failed": 7,
+          "candidate-error": 1,
+          "passed": 1,
+          "scope-violation": 1
+        },
+        "conventions_followed_of_scored": {
+          "implicit-audit": [
+            8,
+            8
+          ],
+          "implicit-outbox": [
+            1,
+            8
+          ],
+          "implicit-request-hash": [
+            8,
+            8
+          ],
+          "implicit-uniform-denial": [
+            8,
+            8
+          ]
+        },
+        "conventions_followed_given_explicit_pass": {
+          "implicit-audit": [
+            8,
+            8
+          ],
+          "implicit-outbox": [
+            1,
+            8
+          ],
+          "implicit-request-hash": [
+            8,
+            8
+          ],
+          "implicit-uniform-denial": [
+            8,
+            8
+          ]
+        },
+        "median_seconds": 47.275999999999996,
+        "median_credits": 0.49975299917081256,
+        "total_credits": 5.019
+      }
+    },
+    "blocks_manual_action": [
+      "FF",
+      "FF",
+      "FP",
+      "PF",
+      "FF",
+      "PF",
+      "FF",
+      "PF",
+      "PF",
+      "PF"
+    ],
+    "action_only_pass": 1,
+    "manual_only_pass": 5,
+    "sign_test_p_exploratory": 0.2188
+  }
+]

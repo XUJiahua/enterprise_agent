@@ -1,0 +1,2 @@
+[warn] failed to set effort 'medium': model 'claude-opus-5.5' offers no effort levels
+[INFO] [KRS] <-- GenerateAssistantResponseCommand done totalEvents=9
