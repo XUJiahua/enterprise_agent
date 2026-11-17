@@ -201,6 +201,53 @@ jobs:
         with:
           name: cohort-controls
           path: reports/
+  kernel:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:17.6
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      KERNEL_TEST_ADMIN_URL: postgres://postgres:postgres@127.0.0.1:5432/postgres?sslmode=disable
+      KERNEL_REQUIRE_DB: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: v0.1 kernel, kernel/pg and procurement on PostgreSQL 17 (no skips)
+        run: |
+          mkdir -p reports
+          go test -race -count=1 -v ./kernel/... ./internal/procurement/ | tee reports/kernel-db.txt
+          ! grep -E -- '--- SKIP' reports/kernel-db.txt
+        shell: bash
+      - name: External module imports the kernel and runs it as a non-owner role
+        run: |
+          cd examples/external && go vet ./... && go build -o /tmp/external .
+          psql "$KERNEL_TEST_ADMIN_URL" -v ON_ERROR_STOP=1 -c 'CREATE DATABASE example_ext' \
+            -c "DO \$\$ BEGIN CREATE ROLE kernel_test_runtime LOGIN PASSWORD 'test-only' NOBYPASSRLS; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$"
+          psql "postgres://postgres:postgres@127.0.0.1:5432/example_ext?sslmode=disable" -v ON_ERROR_STOP=1 -f ../../kernel/pg/schema.sql \
+            -c 'GRANT USAGE ON SCHEMA kernel TO kernel_test_runtime' \
+            -c 'GRANT SELECT, INSERT ON kernel.request, kernel.audit, kernel.outbox TO kernel_test_runtime'
+          export EXAMPLE_DATABASE_URL=postgres://kernel_test_runtime:test-only@127.0.0.1:5432/example_ext?sslmode=disable
+          /tmp/external | tee -a ../../reports/kernel-db.txt | grep -q 'replayed=false'
+          /tmp/external | tee -a ../../reports/kernel-db.txt | grep -q 'replayed=true'
+        shell: bash
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kernel-db
+          path: reports/
   oracle-resume-controls:
     runs-on: ubuntu-24.04
     timeout-minutes: 10

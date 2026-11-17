@@ -42,6 +42,7 @@ POC_ROUTE=guarded npm start --prefix apps/web
 | 目的 | 入口 |
 |---|---|
 | 运行示例、切换方案、执行验证 | [本地运行](docs/getting-started.md) |
+| v0.1 Go 操作内核（M1a） | [内核说明](docs/kernel.md) · [issue #36](https://github.com/XUJiahua/enterprise_agent/issues/36) |
 | 理解业务语义与内核 | [操作目录与 Verifier](docs/operation-semantics.md) · [事务化 Action](docs/transactional-action.md) |
 | 查看研究结果与适用边界 | [实验总结](docs/experiment-summary-2026-11-15.md) |
 | 继续开发、复现实验或接手任务 | [当前交接](docs/HANDOFF.md) |
