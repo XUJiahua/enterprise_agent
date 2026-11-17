@@ -1,161 +1,52 @@
-# Enterprise Agent — 可验证企业应用 POC
+# Enterprise Agent
 
-接手入口：[当前工程交接（v1–v9，Kiro CLI）](docs/HANDOFF.md)；[分期实验总结](docs/experiment-summary-2026-11-15.md)。v3–v9 已有真实 Kiro 实验，当前优先提交 oracle 续跑补丁与迁移平台能力；历史试验与主应用能力分别记录。
+面向 AI Coding 的企业应用内核与验证工具原型。以采购审批为例，研究如何通过确定性的权限、事务和业务规则，提高 Agent 开发的可靠性。
 
-工程整合已通过 [PR #33](https://github.com/XUJiahua/enterprise_agent/pull/33) 合入 main，旧 PR 已收拢。原私有 oracle 仓库现已公开；[v9 续跑修复补丁与验证交接](docs/oracle-v9-resume-handoff.md) 已准备，但连接器对该仓库写入返回 403，尚未提交或部署到 oracle。
+技术栈：**Go · PostgreSQL · Next.js**。当前是可运行的研究 POC。
 
-采购审批业务的三条可运行对照路径。目标是检验确定性护栏能否阻断常见实现缺陷，先验证机制，再开展真实 AI Coding 对照实验。
+## 核心能力
 
-| 路径 | 实现 | 权限执行位置 |
-|---|---|---|
-| baseline | Go + pgx，手写授权及 SQL 条件 | 业务 Handler |
-| zenstack | ZenStack **3.10.2** + PostgreSQL | ZModel + PolicyPlugin |
-| guarded | 与 baseline 共用 Go HTTP 实现，启用最小 Policy 编译器 | PostgreSQL RLS + 列权限；Go 绑定可信上下文 |
+- **权限护栏**：对照手写授权、PostgreSQL RLS 和 ZenStack Policy 三种方案。
+- **业务内核**：类型化 Action 和受保护的操作目录，集中执行批量原子性、审计、幂等与领域约束。
+- **确定性验证**：`appctl` 检查策略、迁移、扩展代码和操作声明。
+- **独立评测**：支持 Codex / Kiro 候选生成、冻结计划、归档、独立验收与完整分母报告。
+- **共享界面**：采购单列表、创建、审批及 demo 身份切换。
 
-三条路径执行同一份独立 HTTP 验收：**16 个用例**，包含两租户、角色、字段、身份伪造、创建、审批、状态检查、8 请求并发审批和 60 次并发身份切换。另有 **5 类运行时缺陷注入**、ZenStack 禁用插件的边界对照、Go 路径的直接 SQL 探针与两组启动配置探针和 **7 组 Verifier 对抗探针**。
+## 快速开始
 
-## 在 public CI 查看结果
+需要 Go 1.25+、Node.js 24、Python 3.12+。先按 [本地运行指南](docs/getting-started.md) 启动可销毁的 PostgreSQL 17 测试数据库。
 
-[Actions](https://github.com/XUJiahua/enterprise_agent/actions) 中的 `POC verification` 会在 PR 自动运行。三个 Runtime job 各有独立 PostgreSQL 17.6 服务，无需模型 API Key。
-
-- 健康版本必须全部通过；普通 Go 的注入版本必须被验收测试发现缺陷。
-- ZenStack / guarded 的五种注入必须仍满足对应安全不变量。
-- ZenStack `disable-policy` 对照必须暴露越权，证明测试能识别策略未启用。
-- **500、服务启动失败、探针异常、缺失报告均使 CI 失败，不能算作成功拦截。**
-- 最后的 `report` job 输出对照表，`poc-comparison` artifact 包含 JSON 结果、日志、静态探针结果及 `comparison.md`。
-
-`Faults blocked = 5/5` 只表示这五种人工注入被阻断，不能解读为缺陷率降低 100%。其中敏感字段过度读取：guarded 返回 403，ZenStack 返回该字段为 null；可用性语义不同，报告单独说明。
-
-## 本地复现
-
-需要 Go 1.25+、Node 24、Python 3.12+、一个**可销毁的 PostgreSQL 17+ 测试数据库**。以下口令只用于本地和 CI 测试。
-
-```bash
-docker run --rm --name enterprise-agent-poc \
-  -e POSTGRES_PASSWORD=postgres \
-  -e POSTGRES_DB=enterprise_agent_poc -p 5432:5432 postgres:17.6
-```
-
-另一终端运行：
+在仓库根目录启动默认的 RLS 示例：
 
 ```bash
 export ADMIN_DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/enterprise_agent_poc
 export DATABASE_URL=postgres://app_runtime:poc-only@127.0.0.1:5432/enterprise_agent_poc
 export POC_DB_RESET=1
-make deps test
-make experiment
-make web-deps
-python3 scripts/browser.py --route baseline
-python3 scripts/browser.py --route zenstack
-python3 scripts/browser.py --route guarded
-python3 benchmark/smoke.py | tee reports/benchmark-smoke.json
-python3 benchmark/runner_smoke.py | tee reports/runner-smoke.json
-python3 -m unittest discover -s benchmark/tests -v
-python3 scripts/model_access.py
-python3 research/audit_pilot.py
-python3 research/replay_followup.py
-python3 benchmark/phase2/smoke.py
-python3 benchmark/phase2/driver_smoke.py
-python3 scripts/report.py reports
-```
-
-`model_access.py` 的本地默认值为 `null`，报告显示 unknown，表示未检查 CI Secret；不会把本地状态伪装成 CI 未配置。输出不可覆盖，重复运行 smoke 请使用新 checkout。
-
-如默认端口被占用，可将 Docker 映射改为 `127.0.0.1:55434:5432`，同步修改两个数据库 URL，并设置 `export POC_HTTP_PORT=18084`。Go、ZenStack、独立 Oracle、浏览器健康检查和 UI 代理使用同一端口，仍只连接 loopback。
-
-`db.mjs reset` 会删除测试表并重建，只接受数据库名以 `_poc` 结尾且显式 `POC_DB_RESET=1` 的环境。不要指向有业务数据的数据库。各路径顺序运行，共用 127.0.0.1:8080；三个路径不能共用同一数据库同时运行。
-
-## 手动体验 API
-
-```bash
+make deps build
 node scripts/db.mjs reset guarded
 bin/server --mode guarded
-# 新终端
-curl -H 'Authorization: Bearer demo_alice' http://127.0.0.1:8080/purchases
-curl -X POST -H 'Authorization: Bearer demo_carol' \
-  http://127.0.0.1:8080/purchases/a-other/approve
 ```
 
-ZenStack 路径先 `node scripts/db.mjs reset zenstack`，再 `npm start --prefix apps/zenstack`。普通 Go 使用 `reset baseline` 和 `bin/server --mode baseline`。
-
-## Verifier
+另一终端启动界面：
 
 ```bash
-bin/appctl compile                  # 从 Policy 生成 generated/guard.sql
-bin/appctl check                    # 严格策略语法、生成漂移、迁移锁及 SQL 子集
-bin/appctl plan --base origin/main  # 检查角色权限扩大、历史 Migration 改写
-bin/appctl verify --base origin/main
+npm ci --prefix apps/web
+npm run build --prefix apps/web
+POC_ROUTE=guarded npm start --prefix apps/web
 ```
 
-`check`、`plan`、`verify` 当前共享验证管线，输出 JSON 和非零退出码；并非通用应用编译器。首次 PR 的真实 base 尚无 Policy，建立初始基线；此后 PR 与 GitHub 提供的精确 base SHA 比较。权限扩大要求策略所有者审查，当前采用阻断方式；尚无审批豁免通道。
+打开 [本地界面](http://127.0.0.1:3000)。其他运行模式、API 示例和验证命令见 [本地运行指南](docs/getting-started.md)。
 
-迁移检查故意保守：只自动接受有限的 `CREATE TABLE` / `CREATE INDEX` 子集，其余包括 `ALTER` 要求人工扩展验证器。它不宣称能分析任意 PostgreSQL DDL 的兼容性、锁表或回滚风险。
+## 文档
 
-## 代码导航
+| 目的 | 入口 |
+|---|---|
+| 运行示例、切换方案、执行验证 | [本地运行](docs/getting-started.md) |
+| 理解业务语义与内核 | [操作目录与 Verifier](docs/operation-semantics.md) · [事务化 Action](docs/transactional-action.md) |
+| 查看研究结果与适用边界 | [实验总结](docs/experiment-summary-2026-11-15.md) |
+| 继续开发、复现实验或接手任务 | [当前交接](docs/HANDOFF.md) |
+| 查看自动验证结果 | [GitHub Actions](https://github.com/XUJiahua/enterprise_agent/actions) |
 
-- `tests/acceptance.py`：独立手写业务 Oracle，不导入任何实现或 Policy。
-- `scripts/experiment.py`：重置数据库、启动应用、注入缺陷、采集结果。
-- `apps/zenstack/zenstack/schema.zmodel`：真实 ZenStack V3 模型与策略。
-- `internal/app`：Go HTTP 实现，baseline 与 guarded 对照。
-- `internal/policy`、`cmd/appctl`：闭合 Policy 语法、RLS 编译、语义变更及迁移检查。
-- `scripts/db.mjs`：隔离数据库初始化和不经过 API 的 RLS/列权限探针。
-- `tests/verifier.py`：实际修改文件与 Git 历史，尝试绕过验证器。
-- [首轮结果](docs/poc-results.md)、[业务约定](docs/business-contract.md)、[实验设计和限制](docs/experiment-design.md)。
+## 当前范围
 
-## 信任边界
-
-这是可信代码模式的工程 POC。测试身份由固定 Bearer Token 映射而来；没有生产 OIDC、会话、密钥管理，也没有给任意不可信 Go 代码提供沙箱。应用始终只监听 loopback。RLS 的身份来自可信应用绑定，持有数据库凭据的任意代码可以伪造 `app.*` 会话变量，因此不能宣称 RLS 对同进程恶意扩展不可绕过。
-
-CI、Policy、测试目前位于同仓库，拥有仓库写权限的人可以修改它们。生产发布必须另设独立可信验证器、受保护规则与审批；本 POC 不声称已经实现该治理边界。
-
-当前已有共享 Next.js UI 和三路径真实浏览器验收，另提供可复现的真实模型试验计划及独立候选代码验收器。现已有真实 AI Coding 小样本 pilot，见 [真实结果报告](docs/model-pilot-results.md)；尚不能推断总体首次通过率或性能/成本优势。人工注入和 synthetic-smoke 结果不替代模型可靠性结论。
-
-## 第二阶段：共享界面与模型试验工具
-
-- [共享 UI 启动与浏览器验收](docs/shared-ui.md)：三路径使用同一个 Next.js production UI，每条六个 Chromium 用例，提供桌面和移动截图。
-- [模型试验操作指南](docs/benchmark-guide.md)：三个独立任务、随机可复现计划、固定提交/Oracle、追加式 attempt 和完整分母。
-- CI 另外执行四次真实候选提交的 synthetic-smoke 验收，验证验收器本身可区分未完成任务和正确修复；这些不是模型测量。
-
-## 第三阶段：真实模型运行入口
-
-[模型执行器](docs/model-runner.md) 支持真实 Codex 预检、固定推理参数、生成预算、候选源码范围检查、Git 快照与独立验收。预检会实际发起 READY 请求，避免只凭“已登录”就认定可运行。
-
-PR CI 仅运行不调用模型的协议测试和 synthetic 驱动正反控制。真实 trial 必须在能正常执行 `codex exec` 的环境运行；运行环境、服务或凭据阻塞保留为未测量，不计为模型代码失败。
-
-接手环境已通过真实预检并完成三路径 pilot；完整结果、原始模型事件、候选 bundle 和独立验收见 [真实结果报告](docs/model-pilot-results.md)。前一环境的九项预检阻塞仍单独保存在 [历史运行记录](docs/model-pilot-status.md)，保持未测量状态。
-
-## PR #7 后续研究
-
-[研究结论与复现实验](docs/research-followup.md)：九个真实候选全部重放、195 项冻结验收和 45 项追加验收通过；人工移除新接口租户条件后，普通 Go 泄露而策略路径保持隔离。另通过实际数据库探针明确了 RLS 与批量业务全批成功的边界，并给出流程 × Runtime 的下一轮实验草案。本轮没有新增模型样本。
-
-## 原子批量审批实验 v2
-
-[四组 Go 实验与操作指南](docs/phase2-atomic-bulk.md) 将额外流程指导 × RLS Runtime 拆为 2×2 对照。每个候选接受 30 项新业务验收和原有 16 项回归，检查授权功能、逐行权限、全批回滚、输入和并发。模型候选仅获得新的最小源码仓库，原 Git 历史与 evaluator 文件不随导出；同宿主读取与公开参考实现的边界仍需独立隔离环境解决。
-
-CI 执行 12 次人工正反候选控制和一次假 CLI 链路控制，不调用模型、不计入真实 AI 样本。原应用暂不添加批量审批接口，以便后续由真实模型完成该任务；参考答案只用于验证评分器。v1 计划与 PR #7 归档保持原样。
-
-四组真实生成的冻结条件、完整分母和逐组验收见 [原子批量审批真实 pilot](docs/phase2-model-pilot-results.md)；与前置人工/假驱动控制及 v1 样本分开。
-
-## PR #10 后续审计与研究
-
-[审计、追加重放与代码差异](docs/atomic-pilot-followup.md)：50 个归档文件、四个 bundle 与原始评分/usage 核对一致；四个既有候选在新公开 fixture 上通过 184 项验收和 28 项追加边界检查。查询形状与报文上限差异单独报告，旧的 46/46 首次结果不重判。本轮无新增模型生成；Public CI 新增了四个真实归档候选的自动重放。
-
-## 事务化 Action 内核 POC
-
-[审批、审计与幂等操作指南](docs/transactional-action.md)：新增独立 `cmd/action-server`，将批量审批状态、每目标审计记录和完成态幂等结果放入同一个 PostgreSQL 事务。包括同 key 并发串行、重放/冲突、完整目标集合检查和明确的 64 KiB 报文边界。
-
-独立验收参考为 66/66，五个人工负控制均被识别，另有 12 项元数据 SQL 和 7 项启动检查。新增能力是领域 Action 原型，未迁移原有单条审批或 UI，也不是通用工作流/跨系统 exactly-once。v3 尚未注册真实模型队列；历史 v1/v2 评分与归档不变。
-
-## v3 业务演进对照实验
-
-[手写事务与平台 Action 实验指南](docs/phase3-action-evolution.md)：两组共用原子批量审批起点、RLS、SQL 结构和 HTTP 适配器，只有 Action 能力文件不同。新增冻结计划、最小候选导出、独立生成包、bundle/receipt 恢复、私有验收和完整分母汇总。六次人工候选控制与三次假 CLI/交接验收均使用 66 项评分；真实模型数据另行采集。生成包不包含 Oracle/私有 seed，实际主机及网络隔离仍需部署验证。
-
-首个真实 v3 两组 pilot 使用新增的 Kiro CLI 引擎完成：manual 50/66，action 66/66。manual 的失败全部来自 Oracle 检查了契约未声明的 requestHash 公式，属于 harness 缺陷，不是能力收益证据。见 [Kiro pilot 结果](docs/phase3-kiro-pilot-results.md)。修正契约后的 [10 块重复队列 002](docs/phase3-kiro-cohort-002-results.md)：两组 20 个候选全部 66/66，正确性无差异；action 组生成耗时与 credit 约为 manual 的一半。[队列 003](docs/phase3-kiro-cohort-003-results.md) 换三个较弱模型：manual 通过 5/10、3/10、1/10，action 8/10、10/10、6/10，差异集中在幂等与并发，失败候选均未越权写入（单任务、事后检验，探索性）。[v4 隐含约定队列](docs/phase4-kiro-cohort-001-results.md)：起点有可照抄的手写实现时，manual 几乎都遵守隐含约定；较弱模型在 action 组把扩展写进受保护内核而全部越界（行为本身正确），说明扩展点位置是平台设计问题。
-
-## 扩展 Verifier 规则
-
-[`appctl extensions`](docs/verifier-extension-rules.md) 对候选做静态检查：扩展作用域、Operation 声明完整性与版本化命名、事件与 notify 消费者的对应，以及两条手写代码规则（事件、requestHash 指纹）。在 280 个已归档真实候选上事后评估：合计拦住 97/120 个冻结失败、0 误报，补上 75 个“显式全过、隐含失败”中的 63 个（剩余 12 个均为统一拒绝，静态不覆盖）；规则与评估使用同一批数据。CI 另跑 44 个规则控制和 v4/v5/v5b 的 PostgreSQL 控制。
-
-## 操作语义目录与目录绑定 Verifier
-
-[`internal/opdef`](docs/operation-semantics.md) 是一份受保护的操作目录。每个带版本的条目写明类别、角色与对象、状态或列、审计/历史、指纹字段、事件或带理由的豁免、职责分离、统一拒绝码，目录本身有内容摘要。`internal/opkernel` 只按条目名执行，扩展代码不能再选择 Event 或 NoEvent。`appctl operations` 以同一份目录为准检查 action 声明和手写代码；遇到未知内核类型或无法解析的构造时，判为 `unverifiable` 并阻断（退出码 3）。53 个正反控制全部通过；在 v6 的 228 个已见候选上做回顾性复评（非样本外），TP/FP/FN 为 134/0/8，v6 冻结规则为 104/11/38。真正的样本外评估留给 v7。
+示例采用固定 demo 身份；原有 UI 尚未接入全部新 Action。权限与内核基于可信应用代码假设，尚未提供生产认证或不可信扩展沙箱。研究结果限于已测试的任务与约束，具体证据和后续工作见上述文档。
