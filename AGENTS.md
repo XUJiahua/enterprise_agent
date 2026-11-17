@@ -10,8 +10,8 @@
 ## 新增或修改一个业务操作
 
 1. 在 `internal/procurement/` 实现 `pg.Operation`：
-   - `Definition`：`Ref{Name, Version}`、`MaxTargets`，以及 `Events`（每个事件都要有消费者）或 `NoEventReason`。
-   - `Normalize`：严格解析请求（用 `strict`），不访问数据库。请求必须是 JSON 对象，目标放在一个顶层字段里（单个 id 的字符串或 id 数组）。
+   - `Definition`：`Ref{Name, Version}`、`Targets`（存放目标的顶层请求字段名，单个 id 用字符串，多个用数组）、`MaxTargets`，以及 `Events`（每个事件都要有消费者）或 `NoEventReason`。
+   - `Normalize`：用 `strict` 严格解析请求，不访问数据库。返回的目标必须与 `Targets` 字段的值一致，否则内核返回 Internal。
    - `Authorize`：只看 `kernel.Principal` 的角色。
    - `Execute`：只通过传入的 `*pg.Session` 读写；先用 `lockPurchases` 锁住目标父单，再查状态和金额；任一目标不合格就返回 `deny()`，不写任何数据；如实返回实际改动的目标、每个目标一条审计、以及声明过的事件。
 2. 加入 `Registry()`。改动已发布操作的语义（请求字段、校验、规则、事件）时，发布新的 `Version`，不要原地修改。
@@ -22,12 +22,12 @@
 
 ## 内核与数据库已经保证的内容（不要在领域代码里重做）
 
-事务、幂等与请求指纹（覆盖请求的每个顶层字段）、统一的拒绝消息、按 ID 比对完整目标集合、审计/outbox/结果账本写入、事件与消费者一一对应、租户上下文。数据库触发器保证：状态只能 submitted → approved → closed；审批人不能是创建人；验收合计覆盖金额才能关闭；验收只能记在 approved 的采购单上。新规则如果是跨写路径都必须成立的不变量，也写成触发器或约束。
+事务、幂等与请求指纹（覆盖原始请求的全部字段，只有 `Targets` 字段按集合比较；重复键或只差大小写的键会被拒绝）、统一的拒绝消息、按 ID 比对完整目标集合、审计/outbox/结果账本写入、事件与消费者一一对应、租户上下文。数据库触发器保证：状态只能 submitted → approved → closed；审批人不能是创建人；验收合计覆盖金额才能关闭；验收只能记在 approved 的采购单上。新规则如果是跨写路径都必须成立的不变量，也写成触发器或约束。
 
 ## 禁止
 
 - 修改 `kernel/`，除非任务明确要求。
-- 在 `internal/procurement` 之外写 `procurement.*` 或 `kernel.*` 表；在领域代码中写 `kernel.*` 表、开连接或开事务（`pgxpool`、`database/sql`、`Begin`）。`appctl validate` 会检查这些。
+- 在 `internal/procurement` 之外写 `procurement.*` 或 `kernel.*` 表；在领域代码中写 `kernel.*` 表、开连接或开事务（`pgxpool`、`database/sql`、`Begin`）。`appctl validate` 静态检查这些（只看字符串字面量；SQL 不要在运行时拼接表名）。
 - 修改历史目录、已发布的 migration、`contract.json` 里已发布的版本定义。
 - 直接 push main。
 

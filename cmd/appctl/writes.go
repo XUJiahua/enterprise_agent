@@ -14,8 +14,10 @@ import (
 // domainDir is the procurement domain module; kernel/ is the runner.
 const domainDir = "internal/procurement"
 
-// sqlWrite matches a write statement on a product schema table.
-var sqlWrite = regexp.MustCompile(`(?is)\b(insert\s+into|update|delete\s+from|truncate(\s+table)?|merge\s+into)\s+(only\s+)?"?(procurement|kernel)"?\.`)
+// sqlWrite matches each write statement on a product schema table, with the
+// schema bare or double-quoted. Applied to the unquoted literal, so escapes
+// (\n, \") are already resolved.
+var sqlWrite = regexp.MustCompile(`(?is)\b(insert\s+into|update|delete\s+from|truncate(\s+table)?|merge\s+into)\s+(only\s+)?"?(procurement|kernel)"?\s*\.`)
 
 // bypassImports would let domain code open its own connection or transaction
 // instead of using the runner's Session. migrate.go (admin tool) is exempt.
@@ -35,7 +37,9 @@ var bypassImports = map[string]bool{
 //   - DOMAIN_BYPASSES_SESSION: the domain opens connections or transactions
 //     (forbidden imports, pgx.Connect, Begin) instead of using pg.Session.
 //
-// It reads string literals only; SQL assembled at run time is not seen.
+// It reads string literals only (every write statement in each, after
+// unquoting); SQL assembled at run time is not seen. A non-SQL string that
+// reads like such a statement is also reported: keep messages free of it.
 // Test files are skipped.
 func writeFindings(root string) []Finding {
 	var findings []Finding
@@ -64,11 +68,17 @@ func writeFindings(root string) []Finding {
 		inDomain := strings.HasPrefix(rel, domainDir+"/")
 		exempt := rel == domainDir+"/migrate.go"
 		at := func(n ast.Node) string { return rel + ":" + strconv.Itoa(fset.Position(n.Pos()).Line) }
-		if inDomain && !exempt {
-			for _, imp := range f.Imports {
-				if p, _ := strconv.Unquote(imp.Path.Value); bypassImports[p] {
-					findings = append(findings, Finding{"DOMAIN_BYPASSES_SESSION", at(imp), "imports " + p + "; use the pg.Session passed to Execute/Handle"})
+		pgxName := "" // local name of github.com/jackc/pgx/v5, if imported
+		for _, imp := range f.Imports {
+			p, _ := strconv.Unquote(imp.Path.Value)
+			if p == "github.com/jackc/pgx/v5" {
+				pgxName = "pgx"
+				if imp.Name != nil {
+					pgxName = imp.Name.Name
 				}
+			}
+			if inDomain && !exempt && bypassImports[p] {
+				findings = append(findings, Finding{"DOMAIN_BYPASSES_SESSION", at(imp), "imports " + p + "; use the pg.Session passed to Execute/Handle"})
 			}
 		}
 		ast.Inspect(f, func(n ast.Node) bool {
@@ -77,17 +87,24 @@ func writeFindings(root string) []Finding {
 				if x.Kind != token.STRING {
 					return true
 				}
-				m := sqlWrite.FindStringSubmatch(x.Value)
-				switch {
-				case m == nil, inKernel:
-				case !inDomain:
-					findings = append(findings, Finding{"WRITE_OUTSIDE_DOMAIN", at(x), "writes " + m[4] + ".*; only operations and consumers in " + domainDir + " may write product tables"})
-				case strings.EqualFold(m[4], "kernel"):
-					findings = append(findings, Finding{"KERNEL_TABLE_WRITE", at(x), "domain writes kernel.*; return audit and events in the Outcome instead"})
+				if inKernel {
+					return true
+				}
+				text, err := strconv.Unquote(x.Value)
+				if err != nil {
+					text = x.Value
+				}
+				for _, m := range sqlWrite.FindAllStringSubmatch(text, -1) {
+					switch {
+					case !inDomain:
+						findings = append(findings, Finding{"WRITE_OUTSIDE_DOMAIN", at(x), "writes " + m[4] + ".*; only operations and consumers in " + domainDir + " may write product tables"})
+					case strings.EqualFold(m[4], "kernel"):
+						findings = append(findings, Finding{"KERNEL_TABLE_WRITE", at(x), "domain writes kernel.*; return audit and events in the Outcome instead"})
+					}
 				}
 			case *ast.SelectorExpr:
 				if inDomain && !exempt {
-					if id, ok := x.X.(*ast.Ident); ok && (id.Name == "pgx" && strings.HasPrefix(x.Sel.Name, "Connect") || x.Sel.Name == "Begin" || x.Sel.Name == "BeginTx") {
+					if id, ok := x.X.(*ast.Ident); ok && (pgxName != "" && id.Name == pgxName && strings.HasPrefix(x.Sel.Name, "Connect") || x.Sel.Name == "Begin" || x.Sel.Name == "BeginTx" || x.Sel.Name == "BeginFunc") {
 						findings = append(findings, Finding{"DOMAIN_BYPASSES_SESSION", at(x), "calls " + id.Name + "." + x.Sel.Name + "; the runner owns the transaction"})
 					}
 				}

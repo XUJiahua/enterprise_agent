@@ -44,18 +44,19 @@ func TestFingerprint(t *testing.T) {
 func TestDefinitionValidate(t *testing.T) {
 	ev := []EventType{{"x.done", 1}}
 	ok := []Definition{
-		{Ref: Ref{"x.do", 1}, MaxTargets: 1, Events: ev},
-		{Ref: Ref{"x.do", 1}, MaxTargets: 100, NoEventReason: "local only"},
+		{Ref: Ref{"x.do", 1}, Targets: "ids", MaxTargets: 1, Events: ev},
+		{Ref: Ref{"x.do", 1}, Targets: "ids", MaxTargets: 100, NoEventReason: "local only"},
 	}
 	bad := []Definition{
-		{Ref: Ref{"", 1}, MaxTargets: 1, Events: ev},
-		{Ref: Ref{"X", 1}, MaxTargets: 1, Events: ev},
-		{Ref: Ref{"x.do", 0}, MaxTargets: 1, Events: ev},
-		{Ref: Ref{"x.do", 1}, MaxTargets: 0, Events: ev},
-		{Ref: Ref{"x.do", 1}, MaxTargets: 1},
-		{Ref: Ref{"x.do", 1}, MaxTargets: 1, Events: ev, NoEventReason: "both"},
-		{Ref: Ref{"x.do", 1}, MaxTargets: 1, Events: []EventType{{"x.done", 1}, {"x.done", 1}}},
-		{Ref: Ref{"x.do", 1}, MaxTargets: 1, Events: []EventType{{"x.done", 0}}},
+		{Ref: Ref{"x.do", 1}, MaxTargets: 1, Events: ev},
+		{Ref: Ref{"", 1}, Targets: "ids", MaxTargets: 1, Events: ev},
+		{Ref: Ref{"X", 1}, Targets: "ids", MaxTargets: 1, Events: ev},
+		{Ref: Ref{"x.do", 0}, Targets: "ids", MaxTargets: 1, Events: ev},
+		{Ref: Ref{"x.do", 1}, Targets: "ids", MaxTargets: 0, Events: ev},
+		{Ref: Ref{"x.do", 1}, Targets: "ids", MaxTargets: 1},
+		{Ref: Ref{"x.do", 1}, Targets: "ids", MaxTargets: 1, Events: ev, NoEventReason: "both"},
+		{Ref: Ref{"x.do", 1}, Targets: "ids", MaxTargets: 1, Events: []EventType{{"x.done", 1}, {"x.done", 1}}},
+		{Ref: Ref{"x.do", 1}, Targets: "ids", MaxTargets: 1, Events: []EventType{{"x.done", 0}}},
 	}
 	for _, d := range ok {
 		if err := d.Validate(); err != nil {
@@ -99,16 +100,16 @@ func TestKernelImportsNoInternalCode(t *testing.T) {
 
 func TestRequestFingerprint(t *testing.T) {
 	ref := Ref{"op", 1}
-	fp := func(raw string, targets ...string) string {
+	fp := func(field, raw string, targets ...string) string {
 		t.Helper()
-		h, err := RequestFingerprint(ref, []byte(raw), targets)
+		h, err := RequestFingerprint(ref, field, []byte(raw), targets)
 		if err != nil {
 			t.Fatal(raw, err)
 		}
 		return h
 	}
-	base := fp(`{"ids":["b","a"],"reason":"x","n":1}`, "a", "b")
-	if fp(`{"n":1,"reason":"x","ids":["a","b"]}`, "b", "a") != base {
+	base := fp("ids", `{"ids":["b","a"],"reason":"x","n":1}`, "a", "b")
+	if !strings.HasPrefix(base, FingerprintVersion) || fp("ids", `{"n":1,"reason":"x","ids":["a","b"]}`, "b", "a") != base {
 		t.Fatal("key or target order changed the fingerprint")
 	}
 	for name, raw := range map[string]string{
@@ -116,23 +117,31 @@ func TestRequestFingerprint(t *testing.T) {
 		"number": `{"ids":["a","b"],"reason":"x","n":1.0}`,
 		"extra":  `{"ids":["a","b"],"reason":"x","n":1,"note":""}`,
 	} {
-		if fp(raw, "a", "b") == base {
+		if fp("ids", raw, "a", "b") == base {
 			t.Errorf("%s not bound by the fingerprint", name)
 		}
 	}
-	if fp(`{"id":"a","title":"a"}`, "a") == fp(`{"id":"a","title":"b"}`, "a") {
+	// Only the declared field is a set; another array's order is kept.
+	if fp("ids", `{"ids":["a","b"],"order":["a","b"]}`, "a", "b") == fp("ids", `{"ids":["a","b"],"order":["b","a"]}`, "a", "b") {
+		t.Error("order of a non-target array was discarded")
+	}
+	if fp("id", `{"id":"a","title":"a"}`, "a") == fp("id", `{"id":"a","title":"b"}`, "a") {
 		t.Error("single-target request ignores other fields")
 	}
 	for _, c := range []struct {
-		raw     string
-		targets []string
-		code    Code
+		field, raw string
+		targets    []string
+		code       Code
 	}{
-		{`[1]`, []string{"a"}, Invalid},
-		{`{"ids":["a"]}`, []string{"b"}, Internal},
-		{`{"ids":["a","b"]}`, []string{"a"}, Internal},
+		{"ids", `[1]`, []string{"a"}, Invalid},
+		{"ids", `{"ids":["a"],"reason":"x","reason":null}`, []string{"a"}, Invalid},
+		{"ids", `{"ids":["a"],"Reason":"x","reason":"y"}`, []string{"a"}, Invalid},
+		{"ids", `{"ids":["a"],"meta":{"k":1,"K":2}}`, []string{"a"}, Invalid},
+		{"ids", `{"ids":["a"]}`, []string{"b"}, Internal},
+		{"ids", `{"ids":["a","b"]}`, []string{"a"}, Internal},
+		{"ids", `{"other":["a"]}`, []string{"a"}, Internal},
 	} {
-		if _, err := RequestFingerprint(ref, []byte(c.raw), c.targets); CodeOf(err) != c.code {
+		if _, err := RequestFingerprint(ref, c.field, []byte(c.raw), c.targets); CodeOf(err) != c.code {
 			t.Errorf("%s %v: %v", c.raw, c.targets, err)
 		}
 	}

@@ -19,7 +19,7 @@ import (
 type ping struct{}
 
 func (ping) Definition() kernel.Definition {
-	return kernel.Definition{Ref: kernel.Ref{Name: "example.ping", Version: 1}, MaxTargets: 5, NoEventReason: "example only"}
+	return kernel.Definition{Ref: kernel.Ref{Name: "example.ping", Version: 1}, Targets: "IDs", MaxTargets: 5, NoEventReason: "example only"}
 }
 
 func (ping) Normalize(raw json.RawMessage) (kernel.Input, error) {

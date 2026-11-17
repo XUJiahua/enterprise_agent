@@ -203,7 +203,7 @@ func (r *Runner) Run(ctx context.Context, p kernel.Principal, ref kernel.Ref, ke
 	if !json.Valid(in.Payload) {
 		return Result{}, kernel.Internalf("%s: Normalize returned invalid payload JSON", ref)
 	}
-	hash, err := kernel.RequestFingerprint(ref, raw, in.Targets)
+	hash, err := kernel.RequestFingerprint(ref, reg.def.Targets, raw, in.Targets)
 	if err != nil {
 		return Result{}, err
 	}
@@ -229,7 +229,8 @@ func (r *Runner) Run(ctx context.Context, p kernel.Principal, ref kernel.Ref, ke
 	 WHERE tenant_id=$1 AND actor_id=$2 AND operation=$3 AND version=$4 AND key=$5`,
 		p.Tenant, p.Actor, ref.Name, ref.Version, key).Scan(&savedHash, &saved.Targets, &saved.Body)
 	switch {
-	case err == nil && savedHash == hash:
+	case err == nil && (savedHash == hash || !strings.HasPrefix(savedHash, kernel.FingerprintVersion) && savedHash == kernel.Fingerprint(ref, in)):
+		// v0.1 ledger rows hold the normalized-input fingerprint; they still replay.
 		saved.Replayed = true
 		return saved, nil // read-only: rollback is fine
 	case err == nil:

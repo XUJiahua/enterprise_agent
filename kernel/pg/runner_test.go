@@ -28,7 +28,7 @@ type mark struct {
 var markedEvent = kernel.EventType{Type: "toy.marked", Version: 1}
 
 func (m mark) Definition() kernel.Definition {
-	return kernel.Definition{Ref: kernel.Ref{Name: "toy.mark", Version: m.version}, MaxTargets: 10, Events: []kernel.EventType{markedEvent}}
+	return kernel.Definition{Ref: kernel.Ref{Name: "toy.mark", Version: m.version}, Targets: "ids", MaxTargets: 10, Events: []kernel.EventType{markedEvent}}
 }
 
 func (m mark) Normalize(raw json.RawMessage) (kernel.Input, error) {
@@ -414,5 +414,21 @@ func TestKernelOwnsFingerprintAndDenial(t *testing.T) {
 	}
 	if _, err = r.Run(context.Background(), kernel.Principal{Tenant: "t1", Actor: "ann"}, ref, "k3", json.RawMessage(`{"ids":["a"]}`)); !errors.As(err, &e) || e.Msg != kernel.UniformDenial {
 		t.Fatalf("authorization denial not uniform: %v", err)
+	}
+}
+
+// Ledger rows written by v0.1 (fingerprint over the normalized input, no
+// version prefix) still replay after the upgrade, and still conflict when the
+// request differs.
+func TestV01LedgerRowsReplay(t *testing.T) {
+	d, r, _ := setup(t)
+	in := kernel.Input{Targets: []string{"a"}, Payload: json.RawMessage(`{"note":"n"}`)}
+	d.Exec(t, `INSERT INTO kernel.request VALUES ('t1','ann','toy.mark',1,'old',$1,'{a}','{"marked":["a"]}')`, kernel.Fingerprint(ref, in))
+	res, err := run(r, ann, "old", `{"ids":["a"],"note":"n"}`)
+	if err != nil || !res.Replayed || string(res.Body) != `{"marked":["a"]}` {
+		t.Fatal("v0.1 row did not replay:", res, err)
+	}
+	if _, err = run(r, ann, "old", `{"ids":["a"],"note":"other"}`); kernel.CodeOf(err) != kernel.Conflict {
+		t.Fatal("v0.1 row: different request did not conflict:", err)
 	}
 }

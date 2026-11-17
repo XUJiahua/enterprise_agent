@@ -30,7 +30,7 @@
 
 内核自己保证、不依赖领域代码写对的约定（v0.1.1）：
 
-- **请求指纹**（`kernel.RequestFingerprint`）覆盖原始请求 JSON 的每个顶层字段，数字按原文保留；存放目标的字段按集合比较。即使 Normalize 漏掉某个字段，不同请求也不会被当成同一请求重放。Normalize 返回的目标与请求中任何顶层字段都不一致时，返回 Internal。
+- **请求指纹**（`kernel.RequestFingerprint`，前缀 `v2:`）覆盖原始请求 JSON 的全部字段，数字按原文保留；只有 `Definition.Targets` 声明的字段按集合比较，其他数组保留顺序。任意层级出现重复键或只差大小写的键，返回 Invalid，因此指纹和 Normalize 不会读到不同的值。即使 Normalize 漏掉某个字段，不同请求也不会被当成同一请求重放。Normalize 返回的目标与声明字段不一致时，返回 Internal。v0.1 写入的无前缀账本行仍按旧算法比较，可以继续重放（`TestV01LedgerRowsReplay`）。
 - **统一拒绝**：Authorize 或 Execute 返回的任何 Denied 错误，对客户端的消息都被替换为 `kernel.UniformDenial`；原错误只保留在 `Err` 中，供日志使用。
 
 ## 数据库兜底
@@ -82,7 +82,7 @@
 ## 开发工具（M3）
 
 - `appctl describe`：输出 `pg.Describe(procurement.Registry())` 的 JSON，即 `cmd/product` 交给 `pg.New` 的同一份注册表（操作定义 + 消费者）。提交为 `internal/procurement/contract.json`。
-- `appctl validate [--base REF]`：静态写路径规则（`cmd/appctl/writes.go`，只读字符串字面量，跳过测试文件）。`kernel/` 和 `internal/procurement` 以外的代码写 `procurement.*` 或 `kernel.*` 表，报 `WRITE_OUTSIDE_DOMAIN`；领域代码写 `kernel.*` 表，报 `KERNEL_TABLE_WRITE`；领域代码导入 `database/sql`、`pgxpool`、`pgconn` 或调用 `Begin`、`pgx.Connect`，报 `DOMAIN_BYPASSES_SESSION`（`migrate.go` 豁免）。注册表无效或 `contract.json` 过期，报 `CONTRACT_DRIFT`；有 `--base` 时，基线中已发布的操作版本定义（事件、MaxTargets、NoEventReason）若被原地修改，报 `CONTRACT_CHANGED_WITHOUT_VERSION`。删除旧版本允许（退役）。它看不到 Normalize/Execute 内部行为的变化。
+- `appctl validate [--base REF]`：静态写路径规则（`cmd/appctl/writes.go`，只读字符串字面量，跳过测试文件）。`kernel/` 和 `internal/procurement` 以外的代码写 `procurement.*` 或 `kernel.*` 表，报 `WRITE_OUTSIDE_DOMAIN`；领域代码写 `kernel.*` 表，报 `KERNEL_TABLE_WRITE`；领域代码导入 `database/sql`、`pgxpool`、`pgconn` 或调用 `Begin`、`pgx.Connect`，报 `DOMAIN_BYPASSES_SESSION`（`migrate.go` 豁免，pgx 的导入别名也会解析）。检查先对字面量去引号，再查找其中的每一条写语句；看起来像写语句的普通文本同样会被报告。注册表无效或 `contract.json` 过期，报 `CONTRACT_DRIFT`；有 `--base` 时，基线中已发布的操作版本定义（事件、MaxTargets、NoEventReason、Targets）若被原地修改，报 `CONTRACT_CHANGED_WITHOUT_VERSION`。v0.1.1 新增的 `targets` 字段在旧基线中不存在，补上它不算修改。删除旧版本允许（退役）。它看不到 Normalize/Execute 内部行为的变化。
 - `appctl verify --base REF`：原有 POC 检查，加上产品 migration 基线检查。`validate` 不并入 `verify`，因为 `tests/verifier.py` 在不含产品代码的局部 checkout 上运行 `verify`。
 - 新增操作或版本的步骤：在领域模块实现 `pg.Operation`（需要事件时再实现或扩展 `pg.Consumer`），加入 `Registry()`，运行 `appctl describe > internal/procurement/contract.json`，补测试。不需要修改 `kernel/`。
 

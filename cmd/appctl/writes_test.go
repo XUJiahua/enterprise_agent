@@ -25,16 +25,22 @@ func TestWriteFindings(t *testing.T) {
 	put("internal/procurement/audit.go", "package procurement\nconst q = `INSERT INTO kernel.audit (x) VALUES (1)`\n")
 	put("internal/procurement/pool.go", "package procurement\nimport \"github.com/jackc/pgx/v5/pgxpool\"\nfunc f(p *pgxpool.Pool) { p.Begin(nil) }\n")
 	put("internal/other/read.go", "package other\nconst q = `SELECT * FROM procurement.purchase`\n")
+	put("internal/other/quoted.go", "package other\nconst q = \"UPDATE \\\"procurement\\\".purchase\\nSET x=1\"\n")
+	put("internal/procurement/multi.go", "package procurement\nconst q = `UPDATE procurement.purchase SET a=1; INSERT INTO kernel.audit (x) VALUES (1)`\n")
+	put("internal/procurement/alias.go", "package procurement\nimport driver \"github.com/jackc/pgx/v5\"\nvar _ = driver.Connect\n")
 	var got []string
 	for _, f := range writeFindings(root) {
 		got = append(got, f.Code+" "+strings.SplitN(f.Path, ":", 2)[0])
 	}
 	slices.Sort(got)
 	want := []string{
+		"DOMAIN_BYPASSES_SESSION internal/procurement/alias.go",
 		"DOMAIN_BYPASSES_SESSION internal/procurement/pool.go",
 		"DOMAIN_BYPASSES_SESSION internal/procurement/pool.go",
 		"KERNEL_TABLE_WRITE internal/procurement/audit.go",
+		"KERNEL_TABLE_WRITE internal/procurement/multi.go",
 		"WRITE_OUTSIDE_DOMAIN cmd/product/main.go",
+		"WRITE_OUTSIDE_DOMAIN internal/other/quoted.go",
 	}
 	if !slices.Equal(got, want) {
 		t.Fatalf("got %q\nwant %q", got, want)
