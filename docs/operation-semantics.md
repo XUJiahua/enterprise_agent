@@ -166,11 +166,28 @@ v6 冻结规则的 TN 是 75，新 Verifier 是 86：v6 统计时有 11 个通�
 - verifier job 新增两步：53 个控制，以及 228 个候选的复评。`scripts/report.py` 要求控制计数为 34/12/7/4，复评 `summary.json` 与入库版本完全一致，并且 `out_of_sample` 为 false。
 - cohort-controls job 新增一步：`opkernel` 的 PostgreSQL 测试（`POC_REQUIRE_DB=1`）。`report.py` 要求输出中有 `PASS` 且没有 `SKIP`。
 
+## 平台事件规则（v9 验证）
+
+v9 把两条在实验中验证过的事件规则从私有叠加层移进受保护目录，落在 `internal/opdef/registry.go` 和 `Validate` 的 `eventRule` 中。registry.go 带两份受保护列表：
+
+- `consumedEvents`：有注册消费者处理的 `PurchaseEvent` 类型；
+- `exemptOperations`：可以用 `EventExemption` 代替事件的操作，目前只有历史上早于 outbox 的 `bulk-approve.v3`。
+
+两条规则（`Validate` 对每个目录条目执行 `eventRule`，与既有的逐条 `validate` 并列）：
+
+- **R1 — 事件必须有注册消费者。** 不在 `exemptOperations` 上的条目必须声明一个 `Event`，且该事件必须出现在 `consumedEvents` 里。缺事件、或事件没有注册消费者都会被拒绝。既有的“一个事件类型不能被两个条目使用”检查保留。
+- **R2 — 豁免是受保护名单的特权。** 只有 `exemptOperations` 上的操作可以带 `EventExemption`；任何其他条目自行声明豁免都会被拒绝。条目不能靠给自己加豁免来跳过 outbox。
+
+`registry.go` 已加入 `//go:embed` 和 `SourceFiles`，所以 `appctl operations` 的目录漂移检查要求候选 checkout 的 `registry.go` 与 Verifier 内置版本逐字节一致；改动注册表等同于改目录，需要所有者审查。
+
+**受保护边界与 notify 的关系。** `consumedEvents` 对应通知 outbox 的消费者（notify 包的 `audience()` 分支）。该消费者不是本仓库 `internal/` 里的运行时包，只存在于冻结的分期 benchmark 任务源码（`benchmark/phaseN/source/notify.go.txt`），且每期只列该期子集（phase6a 有 `purchase.countersigned`，phase6b 有 `purchase.reassigned`，phase5/5b 都没有）。因此没有单一运行时 notify 可供对比，冻结的 fixture 也不能改——`registry.go` 就是公开目录这一侧权威的消费者清单，把之前只在部分 fixture 里出现的 `purchase.countersigned`、`purchase.reassigned` 都登记进受保护边界。一致性改由 `registry_test.go` 对目录双向校验（每个非豁免条目的事件都已登记、每个登记事件都被某条目使用、豁免只限 `exemptOperations`），取代之前的人工审查。
+
 ## 局限
 
+- **登记不等于消费验证。** `registry_test.go` 只检查目录与登记表双向一致，没有执行真实 notify 消费者，也没有验证部署状态和载荷版本。两个已注册合法事件被不同操作选错时，成员资格和唯一性检查不足以判断业务语义；这需要独立验收或更明确的领域契约。
 - **可信代码模式。** 规则只做语法和常量分析，有意规避（反射、`unsafe`、经变量拼接 SQL）很容易绕过，所以它是辅助防线，不是安全边界。内核只接受目录名，这一点在运行时也成立。但持有数据库凭据的代码仍可直接写表，这与 README 的“信任边界”一节相同。
 - **目录、内核、Verifier 与候选在同一仓库。** “受保护”依靠 `PROTECTED_PATH_CHANGED`、摘要钉住和审查约定，不是独立的发布治理。
 - **一个名字只能对应一种语义。** `bulk-approve.v3` 在 v6a 加入了分级，但没有改版本号。v6 的 T1/T3 内核类型没有 `Over` 字段，所以 Verifier 只比较该内核类型能表达的属性。新平台中这种情况必须新开版本。
 - **覆盖范围。** 手写代码的审计/历史只检查存在，不检查内容；统一拒绝、并发、幂等的重放行为仍由运行时验收负责；手写事件只在包级别检查有无，不检查是否写在同一个事务里。
 - **复评是回顾性的。** 规则设计参考了 v6 的失败类型，并针对这批数据修改过两次；FP=0 和 106/110 都不能当作 v7 的预期。
-- `notify` 消费者与目录事件之间的一致性，目前靠人工审查条目，没有自动检查（`notify` 位于 benchmark 源码中，不在本仓库的 `internal/`）。
+- `notify` 消费者与目录事件的一致性，v9 起由 `internal/opdef/registry.go` 的 `consumedEvents` 登记，并由 `eventRule`（运行时拒绝未登记事件）和 `registry_test.go`（目录双向校验）保证，不再只靠人工审查。注册表是公开目录这一侧的权威消费者清单；运行时 notify 消费者本身仍在 benchmark 源码中，不在本仓库的 `internal/`，两者的同步仍属审查约定。

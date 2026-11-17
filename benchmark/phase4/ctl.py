@@ -52,7 +52,13 @@ def trials(plan,ident=None):
     if not selected: raise ValueError('trial not in plan')
     return selected
 
-def prompt(cell):
+# v4b: v4 cohort 001 showed weaker models declaring the new Transition inside the
+# protected kernel. The only change is a sentence naming the extension point.
+EXTENSION_HINT=('Declare any new Transition value in internal/candidate (e.g. var reject = action.Transition{...}); '
+                'action.Approve lives in the protected kernel only as the existing example.')
+
+def prompt(cell,variant='v4'):
+    if variant not in ('v4','v4b'): raise ValueError('unknown prompt variant')
     return '\n'.join([contract()['requirements'],
      'Add the bulk-reject Action described above to the existing service.',
      'Read the existing code first and follow its conventions.',
@@ -64,6 +70,7 @@ def prompt(cell):
      ('Capability: protected internal/action is the platform Action kernel: New(ctx,pool), Transition{Operation,From,To,Field} '
       'and Executor.Run(ctx,identity,transition,key,ids). The existing approval calls it with action.Approve. '
       'action.Rejection is distinct from protocol.Rejection; adapt at your boundary.'
+      +(' '+EXTENSION_HINT if variant=='v4b' else '')
       if cell['capability'] else 'Capability: no platform Action kernel. The existing batch approval is hand-written in internal/candidate/.'),
      'This is a trusted-code pilot; directory export alone does not enforce host or network isolation.'])
 
@@ -96,7 +103,7 @@ def load_plan(path):
         expected=t['cell']+'--'+str(t['instance']).zfill(3)
         if t['id']!=expected or expected in seen: raise ValueError('duplicate/invalid trial identity')
         seen.add(expected);blocks.setdefault(t['instance'],set()).add(t['cell'])
-        if t['prompt']!=prompt(cells[t['cell']]) or sha(t['prompt'].encode())!=t['prompt_sha256']: raise ValueError('prompt tamper')
+        if t['prompt']!=prompt(cells[t['cell']],value.get('variant','v4')) or sha(t['prompt'].encode())!=t['prompt_sha256']: raise ValueError('prompt tamper')
     if not blocks or sorted(blocks)!=list(range(1,len(blocks)+1)) or any(b!=set(cells) for b in blocks.values()):
         raise ValueError('incomplete two-cell block')
     if value['exports']!={c['id']:{p:sha(d) for p,d in files(value,c).items()} for c in cells.values()}: raise ValueError('export drift')
@@ -114,14 +121,14 @@ def plan(args):
     value={'version':4,'kind':'synthetic-smoke' if args.synthetic else 'model-trial','task':contract()['task'],
      'base_sha':base,'harness_sha':git(ROOT,'rev-parse','HEAD'),'frozen':{p:digest(ROOT/p) for p in FROZEN},
      'source_files':{p:sha(source(base,p)) for p in BASE+SQL},'fixtures_sha256':digest(args.fixtures),'seed':args.seed,
-     'model':args.model,'reasoning_effort':args.reasoning_effort,'engine':args.engine,
+     'model':args.model,'reasoning_effort':args.reasoning_effort,'engine':args.engine,'variant':getattr(args,'variant','v4'),
      'generation_budget_seconds':args.time_budget,'trials':[],
      'isolation':'operator must isolate generation from evaluator; commands alone do not enforce it'}
     value['exports']={c['id']:{p:sha(d) for p,d in files(value,c).items()} for c in contract()['cells']}
     for instance in range(1,args.repetitions+1):
         block=[]
         for c in contract()['cells']:
-            text=prompt(c)
+            text=prompt(c,getattr(args,'variant','v4'))
             block.append({'id':c['id']+'--'+str(instance).zfill(3),'cell':c['id'],'instance':instance,
                           'prompt':text,'prompt_sha256':sha(text.encode())})
         random.Random(args.seed+instance).shuffle(block);value['trials']+=block
@@ -325,6 +332,7 @@ def main():
     s.add_argument('--repetitions',type=int,default=1);s.add_argument('--time-budget',type=int,default=600)
     s.add_argument('--reasoning-effort',choices=('low','medium','high'),default='medium');s.add_argument('--seed',type=int,default=20261116)
     s.add_argument('--engine',choices=('codex','kiro'),default='kiro')
+    s.add_argument('--variant',choices=('v4','v4b'),default='v4')
     s.add_argument('--synthetic',action='store_true');s.add_argument('--allow-dirty-harness',action='store_true')
     s=sub.add_parser('prepare')
     for n in ('plan','trial','output'): s.add_argument('--'+n,required=True)

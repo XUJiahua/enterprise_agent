@@ -1,6 +1,6 @@
 # Enterprise Agent — 可验证企业应用 POC
 
-接手入口：[完整技术 POC 交接文档（Kiro CLI）](docs/HANDOFF.md)；[2026-11-15 实验总结（378 个真实候选）](docs/experiment-summary-2026-11-15.md)，包含目标、合并后的进展、实验事实、运行命令和待办验收标准。
+接手入口：[当前工程交接（v1–v9，Kiro CLI）](docs/HANDOFF.md)；[分期实验总结](docs/experiment-summary-2026-11-15.md)。v3–v9 已有真实 Kiro 实验，当前优先工程整合、私有续跑修复与平台能力迁移；历史试验与主应用能力分别记录。
 
 采购审批业务的三条可运行对照路径。目标是检验确定性护栏能否阻断常见实现缺陷，先验证机制，再开展真实 AI Coding 对照实验。
 

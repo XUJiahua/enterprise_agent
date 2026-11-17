@@ -1,0 +1,2 @@
+[warn] failed to set effort 'medium': model 'claude-haiku-4.5' offers no effort levels
+[INFO] [KRS] <-- GenerateAssistantResponseCommand done totalEvents=7

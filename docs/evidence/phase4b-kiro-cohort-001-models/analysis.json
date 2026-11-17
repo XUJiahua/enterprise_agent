@@ -1,0 +1,238 @@
+[
+  {
+    "model": "claude-haiku-4.5",
+    "harness_sha": "ad85b9d2b2793a89e189e531ec22010b0f344634",
+    "cells": {
+      "go-manual": {
+        "planned": 10,
+        "observed": 10,
+        "passed_all": 10,
+        "passed_explicit": 10,
+        "outcomes": {
+          "passed": 10
+        },
+        "conventions_followed_of_scored": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-operation-scope": [
+            10,
+            10
+          ],
+          "implicit-request-hash": [
+            10,
+            10
+          ],
+          "implicit-uniform-409": [
+            10,
+            10
+          ]
+        },
+        "conventions_followed_given_explicit_pass": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-operation-scope": [
+            10,
+            10
+          ],
+          "implicit-request-hash": [
+            10,
+            10
+          ],
+          "implicit-uniform-409": [
+            10,
+            10
+          ]
+        },
+        "median_seconds": 54.4675,
+        "median_credits": 0.7006163580431177,
+        "total_credits": 7.163
+      },
+      "go-action": {
+        "planned": 10,
+        "observed": 10,
+        "passed_all": 7,
+        "passed_explicit": 7,
+        "outcomes": {
+          "passed": 7,
+          "scope-violation": 3
+        },
+        "conventions_followed_of_scored": {
+          "implicit-audit": [
+            7,
+            7
+          ],
+          "implicit-operation-scope": [
+            7,
+            7
+          ],
+          "implicit-request-hash": [
+            7,
+            7
+          ],
+          "implicit-uniform-409": [
+            7,
+            7
+          ]
+        },
+        "conventions_followed_given_explicit_pass": {
+          "implicit-audit": [
+            7,
+            7
+          ],
+          "implicit-operation-scope": [
+            7,
+            7
+          ],
+          "implicit-request-hash": [
+            7,
+            7
+          ],
+          "implicit-uniform-409": [
+            7,
+            7
+          ]
+        },
+        "median_seconds": 43.5295,
+        "median_credits": 0.5016377699834162,
+        "total_credits": 5.854
+      }
+    },
+    "blocks_manual_action": [
+      "PF",
+      "PP",
+      "PP",
+      "PP",
+      "PF",
+      "PP",
+      "PF",
+      "PP",
+      "PP",
+      "PP"
+    ],
+    "action_only_pass": 0,
+    "manual_only_pass": 3,
+    "sign_test_p_exploratory": 0.25
+  },
+  {
+    "model": "qwen3-coder-next",
+    "harness_sha": "ad85b9d2b2793a89e189e531ec22010b0f344634",
+    "cells": {
+      "go-manual": {
+        "planned": 10,
+        "observed": 10,
+        "passed_all": 10,
+        "passed_explicit": 10,
+        "outcomes": {
+          "passed": 10
+        },
+        "conventions_followed_of_scored": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-operation-scope": [
+            10,
+            10
+          ],
+          "implicit-request-hash": [
+            10,
+            10
+          ],
+          "implicit-uniform-409": [
+            10,
+            10
+          ]
+        },
+        "conventions_followed_given_explicit_pass": {
+          "implicit-audit": [
+            10,
+            10
+          ],
+          "implicit-operation-scope": [
+            10,
+            10
+          ],
+          "implicit-request-hash": [
+            10,
+            10
+          ],
+          "implicit-uniform-409": [
+            10,
+            10
+          ]
+        },
+        "median_seconds": 55.3145,
+        "median_credits": 0.5138316849087894,
+        "total_credits": 5.003
+      },
+      "go-action": {
+        "planned": 10,
+        "observed": 10,
+        "passed_all": 6,
+        "passed_explicit": 6,
+        "outcomes": {
+          "passed": 6,
+          "scope-violation": 4
+        },
+        "conventions_followed_of_scored": {
+          "implicit-audit": [
+            6,
+            6
+          ],
+          "implicit-operation-scope": [
+            6,
+            6
+          ],
+          "implicit-request-hash": [
+            6,
+            6
+          ],
+          "implicit-uniform-409": [
+            6,
+            6
+          ]
+        },
+        "conventions_followed_given_explicit_pass": {
+          "implicit-audit": [
+            6,
+            6
+          ],
+          "implicit-operation-scope": [
+            6,
+            6
+          ],
+          "implicit-request-hash": [
+            6,
+            6
+          ],
+          "implicit-uniform-409": [
+            6,
+            6
+          ]
+        },
+        "median_seconds": 31.814500000000002,
+        "median_credits": 0.2853977271973466,
+        "total_credits": 3.236
+      }
+    },
+    "blocks_manual_action": [
+      "PP",
+      "PF",
+      "PF",
+      "PF",
+      "PP",
+      "PP",
+      "PF",
+      "PP",
+      "PP",
+      "PP"
+    ],
+    "action_only_pass": 0,
+    "manual_only_pass": 4,
+    "sign_test_p_exploratory": 0.125
+  }
+]

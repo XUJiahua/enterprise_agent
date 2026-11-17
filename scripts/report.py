@@ -65,6 +65,17 @@ for name,kind,cases,isolated,explicit in [('phase4-controls','synthetic-v4-impli
     assert control['crash_control']['outcome']=='candidate-error' and control['partial_denominator_checked'] and control['duplicate_rejected']
 # v5b: omitting Event is an explicit (fail-loud) failure, not an isolated implicit violation as in v5.
 assert next(c for c in json.loads((root/'phase5b-controls/control.json').read_text())['controls'] if c['cell']=='go-action' and c['mode']=='omit-event')['violates'] is None
+for name,kind,cases,explicit,implicit,evaluations,references in [
+        ('phase6a-controls','synthetic-v6a-two-level-approval-control',193,180,13,15,2),
+        ('phase6b-controls','synthetic-v6b-bulk-reassign-control',190,178,12,16,3)]:
+    control=json.loads((root/name/'control.json').read_text())
+    assert control['kind']==kind and control['new_model_generations']==0
+    assert (control['cases_per_evaluation'],control['explicit_cases'],control['implicit_cases'])==(cases,explicit,implicit)
+    assert control['human_evaluations']==evaluations==len(control['controls'])
+    assert control['reference_passed']==references and control['worker_transport_evaluations']==2
+    assert control['implicit_violations_isolated']==8 and control['explicit_violations_detected']==5
+    assert control['crash_control']['outcome']=='candidate-error'
+    assert control['partial_denominator_checked'] and control['duplicate_rejected']
 extension=json.loads((root/'extension-controls.json').read_text())
 assert extension['ok'] and extension['model_calls']==0 and extension['controls']==44 and all(r['passed'] for r in extension['results'])
 assert (extension['negative_detected'],extension['positive_clean'],extension['uncovered_clean'])==(24,7,13)
@@ -89,6 +100,7 @@ text+='\nPhase 2 atomic bulk approval: 12 human-authored candidate evaluations, 
 text+='\nPR 10 audit: 50 archived files and four candidate bundles verified. New public fixtures: 184 replay cases plus 28 additional checks pass; four candidate-authored Go test suites pass. Four request-capacity observations remain separate from first-pass scoring. Original private seed was not used. No new model generations.\n'
 text+='\nTyped Action mechanism POC: reference passes 66/66; five negative controls detected, each evaluated against 66 cases. Purchase state, audit rows and completed idempotency response commit in one PostgreSQL transaction. Metadata SQL probes: 12/12; startup checks: 7/7. No new model samples or general workflow-engine claim.\n'
 text+='\nImplicit-convention cohort controls v4/v5/v5b (real PostgreSQL 17.6, fake Kiro, no model calls): 14 human candidates and 2 worker-transport evaluations each; references pass; v5b omit-event is an explicit failure.\n'
+text+='\nConfirmatory task harness controls v6a/v6b (real PostgreSQL 17.6, fake Kiro, no model calls): 15/16 human evaluations, 193/190 cases each; 2/3 positive references and two worker-transport evaluations per harness pass. Eight isolated convention violations and five explicit defects are detected per harness.\n'
 text+=f"\nExtension verifier (appctl extensions): {extension['controls']} controls on real exports ({extension['negative_detected']} negatives flagged, {extension['positive_clean']} positives clean, {extension['uncovered_clean']} known-uncovered stay clean). Archived interception (post hoc, {interception['trials']} real candidates): any rule TP/FP/FN = {interception['any_rule']['vs_any_frozen_failure']['TP']}/{interception['any_rule']['vs_any_frozen_failure']['FP']}/{interception['any_rule']['vs_any_frozen_failure']['FN']} against frozen failures; frozen scores unchanged.\n"
 full=replay['configs']['full'];sem=full['semantic_findings_vs_any_frozen_failure']
 text+=f"\nOperation catalog {replay['catalog'][:19]}: catalog kernel passes on PostgreSQL 17.6 for all entries. Catalog-bound verifier (appctl operations): {operations['controls']} controls ({operations['negative_detected']} negatives flagged, of which {operations['unverifiable_detected']} UNVERIFIABLE; {operations['positive_clean']} positives clean; {operations['uncovered_clean']} known-uncovered clean). Retrospective replay on {full['trials']} seen v6 candidates (NOT out-of-sample): TP/FP/FN = {sem['TP']}/{sem['FP']}/{sem['FN']}, silent failures caught {full['silent_caught']}/{full['silent_failures']}.\n"
