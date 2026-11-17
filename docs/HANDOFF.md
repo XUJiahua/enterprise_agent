@@ -6,6 +6,8 @@
 
 ## 接手摘要
 
+**2026-11-17 更新：主线已转为 v0.1 产品开发（Go 内核 + 采购参考应用），权威入口是 [issue #36](https://github.com/XUJiahua/enterprise_agent/issues/36) 与 [v0.1 发布说明](release-v0.1.md)。下文“优先顺序”中先恢复 oracle / 继续试验的安排已过时，仅保留作研究背景。**
+
 **v3–v9 已完成真实 Kiro 模型实验。Kiro 后端、文件与网络隔离、跨主机私有 Oracle 流程都已经存在。不要重做首个 v3 pilot。** 公开工程包含受保护的操作语义目录、事务内核、目录绑定 Verifier 和 v9 事件登记规则，仍是采购审批 POC。
 
 原 16 个 PR（#15–#25、#27–#31）已通过 [PR #33](https://github.com/XUJiahua/enterprise_agent/pull/33) 合入 main，merge commit 为 `e8248d836f086a221eae521a72068e63d140232a`，保留全部 51 个原始提交。旧 PR 已关闭并注明整合去向（#15 被 GitHub 自动标记 merged）。[合并后 main CI](https://github.com/XUJiahua/enterprise_agent/actions/runs/44048578930) 六个 jobs 全部成功。

@@ -1,4 +1,4 @@
-# v0.1 操作内核（M1a + M1b + M2）
+# v0.1 操作内核
 
 设计与里程碑见 [issue #36](https://github.com/XUJiahua/enterprise_agent/issues/36)。本文只记录已实现的部分。
 
@@ -9,7 +9,7 @@
 | `kernel` | `Principal`、`Ref`、`Definition`、`Input`、`Outcome`、错误分类、请求指纹 | 仅标准库 |
 | `kernel/pg` | `Runner`（唯一受管写入口）、`Session`、`Schema`（kernel.request/audit/outbox）、`CheckRuntime` | `kernel`、pgx v5 |
 | `kernel/pg/pgtest` | 测试用一次性数据库 | pgx v5 |
-| `internal/procurement` | `approve@1`、`receive@1`、`close@1`、产品 migrations 与 `Migrate`、HTTP `Handler` | `kernel`、`kernel/pg`、golang-migrate v4.19.1 |
+| `internal/procurement` | `approve@1`、`receive@1`、`close@2`、产品 migrations 与 `Migrate`、HTTP `Handler` | `kernel`、`kernel/pg`、golang-migrate v4.19.1 |
 | `examples/external` | 仓库外 module 导入内核的最小示例 | `kernel`、`kernel/pg` |
 
 `kernel/...` 不 import 本仓库任何其他包，`TestKernelImportsNoInternalCode` 检查这一点。
@@ -41,7 +41,7 @@
 |---|---|---|---|
 | `procurement.approve@1` | approver | submitted → approved，不能批自己创建的 | 无（`NoEventReason`） |
 | `procurement.receive@1` | requester | 对一个 approved 采购单追加验收记录（amount > 0） | 无 |
-| `procurement.close@1` | approver | 1–100 个 approved 采购单，验收合计 ≥ 采购金额，整批 approved → closed | `procurement.purchase.closed@1`，载荷 `{id, amount, received}` |
+| `procurement.close@2` | approver | 1–100 个 approved 采购单，验收合计 ≥ 采购金额，整批 approved → closed；`reason` 必填（`close@1` 已退役） | `procurement.purchase.closed@1`，载荷 `{id, amount, received}` |
 
 **父单锁协议**：每个修改采购单或其验收依据的操作，先用 `lockPurchases` 按 `id COLLATE "C"` 顺序 `FOR UPDATE` 锁住全部目标采购单，再在之后的语句里读取状态与验收合计。Read Committed 下，后续语句能看到加锁前已提交的所有验收记录，而被锁采购单在此期间不会再提交新验收。验收记录只有 INSERT 授权（append-only）。以后新增影响金额、状态或验收的写路径必须遵守同一协议，或改用 Serializable 并设计重试。
 
@@ -69,6 +69,13 @@
 - `GET /v1/activity`：当前租户最近 50 条审计和当前用户的通知。
 
 界面：`apps/web/app/procurement`（`/procurement`），通过 `/api/product/*` 代理到 `cmd/product`（`PRODUCT_HTTP_PORT`，默认 8090），只放行列出的读路径和三个操作。原有 `/` 页面与三条路线的 6 项浏览器用例不变。
+
+## 开发工具（M3）
+
+- `appctl describe`：输出 `pg.Describe(procurement.Registry())` 的 JSON，即 `cmd/product` 交给 `pg.New` 的同一份注册表（操作定义 + 消费者）。提交为 `internal/procurement/contract.json`。
+- `appctl validate [--base REF]`：注册表无效或 `contract.json` 过期报 `CONTRACT_DRIFT`；有 `--base` 时，基线中已发布的操作版本定义（事件、MaxTargets、NoEventReason）若被原地修改，报 `CONTRACT_CHANGED_WITHOUT_VERSION`。删除旧版本允许（退役）。它看不到 Normalize/Execute 内部行为的变化。
+- `appctl verify --base REF`：原有 POC 检查，加上产品 migration 基线检查。`validate` 不并入 `verify`，因为 `tests/verifier.py` 在不含产品代码的局部 checkout 上运行 `verify`。
+- 新增操作或版本的步骤：在领域模块实现 `pg.Operation`（需要事件时再实现或扩展 `pg.Consumer`），加入 `Registry()`，运行 `appctl describe > internal/procurement/contract.json`，补测试。不需要修改 `kernel/`。
 
 ## 运行测试
 

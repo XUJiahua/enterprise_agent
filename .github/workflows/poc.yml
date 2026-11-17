@@ -222,9 +222,19 @@ jobs:
       KERNEL_REQUIRE_DB: '1'
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
+      - name: Operation contract is current and published versions are unchanged
+        run: |
+          go build -o /tmp/appctl ./cmd/appctl
+          if [ "${{ github.event_name }}" = pull_request ]; then
+            /tmp/appctl validate --base '${{ github.event.pull_request.base.sha }}'
+          else
+            /tmp/appctl validate
+          fi
       - name: v0.1 kernel, kernel/pg, procurement and appctl on PostgreSQL 17 (no skips)
         run: |
           mkdir -p reports
