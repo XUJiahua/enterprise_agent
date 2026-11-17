@@ -309,9 +309,19 @@ func contractFindings(root, base string) []Finding {
 	if base == "" {
 		return findings
 	}
+	if _, err := git(root, "rev-parse", "--verify", base+"^{commit}"); err != nil {
+		return append(findings, Finding{"BASE_INVALID", base, err.Error()})
+	}
+	listed, err := git(root, "ls-tree", "--name-only", base, "--", contractFile)
+	if err != nil {
+		return append(findings, Finding{"BASE_READ", contractFile, err.Error()})
+	}
+	if strings.TrimSpace(string(listed)) == "" {
+		return findings // not published at base yet
+	}
 	old, err := git(root, "show", base+":"+contractFile)
 	if err != nil {
-		return findings // not published at base yet
+		return append(findings, Finding{"BASE_READ", contractFile, err.Error()})
 	}
 	var prev pg.Contract
 	if err := json.Unmarshal(old, &prev); err != nil {

@@ -64,7 +64,7 @@ go get github.com/XUJiahua/enterprise_agent@<tag 或 commit>
 - `contract.json` 只覆盖定义层面；Normalize/Execute 的行为变化需要人工保证版本纪律。
 - migration 内容不可变只在可信 Git 基线下检查（`appctl verify --base`）；不发现线上手工 DDL。
 - `kernel.pending_tenants` 的 owner 必须是 superuser 或 BYPASSRLS 的迁移角色。
-- 单消费者进程、轮询间隔 1 秒；没有租约、Worker 池或外部投递。毒消息会在每次轮询时重新报错。
+- 单消费者进程、轮询间隔 1 秒；没有租约、Worker 池或外部投递。失败事件不阻塞其后的事件（按 id 分页），但会在每次轮询时重试并报错，没有死信表。
 - 跨表不变量依赖采购模块的父单锁协议（Read Committed）。新增影响金额、状态或验收的写路径必须遵守它。
 - 采购示例使用固定 demo 身份。原 `/` 页面仍是三条 POC 路线的共享界面、走旧 API，未迁移；产品的完整流程在 `/procurement`。旧 `internal/opkernel` 保留用于历史回放。
 - golang-migrate 用 v4.19.1（v4.20.1 会连带升级 pgx 与 Go 版本，见 kernel.md）。

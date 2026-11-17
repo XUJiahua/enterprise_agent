@@ -3,6 +3,7 @@ INSERT INTO procurement.purchase (tenant_id, id, created_by, title, amount, stat
   ('tenant-a', 'po-100', 'alice', '研发笔记本电脑', 900, 'approved', 'supplier-bank-account'),
   ('tenant-a', 'po-101', 'alice', '会议室显示器', 300, 'approved', 'supplier-bank-account'),
   ('tenant-a', 'po-102', 'alice', '人体工学椅', 50, 'submitted', ''),
+  ('tenant-a', 'po-103', 'alice', '投影仪', 300, 'approved', ''),
   ('tenant-b', 'po-200', 'dave', '机房服务器', 5000, 'approved', 'secret');
 INSERT INTO procurement.receipt (tenant_id, purchase_id, amount, received_by) VALUES
   ('tenant-a', 'po-100', 900, 'alice'),

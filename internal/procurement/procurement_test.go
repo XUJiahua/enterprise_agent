@@ -127,6 +127,8 @@ func TestApproveRefusalsChangeNothing(t *testing.T) {
 		"tenant in body":   {bob, `{"ids":["x1"],"tenant":"t2"}`, kernel.Invalid},
 		"long reason":      {bob, `{"ids":["p1"],"reason":"` + string(make([]byte, 201)) + `"}`, kernel.Invalid},
 		"trailing data":    {bob, `{"ids":["p1"]} {}`, kernel.Invalid},
+		"trailing ]":       {bob, `{"ids":["p1"]}]`, kernel.Invalid},
+		"trailing }":       {bob, `{"ids":["p1"]}}`, kernel.Invalid},
 	} {
 		if _, err := approve(r, c.p, "k", c.raw); kernel.CodeOf(err) != c.code {
 			t.Errorf("%s: got %v, want %s", name, err, c.code)

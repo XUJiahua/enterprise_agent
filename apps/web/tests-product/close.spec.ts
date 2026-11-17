@@ -98,3 +98,23 @@ test("完整流程：申请人创建、审批人批准、申请人验收、审�
   await as(page, "alice");
   await expect(page.getByTestId("notifications")).toContainText(`采购单 ${id} 已关闭`, { timeout: 10000 });
 });
+
+test("提交后响应丢失，重试同一操作不会重复登记验收", async ({ page }) => {
+  await page.goto("/procurement");
+  await as(page, "alice");
+  let dropped = false;
+  await page.route("**/api/product/operations/procurement.receive/1", async (route) => {
+    if (dropped) return route.continue();
+    dropped = true;
+    await route.fetch(); // the server commits the receipt ...
+    await route.abort("connectionreset"); // ... but the browser never sees the answer
+  });
+  await page.getByLabel("验收金额 po-103").fill("300");
+  const button = page.getByTestId("purchase-po-103").getByRole("button", { name: "登记验收" });
+  await button.click();
+  await expect(page.locator(".error")).toBeVisible();
+  await button.click();
+  await expect(page.locator(".notice")).toContainText("已登记 po-103");
+  await expect(page.getByTestId("received-po-103")).toContainText("300");
+  await expect(page.getByTestId("received-po-103")).not.toContainText("600");
+});

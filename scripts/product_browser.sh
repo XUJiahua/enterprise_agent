@@ -28,6 +28,6 @@ PRODUCT_HTTP_PORT=$port POC_BROWSER_REPORT_DIR="$out" NEXT_TELEMETRY_DISABLED=1 
 python3 - "$out/results.json" <<'PY'
 import json, sys
 s = json.load(open(sys.argv[1]))["stats"]
-assert s["expected"] == 5 and not any(s.get(k, 0) for k in ("unexpected", "flaky", "skipped")), s
+assert s["expected"] == 6 and not any(s.get(k, 0) for k in ("unexpected", "flaky", "skipped")), s
 print("product browser ok", s)
 PY

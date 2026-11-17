@@ -57,6 +57,9 @@ func TestContractFindings(t *testing.T) {
 	if got := codes("HEAD"); got != "CONTRACT_CHANGED_WITHOUT_VERSION" {
 		t.Fatal("changed published version:", got)
 	}
+	if got := codes("no-such-ref"); got != "BASE_INVALID" {
+		t.Fatal("invalid base:", got)
+	}
 	write(prev)
 	if got := codes(""); got != "CONTRACT_DRIFT" {
 		t.Fatal("stale contract file:", got)

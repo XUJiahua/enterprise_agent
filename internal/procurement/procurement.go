@@ -17,6 +17,7 @@ import (
 	"context"
 	"embed"
 	"encoding/json"
+	"io"
 	"strings"
 	"unicode/utf8"
 
@@ -126,7 +127,10 @@ func requireRole(p kernel.Principal, role string) error {
 func strict(raw json.RawMessage, v any) error {
 	dec := json.NewDecoder(bytes.NewReader(raw))
 	dec.DisallowUnknownFields()
-	if dec.Decode(v) != nil || dec.More() {
+	if dec.Decode(v) != nil {
+		return kernel.Invalidf("malformed request")
+	}
+	if _, err := dec.Token(); err != io.EOF { // nothing, not even a stray ] or }, may follow
 		return kernel.Invalidf("malformed request")
 	}
 	return nil

@@ -55,20 +55,32 @@ export default function Procurement() {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const generation = useRef(0);
+  const draftId = useRef<string | null>(null); // kept across retries of one create
   const current = identities[actor];
 
+  // A write whose outcome is unknown (network error, 5xx) keeps its key, so
+  // retrying the same action replays instead of executing twice. Any
+  // definite answer (2xx/4xx) releases it; the next action gets a new key.
+  const pending = useRef(new Map<string, string>());
   const api = useCallback(
     async (path: string, body?: unknown) => {
+      const action = body === undefined ? "" : actor + " " + path + " " + JSON.stringify(body);
+      let key = "";
+      if (action) {
+        key = pending.current.get(action) ?? crypto.randomUUID();
+        pending.current.set(action, key);
+      }
       const response = await fetch("/api/product/" + path, {
         method: body === undefined ? "GET" : "POST",
         headers: {
           "Content-Type": "application/json",
           "X-Demo-Identity": actor,
-          ...(body === undefined ? {} : { "Idempotency-Key": crypto.randomUUID() }),
+          ...(action ? { "Idempotency-Key": key } : {}),
         },
         body: body === undefined ? undefined : JSON.stringify(body),
         cache: "no-store",
       });
+      if (action && response.status < 500) pending.current.delete(action);
       const data = await response.json().catch(() => ({}));
       if (!response.ok)
         throw Object.assign(new Error(data.message ?? "请求失败"), { status: response.status });
@@ -140,8 +152,10 @@ export default function Procurement() {
   const create = (event: React.FormEvent) => {
     event.preventDefault();
     return act(async () => {
-      const id = "po-" + crypto.randomUUID().slice(0, 8);
+      draftId.current ??= "po-" + crypto.randomUUID().slice(0, 8);
+      const id = draftId.current;
       await api("operations/procurement.create/1", { id, title: title.trim(), amount: Number(amount) });
+      draftId.current = null;
       setTitle("");
       setAmount("");
       return `已提交采购单 ${id}`;

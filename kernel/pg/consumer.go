@@ -136,26 +136,35 @@ func (r *Runner) Drain(ctx context.Context, name string) (handled int, err error
 	var errs []error
 	for _, tenant := range tenants {
 		p := kernel.Principal{Tenant: tenant, Actor: "consumer:" + name}
-		var ids []int64
-		if err := r.Read(ctx, p, func(s *Session) error {
-			rows, err := s.Query(ctx, `SELECT o.id FROM kernel.outbox o WHERE o.event_type = ANY ($2)
-			 AND NOT EXISTS (SELECT 1 FROM kernel.inbox i WHERE i.consumer = $1 AND i.event_id = o.id) ORDER BY o.id LIMIT 1000`, name, reg.types)
-			if err != nil {
+		// Page by id so failing events at the head cannot hide newer ones.
+		// ponytail: failing events are retried on every Drain; a dead-letter
+		// table is the upgrade if poison events become common.
+		for after := int64(0); ; {
+			var ids []int64
+			if err := r.Read(ctx, p, func(s *Session) error {
+				rows, err := s.Query(ctx, `SELECT o.id FROM kernel.outbox o WHERE o.event_type = ANY ($2) AND o.id > $3
+				 AND NOT EXISTS (SELECT 1 FROM kernel.inbox i WHERE i.consumer = $1 AND i.event_id = o.id) ORDER BY o.id LIMIT 1000`, name, reg.types, after)
+				if err != nil {
+					return err
+				}
+				ids, err = pgx.CollectRows(rows, pgx.RowTo[int64])
 				return err
+			}); err != nil {
+				errs = append(errs, err)
+				break
 			}
-			ids, err = pgx.CollectRows(rows, pgx.RowTo[int64])
-			return err
-		}); err != nil {
-			errs = append(errs, err)
-			continue
-		}
-		for _, id := range ids {
-			done, err := r.deliver(ctx, reg, p, id)
-			if err != nil {
-				errs = append(errs, fmt.Errorf("consumer %s event %d: %w", name, id, err))
-			} else if done {
-				handled++
+			if len(ids) == 0 {
+				break
 			}
+			for _, id := range ids {
+				done, err := r.deliver(ctx, reg, p, id)
+				if err != nil {
+					errs = append(errs, fmt.Errorf("consumer %s event %d: %w", name, id, err))
+				} else if done {
+					handled++
+				}
+			}
+			after = ids[len(ids)-1]
 		}
 	}
 	return handled, errors.Join(errs...)
