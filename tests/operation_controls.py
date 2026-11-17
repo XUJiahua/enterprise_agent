@@ -133,7 +133,7 @@ def platform_export(target, extra_kernel=''):
     export('T3', 'go-action', target, do_commit=False)
     shutil.rmtree(target / 'internal/action')
     (target / OPS).unlink()
-    for rel in ('internal/opdef/opdef.go', 'internal/opdef/catalog.go', 'internal/opkernel/opkernel.go'):
+    for rel in ('internal/opdef/opdef.go', 'internal/opdef/catalog.go', 'internal/opdef/registry.go', 'internal/opkernel/opkernel.go'):
         (target / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(ROOT / rel, target / rel)
     if extra_kernel:
