@@ -7,6 +7,7 @@
 package kernel
 
 import (
+	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
@@ -14,6 +15,7 @@ import (
 	"fmt"
 	"slices"
 	"strings"
+	"unicode"
 	"unicode/utf8"
 )
 
@@ -51,6 +53,7 @@ func (e EventType) String() string { return fmt.Sprintf("%s@%d", e.Type, e.Versi
 // means requires a new Version.
 type Definition struct {
 	Ref           Ref         `json:"ref"`
+	Targets       string      `json:"targets"`                 // top-level request field holding the target id or id array
 	MaxTargets    int         `json:"maxTargets"`              // 1..MaxTargets distinct targets per call
 	Events        []EventType `json:"events,omitempty"`        // events the Outcome may contain
 	NoEventReason string      `json:"noEventReason,omitempty"` // explicit exemption when Events is empty
@@ -60,6 +63,9 @@ type Definition struct {
 func (d Definition) Validate() error {
 	if !validName(d.Ref.Name) || d.Ref.Version < 1 {
 		return fmt.Errorf("invalid operation ref %q", d.Ref)
+	}
+	if d.Targets == "" {
+		return fmt.Errorf("%s: Targets must name the request field holding the targets", d.Ref)
 	}
 	if d.MaxTargets < 1 || d.MaxTargets > 1000 {
 		return fmt.Errorf("%s: MaxTargets must be 1..1000", d.Ref)
@@ -145,6 +151,126 @@ func Fingerprint(ref Ref, in Input) string {
 	}
 	return hex.EncodeToString(h.Sum(nil))
 }
+
+// FingerprintVersion prefixes RequestFingerprint values. Ledger rows without
+// it were written by v0.1 (Fingerprint over the normalized Input).
+const FingerprintVersion = "v2:"
+
+// RequestFingerprint binds a request to its operation version and to every
+// field of the raw JSON object, so a field the domain's Normalize forgets
+// still separates two requests. Only the declared targets field is compared
+// as a set (it must equal targets: a string for one target, or an array);
+// every other value, including array order, is kept as sent. Duplicate keys
+// at any depth, including keys that differ only in case (encoding/json
+// matches field names case-insensitively), are Invalid, so the fingerprint and
+// Normalize cannot read different values.
+func RequestFingerprint(ref Ref, targetsField string, raw []byte, targets []string) (string, error) {
+	if err := noDuplicateKeys(raw); err != nil {
+		return "", err
+	}
+	dec := json.NewDecoder(bytes.NewReader(raw))
+	dec.UseNumber() // keep numbers exactly as sent
+	var body map[string]any
+	if err := dec.Decode(&body); err != nil || body == nil {
+		return "", Invalidf("request must be a JSON object")
+	}
+	sorted := slices.Clone(targets)
+	slices.Sort(sorted)
+	match := false
+	switch x := body[targetsField].(type) {
+	case string:
+		match = len(sorted) == 1 && x == sorted[0]
+	case []any:
+		ids := make([]string, 0, len(x))
+		for _, e := range x {
+			if s, ok := e.(string); ok {
+				ids = append(ids, s)
+			}
+		}
+		slices.Sort(ids)
+		if len(ids) == len(x) && slices.Equal(ids, sorted) {
+			body[targetsField], match = ids, true
+		}
+	}
+	if !match {
+		return "", Internalf("%s: Normalize targets differ from request field %q", ref, targetsField)
+	}
+	canonical, err := json.Marshal(body) // map keys are sorted
+	if err != nil {
+		return "", Internalf("%s: %v", ref, err)
+	}
+	return FingerprintVersion + Fingerprint(ref, Input{Targets: sorted, Payload: canonical}), nil
+}
+
+// foldKey maps each rune to the smallest rune of its Unicode simple-fold
+// orbit, so keys encoding/json would match to the same field (e.g. "reason",
+// "Reason", "reaſon") get the same key.
+func foldKey(s string) string {
+	var b strings.Builder
+	for _, r := range s {
+		min := r
+		for f := unicode.SimpleFold(r); f != r; f = unicode.SimpleFold(f) {
+			if f < min {
+				min = f
+			}
+		}
+		b.WriteRune(min)
+	}
+	return b.String()
+}
+
+// noDuplicateKeys rejects any object, at any depth, with two keys that are
+// equal under Unicode simple case folding.
+func noDuplicateKeys(raw []byte) error {
+	dec := json.NewDecoder(bytes.NewReader(raw))
+	var walk func() error
+	walk = func() error {
+		t, err := dec.Token()
+		if err != nil {
+			return err
+		}
+		switch t {
+		case json.Delim('{'):
+			seen := map[string]bool{}
+			for dec.More() {
+				k, err := dec.Token()
+				if err != nil {
+					return err
+				}
+				key := foldKey(k.(string))
+				if seen[key] {
+					return Invalidf("duplicate field %q", k)
+				}
+				seen[key] = true
+				if err := walk(); err != nil {
+					return err
+				}
+			}
+			_, err = dec.Token()
+			return err
+		case json.Delim('['):
+			for dec.More() {
+				if err := walk(); err != nil {
+					return err
+				}
+			}
+			_, err = dec.Token()
+			return err
+		}
+		return nil
+	}
+	if err := walk(); err != nil {
+		if CodeOf(err) == Invalid {
+			return err
+		}
+		return Invalidf("malformed request")
+	}
+	return nil
+}
+
+// UniformDenial is the only message a client sees for a Denied operation, so
+// a denial never reveals whether or why a target is ineligible.
+const UniformDenial = "not permitted, or one or more targets are not eligible"
 
 // ValidKey reports whether key is an acceptable idempotency key.
 func ValidKey(key string) bool {

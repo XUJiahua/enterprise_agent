@@ -60,7 +60,7 @@ go get github.com/XUJiahua/enterprise_agent@<tag 或 commit>
 ## 已知限制
 
 - 可信宿主模型：身份由宿主绑定，领域模块是经审查的同进程 Go 代码。`Session` 只防误用，不是沙箱。
-- 直接写 SQL 不会获得操作级约束（父单锁协议、完整目标检查、审计）；数据库只兜底租户 RLS 与列授权。
+- 直接写 SQL 拿不到操作级的审计、幂等和完整目标检查。v0.1.1 起，状态机、职责分离、验收与关闭的不变量由数据库触发器兜底（migration 0007）。
 - `contract.json` 只覆盖定义层面；Normalize/Execute 的行为变化需要人工保证版本纪律。
 - migration 内容不可变只在可信 Git 基线下检查（`appctl verify --base`）；不发现线上手工 DDL。
 - `kernel.pending_tenants` 的 owner 必须是 superuser 或 BYPASSRLS 的迁移角色。
@@ -69,3 +69,12 @@ go get github.com/XUJiahua/enterprise_agent@<tag 或 commit>
 - 采购示例使用固定 demo 身份。原 `/` 页面仍是三条 POC 路线的共享界面、走旧 API，未迁移；产品的完整流程在 `/procurement`。旧 `internal/opkernel` 保留用于历史回放。
 - golang-migrate 用 v4.19.1（v4.20.1 会连带升级 pgx 与 Go 版本，见 kernel.md）。
 - 第二业务域、多合法事件、多轮维护成本属于后续研究，不在 v0.1。
+
+## v0.1.1
+
+把原先需要领域代码自觉遵守的约定收回平台，并给 Agent 提供入口：
+
+- 内核：请求指纹覆盖原始请求的全部顶层字段；Denied 错误的消息统一为 `kernel.UniformDenial`。
+- 数据库：0007 触发器保证状态机、审批人不是创建人、验收覆盖金额才能关闭、验收只能记在 approved 单上（插入时锁父单）。
+- 工具：`appctl validate` 增加静态写路径规则。
+- `AGENTS.md`：给 Agent 的操作说明、禁止事项和完成前检查。

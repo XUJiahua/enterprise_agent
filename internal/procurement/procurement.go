@@ -176,7 +176,7 @@ type createRequest struct {
 }
 
 func (create) Definition() kernel.Definition {
-	return kernel.Definition{Ref: CreateRef, MaxTargets: 1, NoEventReason: "new purchases are seen through the list; no consumer"}
+	return kernel.Definition{Ref: CreateRef, Targets: "id", MaxTargets: 1, NoEventReason: "new purchases are seen through the list; no consumer"}
 }
 
 func (create) Normalize(raw json.RawMessage) (kernel.Input, error) {
@@ -225,7 +225,7 @@ func (create) Execute(ctx context.Context, s *pg.Session, in kernel.Input) (kern
 type approve struct{}
 
 func (approve) Definition() kernel.Definition {
-	return kernel.Definition{Ref: ApproveRef, MaxTargets: 100,
+	return kernel.Definition{Ref: ApproveRef, Targets: "ids", MaxTargets: 100,
 		NoEventReason: "no registered consumer for approvals; the M2 notification projection consumes closes only"}
 }
 
@@ -258,7 +258,7 @@ func (approve) Execute(ctx context.Context, s *pg.Session, in kernel.Input) (ker
 type receive struct{}
 
 func (receive) Definition() kernel.Definition {
-	return kernel.Definition{Ref: ReceiveRef, MaxTargets: 1, NoEventReason: "receipts are read through the purchase; no consumer"}
+	return kernel.Definition{Ref: ReceiveRef, Targets: "purchaseId", MaxTargets: 1, NoEventReason: "receipts are read through the purchase; no consumer"}
 }
 
 func (receive) Normalize(raw json.RawMessage) (kernel.Input, error) {
@@ -305,7 +305,7 @@ func (receive) Execute(ctx context.Context, s *pg.Session, in kernel.Input) (ker
 type closeOp struct{}
 
 func (closeOp) Definition() kernel.Definition {
-	return kernel.Definition{Ref: CloseRef, MaxTargets: 100, Events: []kernel.EventType{ClosedEvent}}
+	return kernel.Definition{Ref: CloseRef, Targets: "ids", MaxTargets: 100, Events: []kernel.EventType{ClosedEvent}}
 }
 
 func (closeOp) Normalize(raw json.RawMessage) (kernel.Input, error) { return normalizeBulk(raw, true) }

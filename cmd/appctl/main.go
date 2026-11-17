@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"reflect"
 	"slices"
 	"strings"
 
@@ -50,7 +51,7 @@ func run() int {
 		if f.Parse(os.Args[2:]) != nil {
 			return 1
 		}
-		return report(append([]Finding{}, contractFindings(*root, *base)...))
+		return report(append(append([]Finding{}, contractFindings(*root, *base)...), writeFindings(*root)...))
 	}
 	f := flag.NewFlagSet(command, flag.ContinueOnError)
 	root := f.String("root", ".", "application root")
@@ -327,16 +328,37 @@ func contractFindings(root, base string) []Finding {
 	if err := json.Unmarshal(old, &prev); err != nil {
 		return append(findings, Finding{"BASE_CONTRACT_INVALID", contractFile, err.Error()})
 	}
-	for _, p := range prev.Operations {
+	// Compare raw JSON so a definition field the kernel added after base was
+	// published (absent there) is not reported as an in-place change.
+	var prevRaw struct{ Operations []map[string]json.RawMessage }
+	_ = json.Unmarshal(old, &prevRaw)
+	for i, p := range prev.Operations {
 		for _, d := range c.Operations {
-			if d.Ref == p.Ref {
-				a, _ := json.Marshal(p)
-				b, _ := json.Marshal(d)
-				if string(a) != string(b) {
-					findings = append(findings, Finding{"CONTRACT_CHANGED_WITHOUT_VERSION", contractFile, d.Ref.String() + " changed; publish it as a new version"})
+			if d.Ref != p.Ref || i >= len(prevRaw.Operations) {
+				continue
+			}
+			var now map[string]json.RawMessage
+			b, _ := json.Marshal(d)
+			_ = json.Unmarshal(b, &now)
+			was := prevRaw.Operations[i]
+			for k, v := range now {
+				if w, published := was[k]; !published && k == "targets" {
+					continue // added in v0.1.1
+				} else if !published || !jsonEqual(w, v) {
+					findings = append(findings, Finding{"CONTRACT_CHANGED_WITHOUT_VERSION", contractFile, d.Ref.String() + " changed " + k + "; publish it as a new version"})
+				}
+			}
+			for k := range was {
+				if _, ok := now[k]; !ok {
+					findings = append(findings, Finding{"CONTRACT_CHANGED_WITHOUT_VERSION", contractFile, d.Ref.String() + " dropped " + k + "; publish it as a new version"})
 				}
 			}
 		}
 	}
 	return findings
+}
+
+func jsonEqual(a, b json.RawMessage) bool {
+	var x, y any
+	return json.Unmarshal(a, &x) == nil && json.Unmarshal(b, &y) == nil && reflect.DeepEqual(x, y)
 }

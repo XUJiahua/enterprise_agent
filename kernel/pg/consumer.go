@@ -90,7 +90,7 @@ func Describe(reg Registry) (Contract, error) {
 	names := map[string]bool{}
 	for _, cs := range reg.Consumers {
 		cc := ConsumerContract{Name: cs.Name(), Events: slices.Clone(cs.Events())}
-		probe := kernel.Definition{Ref: kernel.Ref{Name: cc.Name, Version: 1}, MaxTargets: 1, Events: cc.Events}
+		probe := kernel.Definition{Ref: kernel.Ref{Name: cc.Name, Version: 1}, Targets: "-", MaxTargets: 1, Events: cc.Events}
 		if err := probe.Validate(); err != nil {
 			return Contract{}, fmt.Errorf("pg: consumer %q: %w", cc.Name, err)
 		}
