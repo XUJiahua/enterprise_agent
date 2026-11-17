@@ -30,11 +30,8 @@ func setup(t *testing.T, beforeSeed ...string) (*pgtest.DB, *pg.Runner) {
 	d := pgtest.New(t)
 	d.Exec(t, `DO $$ BEGIN CREATE ROLE enterprise_runtime NOLOGIN; EXCEPTION WHEN duplicate_object THEN NULL; END $$`)
 	d.Exec(t, `GRANT enterprise_runtime TO `+pgtest.Runtime+` WITH INHERIT TRUE`)
-	files, _ := fs.Glob(procurement.Migrations, "migrations/*.up.sql")
-	slices.Sort(files)
-	for _, f := range files {
-		b, _ := fs.ReadFile(procurement.Migrations, f)
-		d.Exec(t, string(b))
+	if v, applied, err := procurement.Migrate(d.AdminURL); err != nil || !applied || v != 3 {
+		t.Fatal("migrate:", v, applied, err)
 	}
 	for _, sql := range beforeSeed {
 		d.Exec(t, sql)

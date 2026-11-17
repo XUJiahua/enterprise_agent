@@ -3,6 +3,7 @@ build:
 	mkdir -p bin
 	go build -o bin/server ./cmd/server
 	go build -o bin/appctl ./cmd/appctl
+	go build -o bin/product ./cmd/product
 check: build
 	bin/appctl verify
 test: build
