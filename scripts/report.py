@@ -91,8 +91,14 @@ assert replay==replay_frozen and replay['out_of_sample'] is False and replay['co
 assert operations['catalog']==replay['catalog']
 opkernel=(root/'opkernel-db.txt').read_text()
 assert '--- PASS: TestCatalogOperationsDB' in opkernel and '--- SKIP' not in opkernel and '\nok ' in opkernel
+oracle_resume=json.loads((root/'oracle-resume-controls.json').read_text())
+assert oracle_resume['ok'] and oracle_resume['tests']==13
+assert not oracle_resume['failures'] and not oracle_resume['errors'] and not oracle_resume['skipped']
+assert oracle_resume['patch_applied'] and oracle_resume['oracle_base_sha']=='e75c744a280d13854f154f637c462f4dc4faa192'
+assert oracle_resume['new_model_generations']==0 and oracle_resume['real_host_contacted'] is False
 text='# Controlled POC results\n\n| Path | Healthy acceptance | Faults blocked |\n|---|---:|---:|\n'
 for route,acceptance,blocked in rows:text+=f'| {route} | {acceptance} | {blocked} |\n'
+text+='\nOracle v9 resume handoff: pinned-base patch applies; 13 no-model subprocess controls pass. No real model or evaluator host contacted. Oracle write access remains unavailable through the current integration.\n'
 text+='\nVerifier adversarial probes: 7/7. Direct SQL probes: 6/6. Startup configuration probes: 2/2. Shared browser acceptance: 18/18. Synthetic evaluator controls: 4 committed-candidate evaluations plus 1 driver end-to-end control (not AI measurements).\n\nThese are hand-authored fault injections, not measured AI defect rates or first-pass productivity. A guarded field over-fetch fails closed with 403; ZenStack nullifies the denied field. Disabling the ZenStack policy client is an expected escaping boundary control.\n'
 text+='\nPublic CI model key configured for this run: '+('unknown (local, CI Secret not checked)' if configured is None else str(configured))+'. Model execution is not enabled by PR checks.\n'
 text+='\nPR 7 archived replay: 9 candidates / 195 frozen cases; 45 post-hoc cases. Manual interventions and business-contract probes are separate from model first-pass rates.\n'

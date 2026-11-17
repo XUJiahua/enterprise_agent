@@ -8,11 +8,13 @@
 
 **v3–v9 已完成真实 Kiro 模型实验。Kiro 后端、文件与网络隔离、跨主机私有 Oracle 流程都已经存在。不要重做首个 v3 pilot。** 公开工程包含受保护的操作语义目录、事务内核、目录绑定 Verifier 和 v9 事件登记规则，仍是采购审批 POC。
 
-本次工程整合包含 #15–#25 及 #27–#31 的 16 个开放 PR、51 个原始提交，保留全部原始 SHA。它们在收尾开始时均未合并 main，各 PR 最新提交的 CI 均成功。本文随整合 PR 交付，**合并状态以 GitHub 为准**；接手时记录实际 `origin/main` 和工作分支 HEAD，不把工作分支当成已发布 main。
+原 16 个 PR（#15–#25、#27–#31）已通过 [PR #33](https://github.com/XUJiahua/enterprise_agent/pull/33) 合入 main，merge commit 为 `e8248d836f086a221eae521a72068e63d140232a`，保留全部 51 个原始提交。旧 PR 已关闭并注明整合去向（#15 被 GitHub 自动标记 merged）。[合并后 main CI](https://github.com/XUJiahua/enterprise_agent/actions/runs/44048578930) 六个 jobs 全部成功。
+
+2026-11-17 后续：`goodloris/oracle` 现已由所有者公开。已基于固定 v9 提交实现续跑修复，13 项 subprocess 控制通过；当前连接器写 oracle 返回 HTTP 403，修复以 [补丁与交接](oracle-v9-resume-handoff.md) 保存，尚未直接提交或部署到 oracle。
 
 研究交接见 [Issue #32](https://github.com/XUJiahua/enterprise_agent/issues/32)，冻结承诺见 [Issue #26](https://github.com/XUJiahua/enterprise_agent/issues/26)。本次收尾没有调用模型，没有新增模型样本，也没有修改历史计划、Oracle、评分或 evidence。
 
-优先顺序：确认整合 PR 的 CI 与合并状态 → 在有权限的环境接入私有续跑修复 → 提取私有内核可复用能力 → 多合法事件与持续业务演进实验。
+优先顺序：在有 oracle 写权限的环境应用并提交续跑补丁 → 确认真实主机部署条件 → 提取实验叠加层的可复用平台能力 → 使用新隐藏任务开展多合法事件与持续业务演进实验。
 
 ## POC 目标与架构
 
@@ -55,9 +57,9 @@ v3–v5b 共 362 个计划 trial；v6–v9 共 1,200 个计划 trial。任务和
 | `cmd/action-server` | 事务化批量审批，其他 API 委托原服务 | UI 已迁移到目录内核 |
 | `internal/opdef` / `internal/opkernel` | 五个公开条目；字段修改仅管理 `assigneeId`，记录 `AssignmentHistory` | 已支持任意实体、字段和历史表 |
 | `benchmark/phase3` 至 `phase6b` | 模板、Oracle、控制、导出和交接 | 已部署的新业务功能 |
-| `goodloris/oracle` 私有仓库 | v7–v9 任务、独立 Oracle、原始证据、复杂内核叠加层 | 所有已测平台能力均已公开 |
+| `goodloris/oracle`（原私有，现公开） | v7–v9 任务、独立 Oracle、原始证据、复杂内核叠加层 | 所有已测平台能力均已公开 |
 
-v8b 的跨表前置条件、时间窗、逐项更新，以及其他新字段能力仍在私有叠加层。本次整合不自动迁移它们。后续仅提取可复用平台代码和独立公开控制，保留隐藏任务、seed、Oracle 私有。
+v8b 的跨表前置条件、时间窗、逐项更新，以及其他新字段能力仍在 oracle 的实验叠加层。本次整合不自动迁移它们。后续仅提取可复用平台代码和独立公开控制，保留隐藏任务、seed、Oracle 私有。
 
 消费者登记规则证明事件在受保护清单中；目录双向检查不证明真实消费者已部署或正确处理。实际 notify 仍是分期 fixture。见 [操作语义设计](operation-semantics.md)。
 
@@ -127,17 +129,19 @@ python3 scripts/archive_preflight.py --run /absolute/lane --trial given--011 && 
 
 后半段是操作员已有、核对同一计划的续跑入口，不是本仓库的脚本。必须用 `&&` 或检查退出码，不在归档失败后继续。归档工具不生成、不重试、不改计划，不以目录存在推断 trial 已完成。
 
-**私有 `scripts/resume_v9.sh` 尚未修复。** 当前 GitHub 连接访问 `goodloris/oracle` 返回 404，无法检查其多阶段状态或直接修改。接手方需在私有驱动层接入等价逻辑，并测试真实格式；公开工具通过控制不代表私有驱动已修复。
+**oracle v9 续跑源码修复已完成为补丁，尚未写回或部署。** 源码现在可读，已核对真实两阶段输出形状；补丁修复重复归档、移动失败传播、传输恢复、数据库槽位复用、后台失败和缺失评分。13 项真实 Bash/Python/tar、模拟 SSH/DB 控制通过，冻结分析脚本自检通过。写回受到 GitHub App 的 HTTP 403 限制；完整应用步骤、补丁和 CI 控制见 [oracle-v9-resume-handoff.md](oracle-v9-resume-handoff.md)。本仓库中的简易 archive_preflight 工具不替代新的 oracle 多阶段驱动修复。
 
-私有证据锚点：v7 `main` / `ea3dc6f`；v8a `v8a` / `f387120`；v8b `v8b` / `f9a0d5d`；v9 `v9` / `e75c744`。验收主机 `root@10.30.11.112` 仅使用 `/opt/poc-oracle`，原交接报告根盘 97%，使用前确认空间，不自动清理历史证据。主机无 GitHub 凭据。本次没有连接或修改该主机。
+历史 v7–v9 的隐藏条件以采集时为准，公开后的旧任务只能用于复现/工程控制；未来盲测必须使用新的、生成端不可访问的任务与 Oracle。
+
+历史证据锚点（现已公开）：v7 `main` / `ea3dc6f`；v8a `v8a` / `f387120`；v8b `v8b` / `f9a0d5d`；v9 `v9` / `e75c744`。验收主机 `root@10.30.11.112` 仅使用 `/opt/poc-oracle`，原交接报告根盘 97%，使用前确认空间，不自动清理历史证据。主机无 GitHub 凭据。本次没有连接或修改该主机。
 
 ## 待办与验收
 
 | 优先级 | 工作 | 完成标准 |
 |---|---|---|
-| P0 | 公开工程整合 | 完整 CI；保留 51 个原始提交；明确旧 PR 状态；合并后 main 再通过 CI |
-| P0 | 私有续跑修复 | 同 trial 同日三次阻塞均保留；移动失败停止；已开始生成不重跑；每个计划 trial 有唯一终局或明确未测量 |
-| P1 | 平台能力迁移 | 提取跨表条件/时间窗/逐项更新；公开独立控制与旧条目回归；不公开隐藏 Oracle |
+| 已完成 | 公开工程整合 | PR #33 已合入 main；保留 51 个原始提交；旧 PR 已收拢；main 六项 CI 通过 |
+| P0 | Oracle 补丁写回与部署 | 补丁和 13 项控制已准备；在有写权限的环境创建 v9 PR；部署时核对冻结 harness，不重跑已有观察值 |
+| P1 | 平台能力迁移 | 从 oracle 实验叠加层提取跨表条件/时间窗/逐项更新；独立控制与旧条目回归；未来新隐藏 Oracle 单独保存 |
 | P1 | 消费者契约 | 实际消费者与载荷版本联动检查；识别未部署和不兼容 |
 | P1 | 多合法事件 | 包含合法事件互换反例；权威判断依据独立于待审条目；新私有 Oracle 与预注册 |
 | P1 | 持续演进与总成本 | 多次改阈值、权限、指纹、事件版本；计入平台扩展、审查、修复与回归成本 |
@@ -147,15 +151,16 @@ python3 scripts/archive_preflight.py --run /absolute/lane --trial given--011 && 
 ## Kiro 接手任务
 
 ```text
-请接手 enterprise_agent 工程收尾。先读最新 docs/HANDOFF.md、Issue #32、
-整合 PR 和 CI YAML，记录实际 main/分支 HEAD，核对哪些改动已经合并。
-v3–v9 和 Kiro 后端已完成，不重做 pilot，不改历史计划/评分/evidence。
+请接手 enterprise_agent 与 oracle v9 的工程收尾。先读 docs/HANDOFF.md、
+docs/oracle-v9-resume-handoff.md 和 Issue #32。PR #33 已合并，旧 PR 已收拢，
+main 的六项 CI 通过；v3–v9 和 Kiro 后端均已完成，不重做 pilot。
 
-先验证公开完整回归和 main 合并状态。有 goodloris/oracle 权限时，检查私有
-scripts/resume_v9.sh，按 archive_preflight.py 的唯一槽位、失败停止原则
-修复，在私有驱动层覆盖重复阻塞、已开始生成、移动失败和漏跑计数。
-随后独立 PR 提取私有内核通用能力，保留隐藏任务、seed 与 Oracle 私有。
+在有 goodloris/oracle 写权限的环境，基于固定提交 e75c744 应用 maintenance/
+oracle-v9-resume.patch，运行 13 项控制并创建以 v9 为 base 的 PR。不要移动
+验收主机的冻结 harness checkout，不重跑已有 trial，不修改历史评分或证据。
+源码修复尚未部署到真实主机；先核对运行进程、槽位、空间与冻结计划。
 
-新模型队列先冻结预注册，不能静默扩大预算。使用独立 worktree/分支与 PR，
-不直接 push main。交付代码、操作说明、实际证据和剩余阻塞。
+然后独立 PR 提取实验叠加层的通用能力。oracle 旧任务已公开，只能复现；
+新的确认性盲测必须准备新的隐藏任务和独立 Oracle，先冻结预注册与预算。
+使用独立 worktree/分支和 PR，不直接 push main；交付实际证据和剩余限制。
 ```
