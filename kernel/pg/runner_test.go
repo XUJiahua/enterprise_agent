@@ -89,7 +89,12 @@ ALTER TABLE toy.item ENABLE ROW LEVEL SECURITY, FORCE ROW LEVEL SECURITY;
 CREATE POLICY tenant ON toy.item USING (tenant_id = current_setting('app.tenant', true));
 GRANT USAGE ON SCHEMA toy, kernel TO kernel_test_runtime;
 GRANT SELECT, UPDATE (marked) ON toy.item TO kernel_test_runtime;
-GRANT SELECT, INSERT ON kernel.request, kernel.audit, kernel.outbox TO kernel_test_runtime;
+GRANT SELECT, INSERT ON kernel.request, kernel.audit, kernel.outbox, kernel.inbox TO kernel_test_runtime;
+GRANT EXECUTE ON FUNCTION kernel.pending_tenants(text, text[]) TO kernel_test_runtime;
+CREATE TABLE toy.log (tenant_id text NOT NULL, event_id bigint UNIQUE NOT NULL, item text NOT NULL);
+ALTER TABLE toy.log ENABLE ROW LEVEL SECURITY, FORCE ROW LEVEL SECURITY;
+CREATE POLICY tenant ON toy.log USING (tenant_id = current_setting('app.tenant', true));
+GRANT SELECT, INSERT ON toy.log TO kernel_test_runtime;
 INSERT INTO toy.item (tenant_id, id) VALUES ('t1','a'),('t1','b'),('t1','c'),('t1','d'),('t2','x');`
 
 var (
@@ -100,12 +105,13 @@ var (
 func setup(t *testing.T, ops ...pg.Operation) (*pgtest.DB, *pg.Runner, *pgxpool.Pool) {
 	d := pgtest.New(t)
 	d.Exec(t, pg.Schema)
+	d.Exec(t, pg.InboxSchema)
 	d.Exec(t, toySchema)
 	pool := d.Pool(t)
 	if len(ops) == 0 {
 		ops = []pg.Operation{mark{version: 1}}
 	}
-	r, err := pg.New(context.Background(), pool, ops...)
+	r, err := pg.New(context.Background(), pool, registry(ops...))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -290,7 +296,7 @@ func TestPooledConnectionDoesNotLeakIdentity(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer pool.Close()
-	r, err := pg.New(ctx, pool, mark{version: 1})
+	r, err := pg.New(ctx, pool, registry(mark{version: 1}))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -328,17 +334,17 @@ func TestNewRejectsPrivilegedRuntimeAndBadDefinitions(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer admin.Close()
-	if _, err = pg.New(ctx, admin, mark{version: 1}); err == nil {
+	if _, err = pg.New(ctx, admin, registry(mark{version: 1})); err == nil {
 		t.Fatal("superuser runtime accepted")
 	}
-	if _, err = pg.New(ctx, pool, mark{version: 1}, mark{version: 1}); err == nil {
+	if _, err = pg.New(ctx, pool, registry(mark{version: 1}, mark{version: 1})); err == nil {
 		t.Fatal("duplicate registration accepted")
 	}
-	if _, err = pg.New(ctx, pool, mark{version: 0}); err == nil {
+	if _, err = pg.New(ctx, pool, registry(mark{version: 0})); err == nil {
 		t.Fatal("invalid definition accepted")
 	}
 	d.Exec(t, `ALTER TABLE kernel.audit NO FORCE ROW LEVEL SECURITY`)
-	if _, err = pg.New(ctx, pool, mark{version: 1}); err == nil {
+	if _, err = pg.New(ctx, pool, registry(mark{version: 1})); err == nil {
 		t.Fatal("unforced RLS accepted")
 	}
 }

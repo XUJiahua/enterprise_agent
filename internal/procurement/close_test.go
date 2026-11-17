@@ -202,7 +202,7 @@ func TestReceiveBeforeCloseCountsReceipt(t *testing.T) {
 
 func TestMigrateIsRepeatableAndRefusesDirty(t *testing.T) {
 	d, _ := setup(t)
-	if v, applied, err := procurement.Migrate(d.AdminURL); err != nil || applied || v != 3 {
+	if v, applied, err := procurement.Migrate(d.AdminURL); err != nil || applied || v != 5 {
 		t.Fatal("second run:", v, applied, err)
 	}
 	d.Exec(t, `UPDATE procurement_schema_migrations SET dirty = true`)
@@ -280,3 +280,40 @@ func TestHTTP(t *testing.T) {
 }
 
 func itoa(n int) string { b, _ := json.Marshal(n); return string(b) }
+
+func TestCloseNotifiesCreatorOnce(t *testing.T) {
+	d, r := approved(t)
+	ctx := context.Background()
+	for _, id := range []string{"p1", "p2"} {
+		amount := map[string]string{"p1": "900", "p2": "300"}[id]
+		if _, err := op(r, ann, procurement.ReceiveRef, "r-"+id, `{"purchaseId":"`+id+`","amount":`+amount+`}`); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if n, err := r.Drain(ctx, procurement.Notifier); n != 0 || err != nil {
+		t.Fatal("events before close:", n, err)
+	}
+	if _, err := op(r, bob, procurement.CloseRef, "c", `{"ids":["p1","p2"]}`); err != nil {
+		t.Fatal(err)
+	}
+	for i, wantN := range []int{2, 0} {
+		if n, err := r.Drain(ctx, procurement.Notifier); n != wantN || err != nil {
+			t.Fatalf("drain %d: %d %v", i, n, err)
+		}
+	}
+	want(t, "notifications", d.Strings(t, `SELECT recipient, purchase_id, kind FROM procurement.notification ORDER BY purchase_id`), "ann p1 closed", "ann p2 closed")
+	a, err := procurement.ListActivity(ctx, r, ann)
+	if err != nil || len(a.Notifications) != 2 || len(a.Audit) == 0 {
+		t.Fatal(a, err)
+	}
+	if a, _ = procurement.ListActivity(ctx, r, bob); len(a.Notifications) != 0 {
+		t.Fatal("bob sees ann's notifications:", a.Notifications)
+	}
+	// A closed event whose payload does not match closed@1 is reported and left pending.
+	d.Exec(t, `INSERT INTO kernel.outbox (tenant_id, actor_id, operation, version, key, event_type, event_version, target_id, payload)
+	 VALUES ('t1','bob','procurement.close',1,'c','procurement.purchase.closed',1,'p1','{"id":"p1","amount":900}')`)
+	if n, err := r.Drain(ctx, procurement.Notifier); n != 0 || err == nil || !strings.Contains(err.Error(), "payload does not match") {
+		t.Fatal(n, err)
+	}
+	want(t, "still two", d.Strings(t, `SELECT count(*) FROM procurement.notification`), "2")
+}

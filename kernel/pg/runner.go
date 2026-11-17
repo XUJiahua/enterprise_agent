@@ -80,8 +80,9 @@ type registered struct {
 
 // Runner executes registered operations. Create it with New.
 type Runner struct {
-	pool *pgxpool.Pool
-	ops  map[string]registered
+	pool      *pgxpool.Pool
+	ops       map[string]registered
+	consumers map[string]consumerReg
 }
 
 // Result is the stored outcome of one request; a replay returns the same Body.
@@ -91,14 +92,15 @@ type Result struct {
 	Replayed bool
 }
 
-// New validates and freezes the operation definitions and checks that the
-// pool's role cannot bypass the kernel tables' row level security.
-func New(ctx context.Context, pool *pgxpool.Pool, ops ...Operation) (*Runner, error) {
+// New validates and freezes the operation definitions, checks that declared
+// events and registered consumers match exactly, and checks that the pool's
+// role cannot bypass the kernel tables' row level security.
+func New(ctx context.Context, pool *pgxpool.Pool, reg Registry) (*Runner, error) {
 	if pool == nil {
 		return nil, errors.New("pg: nil pool")
 	}
 	r := &Runner{pool: pool, ops: map[string]registered{}}
-	for _, op := range ops {
+	for _, op := range reg.Operations {
 		def := op.Definition().Clone()
 		if err := def.Validate(); err != nil {
 			return nil, err
@@ -109,7 +111,14 @@ func New(ctx context.Context, pool *pgxpool.Pool, ops ...Operation) (*Runner, er
 		}
 		r.ops[id] = registered{op, def}
 	}
-	if err := CheckRuntime(ctx, pool, "kernel.request", "kernel.audit", "kernel.outbox"); err != nil {
+	if err := r.registerConsumers(reg.Consumers); err != nil {
+		return nil, err
+	}
+	tables := []string{"kernel.request", "kernel.audit", "kernel.outbox"}
+	if len(r.consumers) > 0 {
+		tables = append(tables, "kernel.inbox")
+	}
+	if err := CheckRuntime(ctx, pool, tables...); err != nil {
 		return nil, err
 	}
 	return r, nil

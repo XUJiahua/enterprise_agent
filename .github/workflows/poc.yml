@@ -203,7 +203,7 @@ jobs:
           path: reports/
   kernel:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 20
     services:
       postgres:
         image: postgres:17.6
@@ -248,6 +248,20 @@ jobs:
           mkdir -p bin && go build -o bin/product ./cmd/product && go build -o bin/appctl ./cmd/appctl
           scripts/product_smoke.sh 2>&1 | tee -a reports/kernel-db.txt
         shell: bash
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.11.1'
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - name: Product page browser E2E (receipts, bulk close, consumer notifications)
+        run: |
+          npm ci --prefix apps/web
+          npm run build --prefix apps/web
+          apps/web/node_modules/.bin/playwright install --with-deps chromium
+          scripts/product_browser.sh 2>&1 | tee -a reports/kernel-db.txt
+        shell: bash
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
       - uses: actions/upload-artifact@v4
         if: always()
         with:

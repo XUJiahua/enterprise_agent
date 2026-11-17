@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/XUJiahua/enterprise_agent/kernel"
 	"github.com/XUJiahua/enterprise_agent/kernel/pg"
@@ -19,6 +20,7 @@ type Authenticate func(*http.Request) (kernel.Principal, bool)
 //
 //	POST /v1/operations/{name}/{version}  (Idempotency-Key header, JSON body)
 //	GET  /v1/purchases
+//	GET  /v1/activity
 //
 // Every write goes through Runner.Run; reads go through Runner.Read.
 func Handler(r *pg.Runner, auth Authenticate) http.Handler {
@@ -62,7 +64,81 @@ func Handler(r *pg.Runner, auth Authenticate) http.Handler {
 		}
 		writeJSON(w, http.StatusOK, map[string]any{"purchases": list})
 	})
+	mux.HandleFunc("GET /v1/activity", func(w http.ResponseWriter, req *http.Request) {
+		p, ok := auth(req)
+		if !ok {
+			writeJSON(w, http.StatusUnauthorized, errorBody("unauthenticated", "missing or unknown identity"))
+			return
+		}
+		a, err := ListActivity(req.Context(), r, p)
+		if err != nil {
+			writeError(w, err)
+			return
+		}
+		writeJSON(w, http.StatusOK, a)
+	})
 	return mux
+}
+
+// AuditEntry is one kernel audit row as shown to tenant members.
+type AuditEntry struct {
+	Operation string          `json:"operation"`
+	Version   int             `json:"version"`
+	Actor     string          `json:"actor"`
+	Target    string          `json:"target"`
+	Change    json.RawMessage `json:"change"`
+	At        time.Time       `json:"at"`
+}
+
+// Notification is one projected notification for the caller.
+type Notification struct {
+	PurchaseID string    `json:"purchaseId"`
+	Kind       string    `json:"kind"`
+	At         time.Time `json:"at"`
+}
+
+// Activity is the tenant's latest 50 audit entries and the caller's latest 50 notifications.
+type Activity struct {
+	Audit         []AuditEntry   `json:"audit"`
+	Notifications []Notification `json:"notifications"`
+}
+
+func ListActivity(ctx context.Context, r *pg.Runner, p kernel.Principal) (Activity, error) {
+	a := Activity{Audit: []AuditEntry{}, Notifications: []Notification{}}
+	err := r.Read(ctx, p, func(s *pg.Session) error {
+		rows, err := s.Query(ctx, `SELECT operation, version, actor_id, target_id, change, created_at FROM kernel.audit ORDER BY id DESC LIMIT 50`)
+		if err != nil {
+			return err
+		}
+		for rows.Next() {
+			var e AuditEntry
+			var change []byte
+			if err := rows.Scan(&e.Operation, &e.Version, &e.Actor, &e.Target, &change, &e.At); err != nil {
+				rows.Close()
+				return err
+			}
+			e.Change = change
+			a.Audit = append(a.Audit, e)
+		}
+		rows.Close()
+		if err := rows.Err(); err != nil {
+			return err
+		}
+		rows, err = s.Query(ctx, `SELECT purchase_id, kind, created_at FROM procurement.notification WHERE recipient = $1 ORDER BY id DESC LIMIT 50`, p.Actor)
+		if err != nil {
+			return err
+		}
+		defer rows.Close()
+		for rows.Next() {
+			var n Notification
+			if err := rows.Scan(&n.PurchaseID, &n.Kind, &n.At); err != nil {
+				return err
+			}
+			a.Notifications = append(a.Notifications, n)
+		}
+		return rows.Err()
+	})
+	return a, err
 }
 
 // Purchase is the client-visible projection; only these fields are serialized.
