@@ -96,3 +96,44 @@ func TestKernelImportsNoInternalCode(t *testing.T) {
 		}
 	}
 }
+
+func TestRequestFingerprint(t *testing.T) {
+	ref := Ref{"op", 1}
+	fp := func(raw string, targets ...string) string {
+		t.Helper()
+		h, err := RequestFingerprint(ref, []byte(raw), targets)
+		if err != nil {
+			t.Fatal(raw, err)
+		}
+		return h
+	}
+	base := fp(`{"ids":["b","a"],"reason":"x","n":1}`, "a", "b")
+	if fp(`{"n":1,"reason":"x","ids":["a","b"]}`, "b", "a") != base {
+		t.Fatal("key or target order changed the fingerprint")
+	}
+	for name, raw := range map[string]string{
+		"reason": `{"ids":["a","b"],"reason":"y","n":1}`,
+		"number": `{"ids":["a","b"],"reason":"x","n":1.0}`,
+		"extra":  `{"ids":["a","b"],"reason":"x","n":1,"note":""}`,
+	} {
+		if fp(raw, "a", "b") == base {
+			t.Errorf("%s not bound by the fingerprint", name)
+		}
+	}
+	if fp(`{"id":"a","title":"a"}`, "a") == fp(`{"id":"a","title":"b"}`, "a") {
+		t.Error("single-target request ignores other fields")
+	}
+	for _, c := range []struct {
+		raw     string
+		targets []string
+		code    Code
+	}{
+		{`[1]`, []string{"a"}, Invalid},
+		{`{"ids":["a"]}`, []string{"b"}, Internal},
+		{`{"ids":["a","b"]}`, []string{"a"}, Internal},
+	} {
+		if _, err := RequestFingerprint(ref, []byte(c.raw), c.targets); CodeOf(err) != c.code {
+			t.Errorf("%s %v: %v", c.raw, c.targets, err)
+		}
+	}
+}

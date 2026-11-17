@@ -50,7 +50,7 @@ func run() int {
 		if f.Parse(os.Args[2:]) != nil {
 			return 1
 		}
-		return report(append([]Finding{}, contractFindings(*root, *base)...))
+		return report(append(append([]Finding{}, contractFindings(*root, *base)...), writeFindings(*root)...))
 	}
 	f := flag.NewFlagSet(command, flag.ContinueOnError)
 	root := f.String("root", ".", "application root")

@@ -19,8 +19,10 @@ import (
 // mark is a toy operation on toy.item: it sets marked=true on unmarked items.
 // fault lets a test make Execute misreport or fail after it has written.
 type mark struct {
-	version int
-	fault   func(*kernel.Outcome) error
+	version  int
+	fault    func(*kernel.Outcome) error
+	dropNote bool   // Normalize forgets to carry note into the payload
+	leak     string // Execute denies with this message instead of a neutral one
 }
 
 var markedEvent = kernel.EventType{Type: "toy.marked", Version: 1}
@@ -29,7 +31,7 @@ func (m mark) Definition() kernel.Definition {
 	return kernel.Definition{Ref: kernel.Ref{Name: "toy.mark", Version: m.version}, MaxTargets: 10, Events: []kernel.EventType{markedEvent}}
 }
 
-func (mark) Normalize(raw json.RawMessage) (kernel.Input, error) {
+func (m mark) Normalize(raw json.RawMessage) (kernel.Input, error) {
 	var req struct {
 		IDs  []string `json:"ids"`
 		Note string   `json:"note"`
@@ -40,6 +42,9 @@ func (mark) Normalize(raw json.RawMessage) (kernel.Input, error) {
 		return kernel.Input{}, kernel.Invalidf("bad request")
 	}
 	payload, _ := json.Marshal(map[string]string{"note": req.Note})
+	if m.dropNote {
+		payload = nil
+	}
 	return kernel.Input{Targets: req.IDs, Payload: payload}, nil
 }
 
@@ -67,6 +72,9 @@ func (m mark) Execute(ctx context.Context, s *pg.Session, in kernel.Input) (kern
 		return kernel.Outcome{}, err
 	}
 	if len(locked) != len(in.Targets) {
+		if m.leak != "" {
+			return kernel.Outcome{}, kernel.Deniedf("%s", m.leak)
+		}
 		return kernel.Outcome{}, kernel.Deniedf("targets not eligible")
 	}
 	if _, err := s.Exec(ctx, `UPDATE toy.item SET marked = true WHERE id = ANY($1)`, in.Targets); err != nil {
@@ -387,5 +395,24 @@ func TestReadIsTenantBoundAndReadOnly(t *testing.T) {
 	}
 	if err = r.Read(ctx, kernel.Principal{}, func(*pg.Session) error { return nil }); kernel.CodeOf(err) != kernel.Denied {
 		t.Fatal("Read without identity:", err)
+	}
+}
+
+// Kernel-owned conventions hold even when the domain code gets them wrong.
+func TestKernelOwnsFingerprintAndDenial(t *testing.T) {
+	_, r, _ := setup(t, mark{version: 1, dropNote: true, leak: "item nope does not exist"})
+	if _, err := run(r, ann, "k", `{"ids":["a"],"note":"x"}`); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := run(r, ann, "k", `{"ids":["a"],"note":"y"}`); kernel.CodeOf(err) != kernel.Conflict {
+		t.Fatal("a field Normalize dropped did not separate the requests:", err)
+	}
+	_, err := run(r, ann, "k2", `{"ids":["b","nope"]}`)
+	var e *kernel.Error
+	if !errors.As(err, &e) || e.Code != kernel.Denied || e.Msg != kernel.UniformDenial {
+		t.Fatalf("domain denial message reached the client: %v", err)
+	}
+	if _, err = r.Run(context.Background(), kernel.Principal{Tenant: "t1", Actor: "ann"}, ref, "k3", json.RawMessage(`{"ids":["a"]}`)); !errors.As(err, &e) || e.Msg != kernel.UniformDenial {
+		t.Fatalf("authorization denial not uniform: %v", err)
 	}
 }

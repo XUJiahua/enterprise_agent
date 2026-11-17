@@ -216,7 +216,7 @@ func TestReceiveBeforeCloseCountsReceipt(t *testing.T) {
 
 func TestMigrateIsRepeatableAndRefusesDirty(t *testing.T) {
 	d, _ := setup(t)
-	if v, applied, err := procurement.Migrate(d.AdminURL); err != nil || applied || v != 6 {
+	if v, applied, err := procurement.Migrate(d.AdminURL); err != nil || applied || v != 7 {
 		t.Fatal("second run:", v, applied, err)
 	}
 	d.Exec(t, `UPDATE procurement_schema_migrations SET dirty = true`)
@@ -259,8 +259,8 @@ func TestHTTP(t *testing.T) {
 		{"POST", "/v1/operations/procurement.receive/1", "ann", "k", `{"purchaseId":"p2","amount":1}`, 409, "", "conflict"},
 		{"POST", "/v1/operations/procurement.receive/x", "ann", "k", recv, 400, "", "invalid version"},
 		{"POST", "/v1/operations/procurement.nope/1", "ann", "k", recv, 400, "", "unknown operation"},
-		{"POST", "/v1/operations/procurement.close/2", "bob", "c", `{"ids":["p1"],"reason":"r"}`, 403, "", `"message":"one or more targets are not eligible"`},
-		{"POST", "/v1/operations/procurement.close/2", "bob", "c", `{"ids":["x1"],"reason":"r"}`, 403, "", `"message":"one or more targets are not eligible"`},
+		{"POST", "/v1/operations/procurement.close/2", "bob", "c", `{"ids":["p1"],"reason":"r"}`, 403, "", `"message":"not permitted, or one or more targets are not eligible"`},
+		{"POST", "/v1/operations/procurement.close/2", "bob", "c", `{"ids":["x1"],"reason":"r"}`, 403, "", `"message":"not permitted, or one or more targets are not eligible"`},
 		{"POST", "/v1/operations/procurement.close/2", "bob", "c2", `{"ids":["p2"]}`, 400, "", "reason is required"},
 		{"POST", "/v1/operations/procurement.close/1", "bob", "c2", `{"ids":["p2"]}`, 400, "", "unknown operation procurement.close@1"},
 		{"POST", "/v1/operations/procurement.close/2", "bob", "c2", `{"ids":["p2"],"reason":"received"}`, 200, "false", `{"closedIds":["p2"]}`},
@@ -403,4 +403,82 @@ func TestCreate(t *testing.T) {
 		}
 	}
 	want(t, "closed", d.Strings(t, `SELECT tenant_id, status FROM procurement.purchase WHERE id='new-1' ORDER BY 1`), "t1 closed", "t2 submitted")
+}
+
+// The invariants hold for SQL that bypasses the operations, run as the
+// application role with a bound tenant (and actor where noted).
+func TestDatabaseInvariantsHoldForRawSQL(t *testing.T) {
+	d, r := approved(t) // p1 (900), p2 (300) approved by bob
+	if _, err := op(r, ann, procurement.ReceiveRef, "r", `{"purchaseId":"p2","amount":300}`); err != nil {
+		t.Fatal(err)
+	}
+	ctx := context.Background()
+	pool := d.Pool(t)
+	try := func(label, actor, sql string, allowed bool) {
+		t.Helper()
+		tx, err := pool.Begin(ctx)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer func() { _ = tx.Rollback(ctx) }()
+		if _, err = tx.Exec(ctx, `SELECT set_config('app.tenant','t1',true), set_config('app.actor',$1,true)`, actor); err != nil {
+			t.Fatal(err)
+		}
+		_, err = tx.Exec(ctx, sql)
+		if (err == nil) != allowed {
+			t.Errorf("%s: allowed=%v err=%v", label, allowed, err)
+		}
+	}
+	try("close without enough receipts", "bob", `UPDATE procurement.purchase SET status='closed' WHERE id='p1'`, false)
+	try("close covered purchase", "bob", `UPDATE procurement.purchase SET status='closed' WHERE id='p2'`, true)
+	try("skip approval", "bob", `UPDATE procurement.purchase SET status='closed' WHERE id='own'`, false)
+	try("self-approve", "bob", `UPDATE procurement.purchase SET status='approved' WHERE id='own'`, false)
+	try("approve without bound actor", "", `UPDATE procurement.purchase SET status='approved' WHERE id='own'`, false)
+	try("approve by another actor", "ann", `UPDATE procurement.purchase SET status='approved' WHERE id='own'`, true)
+	try("receipt on submitted purchase", "ann", `INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','own',1,'ann')`, false)
+	if _, err := op(r, bob, procurement.CloseRef, "c", `{"ids":["p2"],"reason":"done"}`); err != nil {
+		t.Fatal(err)
+	}
+	try("reopen closed", "bob", `UPDATE procurement.purchase SET status='approved' WHERE id='p2'`, false)
+	try("receipt on closed purchase", "ann", `INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','p2',1,'ann')`, false)
+}
+
+// With the parent lock removed from receive (simulating a new write path that
+// forgets the protocol), the receipt trigger still serializes on the parent
+// row and refuses a receipt that would land on a closed purchase.
+func TestReceiptTriggerSerializesWithClose(t *testing.T) {
+	d, r := approved(t)
+	if _, err := op(r, ann, procurement.ReceiveRef, "r0", `{"purchaseId":"p2","amount":300}`); err != nil {
+		t.Fatal(err)
+	}
+	ctx := context.Background()
+	locked, release := barrier(t, procurement.CloseRef)
+	closing := async(func() error {
+		_, err := op(r, bob, procurement.CloseRef, "c", `{"ids":["p2"],"reason":"done"}`)
+		return err
+	})
+	<-locked
+	rawInsert := async(func() error {
+		tx, err := d.Pool(t).Begin(ctx)
+		if err != nil {
+			return err
+		}
+		defer func() { _ = tx.Rollback(ctx) }()
+		if _, err = tx.Exec(ctx, `SELECT set_config('app.tenant','t1',true)`); err != nil {
+			return err
+		}
+		if _, err = tx.Exec(ctx, `INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','p2',50,'ann')`); err != nil {
+			return err
+		}
+		return tx.Commit(ctx)
+	})
+	waitBlocked(t, d)
+	close(release)
+	if err := <-closing; err != nil {
+		t.Fatal(err)
+	}
+	if err := <-rawInsert; err == nil {
+		t.Fatal("raw receipt landed on a closed purchase")
+	}
+	want(t, "receipts", d.Strings(t, `SELECT amount FROM procurement.receipt WHERE purchase_id='p2'`), "300")
 }

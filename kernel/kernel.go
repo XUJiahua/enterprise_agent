@@ -7,6 +7,7 @@
 package kernel
 
 import (
+	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
@@ -145,6 +146,53 @@ func Fingerprint(ref Ref, in Input) string {
 	}
 	return hex.EncodeToString(h.Sum(nil))
 }
+
+// RequestFingerprint binds a request to its operation version and to every
+// top-level field of the raw JSON object, so a field the domain's Normalize
+// forgets to carry into the payload still separates two requests. The field
+// holding the targets (a string equal to the single target, or an array equal
+// to the target set) is compared as a sorted set, so target order does not
+// matter. raw with no such field is a contract violation of Normalize.
+func RequestFingerprint(ref Ref, raw []byte, targets []string) (string, error) {
+	dec := json.NewDecoder(bytes.NewReader(raw))
+	dec.UseNumber() // keep numbers exactly as sent
+	var body map[string]any
+	if err := dec.Decode(&body); err != nil || body == nil {
+		return "", Invalidf("request must be a JSON object")
+	}
+	sorted := slices.Clone(targets)
+	slices.Sort(sorted)
+	found := false
+	for k, v := range body {
+		switch x := v.(type) {
+		case string:
+			found = found || (len(sorted) == 1 && x == sorted[0])
+		case []any:
+			ids := make([]string, 0, len(x))
+			for _, e := range x {
+				if s, ok := e.(string); ok {
+					ids = append(ids, s)
+				}
+			}
+			slices.Sort(ids)
+			if len(ids) == len(x) && slices.Equal(ids, sorted) {
+				body[k], found = ids, true
+			}
+		}
+	}
+	if !found {
+		return "", Internalf("%s: Normalize targets do not match any top-level request field", ref)
+	}
+	canonical, err := json.Marshal(body) // map keys are sorted
+	if err != nil {
+		return "", Internalf("%s: %v", ref, err)
+	}
+	return Fingerprint(ref, Input{Targets: sorted, Payload: canonical}), nil
+}
+
+// UniformDenial is the only message a client sees for a Denied operation, so
+// a denial never reveals whether or why a target is ineligible.
+const UniformDenial = "not permitted, or one or more targets are not eligible"
 
 // ValidKey reports whether key is an acceptable idempotency key.
 func ValidKey(key string) bool {

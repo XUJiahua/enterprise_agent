@@ -41,6 +41,7 @@ POC_ROUTE=guarded npm start --prefix apps/web
 
 | 目的 | 入口 |
 |---|---|
+| 让 Agent 修改 v0.1 产品 | [AGENTS.md](AGENTS.md) |
 | 运行示例、切换方案、执行验证 | [本地运行](docs/getting-started.md) |
 | v0.1 Go 操作内核与采购参考应用 | [发布说明](docs/release-v0.1.md) · [内核说明](docs/kernel.md) · [issue #36](https://github.com/XUJiahua/enterprise_agent/issues/36) |
 | 理解业务语义与内核 | [操作目录与 Verifier](docs/operation-semantics.md) · [事务化 Action](docs/transactional-action.md) |

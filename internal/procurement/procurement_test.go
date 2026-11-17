@@ -36,7 +36,7 @@ func setup(t *testing.T, beforeSeed ...string) (*pgtest.DB, *pg.Runner) {
 	d.Exec(t, `DO $$ BEGIN CREATE ROLE enterprise_consumer NOLOGIN; EXCEPTION WHEN duplicate_object THEN NULL; END $$`)
 	d.Exec(t, `DO $$ BEGIN CREATE ROLE `+consumerRole+` LOGIN PASSWORD 'test-only' NOSUPERUSER NOBYPASSRLS; EXCEPTION WHEN duplicate_object THEN NULL; END $$`)
 	d.Exec(t, `GRANT enterprise_consumer TO `+consumerRole+` WITH INHERIT TRUE`)
-	if v, applied, err := procurement.Migrate(d.AdminURL); err != nil || !applied || v != 6 {
+	if v, applied, err := procurement.Migrate(d.AdminURL); err != nil || !applied || v != 7 {
 		t.Fatal("migrate:", v, applied, err)
 	}
 	for _, sql := range beforeSeed {

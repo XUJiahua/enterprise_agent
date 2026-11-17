@@ -172,8 +172,9 @@ func bind(ctx context.Context, tx pgx.Tx, p kernel.Principal) error {
 }
 
 // Run executes ref for principal p under idempotency key. A repeat of the same
-// key and request returns the stored result (Replayed); the same key with a
-// different request is a Conflict. If commit fails the outcome is unknown and
+// key and request (every top-level field of raw, targets as a set) returns the
+// stored result (Replayed); the same key with a different request is a
+// Conflict. Every Denied error carries kernel.UniformDenial as its message. If commit fails the outcome is unknown and
 // the error is Retryable: retry with the same key to learn it.
 func (r *Runner) Run(ctx context.Context, p kernel.Principal, ref kernel.Ref, key string, raw json.RawMessage) (Result, error) {
 	reg, ok := r.ops[ref.String()]
@@ -202,8 +203,12 @@ func (r *Runner) Run(ctx context.Context, p kernel.Principal, ref kernel.Ref, ke
 	if !json.Valid(in.Payload) {
 		return Result{}, kernel.Internalf("%s: Normalize returned invalid payload JSON", ref)
 	}
+	hash, err := kernel.RequestFingerprint(ref, raw, in.Targets)
+	if err != nil {
+		return Result{}, err
+	}
 	if err = reg.op.Authorize(p); err != nil {
-		return Result{}, classify(err)
+		return Result{}, uniform(err)
 	}
 
 	tx, err := r.pool.Begin(ctx)
@@ -218,7 +223,6 @@ func (r *Runner) Run(ctx context.Context, p kernel.Principal, ref kernel.Ref, ke
 	if _, err = tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1, 0))`, string(scope)); err != nil {
 		return Result{}, classify(err)
 	}
-	hash := kernel.Fingerprint(ref, in)
 	var saved Result
 	var savedHash string
 	err = tx.QueryRow(ctx, `SELECT request_hash, targets, result FROM kernel.request
@@ -236,7 +240,7 @@ func (r *Runner) Run(ctx context.Context, p kernel.Principal, ref kernel.Ref, ke
 
 	out, err := reg.op.Execute(ctx, &Session{tx, p}, in)
 	if err != nil {
-		return Result{}, classify(err)
+		return Result{}, uniform(err)
 	}
 	if err = checkOutcome(reg.def, in, out); err != nil {
 		return Result{}, err
@@ -320,6 +324,16 @@ func checkOutcome(def kernel.Definition, in kernel.Input, out kernel.Outcome) er
 func isObject(b json.RawMessage) bool {
 	b = bytes.TrimSpace(b)
 	return len(b) > 1 && b[0] == '{' && json.Valid(b)
+}
+
+// uniform replaces the message of any Denied error with kernel.UniformDenial
+// (keeping the cause for logs), so domain code cannot leak target existence.
+func uniform(err error) error {
+	err = classify(err)
+	if kernel.CodeOf(err) == kernel.Denied {
+		return &kernel.Error{Code: kernel.Denied, Msg: kernel.UniformDenial, Err: err}
+	}
+	return err
 }
 
 // classify keeps kernel errors, marks transient PostgreSQL failures
