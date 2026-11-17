@@ -17,6 +17,7 @@ import (
 	"context"
 	"embed"
 	"encoding/json"
+	"strings"
 	"unicode/utf8"
 
 	"github.com/XUJiahua/enterprise_agent/kernel"
@@ -43,8 +44,10 @@ var (
 	ApproveRef = kernel.Ref{Name: "procurement.approve", Version: 1}
 	// ReceiveRef records a goods receipt on one approved purchase.
 	ReceiveRef = kernel.Ref{Name: "procurement.receive", Version: 1}
-	// CloseRef: approved -> closed for 1..100 purchases whose receipts cover the amount.
-	CloseRef = kernel.Ref{Name: "procurement.close", Version: 1}
+	// CloseRef: approved -> closed for 1..100 purchases whose receipts cover
+	// the amount. Version 2 requires a reason (audit requirement); version 1,
+	// which allowed an empty reason, is retired and no longer registered.
+	CloseRef = kernel.Ref{Name: "procurement.close", Version: 2}
 	// ClosedEvent payload: {"id","amount","received"}.
 	ClosedEvent = kernel.EventType{Type: "procurement.purchase.closed", Version: 1}
 )
@@ -140,10 +143,13 @@ type bulkRequest struct {
 	Reason string   `json:"reason,omitempty"`
 }
 
-func normalizeBulk(raw json.RawMessage) (kernel.Input, error) {
+func normalizeBulk(raw json.RawMessage, requireReason bool) (kernel.Input, error) {
 	var req bulkRequest
 	if err := strict(raw, &req); err != nil {
 		return kernel.Input{}, err
+	}
+	if requireReason && strings.TrimSpace(req.Reason) == "" {
+		return kernel.Input{}, kernel.Invalidf("reason is required")
 	}
 	payload, err := reason(req.Reason)
 	return kernel.Input{Targets: req.IDs, Payload: payload}, err
@@ -162,7 +168,7 @@ func (approve) Definition() kernel.Definition {
 		NoEventReason: "no registered consumer for approvals; the M2 notification projection consumes closes only"}
 }
 
-func (approve) Normalize(raw json.RawMessage) (kernel.Input, error) { return normalizeBulk(raw) }
+func (approve) Normalize(raw json.RawMessage) (kernel.Input, error) { return normalizeBulk(raw, false) }
 func (approve) Authorize(p kernel.Principal) error                  { return requireRole(p, Approver) }
 
 func (approve) Execute(ctx context.Context, s *pg.Session, in kernel.Input) (kernel.Outcome, error) {
@@ -241,7 +247,7 @@ func (closeOp) Definition() kernel.Definition {
 	return kernel.Definition{Ref: CloseRef, MaxTargets: 100, Events: []kernel.EventType{ClosedEvent}}
 }
 
-func (closeOp) Normalize(raw json.RawMessage) (kernel.Input, error) { return normalizeBulk(raw) }
+func (closeOp) Normalize(raw json.RawMessage) (kernel.Input, error) { return normalizeBulk(raw, true) }
 func (closeOp) Authorize(p kernel.Principal) error                  { return requireRole(p, Approver) }
 
 func (closeOp) Execute(ctx context.Context, s *pg.Session, in kernel.Input) (kernel.Outcome, error) {

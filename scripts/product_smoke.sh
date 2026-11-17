@@ -35,12 +35,12 @@ call() { # user key path body -> "status body"
 }
 expect() { echo "$2" >&2; [[ "$2" == "$1"* ]] || { echo "FAIL: want prefix '$1'" >&2; exit 1; }; }
 
-expect '403' "$(call demo_bob c1 procurement.close/1 '{"ids":["po-1"]}')"
+expect '403' "$(call demo_bob c1 procurement.close/2 '{"ids":["po-1"],"reason":"received"}')"
 expect '200 {"amount":900,"purchaseId":"po-1"}' "$(call demo_alice r1 procurement.receive/1 '{"purchaseId":"po-1","amount":900}')"
-expect '403' "$(call demo_erin c2 procurement.close/1 '{"ids":["po-1"]}')"
-expect '200 {"closedIds":["po-1"]}' "$(call demo_bob c3 procurement.close/1 '{"ids":["po-1"]}')"
-expect '200 {"closedIds":["po-1"]}' "$(call demo_bob c3 procurement.close/1 '{"ids":["po-1"]}')"
-expect '409' "$(call demo_bob c3 procurement.close/1 '{"ids":["po-1"],"reason":"x"}')"
+expect '403' "$(call demo_erin c2 procurement.close/2 '{"ids":["po-1"],"reason":"received"}')"
+expect '200 {"closedIds":["po-1"]}' "$(call demo_bob c3 procurement.close/2 '{"ids":["po-1"],"reason":"received"}')"
+expect '200 {"closedIds":["po-1"]}' "$(call demo_bob c3 procurement.close/2 '{"ids":["po-1"],"reason":"received"}')"
+expect '409' "$(call demo_bob c3 procurement.close/2 '{"ids":["po-1"],"reason":"x"}')"
 expect '403' "$(call demo_alice r2 procurement.receive/1 '{"purchaseId":"po-1","amount":1}')"
 list=$(curl -s -H 'Authorization: Bearer demo_bob' "http://127.0.0.1:$port/v1/purchases")
 expect '{"purchases":[{"id":"po-1","title":"laptop","amount":900,"status":"closed","createdBy":"alice","received":900}]}' "$list"

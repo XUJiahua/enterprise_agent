@@ -46,13 +46,21 @@ func TestReceiveAndClose(t *testing.T) {
 		t.Fatal(err)
 	}
 	before := snapshot(t, d)
-	for name, raw := range map[string]string{"short p1": `{"ids":["p1"]}`, "p2 has none": `{"ids":["p1","p2"]}`, "submitted": `{"ids":["own"]}`, "other tenant": `{"ids":["x1"]}`} {
+	for name, raw := range map[string]string{"short p1": `{"ids":["p1"],"reason":"r"}`, "p2 has none": `{"ids":["p1","p2"],"reason":"r"}`, "submitted": `{"ids":["own"],"reason":"r"}`, "other tenant": `{"ids":["x1"],"reason":"r"}`} {
 		if _, err := op(r, bob, procurement.CloseRef, "c", raw); kernel.CodeOf(err) != kernel.Denied {
 			t.Errorf("close %s: %v", name, err)
 		}
 	}
-	if _, err := op(r, ann, procurement.CloseRef, "c", `{"ids":["p1"]}`); kernel.CodeOf(err) != kernel.Denied {
+	if _, err := op(r, ann, procurement.CloseRef, "c", `{"ids":["p1"],"reason":"done"}`); kernel.CodeOf(err) != kernel.Denied {
 		t.Error("requester closed:", err)
+	}
+	for _, raw := range []string{`{"ids":["p1"]}`, `{"ids":["p1"],"reason":"  "}`} {
+		if _, err := op(r, bob, procurement.CloseRef, "c", raw); kernel.CodeOf(err) != kernel.Invalid {
+			t.Errorf("close without reason %s: %v", raw, err)
+		}
+	}
+	if _, err := op(r, bob, kernel.Ref{Name: "procurement.close", Version: 1}, "c", `{"ids":["p1"]}`); kernel.CodeOf(err) != kernel.Invalid {
+		t.Error("retired close@1 still runs:", err)
 	}
 	for name, err := range map[string]error{
 		"approver receives": func() error {
@@ -107,7 +115,7 @@ func TestCloseOutboxFailureRollsBack(t *testing.T) {
 	d.Exec(t, `CREATE FUNCTION fail() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'outbox down'; END $$`)
 	d.Exec(t, `CREATE TRIGGER fail BEFORE INSERT ON kernel.outbox FOR EACH ROW EXECUTE FUNCTION fail()`)
 	before := snapshot(t, d)
-	if _, err := op(r, bob, procurement.CloseRef, "c", `{"ids":["p2"]}`); kernel.CodeOf(err) != kernel.Internal {
+	if _, err := op(r, bob, procurement.CloseRef, "c", `{"ids":["p2"],"reason":"done"}`); kernel.CodeOf(err) != kernel.Internal {
 		t.Fatal(err)
 	}
 	if got := snapshot(t, d); got != before {
@@ -158,7 +166,7 @@ func TestCloseBeforeReceiveRefusesReceipt(t *testing.T) {
 		t.Fatal(err)
 	}
 	locked, release := barrier(t, procurement.CloseRef)
-	closing := async(func() error { _, err := op(r, bob, procurement.CloseRef, "c", `{"ids":["p2"]}`); return err })
+	closing := async(func() error { _, err := op(r, bob, procurement.CloseRef, "c", `{"ids":["p2"],"reason":"done"}`); return err })
 	<-locked
 	receiving := async(func() error {
 		_, err := op(r, ann, procurement.ReceiveRef, "r1", `{"purchaseId":"p2","amount":50}`)
@@ -188,7 +196,7 @@ func TestReceiveBeforeCloseCountsReceipt(t *testing.T) {
 		return err
 	})
 	<-locked
-	closing := async(func() error { _, err := op(r, bob, procurement.CloseRef, "c", `{"ids":["p1"]}`); return err })
+	closing := async(func() error { _, err := op(r, bob, procurement.CloseRef, "c", `{"ids":["p1"],"reason":"done"}`); return err })
 	waitBlocked(t, d)
 	close(release)
 	if err := <-receiving; err != nil {
@@ -245,9 +253,11 @@ func TestHTTP(t *testing.T) {
 		{"POST", "/v1/operations/procurement.receive/1", "ann", "k", `{"purchaseId":"p2","amount":1}`, 409, "", "conflict"},
 		{"POST", "/v1/operations/procurement.receive/x", "ann", "k", recv, 400, "", "invalid version"},
 		{"POST", "/v1/operations/procurement.nope/1", "ann", "k", recv, 400, "", "unknown operation"},
-		{"POST", "/v1/operations/procurement.close/1", "bob", "c", `{"ids":["p1"]}`, 403, "", `"message":"one or more targets are not eligible"`},
-		{"POST", "/v1/operations/procurement.close/1", "bob", "c", `{"ids":["x1"]}`, 403, "", `"message":"one or more targets are not eligible"`},
-		{"POST", "/v1/operations/procurement.close/1", "bob", "c2", `{"ids":["p2"]}`, 200, "false", `{"closedIds":["p2"]}`},
+		{"POST", "/v1/operations/procurement.close/2", "bob", "c", `{"ids":["p1"],"reason":"r"}`, 403, "", `"message":"one or more targets are not eligible"`},
+		{"POST", "/v1/operations/procurement.close/2", "bob", "c", `{"ids":["x1"],"reason":"r"}`, 403, "", `"message":"one or more targets are not eligible"`},
+		{"POST", "/v1/operations/procurement.close/2", "bob", "c2", `{"ids":["p2"]}`, 400, "", "reason is required"},
+		{"POST", "/v1/operations/procurement.close/1", "bob", "c2", `{"ids":["p2"]}`, 400, "", "unknown operation procurement.close@1"},
+		{"POST", "/v1/operations/procurement.close/2", "bob", "c2", `{"ids":["p2"],"reason":"received"}`, 200, "false", `{"closedIds":["p2"]}`},
 	} {
 		status, h, body := call(c.method, c.path, c.user, c.key, c.body)
 		if status != c.status || h.Get("Idempotent-Replayed") != c.replayed || !strings.Contains(body, c.contains) {
@@ -293,7 +303,7 @@ func TestCloseNotifiesCreatorOnce(t *testing.T) {
 	if n, err := r.Drain(ctx, procurement.Notifier); n != 0 || err != nil {
 		t.Fatal("events before close:", n, err)
 	}
-	if _, err := op(r, bob, procurement.CloseRef, "c", `{"ids":["p1","p2"]}`); err != nil {
+	if _, err := op(r, bob, procurement.CloseRef, "c", `{"ids":["p1","p2"],"reason":"done"}`); err != nil {
 		t.Fatal(err)
 	}
 	for i, wantN := range []int{2, 0} {
@@ -311,7 +321,7 @@ func TestCloseNotifiesCreatorOnce(t *testing.T) {
 	}
 	// A closed event whose payload does not match closed@1 is reported and left pending.
 	d.Exec(t, `INSERT INTO kernel.outbox (tenant_id, actor_id, operation, version, key, event_type, event_version, target_id, payload)
-	 VALUES ('t1','bob','procurement.close',1,'c','procurement.purchase.closed',1,'p1','{"id":"p1","amount":900}')`)
+	 VALUES ('t1','bob','procurement.close',2,'c','procurement.purchase.closed',1,'p1','{"id":"p1","amount":900}')`)
 	if n, err := r.Drain(ctx, procurement.Notifier); n != 0 || err == nil || !strings.Contains(err.Error(), "payload does not match") {
 		t.Fatal(n, err)
 	}

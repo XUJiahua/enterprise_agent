@@ -47,6 +47,7 @@ export default function Procurement() {
   const [notes, setNotes] = useState<Notification[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
   const [receipt, setReceipt] = useState<Record<string, string>>({});
+  const [reason, setReason] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -121,8 +122,9 @@ export default function Procurement() {
 
   const closeSelected = () =>
     act(async () => {
-      const r = await api("operations/procurement.close/1", { ids: selected });
+      const r = await api("operations/procurement.close/2", { ids: selected, reason: reason.trim() });
       setSelected([]);
+      setReason("");
       return `已关闭 ${r.closedIds.length} 张采购单：${r.closedIds.join("、")}`;
     });
   const receive = (id: string) =>
@@ -198,14 +200,24 @@ export default function Procurement() {
                 <p>仅显示当前租户可访问的记录</p>
               </div>
               {current.role === "approver" && (
-                <button
-                  className="primary"
-                  style={{ width: "auto", marginTop: 0 }}
-                  disabled={busy || selected.length === 0}
-                  onClick={closeSelected}
-                >
-                  批量关闭所选（{selected.length}）
-                </button>
+                <span style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <input
+                    aria-label="关闭原因"
+                    placeholder="关闭原因（必填）"
+                    maxLength={200}
+                    value={reason}
+                    disabled={busy}
+                    onChange={(e) => setReason(e.target.value)}
+                  />
+                  <button
+                    className="primary"
+                    style={{ width: "auto", marginTop: 0 }}
+                    disabled={busy || selected.length === 0 || reason.trim() === ""}
+                    onClick={closeSelected}
+                  >
+                    批量关闭所选（{selected.length}）
+                  </button>
+                </span>
               )}
             </div>
             <div className="table-wrap">
@@ -306,6 +318,7 @@ export default function Procurement() {
                 {audit.map((a, i) => (
                   <li key={i}>
                     {a.actor} {operationLabel[a.operation] ?? a.operation} {a.target}
+                    {typeof a.change.reason === "string" && a.change.reason !== "" && <> · 原因：{a.change.reason}</>}
                   </li>
                 ))}
               </ul>

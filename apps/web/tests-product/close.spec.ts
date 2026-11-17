@@ -17,6 +17,8 @@ test("混合批次中有验收不足的采购单时整批不关闭", async ({ pa
   await as(page, "bob");
   await page.getByLabel("选择 po-100").check();
   await page.getByLabel("选择 po-101").check();
+  await expect(page.getByRole("button", { name: "批量关闭所选（2）" })).toBeDisabled();
+  await page.getByLabel("关闭原因").fill("月末结算");
   await page.getByRole("button", { name: "批量关闭所选（2）" }).click();
   await expect(page.locator(".error")).toContainText("所有采购单保持不变");
   await expect(status(page, "po-100")).toHaveText("已批准");
@@ -36,12 +38,13 @@ test("申请人补登验收后，审批人整批关闭并看到审计", async ({
   await as(page, "bob");
   await page.getByLabel("选择 po-100").check();
   await page.getByLabel("选择 po-101").check();
+  await page.getByLabel("关闭原因").fill("验收完成");
   await page.getByRole("button", { name: "批量关闭所选（2）" }).click();
   await expect(page.locator(".notice")).toContainText("已关闭 2 张采购单：po-100、po-101");
   await expect(status(page, "po-100")).toHaveText("已关闭");
   await expect(status(page, "po-101")).toHaveText("已关闭");
   await expect(page.getByLabel("选择 po-100")).toHaveCount(0);
-  await expect(page.getByTestId("audit")).toContainText("bob 关闭 po-101");
+  await expect(page.getByTestId("audit")).toContainText("bob 关闭 po-101 · 原因：验收完成");
   await expect(page.getByTestId("audit")).toContainText("alice 登记验收 po-101");
 });
 

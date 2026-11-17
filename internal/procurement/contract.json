@@ -11,7 +11,7 @@
     {
       "ref": {
         "name": "procurement.close",
-        "version": 1
+        "version": 2
       },
       "maxTargets": 100,
       "events": [
