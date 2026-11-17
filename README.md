@@ -1,6 +1,8 @@
 # Enterprise Agent — 可验证企业应用 POC
 
-接手入口：[当前工程交接（v1–v9，Kiro CLI）](docs/HANDOFF.md)；[分期实验总结](docs/experiment-summary-2026-11-15.md)。v3–v9 已有真实 Kiro 实验，当前优先工程整合、私有续跑修复与平台能力迁移；历史试验与主应用能力分别记录。
+接手入口：[当前工程交接（v1–v9，Kiro CLI）](docs/HANDOFF.md)；[分期实验总结](docs/experiment-summary-2026-11-15.md)。v3–v9 已有真实 Kiro 实验，当前优先提交 oracle 续跑补丁与迁移平台能力；历史试验与主应用能力分别记录。
+
+工程整合已通过 [PR #33](https://github.com/XUJiahua/enterprise_agent/pull/33) 合入 main，旧 PR 已收拢。原私有 oracle 仓库现已公开；[v9 续跑修复补丁与验证交接](docs/oracle-v9-resume-handoff.md) 已准备，但连接器对该仓库写入返回 403，尚未提交或部署到 oracle。
 
 采购审批业务的三条可运行对照路径。目标是检验确定性护栏能否阻断常见实现缺陷，先验证机制，再开展真实 AI Coding 对照实验。
 

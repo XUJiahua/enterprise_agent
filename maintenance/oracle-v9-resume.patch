@@ -1,0 +1,679 @@
+diff --git a/.github/workflows/resume-controls.yml b/.github/workflows/resume-controls.yml
+new file mode 100644
+index 0000000..9f8a87f
+--- /dev/null
++++ b/.github/workflows/resume-controls.yml
+@@ -0,0 +1,18 @@
++name: Resume controls
++on:
++  pull_request:
++  push:
++    branches: [v9]
++permissions:
++  contents: read
++jobs:
++  resume-controls:
++    runs-on: ubuntu-24.04
++    timeout-minutes: 10
++    steps:
++      - uses: actions/checkout@v4
++      - uses: actions/setup-python@v5
++        with:
++          python-version: '3.12'
++      - run: bash -n scripts/resume_v9.sh
++      - run: python3 -m unittest discover -s tests -v
+diff --git a/README.md b/README.md
+index 2e765cc..ace17e5 100644
+--- a/README.md
++++ b/README.md
+@@ -1,10 +1,12 @@
+-# enterprise_agent 私有验收（v7，v9 分支）
++# enterprise_agent 实验归档与验收（v7，v9 分支）
+ 
+-> **v9 分支**：平台把事件规则做成确定性校验（R1 事件必须有注册消费者，R2 只有受保护名单上的操作可以豁免）后，Agent 起草的条目能否达到给定条目的水平。三组（given、drafted-norule、drafted-rule），任务 `hold`、`project`。设计见 [docs/v9-design.md](docs/v9-design.md)，预注册草稿（未冻结）见 [prereg/preregistration-v9.md](prereg/preregistration-v9.md)。主机 checkout 为 `/opt/poc-oracle/private-v9`，运行目录以 `v9-` 开头，驱动为 `scripts/run_v9.sh`。
++> **v9 分支**：平台把事件规则做成确定性校验（R1 事件必须有注册消费者，R2 只有受保护名单上的操作可以豁免）后，Agent 起草的条目能否达到给定条目的水平。三组（given、drafted-norule、drafted-rule），任务 `hold`、`project`。设计见 [docs/v9-design.md](docs/v9-design.md)，已冻结的预注册见 [prereg/preregistration-v9.md](prereg/preregistration-v9.md)。主机 checkout 为 `/opt/poc-oracle/private-v9`，运行目录以 `v9-` 开头，驱动为 `scripts/run_v9.sh`。
+ 
+ > **v8a 分支**：v8a 测 Agent 起草目录条目后收益还剩多少、一次固定 AI 审查能挽回多少。四组（manual、given、drafted、drafted-review），任务 `return`、`delivery-site`。设计见 [docs/v8a-design.md](docs/v8a-design.md)，预注册草稿（未冻结）见 [prereg/preregistration-v8a.md](prereg/preregistration-v8a.md)。主机 checkout 为 `/opt/poc-oracle/private-v8a`，运行目录以 `v8a-` 开头，驱动为 `scripts/run_v8a.sh`。下文描述 v7 的布局与流程，v8a 的差别以设计文档为准。
+ 
+-这个仓库**必须保持 private**。这里存放 v7 确认性实验中不能公开的部分：任务、起点、Oracle、参考实现、正反控制和预注册全文。公开的平台代码在 <https://github.com/XUJiahua/enterprise_agent>。
++**2026-11-17 状态更新：仓库现已由所有者公开，v7–v9 实验已完成。** 本仓库现在用于历史复现与工程维护；下文的 private、隐藏 Oracle 等描述是采集时的条件。后续盲测必须准备新的、生成端不可访问的任务和 Oracle，不能再将这些公开任务当作隐藏样本。平台代码在 <https://github.com/XUJiahua/enterprise_agent>。
++
++v9 续跑修复与不调用模型的验证见 [v9-resume-repair.md](docs/v9-resume-repair.md)。此修复基于 `v9`，不会改写冻结任务、评分、预注册或历史结果，也不改变仓库默认分支。
+ 
+ ## 为什么要分开
+ 
+diff --git a/docs/v9-resume-repair.md b/docs/v9-resume-repair.md
+new file mode 100644
+index 0000000..666ca4e
+--- /dev/null
++++ b/docs/v9-resume-repair.md
+@@ -0,0 +1,43 @@
++# v9 续跑工程修复（2026-11-17）
++
++针对 `prereg/preregistration-v9.md` 附录 E 的归档重名缺陷。本改动基于 `v9` 分支，仅改变操作员续跑与传输流程，不改 `harness/`、`benchmark/`、`tasks/`、`prereg/` 或历史 evidence，不重新生成或重新评分任何旧 trial。
++
++## 行为
++
++- 本地与远端重复阻塞均进入独立的 UTC 日期/序号槽位：`preflight-blocked-YYYYMMDD/<trial>--0001/result`、`--0002/result`。
++- 只有计划中唯一存在、明确 `ready=false`、且没有 generation、draft、adapter、receipt 等生成证据的结果可以按 R1 归档。probe 自身的 `turn_started` 是 READY 回合，不是任务生成回合。
++- 远端先归档，本地后归档；任一失败均停止该 lane。若远端已成功而本地失败，下次可接受远端源目录不存在，保留原远端归档后再处理本地。
++- 现有 outcome 一律保留，不重新生成；缺 outcome 但有开始生成迹象的目录直接报错，不把它推断为可重试。
++- 同批最多三个 lane，数据库槽位只复用 1–3。声明占用使用原子的 slot/lane 目录；已被别的进程占用时停止，不删除别人的占用标记。
++- 父脚本等待并检查每个 lane 的退出码；失败或尚有 preflight 阻塞时退出非零、记录 `RESUME INCOMPLETE`，不能写 `RESUME DONE`。
++- 成功启动的数据库在退出时清理；启动失败不主动 down，避免移除原有容器。若 host_db 在创建容器后才失败，需操作员核对并处理该槽位。
++- 所有 terminal 结果可重新传输，修复“本地已完成但上次未传完”被永久跳过的问题；新 preflight 阻塞也同步远端以保留每次探针。接收先在临时目录解包、核对摘要，再原子安装；相同数据可重复提交，不覆盖不同 terminal 数据。排除 `kiro-home`；中断传输不会发布半个结果。
++- 旧汇总保存在 `summary-before-resume/summary--NNNN/summary.json`；固定 evaluator 可以重建汇总，不覆盖旧文件。最终逐个核对计划分母与 receipt 对应的 `evaluations/<trial>/result.json`，防止 evaluator 跳过错误却返回成功。
++
++## 操作
++
++需要 Python 3.12+、Bash、tar、SSH，以及旧脚本所需的 Kiro/Seatbelt/主机环境。先停止原驱动，确认没有正在运行的生成进程；不要并发启动另一个恢复器或手动清理不明锁。发生中断或遇到部分生成，保留证据并由操作员确认，不自动强制解锁/重试。
++
++```bash
++# 从包含修复的 v9 checkout 运行；输入仍是原计划和原 kit。
++export ORACLE_HOST=root@10.30.11.112
++export ORACLE_REMOTE_RUNS_ROOT=/opt/poc-oracle/runs
++bash scripts/resume_v9.sh /absolute/operator-runs v9-hold-qwen3-coder-next
++```
++
++脚本从自身位置查找 generate、host_db、host_evaluate，不再硬编码操作员 Mac 的源码目录。远端数据库环境与 harness checkout 保留原计划绑定的版本，不要为了部署续跑脚本而移动它的 `harness_sha`；新 helper 通过 SSH 的命令输入执行，不需要修改验收主机 checkout。
++
++`ORACLE_REMOTE_RUNS_ROOT` 用于恢复器的传输/归档路径。现有 frozen `host_evaluate.sh` 自身仍固定 `/opt/poc-oracle/runs`；真实使用应保持默认值。测试替身使用另一个根目录，不代表已拓展旧 evaluator 的路径接口。
++
++已有观察值和 R2 未测量结果均不会重跑。生成器返回 3 或结果目录缺失并不自动等于安全 preflight 阻塞：helper 会核查实际证据。候选重试、自动修复、READY 超时和预算都不在本修复范围内；未来新实验按新预注册执行。
++
++## 验证范围
++
++```bash
++bash -n scripts/resume_v9.sh
++python3 -m unittest discover -s tests -v
++```
++
++控制通过真实 Bash/Python/tar 子进程和模拟 SSH/数据库/生成器运行，不访问真实模型或验收主机：重复阻塞三次、完整候选不重跑、远端和本地归档失败、已开始的两阶段结果、传输失败后恢复、错误 terminal 拒绝覆盖、七个 lane 的槽位复用、生成/DB/验收失败传播、缺失评分、锁占用、移动失败、计划顺序与重复输入、损坏传输。CI 同样不持有模型或主机凭据。
++
++真实 `10.30.11.112` 的部署与跨主机复跑未在本次执行。发布旧 Oracle 后，它可用于重放和工程控制，不能用于新的隐藏验收。
+diff --git a/scripts/resume_support.py b/scripts/resume_support.py
+new file mode 100755
+index 0000000..f06fc8d
+--- /dev/null
++++ b/scripts/resume_support.py
+@@ -0,0 +1,209 @@
++#!/usr/bin/env python3
++"""Transport/state helpers for operator-side v9 resume; no model or Oracle calls."""
++import argparse
++from datetime import datetime, timezone
++import hashlib
++import json
++import os
++from pathlib import Path
++import re
++import sys
++import tarfile
++import tempfile
++
++OBSERVED = {'passed', 'acceptance-failed', 'candidate-error', 'budget-exceeded', 'scope-violation', 'draft-invalid'}
++UNMEASURED = {'runtime-blocked', 'provider-error', 'protocol-error', 'infrastructure-blocked'}
++
++
++def trial_ids(run):
++    plan = json.loads((run / 'plan.json').read_text())
++    ids = [t['id'] for t in plan['trials']]
++    if len(ids) != len(set(ids)) or not ids or any(not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]*', t) for t in ids):
++        raise ValueError('invalid or duplicate plan trial ids')
++    order = (run / 'order.txt').read_text().split()
++    if order != ids:
++        raise ValueError('order.txt must match the frozen plan order exactly')
++    return ids
++
++
++def result_path(run, trial):
++    if trial not in trial_ids(run):
++        raise ValueError('trial not in lane plan')
++    result = run / 'results' / trial
++    if (run / 'results').is_symlink() or result.is_symlink():
++        raise ValueError('result path must not be a symlink')
++    return result
++
++
++def classify(run, trial):
++    result = result_path(run, trial)
++    try:
++        result.lstat()
++    except FileNotFoundError:
++        return 'missing'
++    if not result.is_dir():
++        raise ValueError('result is not a directory')
++    if (result / 'outcome.json').exists():
++        value = json.loads((result / 'outcome.json').read_text())
++        if value['trial']['id'] != trial or value['outcome'] not in OBSERVED | UNMEASURED | {'generated'}:
++            raise ValueError('invalid terminal outcome')
++        return 'terminal'
++    if any(p.is_symlink() for p in result.rglob('*')):
++        raise ValueError('ambiguous result contains symlinks')
++    names = {p.name for p in result.iterdir()}
++    if names - {'preflight.json', 'probe', 'network.log'}:
++        raise ValueError('generation/stage or unknown evidence: refusing retry')
++    value = json.loads((result / 'preflight.json').read_text())
++    if value.get('ready') is not False:
++        raise ValueError('only explicit ready=false is a never-started trial')
++    return 'preflight'
++
++
++def reserve(root, prefix):
++    if root.is_symlink():
++        raise ValueError('archive root must not be a symlink')
++    root.mkdir(exist_ok=True)
++    n = 1
++    while True:
++        slot = root / f'{prefix}--{n:04d}'
++        try:
++            slot.mkdir()
++            return slot
++        except FileExistsError:
++            n += 1
++
++
++def archive(run, trial):
++    state = classify(run, trial)
++    if state == 'missing':
++        return {'trial': trial, 'missing': True}
++    if state != 'preflight':
++        raise ValueError('terminal trial must never be archived for retry')
++    source = result_path(run, trial)
++    day = datetime.now(timezone.utc).strftime('%Y%m%d')
++    slot = reserve(run / ('preflight-blocked-' + day), trial)
++    try:
++        os.rename(source, slot / 'result')
++    except OSError:
++        slot.rmdir()
++        raise
++    return {'trial': trial, 'archived': str(slot / 'result')}
++
++
++def payload_digest(result):
++    rows = []
++    for p in sorted(result.rglob('*')):
++        rel = p.relative_to(result)
++        if 'kiro-home' in rel.parts:
++            continue
++        if p.is_symlink():
++            raise ValueError('transport symlink refused')
++        if p.is_file():
++            rows.append((str(rel), hashlib.sha256(p.read_bytes()).hexdigest()))
++        elif not p.is_dir():
++            raise ValueError('unsupported transport entry')
++    return hashlib.sha256(json.dumps(rows, ensure_ascii=True).encode()).hexdigest()
++
++
++def receive(run, trial, expected):
++    destination = result_path(run, trial)
++    results = run / 'results'
++    results.mkdir(exist_ok=True)
++    # Interrupted transfers never publish half a terminal result. The payload is
++    # verified in a same-filesystem staging directory before an atomic rename.
++    with tempfile.TemporaryDirectory(prefix='.incoming-', dir=results) as temp:
++        staging = Path(temp)
++        with tarfile.open(fileobj=sys.stdin.buffer, mode='r|') as stream:
++            stream.extractall(staging, filter='data')
++        incoming = staging / trial
++        if set(p.name for p in staging.iterdir()) != {trial} or incoming.is_symlink() or not incoming.is_dir():
++            raise ValueError('unexpected archive root')
++        if payload_digest(incoming) != expected:
++            raise ValueError('transport digest mismatch')
++        state = classify(run, trial)
++        if state in {'terminal', 'preflight'} and payload_digest(destination) == expected:
++            return {'trial': trial, 'already_present': True}
++        if state == 'terminal':
++            raise ValueError('existing terminal result differs: refusing overwrite')
++        if state == 'preflight':
++            archive(run, trial)
++        os.rename(incoming, destination)
++    return {'trial': trial, 'received': True}
++
++
++def archive_summary(run):
++    trial_ids(run)
++    source = run / 'summary.json'
++    if not source.exists():
++        return {'summary_missing': True}
++    if source.is_symlink() or not source.is_file():
++        raise ValueError('invalid summary path')
++    slot = reserve(run / 'summary-before-resume', 'summary')
++    try:
++        os.rename(source, slot / 'summary.json')
++    except OSError:
++        slot.rmdir()
++        raise
++    return {'archived_summary': str(slot / 'summary.json')}
++
++
++def final_status(run):
++    ids = trial_ids(run)
++    observed = pending = unmeasured = 0
++    for trial in ids:
++        state = classify(run, trial)
++        if state != 'terminal':
++            pending += 1
++            unmeasured += 1
++            continue
++        result = result_path(run, trial)
++        record = json.loads((result / 'outcome.json').read_text())
++        if (result / 'receipt.json').exists() or record['outcome'] == 'generated':
++            path = run / 'evaluations' / trial / 'result.json'
++            record = json.loads(path.read_text())  # Missing evaluation must fail.
++            if record['trial']['id'] != trial:
++                raise ValueError('evaluation trial mismatch')
++        if record['outcome'] in OBSERVED:
++            observed += 1
++        elif record['outcome'] in UNMEASURED:
++            unmeasured += 1
++        else:
++            raise ValueError('unknown final outcome')
++    return {'planned': len(ids), 'observed': observed, 'unmeasured': unmeasured, 'pending': pending}
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('mode', choices=['order', 'classify', 'archive', 'fingerprint', 'receive', 'archive-summary', 'final-status'])
++    parser.add_argument('--run', required=True)
++    parser.add_argument('--trial')
++    parser.add_argument('--digest')
++    args = parser.parse_args()
++    run = Path(args.run).resolve(strict=True)
++    if args.mode == 'order':
++        print(' '.join(trial_ids(run)))
++        return 0
++    if args.mode == 'classify':
++        print(classify(run, args.trial))
++        return 0
++    if args.mode == 'archive':
++        value = archive(run, args.trial)
++    elif args.mode == 'fingerprint':
++        print(payload_digest(result_path(run, args.trial)))
++        return 0
++    elif args.mode == 'receive':
++        value = receive(run, args.trial, args.digest)
++    elif args.mode == 'archive-summary':
++        value = archive_summary(run)
++    else:
++        value = final_status(run)
++    print(json.dumps(value))
++    return 3 if args.mode == 'final-status' and value['pending'] else 0
++
++
++if __name__ == '__main__':
++    try:
++        sys.exit(main())
++    except (OSError, ValueError, KeyError, TypeError, tarfile.TarError) as error:
++        print('resume refused: ' + str(error), file=sys.stderr)
++        sys.exit(1)
+diff --git a/scripts/resume_v9.sh b/scripts/resume_v9.sh
+index 9f7697e..82c2f65 100755
+--- a/scripts/resume_v9.sh
++++ b/scripts/resume_v9.sh
+@@ -1,32 +1,87 @@
+ #!/bin/bash
+-# v9 resume after preflight blocks (prereg v9 R1, appendix B/C). For each run: archive the blocked
+-# result dirs (never started), re-run generate.sh (skips existing results, plan order), copy only the
+-# new result dirs to the host, then host_evaluate (skips existing evaluations). Sequential, one lane at a time
+-# per database slot; at most 3 lanes in parallel to reduce probe latency.
++# Operator-only v9 R1 resume. Stop the original driver first. No observed trial
++# is retried. The remote evaluator remains at the plan's frozen harness SHA.
+ # Usage: resume_v9.sh <runs-root> <run> [<run> ...]
+-set -u
+-ROOT=$1; shift; HERE=/Users/administrator/poc-v7-private/scripts; H=root@10.30.11.112
+-lane() {
+-  run=$1; slot=$2; D=$ROOT/$run; RH=/opt/poc-oracle/runs/$run; day=$(date +%Y%m%d)
+-  for r in "$D"/results/*/; do t=$(basename "$r"); [ -f "$r/outcome.json" ] && continue
+-    mkdir -p "$D/preflight-blocked-$day"; mv "$r" "$D/preflight-blocked-$day/"
+-    ssh -o BatchMode=yes $H "test -d $RH/results/$t && mkdir -p $RH/preflight-blocked-$day && mv $RH/results/$t $RH/preflight-blocked-$day/ || true"
+-    echo "$(date -u +%FT%TZ) $run archived blocked $t" >> "$ROOT/resume.log"; done
+-  before=$(ls "$D/results")
+-  "$HERE/generate.sh" "$D" >> "$ROOT/resume.log" 2>&1
+-  echo "$(date -u +%FT%TZ) $run generate rc=$?" >> "$ROOT/resume.log"
+-  for t in $(ls "$D/results"); do echo "$before" | grep -qx "$t" && continue
+-    [ -f "$D/results/$t/outcome.json" ] || continue
+-    (cd "$D/results" && tar cf - --exclude=kiro-home "$t") | ssh -o BatchMode=yes $H "cd $RH/results && tar xf -"; done
+-  scp -q "$D/ops/status.log" "$H:$RH/generation-status.log"
+-  "$HERE/host_db.sh" up "$slot" >> "$ROOT/resume.log" 2>&1 && "$HERE/host_evaluate.sh" "$run" "$slot" >> "$ROOT/eval-resume-$run.log" 2>&1
+-  "$HERE/host_db.sh" down "$slot" >> "$ROOT/resume.log" 2>&1
++set -euo pipefail
++[ "$#" -ge 2 ] || { echo "usage: resume_v9.sh <runs-root> <run> [...]" >&2; exit 2; }
++ROOT=$(cd "$1" && pwd -P); shift
++HERE=$(cd "$(dirname "$0")" && pwd -P)
++SUPPORT=$HERE/resume_support.py
++H=${ORACLE_HOST:-root@10.30.11.112}
++REMOTE_ROOT=${ORACLE_REMOTE_RUNS_ROOT:-/opt/poc-oracle/runs}
++RUNS=("$@")
++for run in "${RUNS[@]}"; do
++  case "$run" in v9-*) ;; *) echo "v9 run names start with v9-" >&2; exit 2 ;; esac
++  case "$run" in *[!A-Za-z0-9._-]*) echo "invalid run name" >&2; exit 2 ;; esac
++  python3 "$SUPPORT" order --run "$ROOT/$run" >/dev/null
++done
++[ "$(printf '%s\n' "${RUNS[@]}" | sort -u | wc -l)" -eq "${#RUNS[@]}" ] || { echo "duplicate run" >&2; exit 2; }
++CODE=$(python3 -c 'from pathlib import Path; import shlex,sys; print(shlex.quote(Path(sys.argv[1]).read_text()))' "$SUPPORT")
++remote() {
++  local command="python3 -c $CODE" arg quoted
++  for arg in "$@"; do printf -v quoted '%q' "$arg"; command="$command $quoted"; done
++  ssh -o BatchMode=yes "$H" "$command"
++}
++lane() (
++  run=$1; slot=$2; D=$ROOT/$run; RH=$REMOTE_ROOT/$run
++  db_started=0; slot_claimed=0; lane_claimed=0
++  cleanup() {
++    rc=$?; trap - EXIT
++    if [ "$db_started" -eq 1 ]; then "$HERE/host_db.sh" down "$slot" "$H" >> "$ROOT/resume.log" 2>&1 || rc=1; fi
++    if [ "$lane_claimed" -eq 1 ]; then rmdir "$D/.resume-v9.lock" || rc=1; fi
++    if [ "$slot_claimed" -eq 1 ]; then rmdir "$ROOT/slot-$slot" || rc=1; fi
++    exit "$rc"
++  }
++  trap cleanup EXIT
++  mkdir "$ROOT/slot-$slot"; slot_claimed=1
++  mkdir "$D/.resume-v9.lock"; lane_claimed=1
++  ORDER=$(python3 "$SUPPORT" order --run "$D")
++  for t in $ORDER; do
++    state=$(python3 "$SUPPORT" classify --run "$D" --trial "$t")
++    if [ "$state" = preflight ]; then
++      # Remote first: if either move fails generation cannot start. A retry may
++      # see the remote source missing after an earlier successful remote move.
++      remote archive --run "$RH" --trial "$t" >> "$ROOT/resume.log" 2>&1
++      python3 "$SUPPORT" archive --run "$D" --trial "$t" >> "$ROOT/resume.log" 2>&1
++    fi
++  done
++  if "$HERE/generate.sh" "$D" >> "$ROOT/resume.log" 2>&1; then rc=0; else rc=$?; fi
++  echo "$(date -u +%FT%TZ) $run generate rc=$rc" >> "$ROOT/resume.log"
++  case "$rc" in 0|3) ;; *) exit "$rc" ;; esac
++  # Resend every terminal result, including results whose earlier transfer was
++  # interrupted. The receiver accepts identical data and never overwrites a
++  # different terminal result. kiro-home is excluded on both digest and tar.
++  for t in $ORDER; do
++    state=$(python3 "$SUPPORT" classify --run "$D" --trial "$t")
++    case "$state" in terminal|preflight) ;; *) continue ;; esac
++    digest=$(python3 "$SUPPORT" fingerprint --run "$D" --trial "$t")
++    tar cf - --exclude=kiro-home -C "$D/results" "$t" | \
++      remote receive --run "$RH" --trial "$t" --digest "$digest" >> "$ROOT/resume.log" 2>&1
++  done
++  # Keep old derived summaries, so the frozen evaluator can write a fresh one
++  # without overwriting a previous result or silently failing its exclusive save.
++  remote archive-summary --run "$RH" >> "$ROOT/resume.log" 2>&1
++  "$HERE/host_db.sh" up "$slot" "$H" >> "$ROOT/resume.log" 2>&1
++  db_started=1
++  "$HERE/host_evaluate.sh" "$run" "$slot" "$H" >> "$ROOT/eval-resume-$run.log" 2>&1
++  remote final-status --run "$RH" >> "$ROOT/resume.log" 2>&1
+   echo "$(date -u +%FT%TZ) $run resumed+evaluated" >> "$ROOT/resume.log"
++)
++# Batch at most three lanes and reuse slots 1..3. The old increasing counter
++# eventually passed slot 5 to a host_db helper that only accepts slots 1..4.
++pids=(); failures=0; slot=0
++finish_batch() {
++  local pid
++  for pid in "${pids[@]}"; do if wait "$pid"; then :; else failures=1; fi; done
++  pids=(); slot=0
+ }
+-i=0
+-for run in "$@"; do
+-  while [ "$(jobs -rp | wc -l)" -ge 3 ]; do sleep 20; done
+-  i=$((i+1)); lane "$run" "$i" & sleep 3
++for run in "${RUNS[@]}"; do
++  slot=$((slot+1)); lane "$run" "$slot" & pids+=("$!")
++  if [ "${#pids[@]}" -eq 3 ]; then
++    finish_batch
++    [ "$failures" -eq 0 ] || break
++  fi
+ done
+-wait
++if [ "${#pids[@]}" -gt 0 ]; then finish_batch; fi
++if [ "$failures" -ne 0 ]; then echo "$(date -u +%FT%TZ) RESUME INCOMPLETE" >> "$ROOT/resume.log"; exit 1; fi
+ echo "$(date -u +%FT%TZ) RESUME DONE" >> "$ROOT/resume.log"
+diff --git a/tests/test_resume_v9.py b/tests/test_resume_v9.py
+new file mode 100644
+index 0000000..3b6443b
+--- /dev/null
++++ b/tests/test_resume_v9.py
+@@ -0,0 +1,247 @@
++import importlib.util
++import io
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import sys
++import tarfile
++import tempfile
++import unittest
++from unittest.mock import patch
++
++ROOT = Path(__file__).resolve().parents[1]
++spec = importlib.util.spec_from_file_location('resume_support', ROOT / 'scripts/resume_support.py')
++support = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(support)
++
++
++def write(path, value):
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(value))
++
++
++def blocked(run, trial='drafted-rule--002', marker='original'):
++    result = run / 'results' / trial
++    result.mkdir(parents=True)
++    write(result / 'preflight.json', {'ready': False, 'invocation': {'status': 'budget-exceeded', 'turn_started': True}})
++    (result / 'probe').mkdir()
++    (result / 'probe/events.jsonl').write_text(marker)
++
++
++def terminal(run, trial='given--001'):
++    result = run / 'results' / trial
++    result.mkdir(parents=True)
++    write(result / 'outcome.json', {'trial': {'id': trial}, 'outcome': 'generated'})
++    write(result / 'receipt.json', {'trial': {'id': trial}})
++    (result / 'candidate.bundle').write_bytes(b'original candidate bundle')
++    (result / 'kiro-home').mkdir()
++    (result / 'kiro-home/session').write_text('not transported')
++
++
++GENERATOR = '''#!/usr/bin/env python3
++import json,os,sys
++from pathlib import Path
++run=Path(sys.argv[1]);count=run/'generate-count'
++n=int(count.read_text())+1 if count.exists() else 1;count.write_text(str(n))
++if os.environ.get('GENERATE_FAIL'):sys.exit(7)
++for t in json.loads((run/'plan.json').read_text())['trials']:
++ p=run/'results'/t['id']
++ if p.exists():continue
++ p.mkdir(parents=True)
++ if n<=int(os.environ.get('GEN_BLOCKS','0')):
++  (p/'preflight.json').write_text(json.dumps({'ready':False}))
++  (p/'probe').mkdir();(p/'probe/events.jsonl').write_text('blocked-'+str(n));sys.exit(3)
++ (p/'outcome.json').write_text(json.dumps({'trial':t,'outcome':'generated'}))
++ (p/'receipt.json').write_text(json.dumps({'trial':t}))
++ (p/'candidate.bundle').write_bytes(b'new candidate')
++ with (run/'actual-generations').open('a') as f:f.write(t['id']+'\\n')
++'''
++DATABASE = '''#!/usr/bin/env python3
++import json,os,sys
++with open(os.environ['DB_LOG'],'a') as f:f.write(json.dumps(sys.argv[1:])+'\\n')
++assert sys.argv[2] in ['1','2','3']
++if sys.argv[1]=='up' and os.environ.get('DB_FAIL'):sys.exit(8)
++'''
++EVALUATOR = '''#!/usr/bin/env python3
++import json,os,sys
++from pathlib import Path
++run=Path(os.environ['ORACLE_REMOTE_RUNS_ROOT'])/sys.argv[1]
++if os.environ.get('EVAL_FAIL'):sys.exit(6)
++for t in json.loads((run/'plan.json').read_text())['trials']:
++ p=run/'results'/t['id'];out=run/'evaluations'/t['id']/'result.json'
++ if not (p/'receipt.json').exists() or out.exists() or os.environ.get('EVAL_SKIP'):continue
++ out.parent.mkdir(parents=True,exist_ok=True)
++ out.write_text(json.dumps({'trial':t,'outcome':'passed'}))
++with (run/'summary.json').open('x') as f:json.dump({'synthetic':True},f)
++'''
++SSH = '''#!/usr/bin/env python3
++import os,shlex,subprocess,sys
++args=shlex.split(sys.argv[-1]);mode=args[3]
++if os.environ.get('SSH_FAIL_'+mode.upper().replace('-','_')):sys.exit(9)
++sys.exit(subprocess.run(['bash','-c',sys.argv[-1]]).returncode)
++'''
++
++
++class ResumeTests(unittest.TestCase):
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory(prefix='v9-resume-')
++        self.addCleanup(self.temp.cleanup)
++        self.root = Path(self.temp.name)
++        self.runs = self.root / 'local'; self.runs.mkdir()
++        self.remote = self.root / 'remote'; self.remote.mkdir()
++        self.scripts = self.root / 'scripts'; self.scripts.mkdir()
++        self.bin = self.root / 'bin'; self.bin.mkdir()
++        for name in ['resume_v9.sh', 'resume_support.py']:
++            shutil.copy(ROOT / 'scripts' / name, self.scripts / name)
++        for path, text in [(self.scripts/'generate.sh', GENERATOR), (self.scripts/'host_db.sh', DATABASE),
++                           (self.scripts/'host_evaluate.sh', EVALUATOR), (self.bin/'ssh', SSH)]:
++            path.write_text(text); path.chmod(0o755)
++        self.env = {**os.environ, 'PATH':str(self.bin)+os.pathsep+os.environ['PATH'], 'ORACLE_HOST':'synthetic-host',
++                    'ORACLE_REMOTE_RUNS_ROOT':str(self.remote), 'DB_LOG':str(self.root/'db.log')}
++        self.name = 'v9-synthetic'
++        self.make_lane(self.name)
++
++    def make_lane(self, name):
++        for parent in [self.runs, self.remote]:
++            lane = parent / name; lane.mkdir()
++            ids = ['given--001', 'drafted-rule--002']
++            write(lane / 'plan.json', {'trials':[{'id':t} for t in ids]})
++            (lane / 'order.txt').write_text(' '.join(ids))
++            terminal(lane); blocked(lane)
++            if parent == self.remote:
++                shutil.rmtree(lane/'results/given--001/kiro-home')
++
++    def run_resume(self, names=None, **env):
++        return subprocess.run(['bash', str(self.scripts/'resume_v9.sh'), str(self.runs), *(names or [self.name])],
++                              env={**self.env, **env}, capture_output=True, text=True, timeout=60)
++
++    def assert_clean_locks(self):
++        self.assertFalse(list(self.runs.glob('slot-*')))
++        self.assertFalse(list(self.runs.glob('*/.resume-v9.lock')))
++
++    def test_three_blocks_preserve_local_remote_probes_and_first_generation(self):
++        original = (self.runs/self.name/'results/given--001/candidate.bundle').read_bytes()
++        for n in range(3):
++            proc = self.run_resume(GEN_BLOCKS='2')
++            self.assertEqual(proc.returncode == 0, n == 2, proc.stderr)
++            self.assert_clean_locks()
++        for parent in [self.runs, self.remote]:
++            lane = parent/self.name
++            probes = sorted(lane.glob('preflight-blocked-*/drafted-rule--002--*/result/probe/events.jsonl'))
++            self.assertEqual([p.read_text() for p in probes], ['original','blocked-1','blocked-2'])
++            self.assertEqual((lane/'results/given--001/candidate.bundle').read_bytes(), original)
++        lane = self.runs/self.name
++        self.assertEqual((lane/'actual-generations').read_text().splitlines(), ['drafted-rule--002'])
++        self.assertEqual(support.final_status(self.remote/self.name), {'planned':2,'observed':2,'unmeasured':0,'pending':0})
++        self.assertFalse((self.remote/self.name/'results/given--001/kiro-home').exists())
++        self.assertEqual(len(list((self.remote/self.name/'summary-before-resume').glob('summary--*/summary.json'))),2)
++
++    def test_remote_archive_failure_stops_before_generation(self):
++        p = self.run_resume(SSH_FAIL_ARCHIVE='1')
++        self.assertNotEqual(p.returncode, 0)
++        self.assertFalse((self.runs/self.name/'generate-count').exists())
++        self.assertTrue((self.runs/self.name/'results/drafted-rule--002/preflight.json').exists())
++        self.assertNotIn('RESUME DONE', (self.runs/'resume.log').read_text())
++        self.assert_clean_locks()
++
++    def test_local_archive_failure_after_remote_move_can_resume_without_overwrite(self):
++        lane = self.runs/self.name
++        day = support.datetime.now(support.timezone.utc).strftime('%Y%m%d')
++        conflict = lane/('preflight-blocked-'+day); conflict.write_text('occupied')
++        p = self.run_resume()
++        self.assertNotEqual(p.returncode,0)
++        self.assertFalse((lane/'generate-count').exists())
++        self.assertTrue((lane/'results/drafted-rule--002/preflight.json').exists())
++        self.assertEqual(len(list((self.remote/self.name).glob('preflight-blocked-*/drafted-rule--002--*/result'))),1)
++        conflict.unlink()
++        self.assertEqual(self.run_resume().returncode,0)
++        self.assertEqual(len(list((self.remote/self.name).glob('preflight-blocked-*/drafted-rule--002--*/result'))),1)
++
++    def test_partial_generation_or_stage_is_never_archived(self):
++        lane = self.runs/self.name
++        for name in ['generation','draft','adapter','receipt.json']:
++            with self.subTest(name=name):
++                marker = lane/'results/drafted-rule--002'/name;marker.touch()
++                p = self.run_resume()
++                self.assertNotEqual(p.returncode,0)
++                self.assertFalse((lane/'generate-count').exists())
++                self.assertTrue(marker.exists()); marker.unlink()
++                self.assert_clean_locks()
++
++    def test_transfer_failure_recovers_without_regenerating_terminal_results(self):
++        p = self.run_resume(SSH_FAIL_RECEIVE='1')
++        self.assertNotEqual(p.returncode,0)
++        self.assertFalse((self.root/'db.log').exists())
++        self.assertEqual(self.run_resume().returncode,0)
++        self.assertEqual((self.runs/self.name/'actual-generations').read_text().splitlines(),['drafted-rule--002'])
++        self.assert_clean_locks()
++
++    def test_different_terminal_data_is_not_overwritten(self):
++        remote = self.remote/self.name/'results/given--001/candidate.bundle'
++        remote.write_bytes(b'other immutable candidate')
++        self.assertNotEqual(self.run_resume().returncode,0)
++        self.assertEqual(remote.read_bytes(),b'other immutable candidate')
++        self.assertFalse((self.root/'db.log').exists())
++
++    def test_more_than_three_lanes_reuse_only_slots_one_to_three(self):
++        names = [self.name]+['v9-synthetic-'+str(n) for n in range(1,7)]
++        for name in names[1:]:self.make_lane(name)
++        p = self.run_resume(names)
++        self.assertEqual(p.returncode,0,p.stderr)
++        events = [json.loads(s) for s in (self.root/'db.log').read_text().splitlines()]
++        self.assertEqual(len([e for e in events if e[0]=='up']),7)
++        self.assertEqual(len([e for e in events if e[0]=='down']),7)
++        self.assertTrue(all(e[1] in ['1','2','3'] for e in events))
++        self.assert_clean_locks()
++
++    def test_generation_database_and_evaluation_failures_propagate(self):
++        for key in ['GENERATE_FAIL','DB_FAIL','EVAL_FAIL']:
++            with self.subTest(key=key):
++                p = self.run_resume(**{key:'1'})
++                self.assertNotEqual(p.returncode,0)
++                self.assertNotIn('RESUME DONE',(self.runs/'resume.log').read_text())
++                self.assert_clean_locks()
++        events = [json.loads(s) for s in (self.root/'db.log').read_text().splitlines()]
++        self.assertEqual([e[0] for e in events],['up','up','down'])
++
++    def test_successful_evaluator_cannot_hide_missing_results(self):
++        self.assertNotEqual(self.run_resume(EVAL_SKIP='1').returncode,0)
++        self.assertNotIn('RESUME DONE',(self.runs/'resume.log').read_text())
++        self.assert_clean_locks()
++
++    def test_slot_claim_does_not_delete_someone_elses_claim(self):
++        (self.runs/'slot-1').mkdir()
++        self.assertNotEqual(self.run_resume().returncode,0)
++        self.assertTrue((self.runs/'slot-1').exists())
++        self.assertFalse((self.runs/self.name/'generate-count').exists())
++
++    def test_archive_move_failure_keeps_source_and_cleans_only_own_reservation(self):
++        lane = self.runs/self.name
++        with patch.object(support.os,'rename',side_effect=OSError('disk full')):
++            with self.assertRaises(OSError):support.archive(lane,'drafted-rule--002')
++        self.assertTrue((lane/'results/drafted-rule--002/preflight.json').exists())
++        self.assertFalse(list(lane.glob('preflight-blocked-*/*')))
++
++    def test_invalid_order_and_duplicate_runs_stop_before_mutations(self):
++        self.assertNotEqual(self.run_resume([self.name,self.name]).returncode,0)
++        (self.runs/self.name/'order.txt').write_text('drafted-rule--002 given--001')
++        self.assertNotEqual(self.run_resume().returncode,0)
++        self.assertFalse((self.runs/self.name/'generate-count').exists())
++
++    def test_truncated_or_wrong_digest_transport_does_not_publish_partial_result(self):
++        run = self.remote/self.name
++        source = self.runs/self.name/'results/given--001'
++        data = io.BytesIO()
++        with tarfile.open(fileobj=data,mode='w') as tar:tar.add(source,arcname='given--001',filter=lambda i:None if 'kiro-home' in i.name else i)
++        for payload,digest in [(b'not a tar',support.payload_digest(source)),(data.getvalue(),'0'*64)]:
++            p = subprocess.run([sys.executable,str(self.scripts/'resume_support.py'),'receive','--run',str(run),
++                                '--trial','given--001','--digest',digest],input=payload,capture_output=True)
++            self.assertNotEqual(p.returncode,0)
++        self.assertEqual((run/'results/given--001/candidate.bundle').read_bytes(),b'original candidate bundle')
++        self.assertFalse(list((run/'results').glob('.incoming-*')))
++
++
++if __name__ == '__main__':
++    unittest.main()
