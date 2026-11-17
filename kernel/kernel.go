@@ -31,16 +31,16 @@ func (p Principal) Has(role string) bool { return slices.Contains(p.Roles, role)
 
 // Ref names one operation version, e.g. {"procurement.approve", 1}.
 type Ref struct {
-	Name    string
-	Version int
+	Name    string `json:"name"`
+	Version int    `json:"version"`
 }
 
 func (r Ref) String() string { return fmt.Sprintf("%s@%d", r.Name, r.Version) }
 
 // EventType is one versioned event an operation may emit.
 type EventType struct {
-	Type    string
-	Version int
+	Type    string `json:"type"`
+	Version int    `json:"version"`
 }
 
 func (e EventType) String() string { return fmt.Sprintf("%s@%d", e.Type, e.Version) }
@@ -50,10 +50,10 @@ func (e EventType) String() string { return fmt.Sprintf("%s@%d", e.Type, e.Versi
 // every target always gets exactly one audit entry. Changing what a version
 // means requires a new Version.
 type Definition struct {
-	Ref           Ref
-	MaxTargets    int         // 1..MaxTargets distinct targets per call
-	Events        []EventType // events the Outcome may contain
-	NoEventReason string      // explicit exemption when Events is empty
+	Ref           Ref         `json:"ref"`
+	MaxTargets    int         `json:"maxTargets"`              // 1..MaxTargets distinct targets per call
+	Events        []EventType `json:"events,omitempty"`        // events the Outcome may contain
+	NoEventReason string      `json:"noEventReason,omitempty"` // explicit exemption when Events is empty
 }
 
 // Validate checks the declaration itself; it does not inspect domain code.

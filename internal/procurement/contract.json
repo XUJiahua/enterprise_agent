@@ -1,0 +1,52 @@
+{
+  "operations": [
+    {
+      "ref": {
+        "name": "procurement.approve",
+        "version": 1
+      },
+      "maxTargets": 100,
+      "noEventReason": "no registered consumer for approvals; the M2 notification projection consumes closes only"
+    },
+    {
+      "ref": {
+        "name": "procurement.close",
+        "version": 2
+      },
+      "maxTargets": 100,
+      "events": [
+        {
+          "type": "procurement.purchase.closed",
+          "version": 1
+        }
+      ]
+    },
+    {
+      "ref": {
+        "name": "procurement.create",
+        "version": 1
+      },
+      "maxTargets": 1,
+      "noEventReason": "new purchases are seen through the list; no consumer"
+    },
+    {
+      "ref": {
+        "name": "procurement.receive",
+        "version": 1
+      },
+      "maxTargets": 1,
+      "noEventReason": "receipts are read through the purchase; no consumer"
+    }
+  ],
+  "consumers": [
+    {
+      "name": "procurement.notify",
+      "events": [
+        {
+          "type": "procurement.purchase.closed",
+          "version": 1
+        }
+      ]
+    }
+  ]
+}

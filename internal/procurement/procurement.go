@@ -17,6 +17,8 @@ import (
 	"context"
 	"embed"
 	"encoding/json"
+	"io"
+	"strings"
 	"unicode/utf8"
 
 	"github.com/XUJiahua/enterprise_agent/kernel"
@@ -39,19 +41,23 @@ const (
 )
 
 var (
+	// CreateRef: a requester submits a new purchase with a client-chosen id.
+	CreateRef = kernel.Ref{Name: "procurement.create", Version: 1}
 	// ApproveRef: submitted -> approved, by an approver, never their own purchases.
 	ApproveRef = kernel.Ref{Name: "procurement.approve", Version: 1}
 	// ReceiveRef records a goods receipt on one approved purchase.
 	ReceiveRef = kernel.Ref{Name: "procurement.receive", Version: 1}
-	// CloseRef: approved -> closed for 1..100 purchases whose receipts cover the amount.
-	CloseRef = kernel.Ref{Name: "procurement.close", Version: 1}
+	// CloseRef: approved -> closed for 1..100 purchases whose receipts cover
+	// the amount. Version 2 requires a reason (audit requirement); version 1,
+	// which allowed an empty reason, is retired and no longer registered.
+	CloseRef = kernel.Ref{Name: "procurement.close", Version: 2}
 	// ClosedEvent payload: {"id","amount","received"}.
 	ClosedEvent = kernel.EventType{Type: "procurement.purchase.closed", Version: 1}
 )
 
 // Registry returns every procurement operation and consumer for pg.New.
 func Registry() pg.Registry {
-	return pg.Registry{Operations: []pg.Operation{approve{}, receive{}, closeOp{}}, Consumers: []pg.Consumer{notifier{}}}
+	return pg.Registry{Operations: []pg.Operation{create{}, approve{}, receive{}, closeOp{}}, Consumers: []pg.Consumer{notifier{}}}
 }
 
 // afterLock, when set by tests, runs right after an operation holds its
@@ -121,7 +127,10 @@ func requireRole(p kernel.Principal, role string) error {
 func strict(raw json.RawMessage, v any) error {
 	dec := json.NewDecoder(bytes.NewReader(raw))
 	dec.DisallowUnknownFields()
-	if dec.Decode(v) != nil || dec.More() {
+	if dec.Decode(v) != nil {
+		return kernel.Invalidf("malformed request")
+	}
+	if _, err := dec.Token(); err != io.EOF { // nothing, not even a stray ] or }, may follow
 		return kernel.Invalidf("malformed request")
 	}
 	return nil
@@ -140,10 +149,13 @@ type bulkRequest struct {
 	Reason string   `json:"reason,omitempty"`
 }
 
-func normalizeBulk(raw json.RawMessage) (kernel.Input, error) {
+func normalizeBulk(raw json.RawMessage, requireReason bool) (kernel.Input, error) {
 	var req bulkRequest
 	if err := strict(raw, &req); err != nil {
 		return kernel.Input{}, err
+	}
+	if requireReason && strings.TrimSpace(req.Reason) == "" {
+		return kernel.Input{}, kernel.Invalidf("reason is required")
 	}
 	payload, err := reason(req.Reason)
 	return kernel.Input{Targets: req.IDs, Payload: payload}, err
@@ -155,6 +167,61 @@ func payloadReason(in kernel.Input) string {
 	return p.Reason
 }
 
+type create struct{}
+
+type createRequest struct {
+	ID     string `json:"id"`
+	Title  string `json:"title"`
+	Amount int64  `json:"amount"`
+}
+
+func (create) Definition() kernel.Definition {
+	return kernel.Definition{Ref: CreateRef, MaxTargets: 1, NoEventReason: "new purchases are seen through the list; no consumer"}
+}
+
+func (create) Normalize(raw json.RawMessage) (kernel.Input, error) {
+	var req createRequest
+	if err := strict(raw, &req); err != nil {
+		return kernel.Input{}, err
+	}
+	req.Title = strings.TrimSpace(req.Title)
+	if n := utf8.RuneCountInString(req.Title); n < 1 || n > 200 || !utf8.ValidString(req.Title) {
+		return kernel.Input{}, kernel.Invalidf("title must be 1..200 characters")
+	}
+	if req.Amount < 1 || req.Amount > 1e12 {
+		return kernel.Input{}, kernel.Invalidf("amount must be 1..1e12")
+	}
+	for _, c := range req.ID {
+		if !(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9' || c == '-' || c == '_') {
+			return kernel.Input{}, kernel.Invalidf("id may contain only letters, digits, - and _")
+		}
+	}
+	payload, _ := json.Marshal(map[string]any{"title": req.Title, "amount": req.Amount})
+	return kernel.Input{Targets: []string{req.ID}, Payload: payload}, nil
+}
+
+func (create) Authorize(p kernel.Principal) error { return requireRole(p, Requester) }
+
+func (create) Execute(ctx context.Context, s *pg.Session, in kernel.Input) (kernel.Outcome, error) {
+	var req createRequest
+	if err := json.Unmarshal(in.Payload, &req); err != nil {
+		return kernel.Outcome{}, err
+	}
+	p := s.Principal()
+	id := in.Targets[0]
+	tag, err := s.Exec(ctx, `INSERT INTO procurement.purchase (tenant_id, id, created_by, title, amount) VALUES ($1,$2,$3,$4,$5)
+	 ON CONFLICT DO NOTHING`, p.Tenant, id, p.Actor, req.Title, req.Amount)
+	if err != nil {
+		return kernel.Outcome{}, err
+	}
+	if tag.RowsAffected() != 1 {
+		return kernel.Outcome{}, deny() // id taken in this tenant
+	}
+	change, _ := json.Marshal(map[string]any{"created": map[string]any{"title": req.Title, "amount": req.Amount, "status": "submitted"}})
+	return kernel.Outcome{Targets: in.Targets, Audit: []kernel.Audit{{Target: id, Change: change}},
+		Result: map[string]any{"id": id, "status": "submitted"}}, nil
+}
+
 type approve struct{}
 
 func (approve) Definition() kernel.Definition {
@@ -162,7 +229,7 @@ func (approve) Definition() kernel.Definition {
 		NoEventReason: "no registered consumer for approvals; the M2 notification projection consumes closes only"}
 }
 
-func (approve) Normalize(raw json.RawMessage) (kernel.Input, error) { return normalizeBulk(raw) }
+func (approve) Normalize(raw json.RawMessage) (kernel.Input, error) { return normalizeBulk(raw, false) }
 func (approve) Authorize(p kernel.Principal) error                  { return requireRole(p, Approver) }
 
 func (approve) Execute(ctx context.Context, s *pg.Session, in kernel.Input) (kernel.Outcome, error) {
@@ -241,7 +308,7 @@ func (closeOp) Definition() kernel.Definition {
 	return kernel.Definition{Ref: CloseRef, MaxTargets: 100, Events: []kernel.EventType{ClosedEvent}}
 }
 
-func (closeOp) Normalize(raw json.RawMessage) (kernel.Input, error) { return normalizeBulk(raw) }
+func (closeOp) Normalize(raw json.RawMessage) (kernel.Input, error) { return normalizeBulk(raw, true) }
 func (closeOp) Authorize(p kernel.Principal) error                  { return requireRole(p, Approver) }
 
 func (closeOp) Execute(ctx context.Context, s *pg.Session, in kernel.Input) (kernel.Outcome, error) {

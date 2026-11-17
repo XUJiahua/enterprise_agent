@@ -158,3 +158,18 @@ func TestDrainRejectsVersionAndPayloadMismatch(t *testing.T) {
 		t.Fatal("unknown consumer:", err)
 	}
 }
+
+// More than one page of failing events must not hide a valid event behind them.
+func TestDrainPagesPastFailingEvents(t *testing.T) {
+	d, r, _ := setup(t)
+	toyLogger.failures.Store(0)
+	d.Exec(t, `INSERT INTO kernel.request VALUES ('t1','ann','toy.mark',1,'raw','h','{a}','{}')`)
+	d.Exec(t, `INSERT INTO kernel.outbox (tenant_id, actor_id, operation, version, key, event_type, event_version, target_id, payload)
+	 SELECT 't1','ann','toy.mark',1,'raw','toy.marked',2,'a','{"id":"a"}' FROM generate_series(1, 1001)`)
+	d.Exec(t, `INSERT INTO kernel.outbox (tenant_id, actor_id, operation, version, key, event_type, event_version, target_id, payload)
+	 VALUES ('t1','ann','toy.mark',1,'raw','toy.marked',1,'c','{"id":"c"}')`)
+	if n, err := r.Drain(context.Background(), "toy.log"); n != 1 || err == nil {
+		t.Fatal(n, err)
+	}
+	want(t, "valid event behind the failing page", logged(t, d), "t1 c")
+}

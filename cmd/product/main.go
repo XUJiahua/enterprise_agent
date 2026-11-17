@@ -1,12 +1,14 @@
 // Command product serves the v0.1 procurement API on the kernel runner. It is
 // separate from cmd/server, whose source the frozen benchmarks export as-is.
 // Apply migrations first with `appctl migrate up`; DATABASE_URL is the
-// runtime role and POC_HTTP_PORT the port (default 8090). The notification
-// consumer runs as a goroutine of the same process.
+// application role, CONSUMER_DATABASE_URL the consumer role, and
+// POC_HTTP_PORT the port (default 8090). The notification consumer runs as a
+// goroutine of the same process.
 package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -41,10 +43,20 @@ func product(port string) error {
 	if err != nil {
 		return err
 	}
-	// The notification consumer runs in this process; on start it first drains
-	// whatever a previous process left pending. PRODUCT_CONSUMER=off disables it.
+	// The notification consumer runs in this process on its own role
+	// (CONSUMER_DATABASE_URL); on start it first drains whatever a previous
+	// process left pending. PRODUCT_CONSUMER=off disables it.
 	if os.Getenv("PRODUCT_CONSUMER") != "off" {
-		go r.Consume(ctx, procurement.Notifier, time.Second, func(err error) { log.Printf("consumer: %v", err) })
+		cpool, err := pgxpool.New(ctx, os.Getenv("CONSUMER_DATABASE_URL"))
+		if err != nil {
+			return err
+		}
+		defer cpool.Close()
+		c, err := pg.New(ctx, cpool, procurement.Registry())
+		if err != nil {
+			return fmt.Errorf("consumer (CONSUMER_DATABASE_URL): %w", err)
+		}
+		go c.Consume(ctx, procurement.Notifier, time.Second, func(err error) { log.Printf("consumer: %v", err) })
 	}
 	// Demo identities only; production authentication replaces this adapter.
 	auth := func(req *http.Request) (kernel.Principal, bool) {

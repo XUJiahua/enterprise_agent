@@ -5,11 +5,13 @@ import { NextRequest, NextResponse } from "next/server";
 // as a tenant/role, and the backend origin is fixed to loopback.
 const identities = new Set(["alice", "bob", "carol", "dave", "erin"]);
 const reads = new Set(["purchases", "activity"]);
-const operations = new Set([
-  "procurement.approve",
-  "procurement.receive",
-  "procurement.close",
-]);
+// Current operation versions; retired versions (procurement.close@1) are not proxied.
+const operations: Record<string, string> = {
+  "procurement.create": "1",
+  "procurement.approve": "1",
+  "procurement.receive": "1",
+  "procurement.close": "2",
+};
 export const dynamic = "force-dynamic";
 
 async function proxy(
@@ -25,8 +27,8 @@ async function proxy(
     req.method === "POST" &&
     path.length === 3 &&
     path[0] === "operations" &&
-    operations.has(path[1]) &&
-    path[2] === "1";
+    Object.hasOwn(operations, path[1]) &&
+    path[2] === operations[path[1]];
   if (!read && !write)
     return NextResponse.json({ message: "接口不存在" }, { status: 404 });
   const key = req.headers.get("idempotency-key") ?? "";

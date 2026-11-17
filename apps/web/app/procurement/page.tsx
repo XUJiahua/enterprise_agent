@@ -29,6 +29,7 @@ const identities = {
 type Actor = keyof typeof identities;
 const statusLabel = { submitted: "待审批", approved: "已批准", closed: "已关闭" };
 const operationLabel: Record<string, string> = {
+  "procurement.create": "创建",
   "procurement.approve": "批准",
   "procurement.receive": "登记验收",
   "procurement.close": "关闭",
@@ -47,24 +48,39 @@ export default function Procurement() {
   const [notes, setNotes] = useState<Notification[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
   const [receipt, setReceipt] = useState<Record<string, string>>({});
+  const [reason, setReason] = useState("");
+  const [title, setTitle] = useState("");
+  const [amount, setAmount] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const generation = useRef(0);
+  const draftId = useRef<string | null>(null); // kept across retries of one create
   const current = identities[actor];
 
+  // A write whose outcome is unknown (network error, 5xx) keeps its key, so
+  // retrying the same action replays instead of executing twice. Any
+  // definite answer (2xx/4xx) releases it; the next action gets a new key.
+  const pending = useRef(new Map<string, string>());
   const api = useCallback(
     async (path: string, body?: unknown) => {
+      const action = body === undefined ? "" : actor + " " + path + " " + JSON.stringify(body);
+      let key = "";
+      if (action) {
+        key = pending.current.get(action) ?? crypto.randomUUID();
+        pending.current.set(action, key);
+      }
       const response = await fetch("/api/product/" + path, {
         method: body === undefined ? "GET" : "POST",
         headers: {
           "Content-Type": "application/json",
           "X-Demo-Identity": actor,
-          ...(body === undefined ? {} : { "Idempotency-Key": crypto.randomUUID() }),
+          ...(action ? { "Idempotency-Key": key } : {}),
         },
         body: body === undefined ? undefined : JSON.stringify(body),
         cache: "no-store",
       });
+      if (action && response.status < 500) pending.current.delete(action);
       const data = await response.json().catch(() => ({}));
       if (!response.ok)
         throw Object.assign(new Error(data.message ?? "请求失败"), { status: response.status });
@@ -121,8 +137,9 @@ export default function Procurement() {
 
   const closeSelected = () =>
     act(async () => {
-      const r = await api("operations/procurement.close/1", { ids: selected });
+      const r = await api("operations/procurement.close/2", { ids: selected, reason: reason.trim() });
       setSelected([]);
+      setReason("");
       return `已关闭 ${r.closedIds.length} 张采购单：${r.closedIds.join("、")}`;
     });
   const receive = (id: string) =>
@@ -131,6 +148,23 @@ export default function Procurement() {
       await api("operations/procurement.receive/1", { purchaseId: id, amount });
       setReceipt((v) => ({ ...v, [id]: "" }));
       return `已登记 ${id} 的验收金额 ${money(amount)}`;
+    });
+  const create = (event: React.FormEvent) => {
+    event.preventDefault();
+    return act(async () => {
+      draftId.current ??= "po-" + crypto.randomUUID().slice(0, 8);
+      const id = draftId.current;
+      await api("operations/procurement.create/1", { id, title: title.trim(), amount: Number(amount) });
+      draftId.current = null;
+      setTitle("");
+      setAmount("");
+      return `已提交采购单 ${id}`;
+    });
+  };
+  const approveOne = (id: string) =>
+    act(async () => {
+      await api("operations/procurement.approve/1", { ids: [id] });
+      return `已批准 ${id}`;
     });
   const toggle = (id: string) =>
     setSelected((v) => (v.includes(id) ? v.filter((x) => x !== id) : [...v, id]));
@@ -198,14 +232,24 @@ export default function Procurement() {
                 <p>仅显示当前租户可访问的记录</p>
               </div>
               {current.role === "approver" && (
-                <button
-                  className="primary"
-                  style={{ width: "auto", marginTop: 0 }}
-                  disabled={busy || selected.length === 0}
-                  onClick={closeSelected}
-                >
-                  批量关闭所选（{selected.length}）
-                </button>
+                <span style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <input
+                    aria-label="关闭原因"
+                    placeholder="关闭原因（必填）"
+                    maxLength={200}
+                    value={reason}
+                    disabled={busy}
+                    onChange={(e) => setReason(e.target.value)}
+                  />
+                  <button
+                    className="primary"
+                    style={{ width: "auto", marginTop: 0 }}
+                    disabled={busy || selected.length === 0 || reason.trim() === ""}
+                    onClick={closeSelected}
+                  >
+                    批量关闭所选（{selected.length}）
+                  </button>
+                </span>
               )}
             </div>
             <div className="table-wrap">
@@ -248,7 +292,11 @@ export default function Procurement() {
                         <span className={"status " + row.status}>{statusLabel[row.status]}</span>
                       </td>
                       <td>
-                        {current.role === "requester" && row.status === "approved" ? (
+                        {current.role === "approver" && row.status === "submitted" && row.createdBy !== actor ? (
+                          <button className="approve" disabled={busy} onClick={() => approveOne(row.id)}>
+                            批准
+                          </button>
+                        ) : current.role === "requester" && row.status === "approved" ? (
                           <span>
                             <input
                               type="number"
@@ -277,6 +325,21 @@ export default function Procurement() {
               </table>
             </div>
           </section>
+          {current.role === "requester" && (
+            <section className="create panel" aria-label="新建采购单">
+              <form onSubmit={create}>
+                <label htmlFor="title">采购项目</label>
+                <input id="title" value={title} maxLength={200} required disabled={busy}
+                  onChange={(e) => setTitle(e.target.value)} />
+                <label htmlFor="amount">申请金额</label>
+                <input id="amount" type="number" min="1" step="1" value={amount} required disabled={busy}
+                  onChange={(e) => setAmount(e.target.value)} />
+                <button className="primary" type="submit" disabled={busy}>
+                  提交采购单
+                </button>
+              </form>
+            </section>
+          )}
           <div className="workspace-grid">
             <section className="requests panel" aria-label="我的通知">
               <div className="panel-heading">
@@ -306,6 +369,7 @@ export default function Procurement() {
                 {audit.map((a, i) => (
                   <li key={i}>
                     {a.actor} {operationLabel[a.operation] ?? a.operation} {a.target}
+                    {typeof a.change.reason === "string" && a.change.reason !== "" && <> · 原因：{a.change.reason}</>}
                   </li>
                 ))}
               </ul>

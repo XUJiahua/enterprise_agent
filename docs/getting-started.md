@@ -30,7 +30,7 @@ export POC_DB_RESET=1
 make deps build
 ```
 
-这些口令仅用于测试。`make deps` 安装 Node 依赖并生成、检查 ZenStack Client；`make build` 构建 `bin/server` 和 `bin/appctl`。
+这些口令仅用于测试。`make deps` 安装 Node 依赖并生成、检查 ZenStack Client；`make build` 构建 `bin/server`、`bin/appctl` 和 `bin/product`。
 
 ## 启动后端
 
@@ -104,6 +104,44 @@ bin/appctl verify --base origin/main
 ```
 
 验证范围包括生成漂移、权限扩大和迁移锁；迁移语法采用保守子集，未覆盖的变更需要扩展验证器。候选操作声明与目录检查见 [操作语义设计](operation-semantics.md)。
+
+## 运行 v0.1 产品（cmd/product）
+
+v0.1 采购参考应用独立于上面三条 POC 路线，使用自己的 migrations 和角色。说明见 [发布说明](release-v0.1.md) 与 [内核说明](kernel.md)。
+
+一次性创建角色（集群级，口令仅用于本地）：
+
+```bash
+psql "$ADMIN_DATABASE_URL" \
+  -c "CREATE ROLE enterprise_runtime NOLOGIN" \
+  -c "CREATE ROLE enterprise_consumer NOLOGIN" \
+  -c "CREATE ROLE product_app LOGIN PASSWORD 'local-only' NOSUPERUSER NOBYPASSRLS IN ROLE enterprise_runtime" \
+  -c "CREATE ROLE product_consumer LOGIN PASSWORD 'local-only' NOSUPERUSER NOBYPASSRLS IN ROLE enterprise_consumer" \
+  -c "CREATE DATABASE enterprise_product"
+```
+
+迁移、可选的演示数据、启动：
+
+```bash
+make build
+ADMIN_DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/enterprise_product bin/appctl migrate up
+psql postgres://postgres:postgres@127.0.0.1:5432/enterprise_product -f scripts/product_seed.sql   # 可选
+DATABASE_URL=postgres://product_app:local-only@127.0.0.1:5432/enterprise_product \
+CONSUMER_DATABASE_URL=postgres://product_consumer:local-only@127.0.0.1:5432/enterprise_product \
+  bin/product            # 默认 127.0.0.1:8090
+```
+
+界面：`npm run build --prefix apps/web && PRODUCT_HTTP_PORT=8090 npm start --prefix apps/web`，打开 <http://127.0.0.1:3000/procurement>。
+
+验证（需要可销毁的 PostgreSQL 超级用户 URL；每个测试自建自删数据库）：
+
+```bash
+export KERNEL_TEST_ADMIN_URL='postgres://postgres:postgres@127.0.0.1:5432/postgres?sslmode=disable'
+KERNEL_REQUIRE_DB=1 go test -race -count=1 ./kernel/... ./internal/procurement/ ./cmd/appctl/
+bin/appctl validate
+scripts/product_smoke.sh
+scripts/product_browser.sh   # 需先 npm run build 并安装 Playwright Chromium
+```
 
 ## 端口与输出
 

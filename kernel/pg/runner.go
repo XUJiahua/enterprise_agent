@@ -99,23 +99,26 @@ func New(ctx context.Context, pool *pgxpool.Pool, reg Registry) (*Runner, error)
 	if pool == nil {
 		return nil, errors.New("pg: nil pool")
 	}
-	r := &Runner{pool: pool, ops: map[string]registered{}}
-	for _, op := range reg.Operations {
-		def := op.Definition().Clone()
-		if err := def.Validate(); err != nil {
-			return nil, err
-		}
-		id := def.Ref.String()
-		if _, dup := r.ops[id]; dup {
-			return nil, fmt.Errorf("pg: %s registered twice", id)
-		}
-		r.ops[id] = registered{op, def}
-	}
-	if err := r.registerConsumers(reg.Consumers); err != nil {
+	contract, err := Describe(reg)
+	if err != nil {
 		return nil, err
 	}
+	r := &Runner{pool: pool, ops: map[string]registered{}, consumers: map[string]consumerReg{}}
+	for _, op := range reg.Operations {
+		def := op.Definition().Clone()
+		r.ops[def.Ref.String()] = registered{op, def}
+	}
+	for _, c := range reg.Consumers {
+		cr := consumerReg{c: c, events: slices.Clone(c.Events())}
+		for _, e := range cr.events {
+			if !slices.Contains(cr.types, e.Type) {
+				cr.types = append(cr.types, e.Type)
+			}
+		}
+		r.consumers[c.Name()] = cr
+	}
 	tables := []string{"kernel.request", "kernel.audit", "kernel.outbox"}
-	if len(r.consumers) > 0 {
+	if len(contract.Consumers) > 0 {
 		tables = append(tables, "kernel.inbox")
 	}
 	if err := CheckRuntime(ctx, pool, tables...); err != nil {
@@ -140,16 +143,6 @@ func CheckRuntime(ctx context.Context, pool *pgxpool.Pool, tables ...string) err
 		return fmt.Errorf("pg: runtime role must be non-owner, non-superuser, without BYPASSRLS, on tables with forced RLS: %v", tables)
 	}
 	return nil
-}
-
-// Describe returns the frozen definitions, sorted by ref.
-func (r *Runner) Describe() []kernel.Definition {
-	out := make([]kernel.Definition, 0, len(r.ops))
-	for _, o := range r.ops {
-		out = append(out, o.def.Clone())
-	}
-	slices.SortFunc(out, func(a, b kernel.Definition) int { return strings.Compare(a.Ref.String(), b.Ref.String()) })
-	return out
 }
 
 // Read runs fn in a READ ONLY transaction bound to p, for queries that must

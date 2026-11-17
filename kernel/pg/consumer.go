@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"slices"
+	"strings"
 	"time"
 
 	"github.com/XUJiahua/enterprise_agent/kernel"
@@ -50,42 +51,69 @@ type consumerReg struct {
 	types  []string
 }
 
-func (r *Runner) registerConsumers(cs []Consumer) error {
+// Contract is the validated, DB-free description of a Registry. New and the
+// developer tooling (appctl describe/validate) both derive it with Describe,
+// so they cannot disagree.
+type Contract struct {
+	Operations []kernel.Definition `json:"operations"`
+	Consumers  []ConsumerContract  `json:"consumers"`
+}
+
+// ConsumerContract is one consumer and the event versions it handles.
+type ConsumerContract struct {
+	Name   string             `json:"name"`
+	Events []kernel.EventType `json:"events"`
+}
+
+// Describe validates reg (definitions, unique refs and consumer names, and an
+// exact match between declared events and consumers) and returns its sorted
+// contract.
+func Describe(reg Registry) (Contract, error) {
+	var c Contract
+	refs := map[kernel.Ref]bool{}
 	declared := map[kernel.EventType]bool{}
-	for _, o := range r.ops {
-		for _, e := range o.def.Events {
+	for _, op := range reg.Operations {
+		def := op.Definition().Clone()
+		if err := def.Validate(); err != nil {
+			return Contract{}, err
+		}
+		if refs[def.Ref] {
+			return Contract{}, fmt.Errorf("pg: %s registered twice", def.Ref)
+		}
+		refs[def.Ref] = true
+		for _, e := range def.Events {
 			declared[e] = true
 		}
+		c.Operations = append(c.Operations, def)
 	}
 	consumed := map[kernel.EventType]bool{}
-	r.consumers = map[string]consumerReg{}
-	for _, c := range cs {
-		name := c.Name()
-		probe := kernel.Definition{Ref: kernel.Ref{Name: name, Version: 1}, MaxTargets: 1, Events: c.Events()}
+	names := map[string]bool{}
+	for _, cs := range reg.Consumers {
+		cc := ConsumerContract{Name: cs.Name(), Events: slices.Clone(cs.Events())}
+		probe := kernel.Definition{Ref: kernel.Ref{Name: cc.Name, Version: 1}, MaxTargets: 1, Events: cc.Events}
 		if err := probe.Validate(); err != nil {
-			return fmt.Errorf("pg: consumer %q: %w", name, err)
+			return Contract{}, fmt.Errorf("pg: consumer %q: %w", cc.Name, err)
 		}
-		if _, dup := r.consumers[name]; dup {
-			return fmt.Errorf("pg: consumer %q registered twice", name)
+		if names[cc.Name] {
+			return Contract{}, fmt.Errorf("pg: consumer %q registered twice", cc.Name)
 		}
-		reg := consumerReg{c: c, events: slices.Clone(c.Events())}
-		for _, e := range reg.events {
+		names[cc.Name] = true
+		for _, e := range cc.Events {
 			if !declared[e] {
-				return fmt.Errorf("pg: consumer %q handles %s, which no registered operation declares", name, e)
+				return Contract{}, fmt.Errorf("pg: consumer %q handles %s, which no registered operation declares", cc.Name, e)
 			}
 			consumed[e] = true
-			if !slices.Contains(reg.types, e.Type) {
-				reg.types = append(reg.types, e.Type)
-			}
 		}
-		r.consumers[name] = reg
+		c.Consumers = append(c.Consumers, cc)
 	}
 	for e := range declared {
 		if !consumed[e] {
-			return fmt.Errorf("pg: event %s is declared but has no registered consumer", e)
+			return Contract{}, fmt.Errorf("pg: event %s is declared but has no registered consumer", e)
 		}
 	}
-	return nil
+	slices.SortFunc(c.Operations, func(a, b kernel.Definition) int { return strings.Compare(a.Ref.String(), b.Ref.String()) })
+	slices.SortFunc(c.Consumers, func(a, b ConsumerContract) int { return strings.Compare(a.Name, b.Name) })
+	return c, nil
 }
 
 // Drain handles every pending event of the named consumer once, oldest first,
@@ -108,26 +136,35 @@ func (r *Runner) Drain(ctx context.Context, name string) (handled int, err error
 	var errs []error
 	for _, tenant := range tenants {
 		p := kernel.Principal{Tenant: tenant, Actor: "consumer:" + name}
-		var ids []int64
-		if err := r.Read(ctx, p, func(s *Session) error {
-			rows, err := s.Query(ctx, `SELECT o.id FROM kernel.outbox o WHERE o.event_type = ANY ($2)
-			 AND NOT EXISTS (SELECT 1 FROM kernel.inbox i WHERE i.consumer = $1 AND i.event_id = o.id) ORDER BY o.id LIMIT 1000`, name, reg.types)
-			if err != nil {
+		// Page by id so failing events at the head cannot hide newer ones.
+		// ponytail: failing events are retried on every Drain; a dead-letter
+		// table is the upgrade if poison events become common.
+		for after := int64(0); ; {
+			var ids []int64
+			if err := r.Read(ctx, p, func(s *Session) error {
+				rows, err := s.Query(ctx, `SELECT o.id FROM kernel.outbox o WHERE o.event_type = ANY ($2) AND o.id > $3
+				 AND NOT EXISTS (SELECT 1 FROM kernel.inbox i WHERE i.consumer = $1 AND i.event_id = o.id) ORDER BY o.id LIMIT 1000`, name, reg.types, after)
+				if err != nil {
+					return err
+				}
+				ids, err = pgx.CollectRows(rows, pgx.RowTo[int64])
 				return err
+			}); err != nil {
+				errs = append(errs, err)
+				break
 			}
-			ids, err = pgx.CollectRows(rows, pgx.RowTo[int64])
-			return err
-		}); err != nil {
-			errs = append(errs, err)
-			continue
-		}
-		for _, id := range ids {
-			done, err := r.deliver(ctx, reg, p, id)
-			if err != nil {
-				errs = append(errs, fmt.Errorf("consumer %s event %d: %w", name, id, err))
-			} else if done {
-				handled++
+			if len(ids) == 0 {
+				break
 			}
+			for _, id := range ids {
+				done, err := r.deliver(ctx, reg, p, id)
+				if err != nil {
+					errs = append(errs, fmt.Errorf("consumer %s event %d: %w", name, id, err))
+				} else if done {
+					handled++
+				}
+			}
+			after = ids[len(ids)-1]
 		}
 	}
 	return handled, errors.Join(errs...)
