@@ -227,6 +227,10 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
+      - name: Scripts never signal their whole process group
+        # `kill 0` (or an unset pid defaulting to 0) also kills whatever runs
+        # the script in the same group, e.g. an agent supervisor.
+        run: python3 scripts/check_no_group_kill.py --self-test && python3 scripts/check_no_group_kill.py scripts/*.sh
       - name: Operation contract is current and published versions are unchanged
         run: |
           go build -o /tmp/appctl ./cmd/appctl

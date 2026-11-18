@@ -17,7 +17,7 @@ psql -q "$KERNEL_TEST_ADMIN_URL" -c 'DROP DATABASE IF EXISTS product_browser WIT
   -c "DO \$\$ BEGIN CREATE ROLE product_smoke_app LOGIN PASSWORD 'smoke-only' NOSUPERUSER NOBYPASSRLS IN ROLE enterprise_runtime; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$" \
   -c "DO \$\$ BEGIN CREATE ROLE enterprise_consumer NOLOGIN; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$" \
   -c "DO \$\$ BEGIN CREATE ROLE product_smoke_consumer LOGIN PASSWORD 'smoke-only' NOSUPERUSER NOBYPASSRLS IN ROLE enterprise_consumer; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$"
-trap 'kill ${pid:-0} 2>/dev/null || true; psql -q "$KERNEL_TEST_ADMIN_URL" -c "DROP DATABASE IF EXISTS product_browser WITH (FORCE)"' EXIT
+trap '[ -n "${pid:-}" ] && kill "$pid" 2>/dev/null || true; psql -q "$KERNEL_TEST_ADMIN_URL" -c "DROP DATABASE IF EXISTS product_browser WITH (FORCE)"' EXIT
 ADMIN_DATABASE_URL="$admin_db" "$root/bin/appctl" migrate up
 psql -q -v ON_ERROR_STOP=1 "$admin_db" -f "$root/scripts/product_seed.sql"
 DATABASE_URL="postgres://product_smoke_app:smoke-only@${admin_db#*@}" \
