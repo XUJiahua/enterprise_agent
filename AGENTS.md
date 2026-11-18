@@ -15,13 +15,15 @@
    - `Authorize`：只看 `kernel.Principal` 的角色。
    - `Execute`：只通过传入的 `*pg.Session` 读写；先用 `lockPurchases` 锁住目标父单，再查状态和金额；任一目标不合格就返回 `deny()`，不写任何数据；如实返回实际改动的目标、每个目标一条审计、以及声明过的事件。
 2. 加入 `Registry()`。改动已发布操作的语义（请求字段、校验、规则、事件）时，发布新的 `Version`，不要原地修改。这条也适用于你为了新功能而顺带改动的**其他**操作或事件：例如改变 close 判断"验收是否覆盖金额"的算法，或改变事件载荷字段的含义，都要给那个操作或事件升版本。
+   - 事件载荷允许的取值变了，也算含义变化。例如 closed 事件的 `received` 以前一定不小于 `amount`，现在可以更小，就要发布新的事件版本；消费者要继续处理旧版本，因为队列里可能还有旧事件。
    - 数值上下限只按需求写。不要从相邻操作复制 `1e12` 之类的上限；需要上限时，同时在数据库加 `CHECK`，让直接 SQL 也受同样限制。
 3. 需要事件时实现 `pg.Consumer`，在 `Handle` 中严格校验载荷，写入投影表时以 `event_id` 去重。
-4. 数据库变化只能新增 `internal/procurement/migrations/NNNN_name.up.sql`，编号接在最后一个之后。已发布的 migration 不可修改。新表必须 `FORCE ROW LEVEL SECURITY`，加 `RESTRICTIVE` 租户策略，并且只授予需要的列权限。
-5. 运行 `go build -o bin/appctl ./cmd/appctl && bin/appctl describe > internal/procurement/contract.json`。
+4. `Normalize` 里的规范化和校验（去空白后非空、长度、取值范围），只要对应字段能通过你新增的 UPDATE 授权写入，就要在数据库里用 `CHECK` 或触发器做同样的检查，这样直接 SQL 也写不进去。
+5. 数据库变化只能新增 `internal/procurement/migrations/NNNN_name.up.sql`，编号接在最后一个之后。已发布的 migration 不可修改。新表必须 `FORCE ROW LEVEL SECURITY`，加 `RESTRICTIVE` 租户策略，并且只授予需要的列权限。
+6. 运行 `go build -o bin/appctl ./cmd/appctl && bin/appctl describe > internal/procurement/contract.json`。
    新操作版本还要新增 `internal/procurement/behavior/<name>@<version>.json`（格式参照已有文件），写入这个版本的冻结行为用例：正向、每种拒绝、数值边界，以及结果、状态、审计、事件载荷。已发布的 behavior 文件不能修改；改动后如果任何已发布版本的用例失败，说明它的行为变了，要发布新版本，而不是改用例。
-6. 在 `internal/procurement/*_test.go` 补测试：正向用例、每种拒绝情况零写入、幂等重放，以及需求中每个数值边界（刚好允许、刚好超出）。
-7. 新增状态、通知类型或改变规则时，同步更新 `docs/kernel.md` 的操作表与"数据库不变量"段落，以及 `apps/web/app/procurement/page.tsx` 中的状态和通知文案（`statusLabel`、通知列表）；新操作要在界面上可用时，还要加入 `apps/web/app/api/product/[...path]/route.ts` 的 `operations` 允许列表。
+7. 在 `internal/procurement/*_test.go` 补测试：正向用例、每种拒绝情况零写入、幂等重放，以及需求中每个数值边界（刚好允许、刚好超出）。
+8. 新增状态、通知类型或改变规则时，同步更新 `docs/kernel.md` 的操作表与"数据库不变量"段落，以及 `apps/web/app/procurement/page.tsx` 中的状态和通知文案（`statusLabel`、通知列表）；新操作要在界面上可用时，还要加入 `apps/web/app/api/product/[...path]/route.ts` 的 `operations` 允许列表。
 
 ## 内核与数据库已经保证的内容（不要在领域代码里重做）
 

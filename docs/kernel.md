@@ -95,7 +95,7 @@ export KERNEL_TEST_ADMIN_URL='postgres://postgres:postgres@127.0.0.1:55417/postg
 KERNEL_REQUIRE_DB=1 go test -race -count=1 ./kernel/... ./internal/procurement/ ./cmd/appctl/
 make build && scripts/product_smoke.sh   # 含消费者关闭→重启→再重启
 (cd apps/web && npm ci && npm run build && npx playwright install chromium)
-scripts/product_browser.sh               # 4 项浏览器用例
+scripts/product_browser.sh               # 用例数自动统计；可与其他运行并发
 ```
 
 每个测试新建并删除自己的数据库，并创建集群级角色 `kernel_test_runtime`、`enterprise_runtime`。只对可销毁的服务器使用。未设置变量时 DB 测试跳过；`KERNEL_REQUIRE_DB=1`（CI `kernel` job）下跳过视为失败。
