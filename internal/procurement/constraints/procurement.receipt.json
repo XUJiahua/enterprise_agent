@@ -2,13 +2,13 @@
   "table": "procurement.receipt",
   "cases": [
     {"name": "receive on approved", "actor": "ann", "sql": "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','a1',1,'ann')", "allowed": true},
-    {"name": "receive other tenant", "actor": "ann", "sql": "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t2','x1',1,'ann')", "allowed": false},
-    {"name": "receive on submitted", "actor": "ann", "sql": "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','s1',1,'ann')", "allowed": false},
-    {"name": "receive on closed", "actor": "ann", "sql": "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','c1',1,'ann')", "allowed": false},
-    {"name": "receive on missing purchase", "actor": "ann", "sql": "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','zz',1,'ann')", "allowed": false},
-    {"name": "receive amount 0", "actor": "ann", "sql": "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','a1',0,'ann')", "allowed": false},
+    {"name": "receive other tenant", "actor": "ann", "sql": "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t2','x1',1,'ann')", "allowed": false, "refusedBy": "trigger:procurement.receipt_guard"},
+    {"name": "receive on submitted", "actor": "ann", "sql": "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','s1',1,'ann')", "allowed": false, "refusedBy": "trigger:procurement.receipt_guard"},
+    {"name": "receive on closed", "actor": "ann", "sql": "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','c1',1,'ann')", "allowed": false, "refusedBy": "trigger:procurement.receipt_guard"},
+    {"name": "receive on missing purchase", "actor": "ann", "sql": "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','zz',1,'ann')", "allowed": false, "refusedBy": "trigger:procurement.receipt_guard"},
+    {"name": "receive amount 0", "actor": "ann", "sql": "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','a1',0,'ann')", "allowed": false, "refusedBy": "receipt_amount_check"},
     {"name": "receive amount 1e12", "actor": "ann", "sql": "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','a1',1000000000000,'ann')", "allowed": true},
-    {"name": "receive amount above 1e12", "actor": "ann", "sql": "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','a1',1000000000001,'ann')", "allowed": false},
-    {"name": "receive null received_by", "actor": "ann", "sql": "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','a1',1,NULL)", "allowed": false}
+    {"name": "receive amount above 1e12", "actor": "ann", "sql": "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','a1',1000000000001,'ann')", "allowed": false, "refusedBy": "receipt_amount_max"},
+    {"name": "receive null received_by", "actor": "ann", "sql": "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','a1',1,NULL)", "allowed": false, "refusedBy": "not_null:received_by"}
   ]
 }

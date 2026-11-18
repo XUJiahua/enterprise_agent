@@ -16,6 +16,7 @@ import (
 	"fmt"
 	"io/fs"
 	"regexp"
+	"slices"
 	"strings"
 	"testing"
 
@@ -36,6 +37,10 @@ type constraintCase struct {
 	Seed    []string `json:"seed,omitempty"` // admin SQL after the standard seed
 	SQL     string   `json:"sql"`            // one statement, run as the application role in tenant t1
 	Allowed bool     `json:"allowed"`        // true: succeeds and writes a row; false: the database refuses it
+	// RefusedBy, required when allowed is false, names the rule that must
+	// refuse it: a constraint name, not_null:<column>, rls:<policy> or
+	// trigger:<schema>.<function> (see refusal).
+	RefusedBy string `json:"refusedBy,omitempty"`
 }
 
 //go:embed *.json
@@ -46,9 +51,10 @@ const appRole = "enterprise_runtime"
 
 // TestFrozenConstraints runs every case in its own database and then checks
 // coverage: for each (table, column, INSERT|UPDATE) the application role
-// holds, the table's file needs a case of that kind naming the column with
-// "allowed": false. It checks that such a refusal exists, not that it covers
-// every rule Normalize applies to the column.
+// holds, the table's file needs a case of that kind that writes the column,
+// has "allowed": false, and is refused by a rule on that column (see
+// credited). It checks that such a refusal exists, not that it covers every
+// rule Normalize applies to the column.
 func TestFrozenConstraints(t *testing.T) {
 	files, _ := fs.Glob(frozen, "*.json")
 	cases := map[string][]constraintCase{}
@@ -72,7 +78,18 @@ func TestFrozenConstraints(t *testing.T) {
 				t.Fatalf("%s: empty or duplicate case name %q", f, c.Name)
 			}
 			names[c.Name] = true
-			t.Run(cf.Table+"/"+c.Name, func(t *testing.T) { runCase(t, c) })
+			t.Run(cf.Table+"/"+c.Name, func(t *testing.T) {
+				s, err := parse(c.SQL)
+				switch {
+				case err != nil:
+					t.Fatalf("unsupported statement (%v); write INSERT INTO <table> (<columns>) VALUES|SELECT ... or UPDATE <table> SET <column> = ...[, ...] [WHERE ...]", err)
+				case s.table != cf.Table:
+					t.Fatalf("writes %s; cases in %s.json must write %s", s.table, cf.Table, cf.Table)
+				case c.Allowed == (c.RefusedBy != ""):
+					t.Fatal(`"refusedBy" is required exactly when "allowed" is false`)
+				}
+				runCase(t, c)
+			})
 		}
 		cases[cf.Table] = cf.Cases
 	}
@@ -97,55 +114,355 @@ func TestFrozenConstraints(t *testing.T) {
 	if len(grants) == 0 {
 		t.Fatal("found no INSERT/UPDATE grants for " + appRole + "; the coverage query is broken")
 	}
+	byTable := map[string]rules{}
 	for _, g := range grants {
-		seen, refused := false, false
-		for _, c := range cases[g.table] {
-			if writes(c.SQL, g.priv, g.table, g.column) {
-				seen = true
-				refused = refused || !c.Allowed
-			}
+		if byTable[g.table] == nil {
+			byTable[g.table] = tableRules(t, d, g.table)
 		}
-		if !seen || !refused {
-			t.Errorf("%s.%s %s: %s may write it; add a case with \"allowed\": false to constraints/%s.json (a %s naming %s that the database must refuse)",
-				g.table, g.column, g.priv, appRole, g.table, g.priv, g.column)
+		ok := false
+		for _, c := range cases[g.table] {
+			s, err := parse(c.SQL)
+			ok = ok || err == nil && !c.Allowed && s.priv == g.priv && credited(s, c.RefusedBy, g.column, byTable[g.table])
+		}
+		if !ok {
+			t.Errorf("%s.%s %s: %s may write it; add a case to constraints/%s.json: a %s that writes %s, \"allowed\": false, and \"refusedBy\" a rule on %s (a constraint, not_null, row-level security policy or trigger function reading NEW.%s)",
+				g.table, g.column, g.priv, appRole, g.table, g.priv, g.column, g.column, g.column)
 		}
 	}
 }
 
-// ponytail: regex matching, not a SQL parser. INSERT counts the column list,
-// UPDATE the SET clause up to WHERE/RETURNING. Enough for single-table case
-// statements; a case written another way (CTE, INSERT ... SELECT without a
-// column list) simply does not count toward coverage.
-var (
-	insertRe = regexp.MustCompile(`(?is)^\s*INSERT\s+INTO\s+(\S+)\s*\(([^)]*)\)`)
-	updateRe = regexp.MustCompile(`(?is)^\s*UPDATE\s+(\S+)\s+SET\s+(.*?)(?:\s+WHERE\s|\s+RETURNING\s|$)`)
-)
+// rules maps a refusal (as refusal() names it) to the columns it is about.
+type rules map[string]map[string]bool
 
-// writes reports whether sql is a priv statement on table that names column.
-func writes(sql, priv, table, column string) bool {
-	if priv == "INSERT" {
-		m := insertRe.FindStringSubmatch(sql)
-		if m == nil || !strings.EqualFold(m[1], table) {
-			return false
+// tableRules reads the constraints, row-level security policies and trigger
+// functions of table and the columns each one refers to.
+func tableRules(t *testing.T, d *pgtest.DB, table string) rules {
+	r := rules{}
+	add := func(rule, column string) {
+		if r[rule] == nil {
+			r[rule] = map[string]bool{}
 		}
-		for _, c := range strings.Split(m[2], ",") {
-			if strings.EqualFold(strings.Trim(strings.TrimSpace(c), `"`), column) {
-				return true
+		r[rule][column] = true
+	}
+	for _, row := range d.Strings(t, `SELECT c.conname, a.attname FROM pg_constraint c
+	  JOIN pg_attribute a ON a.attrelid = c.conrelid AND a.attnum = ANY (c.conkey) WHERE c.conrelid = $1::regclass`, table) {
+		f := strings.Fields(row)
+		add(f[0], f[1])
+	}
+	cols := d.Strings(t, `SELECT attname FROM pg_attribute WHERE attrelid = $1::regclass AND attnum > 0 AND NOT attisdropped`, table)
+	for _, c := range cols {
+		add("not_null:"+c, c)
+	}
+	for _, row := range d.Strings(t, `SELECT polname, pg_get_expr(coalesce(polwithcheck, polqual), polrelid) FROM pg_policy WHERE polrelid = $1::regclass`, table) {
+		name, expr, _ := strings.Cut(row, " ")
+		for _, c := range cols {
+			if regexp.MustCompile(`\b` + regexp.QuoteMeta(c) + `\b`).MatchString(expr) {
+				add("rls:"+name, c)
 			}
 		}
-		return false
 	}
-	m := updateRe.FindStringSubmatch(sql)
-	return m != nil && strings.EqualFold(m[1], table) &&
-		regexp.MustCompile(`(?i)(^|[\s,(])"?`+regexp.QuoteMeta(column)+`"?\s*=`).MatchString(m[2])
+	for _, row := range d.Strings(t, `SELECT n.nspname||'.'||p.proname, p.prosrc FROM pg_trigger tg
+	  JOIN pg_proc p ON p.oid = tg.tgfoid JOIN pg_namespace n ON n.oid = p.pronamespace
+	 WHERE tg.tgrelid = $1::regclass AND NOT tg.tgisinternal`, table) {
+		fn, src, _ := strings.Cut(row, " ")
+		for _, c := range cols {
+			if regexp.MustCompile(`(?i)\bNEW\.` + regexp.QuoteMeta(c) + `\b`).MatchString(src) {
+				add("trigger:"+fn, c)
+			}
+		}
+	}
+	return r
+}
+
+// credited reports whether a refused case s counts as covering column: s
+// assigns column, and the declared (and, by runCase, observed) refusal is a
+// rule that refers to column: a constraint on it, its not-null, a row-level
+// security policy whose expression names it, or a trigger function that reads
+// NEW.<column>. A refusal by some other rule (a foreign key, a status check
+// in a trigger) says nothing about the column.
+func credited(s statement, refusedBy, column string, r rules) bool {
+	return slices.Contains(s.columns, column) && r[refusedBy][column]
+}
+
+// statement is what parse understood of a case: its privilege kind, the
+// table it writes and the columns it assigns (INSERT column list or UPDATE
+// SET targets).
+type statement struct {
+	priv, table string
+	columns     []string
+}
+
+// parse accepts only `INSERT INTO t (c, ...) VALUES|SELECT ...` and
+// `UPDATE t SET c = expr [, ...] [WHERE|FROM|RETURNING ...]`, after removing
+// comments and string literals, and refuses anything else (CTEs, aliases,
+// multi-column assignment, dollar quoting, several statements) so a case
+// cannot be credited for a column it does not assign.
+func parse(sql string) (statement, error) {
+	toks, err := tokenize(sql)
+	if err != nil {
+		return statement{}, err
+	}
+	i := 0
+	next := func() string {
+		if i >= len(toks) {
+			return ""
+		}
+		i++
+		return toks[i-1]
+	}
+	word := func(want string) bool { return i < len(toks) && toks[i] == want && func() bool { i++; return true }() }
+	table := func() (string, error) {
+		a, ok := ident(next())
+		if !ok {
+			return "", errors.New("expected a table name")
+		}
+		if !word(".") {
+			return a, nil
+		}
+		b, ok := ident(next())
+		if !ok {
+			return "", errors.New("expected a table name after the schema")
+		}
+		return a + "." + b, nil
+	}
+	if slices.Contains(toks, ";") {
+		return statement{}, errors.New("one statement per case")
+	}
+	var s statement
+	switch {
+	case word("insert"):
+		s.priv = "INSERT"
+		if !word("into") {
+			return s, errors.New("expected INTO")
+		}
+		if s.table, err = table(); err != nil {
+			return s, err
+		}
+		if !word("(") {
+			return s, errors.New("INSERT needs a column list")
+		}
+		for {
+			c, ok := ident(next())
+			if !ok {
+				return s, errors.New("expected a column name")
+			}
+			s.columns = append(s.columns, c)
+			if word(")") {
+				break
+			}
+			if !word(",") {
+				return s, errors.New("expected , or ) in the column list")
+			}
+		}
+		if !word("values") && !word("select") {
+			return s, errors.New("expected VALUES or SELECT after the column list")
+		}
+	case word("update"):
+		s.priv = "UPDATE"
+		if s.table, err = table(); err != nil {
+			return s, err
+		}
+		if !word("set") {
+			return s, errors.New("expected SET right after the table (no ONLY, no alias)")
+		}
+		for {
+			c, ok := ident(next())
+			if !ok || !word("=") {
+				return s, errors.New("each SET item must be <column> = <expression>")
+			}
+			s.columns = append(s.columns, c)
+			depth := 0
+			for ; i < len(toks); i++ {
+				switch t := toks[i]; {
+				case t == "(":
+					depth++
+				case t == ")":
+					depth--
+				case depth == 0 && (t == "," || t == "where" || t == "from" || t == "returning"):
+					goto item
+				}
+			}
+		item:
+			if !word(",") {
+				break
+			}
+		}
+	default:
+		return s, errors.New("only INSERT and UPDATE are supported")
+	}
+	return s, nil
+}
+
+// ident returns the identifier a token stands for: unquoted names are
+// lowercased by tokenize, quoted ones keep their case.
+func ident(tok string) (string, bool) {
+	if strings.HasPrefix(tok, `"`) {
+		return tok[1:], len(tok) > 1
+	}
+	return tok, regexp.MustCompile(`^[a-z_][a-z0-9_$]*$`).MatchString(tok)
+}
+
+// tokenize splits sql into lowercased words, quoted identifiers (prefixed
+// with "), punctuation and a placeholder ' for each string literal. Comments
+// are dropped; dollar quoting and parameters are refused.
+func tokenize(sql string) ([]string, error) {
+	var out []string
+	for i := 0; i < len(sql); {
+		c := sql[i]
+		switch {
+		case strings.ContainsRune(" \t\n\r\f\v", rune(c)):
+			i++
+		case strings.HasPrefix(sql[i:], "--"):
+			if j := strings.IndexByte(sql[i:], '\n'); j >= 0 {
+				i += j
+			} else {
+				i = len(sql)
+			}
+		case strings.HasPrefix(sql[i:], "/*"):
+			j := strings.Index(sql[i+2:], "*/")
+			if j < 0 || strings.Contains(sql[i+2:i+2+j], "/*") {
+				return nil, errors.New("unterminated or nested comment")
+			}
+			i += j + 4
+		case c == '\'' || (c == 'e' || c == 'E') && i+1 < len(sql) && sql[i+1] == '\'':
+			escapes := c != '\''
+			if escapes {
+				i++
+			}
+			for i++; ; i++ {
+				switch {
+				case i >= len(sql):
+					return nil, errors.New("unterminated string")
+				case escapes && sql[i] == '\\':
+					i++
+				case sql[i] == '\'' && i+1 < len(sql) && sql[i+1] == '\'':
+					i++
+				case sql[i] == '\'':
+					goto literal
+				}
+			}
+		literal:
+			i++
+			out = append(out, "'")
+		case c == '"':
+			j := strings.IndexByte(sql[i+1:], '"')
+			if j < 0 || i+2+j < len(sql) && sql[i+2+j] == '"' {
+				return nil, errors.New("unterminated quoted identifier or \"\" inside one")
+			}
+			out = append(out, `"`+sql[i+1:i+1+j])
+			i += j + 2
+		case c == '$':
+			return nil, errors.New("dollar quoting and parameters are not supported")
+		case c == '_' || c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= 0x80 || c >= '0' && c <= '9':
+			j := i
+			for j < len(sql) && (sql[j] == '_' || sql[j] == '$' || sql[j] >= 'a' && sql[j] <= 'z' || sql[j] >= 'A' && sql[j] <= 'Z' || sql[j] >= '0' && sql[j] <= '9' || sql[j] >= 0x80 || sql[j] == '.' && c >= '0' && c <= '9') {
+				j++
+			}
+			out = append(out, strings.ToLower(sql[i:j]))
+			i = j
+		default:
+			out = append(out, string(c))
+			i++
+		}
+	}
+	return out, nil
+}
+
+// TestStatementParser pins what counts as writing a column, including the
+// forms that must not be credited.
+func TestStatementParser(t *testing.T) {
+	for sql, want := range map[string]string{
+		`INSERT INTO procurement.purchase (tenant_id,id,title) VALUES ('t1','x','a')`:                          "INSERT procurement.purchase tenant_id,id,title",
+		`insert into procurement.purchase ("title", amount) select 'a', 1`:                                     "INSERT procurement.purchase title,amount",
+		`UPDATE procurement.purchase SET title = '   ' WHERE id='s1'`:                                          "UPDATE procurement.purchase title",
+		`UPDATE procurement.purchase SET status = coalesce(NULL, 'x'), "title"=E'it\'s, title=' WHERE id='s1'`: "UPDATE procurement.purchase status,title",
+		// reads, strings and comments mentioning title= are not assignments
+		`UPDATE procurement.purchase SET status=CASE WHEN title='pen' THEN 'closed' ELSE 'closed' END WHERE id='s1'`:       "UPDATE procurement.purchase status",
+		`UPDATE procurement.purchase SET status='title=x' WHERE title='a'`:                                                 "UPDATE procurement.purchase status",
+		`UPDATE procurement.purchase SET status='closed' /* title='x' */ -- , title='y'` + "\n WHERE id='s1'":              "UPDATE procurement.purchase status",
+		`UPDATE procurement.purchase SET status=(SELECT 'closed' FROM procurement.purchase WHERE title='x') WHERE id='s1'`: "UPDATE procurement.purchase status",
+		`UPDATE procurement.purchase SET status='closed' FROM procurement.receipt r WHERE r.amount=1`:                      "UPDATE procurement.purchase status",
+		// unsupported forms are refused, not guessed
+		`WITH x AS (SELECT 1) UPDATE procurement.purchase SET title='a'`: "error",
+		`UPDATE procurement.purchase p SET title='a'`:                    "error",
+		`UPDATE ONLY procurement.purchase SET title='a'`:                 "error",
+		`UPDATE procurement.purchase SET (title, status) = ('a', 'b')`:   "error",
+		`UPDATE procurement.purchase SET title=$$a$$`:                    "error",
+		`INSERT INTO procurement.purchase VALUES ('t1')`:                 "error",
+		`INSERT INTO procurement.purchase (title) DEFAULT VALUES`:        "error",
+		`UPDATE procurement.purchase SET title='a'; SELECT 1`:            "error",
+		`UPDATE procurement.purchase SET title='a`:                       "error",
+		`DELETE FROM procurement.purchase`:                               "error",
+	} {
+		s, err := parse(sql)
+		got := s.priv + " " + s.table + " " + strings.Join(s.columns, ",")
+		if err != nil {
+			got = "error"
+		}
+		if got != want {
+			t.Errorf("%s\n got  %s (%v)\n want %s", sql, got, err, want)
+		}
+	}
+	// As tableRules reads them on the current schema.
+	r := rules{"purchase_title_not_blank": {"title": true}, "receipt_tenant_id_purchase_id_fkey": {"tenant_id": true, "purchase_id": true},
+		"trigger:procurement.purchase_guard": {"tenant_id": true, "id": true, "created_by": true, "amount": true, "status": true},
+		"trigger:procurement.receipt_guard":  {"tenant_id": true, "purchase_id": true}}
+	for _, c := range []struct {
+		sql, refusedBy, column string
+		want                   bool
+	}{
+		{`UPDATE procurement.purchase SET title='  ' WHERE id='s1'`, "purchase_title_not_blank", "title", true},
+		{`UPDATE procurement.purchase SET status='closed' WHERE id='s1'`, "trigger:procurement.purchase_guard", "status", true},
+		// the status trigger refuses; title is not what it refused
+		{`UPDATE procurement.purchase SET status=CASE WHEN title='pen' THEN 'closed' END WHERE id='s1'`, "trigger:procurement.purchase_guard", "title", false},
+		{`UPDATE procurement.purchase SET title='ok', status='closed' WHERE id='s1'`, "trigger:procurement.purchase_guard", "title", false},
+		{`UPDATE procurement.purchase SET title='  ' WHERE id='s1'`, "trigger:procurement.purchase_guard", "title", false},
+		{`INSERT INTO procurement.receipt (tenant_id,purchase_id,amount) VALUES ('t1','s1',1)`, "trigger:procurement.receipt_guard", "purchase_id", true},
+		{`INSERT INTO procurement.receipt (tenant_id,purchase_id,amount) VALUES ('t1','s1',1)`, "trigger:procurement.receipt_guard", "amount", false},
+		// an unrelated foreign key does not cover the amount
+		{`INSERT INTO procurement.receipt (tenant_id,purchase_id,amount) VALUES ('t1','zz',1)`, "receipt_tenant_id_purchase_id_fkey", "amount", false},
+		{`INSERT INTO procurement.receipt (tenant_id,purchase_id,amount) VALUES ('t1','zz',1)`, "receipt_tenant_id_purchase_id_fkey", "purchase_id", true},
+	} {
+		s, err := parse(c.sql)
+		if got := err == nil && credited(s, c.refusedBy, c.column, r); got != c.want {
+			t.Errorf("credited(%s, %s, %s) = %v, want %v", c.sql, c.refusedBy, c.column, got, c.want)
+		}
+	}
+}
+
+// refusal names the integrity rule behind err: a constraint name, not_null:<column>,
+// trigger:<function> for an error raised in a PL/pgSQL trigger function,
+// rls:<policy> for a row-level security WITH CHECK, or "" for anything else
+// (a missing grant, a syntax error).
+func refusal(err error) string {
+	var pe *pgconn.PgError
+	if !errors.As(err, &pe) {
+		return ""
+	}
+	if pe.Code == "42501" && strings.Contains(pe.Message, "row-level security") {
+		if m := regexp.MustCompile(`policy "([^"]+)"`).FindStringSubmatch(pe.Message); m != nil {
+			return "rls:" + m[1]
+		}
+		return "rls"
+	}
+	switch {
+	case !strings.HasPrefix(pe.Code, "23"):
+		return ""
+	case pe.ConstraintName != "":
+		return pe.ConstraintName
+	case pe.Code == "23502" && pe.ColumnName != "":
+		return "not_null:" + pe.ColumnName
+	}
+	if m := regexp.MustCompile(`PL/pgSQL function ([\w.]+)\(`).FindStringSubmatch(pe.Where); m != nil {
+		return "trigger:" + m[1]
+	}
+	return ""
 }
 
 // runCase runs the statement as the application role inside a transaction
-// bound to tenant t1 and the case's actor, then rolls back. A refusal must
-// come from the database's integrity rules: an integrity constraint violation
-// (SQLSTATE class 23, which the triggers raise too) or a row-level security
-// WITH CHECK violation. A missing grant, a syntax error or a statement that
-// writes nothing does not count either way.
+// bound to tenant t1 and the case's actor, then rolls back. An allowed case
+// must write a row; a refused one must fail with exactly the integrity rule
+// it names in refusedBy (see refusal).
 func runCase(t *testing.T, c constraintCase) {
 	d := setup(t)
 	for _, sql := range c.Seed {
@@ -165,16 +482,13 @@ func runCase(t *testing.T, c constraintCase) {
 	// switches to the simple protocol when there are no arguments.)
 	res := tx.Conn().PgConn().ExecParams(ctx, c.SQL, nil, nil, nil, nil).Read()
 	tag, err := res.CommandTag, res.Err
-	var pe *pgconn.PgError
-	refused := errors.As(err, &pe) && (strings.HasPrefix(pe.Code, "23") ||
-		pe.Code == "42501" && strings.Contains(pe.Message, "row-level security"))
-	switch {
+	switch got := refusal(err); {
 	case c.Allowed && (err != nil || tag.RowsAffected() == 0):
 		t.Fatalf("must succeed and write a row: rows=%d err=%v", tag.RowsAffected(), err)
 	case !c.Allowed && err == nil:
-		t.Fatalf("must be refused by the database, but it wrote %d row(s)", tag.RowsAffected())
-	case !c.Allowed && !refused:
-		t.Fatalf("must be refused by an integrity rule (SQLSTATE 23xxx or row-level security), got %v", err)
+		t.Fatalf("must be refused by the database (%s), but it wrote %d row(s)", c.RefusedBy, tag.RowsAffected())
+	case !c.Allowed && got != c.RefusedBy:
+		t.Fatalf("must be refused by %s, got refusal %q: %v", c.RefusedBy, got, err)
 	}
 }
 
