@@ -230,7 +230,7 @@ jobs:
       - name: Scripts never signal their whole process group
         # `kill 0` (or an unset pid defaulting to 0) also kills whatever runs
         # the script in the same group, e.g. an agent supervisor.
-        run: '! grep -nE "kill[^;|&]*([$][{][A-Za-z_]+:-0[}]|[[:space:]]0([[:space:]]|$)|[[:space:]]-[[:digit:]])" scripts/*.sh'
+        run: '! grep -nE "kill[^;|&]*([$][{][A-Za-z_]+:-0[}]|[[:space:]]0([[:space:]]|$))|kill[[:space:]]+(-[[:alnum:]]+[[:space:]]+|--[[:space:]]+)+-[[:digit:]$]" scripts/*.sh'
       - name: Operation contract is current and published versions are unchanged
         run: |
           go build -o /tmp/appctl ./cmd/appctl
