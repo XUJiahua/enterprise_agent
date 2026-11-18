@@ -38,7 +38,7 @@
 ```bash
 export KERNEL_TEST_ADMIN_URL='postgres://postgres:postgres@127.0.0.1:5432/postgres?sslmode=disable' KERNEL_REQUIRE_DB=1
 go vet ./... && go test -race -count=1 ./kernel/... ./internal/procurement/ ./cmd/appctl/
-go build -o bin/appctl ./cmd/appctl && bin/appctl validate --base origin/main
+make build && bin/appctl validate --base origin/main
 ```
 
-`validate` 的输出必须是 `"ok":true`。新增 migration 或改动 `internal/procurement` 时还要运行 `scripts/product_smoke.sh`；改了界面时运行 `scripts/product_browser.sh`（先 `npm ci && npm run build --prefix apps/web`）。两个脚本都需要上面的 `KERNEL_TEST_ADMIN_URL`。
+`validate` 的输出必须是 `"ok":true`。`make build` 会构建 `bin/appctl` 和 `bin/product`，下面两个脚本用的就是这两个二进制。新增 migration 或改动 `internal/procurement` 时，还要运行 `scripts/product_smoke.sh`。改了界面时，先运行 `make web-deps`（安装依赖、构建界面并安装 Chromium），再运行 `scripts/product_browser.sh`。两个脚本都需要上面的 `KERNEL_TEST_ADMIN_URL`。
