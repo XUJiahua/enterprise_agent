@@ -14,7 +14,7 @@ psql -q "$KERNEL_TEST_ADMIN_URL" -c 'DROP DATABASE IF EXISTS product_smoke' -c '
   -c "DO \$\$ BEGIN CREATE ROLE product_smoke_app LOGIN PASSWORD 'smoke-only' NOSUPERUSER NOBYPASSRLS IN ROLE enterprise_runtime; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$" \
   -c "DO \$\$ BEGIN CREATE ROLE enterprise_consumer NOLOGIN; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$" \
   -c "DO \$\$ BEGIN CREATE ROLE product_smoke_consumer LOGIN PASSWORD 'smoke-only' NOSUPERUSER NOBYPASSRLS IN ROLE enterprise_consumer; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$"
-trap '[ -n "${pid:-}" ] && kill "$pid" 2>/dev/null; psql -q "$KERNEL_TEST_ADMIN_URL" -c "DROP DATABASE IF EXISTS product_smoke WITH (FORCE)"' EXIT
+trap '[ -n "${pid:-}" ] && kill "$pid" 2>/dev/null || true; psql -q "$KERNEL_TEST_ADMIN_URL" -c "DROP DATABASE IF EXISTS product_smoke WITH (FORCE)"' EXIT
 
 ADMIN_DATABASE_URL="$admin_db" "$root/bin/appctl" migrate up | tee /dev/stderr | grep -q '"applied":true,"ok":true,"version":7'
 ADMIN_DATABASE_URL="$admin_db" "$root/bin/appctl" migrate up | tee /dev/stderr | grep -q '"applied":false,"ok":true,"version":7'
