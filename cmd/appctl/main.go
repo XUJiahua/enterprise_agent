@@ -52,7 +52,8 @@ func run() int {
 			return 1
 		}
 		all := append(append([]Finding{}, contractFindings(*root, *base)...), writeFindings(*root)...)
-		return report(append(all, behaviorFindings(*root, *base)...))
+		all = append(all, behaviorFindings(*root, *base)...)
+		return report(append(all, eventFindings(*root, *base)...))
 	}
 	f := flag.NewFlagSet(command, flag.ContinueOnError)
 	root := f.String("root", ".", "application root")
@@ -370,7 +371,7 @@ const behaviorDir = "internal/procurement/behavior"
 
 // behaviorHarness are the files the frozen cases depend on for execution and
 // comparison.
-var behaviorHarness = []string{behaviorDir + "/behavior_test.go", "kernel/pg/pgtest/pgtest.go"}
+var behaviorHarness = []string{behaviorDir + "/behavior_test.go", "kernel/pg/pgtest/pgtest.go", eventsDir + "/events_test.go"}
 
 // behaviorFindings requires a behavior file for every registered operation
 // version (BEHAVIOR_MISSING) and, with base, that every file published there
@@ -442,6 +443,62 @@ func behaviorFindings(root, base string) []Finding {
 			continue
 		}
 		findings = append(findings, Finding{"BEHAVIOR_CHANGED", path, ref + " is published; changed behavior needs a new version"})
+	}
+	return findings
+}
+
+// eventsDir holds one frozen contract per (consumer, event version):
+// <consumer>_<type>@<version>.json, run by events/events_test.go.
+const eventsDir = "internal/procurement/events"
+
+// eventFindings requires a contract file for every event version a registered
+// consumer handles (EVENT_CONTRACT_MISSING), allows no other Go file next to
+// the harness, and with base refuses any edit to or removal of a published
+// contract (EVENT_CONTRACT_CHANGED). Contracts are never retired: queued events
+// of an old version may still exist, so its consumer must keep handling it.
+// The harness itself is frozen via behaviorHarness.
+func eventFindings(root, base string) []Finding {
+	c, err := pg.Describe(procurement.Registry())
+	if err != nil {
+		return nil // reported by contractFindings
+	}
+	var findings []Finding
+	for _, cc := range c.Consumers {
+		for _, e := range cc.Events {
+			path := eventsDir + "/" + cc.Name + "_" + e.String() + ".json"
+			if _, err := os.Stat(filepath.Join(root, path)); err != nil {
+				findings = append(findings, Finding{"EVENT_CONTRACT_MISSING", path, cc.Name + " handles " + e.String() + " without a frozen contract"})
+			}
+		}
+	}
+	entries, _ := os.ReadDir(filepath.Join(root, eventsDir))
+	for _, e := range entries {
+		if path := eventsDir + "/" + e.Name(); !strings.HasSuffix(e.Name(), ".json") && path != eventsDir+"/events_test.go" {
+			findings = append(findings, Finding{"BEHAVIOR_HARNESS_BYPASS", path, "only contract .json files and events_test.go may live in " + eventsDir})
+		}
+	}
+	if base == "" {
+		return findings
+	}
+	if _, err := git(root, "rev-parse", "--verify", base+"^{commit}"); err != nil {
+		return append(findings, Finding{"BASE_INVALID", base, err.Error()})
+	}
+	listed, err := git(root, "ls-tree", "-r", "--name-only", base, "--", eventsDir)
+	if err != nil {
+		return append(findings, Finding{"BASE_READ", eventsDir, err.Error()})
+	}
+	for _, path := range strings.Fields(string(listed)) {
+		if !strings.HasSuffix(path, ".json") {
+			continue
+		}
+		old, err := git(root, "show", base+":"+path)
+		if err != nil {
+			findings = append(findings, Finding{"BASE_READ", path, err.Error()})
+			continue
+		}
+		if now, err := os.ReadFile(filepath.Join(root, path)); err != nil || string(now) != string(old) {
+			findings = append(findings, Finding{"EVENT_CONTRACT_CHANGED", path, "published event contract changed or removed; publish a new event version and keep consuming this one"})
+		}
 	}
 	return findings
 }

@@ -1,0 +1,123 @@
+{
+  "event": {
+    "type": "procurement.purchase.closed",
+    "version": 1
+  },
+  "consumer": "procurement.notify",
+  "cases": [
+    {
+      "name": "received equals amount",
+      "target": "c1",
+      "payload": {
+        "id": "c1",
+        "amount": 1000,
+        "received": 1000
+      },
+      "accept": true,
+      "check": [
+        {
+          "sql": "SELECT recipient, purchase_id, kind FROM procurement.notification",
+          "want": [
+            "ann c1 closed"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "received above amount",
+      "target": "c2",
+      "payload": {
+        "id": "c2",
+        "amount": 300,
+        "received": 450
+      },
+      "accept": true,
+      "check": [
+        {
+          "sql": "SELECT recipient, purchase_id, kind FROM procurement.notification",
+          "want": [
+            "amy c2 closed"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "received below amount",
+      "target": "c1",
+      "payload": {
+        "id": "c1",
+        "amount": 1000,
+        "received": 990
+      },
+      "accept": false,
+      "check": [
+        {
+          "sql": "SELECT recipient, purchase_id, kind FROM procurement.notification",
+          "want": []
+        }
+      ]
+    },
+    {
+      "name": "missing received",
+      "target": "c1",
+      "payload": {
+        "id": "c1",
+        "amount": 1000
+      },
+      "accept": false,
+      "check": [
+        {
+          "sql": "SELECT recipient, purchase_id, kind FROM procurement.notification",
+          "want": []
+        }
+      ]
+    },
+    {
+      "name": "extra field",
+      "target": "c1",
+      "payload": {
+        "id": "c1",
+        "amount": 1000,
+        "received": 1000,
+        "reason": "x"
+      },
+      "accept": false
+    },
+    {
+      "name": "id differs from target",
+      "target": "c1",
+      "payload": {
+        "id": "c2",
+        "amount": 300,
+        "received": 300
+      },
+      "accept": false,
+      "check": [
+        {
+          "sql": "SELECT recipient, purchase_id, kind FROM procurement.notification",
+          "want": []
+        }
+      ]
+    },
+    {
+      "name": "amount zero",
+      "target": "c1",
+      "payload": {
+        "id": "c1",
+        "amount": 0,
+        "received": 0
+      },
+      "accept": false
+    },
+    {
+      "name": "unknown purchase",
+      "target": "nope",
+      "payload": {
+        "id": "nope",
+        "amount": 1,
+        "received": 1
+      },
+      "accept": false
+    }
+  ]
+}

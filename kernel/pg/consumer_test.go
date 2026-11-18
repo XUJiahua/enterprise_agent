@@ -67,6 +67,13 @@ func TestRegistryMatchesEventsAndConsumers(t *testing.T) {
 	if _, err := pg.New(ctx, pool, pg.Registry{Operations: []pg.Operation{mark{version: 1}}, Consumers: []pg.Consumer{toyLogger, toyLogger}}); err == nil {
 		t.Fatal("duplicate consumer accepted")
 	}
+	// A consumer may keep an older version of a declared type, not a newer or unknown one.
+	if _, err := pg.Describe(pg.Registry{Operations: []pg.Operation{markV2Event{}}, Consumers: []pg.Consumer{multi{markedEvent, markedV2}}}); err != nil {
+		t.Fatal("older version of a declared type refused:", err)
+	}
+	if _, err := pg.Describe(pg.Registry{Operations: []pg.Operation{mark{version: 1}}, Consumers: []pg.Consumer{multi{markedEvent, markedV2}}}); err == nil {
+		t.Fatal("newer undeclared version accepted")
+	}
 }
 
 func TestDrainProjectsOnceAndRecovers(t *testing.T) {
@@ -173,3 +180,21 @@ func TestDrainPagesPastFailingEvents(t *testing.T) {
 	}
 	want(t, "valid event behind the failing page", logged(t, d), "t1 c")
 }
+
+var markedV2 = kernel.EventType{Type: "toy.marked", Version: 2}
+
+// markV2Event declares toy.marked@2 instead of @1.
+type markV2Event struct{ mark }
+
+func (markV2Event) Definition() kernel.Definition {
+	d := mark{version: 9}.Definition()
+	d.Events = []kernel.EventType{markedV2}
+	return d
+}
+
+// multi consumes the given event versions.
+type multi []kernel.EventType
+
+func (multi) Name() string                                           { return "toy.multi" }
+func (m multi) Events() []kernel.EventType                           { return m }
+func (multi) Handle(context.Context, *pg.Session, pg.Delivery) error { return nil }
