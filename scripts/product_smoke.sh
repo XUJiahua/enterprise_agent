@@ -11,12 +11,13 @@ admin_db="${KERNEL_TEST_ADMIN_URL%%\?*}"
 db=product_smoke_$$
 admin_db="${admin_db%/*}/$db"
 port=${PRODUCT_SMOKE_PORT:-$(python3 -c 'import socket; s=socket.socket(); s.bind(("127.0.0.1", 0)); print(s.getsockname()[1])')}
-psql -q "$KERNEL_TEST_ADMIN_URL" -c "CREATE DATABASE $db" \
+psql -q -v ON_ERROR_STOP=1 "$KERNEL_TEST_ADMIN_URL" -c "CREATE DATABASE $db"
+trap '[ -n "${pid:-}" ] && kill "$pid" 2>/dev/null || true; psql -q "$KERNEL_TEST_ADMIN_URL" -c "DROP DATABASE IF EXISTS $db WITH (FORCE)"; rm -f "${body_file:-}"' EXIT
+psql -q -v ON_ERROR_STOP=1 "$KERNEL_TEST_ADMIN_URL" \
   -c "DO \$\$ BEGIN CREATE ROLE enterprise_runtime NOLOGIN; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$" \
   -c "DO \$\$ BEGIN CREATE ROLE product_smoke_app LOGIN PASSWORD 'smoke-only' NOSUPERUSER NOBYPASSRLS IN ROLE enterprise_runtime; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$" \
   -c "DO \$\$ BEGIN CREATE ROLE enterprise_consumer NOLOGIN; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$" \
   -c "DO \$\$ BEGIN CREATE ROLE product_smoke_consumer LOGIN PASSWORD 'smoke-only' NOSUPERUSER NOBYPASSRLS IN ROLE enterprise_consumer; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$"
-trap '[ -n "${pid:-}" ] && kill "$pid" 2>/dev/null || true; psql -q "$KERNEL_TEST_ADMIN_URL" -c "DROP DATABASE IF EXISTS $db WITH (FORCE)"; rm -f "${body_file:-}"' EXIT
 
 # The expected version is the newest migration file, so adding one needs no edit here.
 latest=$(ls "$root"/internal/procurement/migrations/*.up.sql | sed 's#.*/0*\([0-9]*\)_.*#\1#' | sort -n | tail -1)

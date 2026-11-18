@@ -8,6 +8,7 @@ const reports =
   process.env.POC_BROWSER_REPORT_DIR ?? path.resolve("../../reports/browser/product");
 export default defineConfig({
   testDir: "./tests-product",
+  forbidOnly: true, // test.only would silently skip the rest
   fullyParallel: false,
   workers: 1,
   retries: 0,
