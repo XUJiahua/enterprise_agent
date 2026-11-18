@@ -14,11 +14,13 @@
    - `Normalize`：用 `strict` 严格解析请求，不访问数据库。返回的目标必须与 `Targets` 字段的值一致，否则内核返回 Internal。
    - `Authorize`：只看 `kernel.Principal` 的角色。
    - `Execute`：只通过传入的 `*pg.Session` 读写；先用 `lockPurchases` 锁住目标父单，再查状态和金额；任一目标不合格就返回 `deny()`，不写任何数据；如实返回实际改动的目标、每个目标一条审计、以及声明过的事件。
-2. 加入 `Registry()`。改动已发布操作的语义（请求字段、校验、规则、事件）时，发布新的 `Version`，不要原地修改。
+2. 加入 `Registry()`。改动已发布操作的语义（请求字段、校验、规则、事件）时，发布新的 `Version`，不要原地修改。这条也适用于你为了新功能而顺带改动的**其他**操作或事件：例如改变 close 判断"验收是否覆盖金额"的算法，或改变事件载荷字段的含义，都要给那个操作或事件升版本。
+   - 数值上下限只按需求写。不要从相邻操作复制 `1e12` 之类的上限；需要上限时，同时在数据库加 `CHECK`，让直接 SQL 也受同样限制。
 3. 需要事件时实现 `pg.Consumer`，在 `Handle` 中严格校验载荷，写入投影表时以 `event_id` 去重。
 4. 数据库变化只能新增 `internal/procurement/migrations/NNNN_name.up.sql`，编号接在最后一个之后。已发布的 migration 不可修改。新表必须 `FORCE ROW LEVEL SECURITY`，加 `RESTRICTIVE` 租户策略，并且只授予需要的列权限。
 5. 运行 `go build -o bin/appctl ./cmd/appctl && bin/appctl describe > internal/procurement/contract.json`。
-6. 在 `internal/procurement/*_test.go` 补测试：正向用例、每种拒绝情况零写入、幂等重放。
+6. 在 `internal/procurement/*_test.go` 补测试：正向用例、每种拒绝情况零写入、幂等重放，以及需求中每个数值边界（刚好允许、刚好超出）。
+7. 新增状态、通知类型或改变规则时，同步更新 `docs/kernel.md` 的操作表与"数据库不变量"段落，以及 `apps/web/app/procurement/page.tsx` 中的状态和通知文案（`statusLabel`、通知列表）；新操作要在界面上可用时，还要加入 `apps/web/app/api/product/[...path]/route.ts` 的 `operations` 允许列表。
 
 ## 内核与数据库已经保证的内容（不要在领域代码里重做）
 
@@ -36,7 +38,7 @@
 ```bash
 export KERNEL_TEST_ADMIN_URL='postgres://postgres:postgres@127.0.0.1:5432/postgres?sslmode=disable' KERNEL_REQUIRE_DB=1
 go vet ./... && go test -race -count=1 ./kernel/... ./internal/procurement/ ./cmd/appctl/
-go build -o bin/appctl ./cmd/appctl && bin/appctl validate --base origin/main
+make build && bin/appctl validate --base origin/main
 ```
 
-`validate` 的输出必须是 `"ok":true`。改了界面时还要运行 `scripts/product_browser.sh`。
+`validate` 的输出必须是 `"ok":true`。`make build` 会构建 `bin/appctl` 和 `bin/product`，下面两个脚本用的就是这两个二进制。新增 migration 或改动 `internal/procurement` 时，还要运行 `scripts/product_smoke.sh`。改了界面时，先运行 `make web-deps`（安装依赖、构建界面并安装 Chromium），再运行 `scripts/product_browser.sh`。两个脚本都需要上面的 `KERNEL_TEST_ADMIN_URL`。

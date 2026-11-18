@@ -78,3 +78,5 @@ go get github.com/XUJiahua/enterprise_agent@<tag 或 commit>
 - 数据库：0007 触发器保证状态机、审批人不是创建人、验收覆盖金额才能关闭、验收只能记在 approved 单上（插入时锁父单）。
 - 工具：`appctl validate` 增加静态写路径规则。
 - `AGENTS.md`：给 Agent 的操作说明、禁止事项和完成前检查。
+
+真实 Agent 扩展试验见 [v0.1.1 Agent 扩展试验](v011-agent-trials.md)：3 个任务都通过了隐藏测试和规定检查，但独立 review 发现了界面、文档、数值边界、smoke 和行为版本方面的缺陷；AGENTS.md 与 smoke 已据此更新。
