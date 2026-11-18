@@ -1,4 +1,8 @@
-package procurement_test
+// Package behavior_test runs the frozen behavior cases in this directory. It
+// is its own package so no other test file can change its state, and
+// appctl validate refuses any other Go file here and any edit to this file
+// once published.
+package behavior_test
 
 import (
 	"context"
@@ -54,7 +58,7 @@ var behaviorPrincipals = map[string]kernel.Principal{
 // comparisons) and appctl validate refuses edits to it once published, so the
 // harness cannot be weakened alongside a behavior change.
 func TestFrozenBehavior(t *testing.T) {
-	files, _ := filepath.Glob("behavior/*.json")
+	files, _ := filepath.Glob("*.json")
 	have := map[kernel.Ref]bool{}
 	for _, f := range files {
 		raw, err := os.ReadFile(f)

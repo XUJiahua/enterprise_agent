@@ -370,7 +370,7 @@ const behaviorDir = "internal/procurement/behavior"
 
 // behaviorHarness are the files the frozen cases depend on for execution and
 // comparison.
-var behaviorHarness = []string{"internal/procurement/behavior_test.go", "kernel/pg/pgtest/pgtest.go"}
+var behaviorHarness = []string{behaviorDir + "/behavior_test.go", "kernel/pg/pgtest/pgtest.go"}
 
 // behaviorFindings requires a behavior file for every registered operation
 // version (BEHAVIOR_MISSING) and, with base, that every file published there
@@ -390,11 +390,13 @@ func behaviorFindings(root, base string) []Finding {
 			findings = append(findings, Finding{"BEHAVIOR_MISSING", path, op.Ref.String() + " has no frozen behavior file"})
 		}
 	}
-	// A TestMain in the package could exit before the frozen cases run.
-	tests, _ := filepath.Glob(filepath.Join(root, "internal/procurement/*_test.go"))
-	for _, f := range tests {
-		if b, err := os.ReadFile(f); err == nil && strings.Contains(string(b), "func TestMain(") {
-			findings = append(findings, Finding{"BEHAVIOR_HARNESS_BYPASS", "internal/procurement/" + filepath.Base(f), "TestMain is not allowed in internal/procurement; it can skip the frozen behavior cases"})
+	// Only the harness and case files may live in behaviorDir: another Go file
+	// there could change the harness's state (init, TestMain).
+	entries, _ := os.ReadDir(filepath.Join(root, behaviorDir))
+	for _, e := range entries {
+		path := behaviorDir + "/" + e.Name()
+		if !strings.HasSuffix(e.Name(), ".json") && path != behaviorHarness[0] {
+			findings = append(findings, Finding{"BEHAVIOR_HARNESS_BYPASS", path, "only <ref>.json files and behavior_test.go may live in " + behaviorDir})
 		}
 	}
 	if base == "" {
@@ -418,6 +420,9 @@ func behaviorFindings(root, base string) []Finding {
 		return append(findings, Finding{"BASE_READ", behaviorDir, err.Error()})
 	}
 	for _, path := range strings.Fields(string(listed)) {
+		if !strings.HasSuffix(path, ".json") {
+			continue // the harness is checked above
+		}
 		old, err := git(root, "show", base+":"+path)
 		if err != nil {
 			findings = append(findings, Finding{"BASE_READ", path, err.Error()})

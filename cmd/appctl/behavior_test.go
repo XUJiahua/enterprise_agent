@@ -74,9 +74,9 @@ func TestBehaviorFindings(t *testing.T) {
 		t.Fatal("edited harness:", got)
 	}
 	_ = os.WriteFile(harness, []byte("package procurement_test\n"), 0o644)
-	_ = os.WriteFile(filepath.Join(root, "internal/procurement/main_test.go"), []byte("package procurement_test\nfunc TestMain(m *testing.M) {}\n"), 0o644)
-	if got := codes(""); got != "BEHAVIOR_HARNESS_BYPASS main_test.go" {
-		t.Fatal("TestMain:", got)
+	_ = os.WriteFile(filepath.Join(dir, "hook_test.go"), []byte("package behavior_test\nfunc init() {}\n"), 0o644)
+	if got := codes(""); got != "BEHAVIOR_HARNESS_BYPASS hook_test.go" {
+		t.Fatal("extra Go file next to the harness:", got)
 	}
 	// The repository has a file for every registered version.
 	if f := behaviorFindings("../..", ""); len(f) != 0 {
