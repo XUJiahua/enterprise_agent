@@ -58,6 +58,58 @@
       ]
     },
     {
+      "name": "received one unit short",
+      "target": "c1",
+      "payload": {
+        "id": "c1",
+        "amount": 1000,
+        "received": 999
+      },
+      "accept": false,
+      "check": [
+        {
+          "sql": "SELECT recipient, purchase_id, kind FROM procurement.notification",
+          "want": []
+        }
+      ]
+    },
+    {
+      "name": "amount one",
+      "target": "c1",
+      "payload": {
+        "id": "c1",
+        "amount": 1,
+        "received": 1
+      },
+      "accept": true,
+      "check": [
+        {
+          "sql": "SELECT recipient, purchase_id, kind FROM procurement.notification",
+          "want": [
+            "ann c1 closed"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "amount at 1e12",
+      "target": "c1",
+      "payload": {
+        "id": "c1",
+        "amount": 1000000000000,
+        "received": 1000000000000
+      },
+      "accept": true,
+      "check": [
+        {
+          "sql": "SELECT recipient, purchase_id, kind FROM procurement.notification",
+          "want": [
+            "ann c1 closed"
+          ]
+        }
+      ]
+    },
+    {
       "name": "missing received",
       "target": "c1",
       "payload": {
