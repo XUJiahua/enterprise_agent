@@ -7,6 +7,10 @@ such as an agent supervisor. Each line is split on shell separators and
 tokenized with shlex (so quotes are understood); quoted strings such as trap
 bodies are checked again as commands.
 
+Known limits (acceptable for this repo's scripts): pids held in variables,
+commands built at run time (eval "$x"), and pids fed through xargs are not
+seen; literal heredoc data that reads like `kill 0` is reported.
+
 usage: check_no_group_kill.py FILE...   |   check_no_group_kill.py --self-test
 """
 import re
@@ -36,10 +40,10 @@ def commands(text):
 
 def bad(tokens):
     for i, t in enumerate(tokens):
-        if t != "kill":
+        if t.rsplit("/", 1)[-1] != "kill":  # kill, /bin/kill, command kill
             continue
         args, options = tokens[i + 1:], True
-        for a in args:
+        for j, a in enumerate(args):
             if ":-0}" in a:
                 return True
             if options and a == "--":
@@ -47,7 +51,7 @@ def bad(tokens):
                 continue
             if options and a.startswith("-") and not re.fullmatch(r"-[\d$].*", a):
                 continue  # signal option such as -9, -TERM, -s handled loosely
-            if options and re.fullmatch(r"-\d+", a) and a == args[0]:
+            if options and re.fullmatch(r"-\d+", a) and j == 0:
                 continue  # `kill -9 pid`: a numeric signal comes first
             options = False
             if a == "0" or a.startswith("-"):
@@ -56,22 +60,35 @@ def bad(tokens):
 
 
 def scan(path):
-    found = []
+    """Check each logical line (backslash-newline continuations joined)."""
+    found, start, logical = [], 1, ""
     for n, line in enumerate(open(path, encoding="utf-8"), 1):
-        if any(bad(c) for c in commands(line)):
-            found.append(f"{path}:{n}: {line.strip()}")
+        if not logical:
+            start = n
+        if line.rstrip("\n").endswith("\\"):
+            logical += line.rstrip("\n")[:-1] + " "
+            continue
+        logical += line
+        if any(bad(c) for c in commands(logical)):
+            found.append(f"{path}:{start}: {logical.strip()[:200]}")
+        logical = ""
     return found
 
 
 BAD = ["kill 0", "kill -TERM 0", "kill -- -$pgid", 'kill -- "-$pgid"', "kill -9 -123", "kill -TERM -$p",
-       "kill ${pid:-0}", "trap 'kill 0' EXIT", "kill 0; echo done", "x && kill 0", 'trap "kill ${pid:-0} || true" EXIT']
+       "kill ${pid:-0}", "trap 'kill 0' EXIT", "kill 0; echo done", "x && kill 0", 'trap "kill ${pid:-0} || true" EXIT',
+       "/bin/kill 0", "kill -9 -9", "command kill 0"]
 GOOD = ['kill "$pid"', "kill -9 $pid", 'kill -TERM "$pid"', 'kill -9 "$pid"',
         """trap '[ -n "${pid:-}" ] && kill "$pid" 2>/dev/null || true; psql -c "DROP"' EXIT""",
         'stop() { kill "$pid"; wait "$pid" 2>/dev/null || true; }', "echo skill 0", "# kill 0 in a comment"]
 
 if __name__ == "__main__":
     if sys.argv[1:] == ["--self-test"]:
-        wrong = [s for s in BAD if not any(bad(c) for c in commands(s))] + \
+        import tempfile
+        with tempfile.NamedTemporaryFile("w", suffix=".sh", delete=False) as f:
+            f.write("echo ok \\\n  && kill \\\n  0\n")
+        continued = scan(f.name)
+        wrong = ([] if continued else ["kill \\<newline> 0"]) + [s for s in BAD if not any(bad(c) for c in commands(s))] + \
                 [s for s in GOOD if any(bad(c) for c in commands(s))]
         print("self-test", "ok" if not wrong else f"FAILED: {wrong}")
         sys.exit(1 if wrong else 0)
