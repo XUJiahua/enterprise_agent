@@ -16,8 +16,10 @@ psql -q "$KERNEL_TEST_ADMIN_URL" -c 'DROP DATABASE IF EXISTS product_smoke' -c '
   -c "DO \$\$ BEGIN CREATE ROLE product_smoke_consumer LOGIN PASSWORD 'smoke-only' NOSUPERUSER NOBYPASSRLS IN ROLE enterprise_consumer; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$"
 trap '[ -n "${pid:-}" ] && kill "$pid" 2>/dev/null || true; psql -q "$KERNEL_TEST_ADMIN_URL" -c "DROP DATABASE IF EXISTS product_smoke WITH (FORCE)"' EXIT
 
-ADMIN_DATABASE_URL="$admin_db" "$root/bin/appctl" migrate up | tee /dev/stderr | grep -q '"applied":true,"ok":true,"version":7'
-ADMIN_DATABASE_URL="$admin_db" "$root/bin/appctl" migrate up | tee /dev/stderr | grep -q '"applied":false,"ok":true,"version":7'
+# The expected version is the newest migration file, so adding one needs no edit here.
+latest=$(ls "$root"/internal/procurement/migrations/*.up.sql | sed 's#.*/0*\([0-9]*\)_.*#\1#' | sort -n | tail -1)
+ADMIN_DATABASE_URL="$admin_db" "$root/bin/appctl" migrate up | tee /dev/stderr | grep -q "\"applied\":true,\"ok\":true,\"version\":$latest"
+ADMIN_DATABASE_URL="$admin_db" "$root/bin/appctl" migrate up | tee /dev/stderr | grep -q "\"applied\":false,\"ok\":true,\"version\":$latest"
 psql -q "$admin_db" -c "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount,status,internal_note)
   VALUES ('tenant-a','po-1','alice','laptop',900,'approved','bank-1'), ('tenant-b','po-9','dave','server',50,'approved','secret')"
 
