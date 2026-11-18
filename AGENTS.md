@@ -18,7 +18,7 @@
    - 事件载荷允许的取值变了，也算含义变化。例如 closed 事件的 `received` 以前一定不小于 `amount`，现在可以更小，就要发布新的事件版本；消费者要继续处理旧版本，因为队列里可能还有旧事件。
    - 数值上下限只按需求写。不要从相邻操作复制 `1e12` 之类的上限；需要上限时，同时在数据库加 `CHECK`，让直接 SQL 也受同样限制。
 3. 需要事件时实现 `pg.Consumer`，在 `Handle` 中严格校验载荷，写入投影表时以 `event_id` 去重。消费者处理的每个事件版本都要有 `internal/procurement/events/<consumer>_<type>@<version>.json`（格式参照已有文件），写明消费者必须接受哪些载荷、投影出什么，以及必须拒绝哪些载荷。已发布的事件契约不能修改或删除。载荷的含义或允许的取值要变，就发布新的事件版本，并让消费者同时继续处理旧版本。
-4. `Normalize` 里的规范化和校验（去空白后非空、长度、取值范围），只要对应字段能通过你新增的 UPDATE 授权写入，就要在数据库里用 `CHECK` 或触发器做同样的检查，这样直接 SQL 也写不进去。
+4. `Normalize` 里的规范化和校验（去空白后非空、长度、取值范围），只要对应字段能通过你新增的 INSERT 或 UPDATE 授权写入，就要在数据库里用 `CHECK` 或触发器做同样的检查，这样直接 SQL 也写不进去。去空白用 `procurement.space_trim`，它与 `strings.TrimSpace` 去掉的字符一致。还要为你授权的每一列在 `internal/procurement/constraints/<schema>.<table>.json` 里追加 `"allowed": false` 的用例（数据库必须拒绝的直接 SQL），否则 `TestFrozenConstraints` 失败。
 5. 数据库变化只能新增 `internal/procurement/migrations/NNNN_name.up.sql`，编号接在最后一个之后。已发布的 migration 不可修改。新表必须 `FORCE ROW LEVEL SECURITY`，加 `RESTRICTIVE` 租户策略，并且只授予需要的列权限。
 6. 运行 `go build -o bin/appctl ./cmd/appctl && bin/appctl describe > internal/procurement/contract.json`。
    新操作版本还要新增 `internal/procurement/behavior/<name>@<version>.json`（格式参照已有文件），写入这个版本的冻结行为用例：正向、每种拒绝、数值边界，以及结果、状态、审计、事件载荷。已发布的 behavior 文件不能修改；改动后如果任何已发布版本的用例失败，说明它的行为变了，要发布新版本，而不是改用例。
@@ -27,13 +27,13 @@
 
 ## 内核与数据库已经保证的内容（不要在领域代码里重做）
 
-事务、幂等与请求指纹（覆盖原始请求的全部字段，只有 `Targets` 字段按集合比较；重复键或只差大小写的键会被拒绝）、统一的拒绝消息、按 ID 比对完整目标集合、审计/outbox/结果账本写入、事件与消费者一一对应、租户上下文。数据库触发器保证：状态只能 submitted → approved → closed；审批人不能是创建人；验收合计覆盖金额才能关闭；验收只能记在 approved 的采购单上。新规则如果是跨写路径都必须成立的不变量，也写成触发器或约束。
+事务、幂等与请求指纹（覆盖原始请求的全部字段，只有 `Targets` 字段按集合比较；重复键或只差大小写的键会被拒绝）、统一的拒绝消息、按 ID 比对完整目标集合、审计/outbox/结果账本写入、事件与消费者一一对应、租户上下文。数据库触发器保证：状态只能 submitted → approved → closed；审批人不能是创建人；验收合计覆盖金额才能关闭；验收只能记在 approved 的采购单上；采购单 id 只含字母、数字、`-`、`_`，标题去空白后非空，采购与验收金额不超过 1e12（migration 0008）。新规则如果是跨写路径都必须成立的不变量，也写成触发器或约束。
 
 ## 禁止
 
 - 修改 `kernel/`，除非任务明确要求。
 - 在 `internal/procurement` 之外写 `procurement.*` 或 `kernel.*` 表；在领域代码中写 `kernel.*` 表、开连接或开事务（`pgxpool`、`database/sql`、`Begin`），或改动测试运行环境（`testing`、`flag`、`os.Args`、`os.Chdir`、`os.Setenv`、`os.Exit`）。`appctl validate` 静态检查这些（只看字符串字面量；SQL 不要在运行时拼接表名）。
-- 修改历史目录、已发布的 migration、`contract.json` 里已发布的版本定义、已发布的 `behavior/*.json` 或 `events/*.json`。
+- 修改历史目录、已发布的 migration、`contract.json` 里已发布的版本定义、已发布的 `behavior/*.json` 或 `events/*.json`；已发布的 `constraints/*.json` 只能在末尾追加用例，不能修改、删除或调整已有用例。
 - 直接 push main。
 
 ## 完成前必须通过

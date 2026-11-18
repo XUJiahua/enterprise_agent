@@ -4,6 +4,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 
@@ -133,6 +134,77 @@ func TestEventFindings(t *testing.T) {
 		t.Fatal("extra Go file:", got)
 	}
 	if f := eventFindings("../..", ""); len(f) != 0 {
+		t.Fatalf("repository: %+v", f)
+	}
+}
+
+func TestConstraintFindings(t *testing.T) {
+	root := t.TempDir()
+	dir := filepath.Join(root, constraintsDir)
+	_ = os.MkdirAll(dir, 0o755)
+	const name = "procurement.purchase.json"
+	put := func(body string) {
+		if err := os.WriteFile(filepath.Join(dir, name), []byte(body), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	git := func(args ...string) {
+		t.Helper()
+		if out, err := exec.Command("git", append([]string{"-C", root, "-c", "user.email=t@t", "-c", "user.name=t"}, args...)...).CombinedOutput(); err != nil {
+			t.Fatalf("%v: %s", err, out)
+		}
+	}
+	codes := func(base string) string {
+		var out []string
+		for _, f := range constraintFindings(root, base) {
+			out = append(out, f.Code+" "+filepath.Base(f.Path))
+		}
+		return strings.Join(out, ",")
+	}
+	a, b := `{"name":"a","sql":"x","allowed":false}`, `{"name":"b","sql":"y","allowed":true}`
+	put(`{"table":"procurement.purchase","cases":[` + a + `,` + b + `]}`)
+	git("init", "-q")
+	git("add", ".")
+	git("commit", "-qm", "base")
+	for label, body := range map[string]string{
+		"unchanged":   `{"table":"procurement.purchase","cases":[` + a + `,` + b + `]}`,
+		"reformatted": "{\n  \"cases\": [\n    " + a + ",\n    " + b + "\n  ],\n  \"table\": \"procurement.purchase\"\n}\n",
+		"appended":    `{"table":"procurement.purchase","cases":[` + a + `,` + b + `,{"name":"c","sql":"z","allowed":false}]}`,
+	} {
+		put(body)
+		if got := codes("HEAD"); got != "" {
+			t.Fatalf("%s: %s", label, got)
+		}
+	}
+	for label, body := range map[string]string{
+		"case edited":     `{"table":"procurement.purchase","cases":[` + strings.Replace(a, "false", "true", 1) + `,` + b + `]}`,
+		"case removed":    `{"table":"procurement.purchase","cases":[` + a + `]}`,
+		"cases reordered": `{"table":"procurement.purchase","cases":[` + b + `,` + a + `]}`,
+		"inserted before": `{"table":"procurement.purchase","cases":[{"name":"c","sql":"z","allowed":false},` + a + `,` + b + `]}`,
+		"table changed":   `{"table":"procurement.receipt","cases":[` + a + `,` + b + `]}`,
+		"field added":     `{"table":"procurement.purchase","x":1,"cases":[` + a + `,` + b + `]}`,
+		"not JSON":        `{`,
+	} {
+		put(body)
+		if got := codes("HEAD"); got != "CONSTRAINT_CASES_CHANGED "+name {
+			t.Fatalf("%s: %q", label, got)
+		}
+	}
+	_ = os.Remove(filepath.Join(dir, name))
+	if got := codes("HEAD"); got != "CONSTRAINT_CASES_CHANGED "+name {
+		t.Fatal("removed file:", got)
+	}
+	if got := codes("no-such-ref"); !strings.Contains(got, "BASE_INVALID") {
+		t.Fatal("invalid base:", got)
+	}
+	_ = os.WriteFile(filepath.Join(dir, "hook_test.go"), []byte("package constraints_test\n"), 0o644)
+	if got := codes(""); got != "BEHAVIOR_HARNESS_BYPASS hook_test.go" {
+		t.Fatal("extra Go file:", got)
+	}
+	if !slices.Contains(behaviorHarness, constraintsDir+"/constraints_test.go") {
+		t.Fatal("constraints harness is not frozen")
+	}
+	if f := constraintFindings("../..", ""); len(f) != 0 {
 		t.Fatalf("repository: %+v", f)
 	}
 }

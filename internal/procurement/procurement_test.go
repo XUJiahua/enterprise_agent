@@ -6,7 +6,10 @@ import (
 	"io/fs"
 	"net/url"
 	"slices"
+	"strconv"
+	"strings"
 	"testing"
+	"unicode"
 
 	"github.com/XUJiahua/enterprise_agent/internal/procurement"
 	"github.com/XUJiahua/enterprise_agent/kernel"
@@ -28,6 +31,24 @@ func TestKernelMigrationsAreVerbatimSchema(t *testing.T) {
 	}
 }
 
+// TestSpaceTrimMatchesGo checks that procurement.space_trim (migration 0008,
+// used by the blank-title CHECK) strips exactly the code points Go's
+// strings.TrimSpace strips, so the database refuses a title iff Normalize does.
+func TestSpaceTrimMatchesGo(t *testing.T) {
+	d, _ := setup(t)
+	var want []string
+	for r := rune(1); r <= unicode.MaxRune; r++ {
+		if unicode.IsSpace(r) {
+			want = append(want, strconv.Itoa(int(r)))
+		}
+	}
+	got := d.Strings(t, `SELECT coalesce(string_agg(i::text, ',' ORDER BY i), '') FROM generate_series(1, 1114111) i
+	 WHERE i NOT BETWEEN 55296 AND 57343 AND procurement.space_trim(chr(i)) = ''`)
+	if got[0] != strings.Join(want, ",") {
+		t.Fatalf("space_trim strips %s, Go TrimSpace strips %s", got[0], strings.Join(want, ","))
+	}
+}
+
 // setup applies the product migrations to an empty database and seeds t1/t2.
 func setup(t *testing.T, beforeSeed ...string) (*pgtest.DB, *pg.Runner) {
 	d := pgtest.New(t)
@@ -36,7 +57,7 @@ func setup(t *testing.T, beforeSeed ...string) (*pgtest.DB, *pg.Runner) {
 	d.Exec(t, `DO $$ BEGIN CREATE ROLE enterprise_consumer NOLOGIN; EXCEPTION WHEN duplicate_object THEN NULL; END $$`)
 	d.Exec(t, `DO $$ BEGIN CREATE ROLE `+consumerRole+` LOGIN PASSWORD 'test-only' NOSUPERUSER NOBYPASSRLS; EXCEPTION WHEN duplicate_object THEN NULL; END $$`)
 	d.Exec(t, `GRANT enterprise_consumer TO `+consumerRole+` WITH INHERIT TRUE`)
-	if v, applied, err := procurement.Migrate(d.AdminURL); err != nil || !applied || v != 7 {
+	if v, applied, err := procurement.Migrate(d.AdminURL); err != nil || !applied || v != 8 {
 		t.Fatal("migrate:", v, applied, err)
 	}
 	for _, sql := range beforeSeed {
