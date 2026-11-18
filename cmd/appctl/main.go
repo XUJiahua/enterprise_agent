@@ -53,7 +53,8 @@ func run() int {
 		}
 		all := append(append([]Finding{}, contractFindings(*root, *base)...), writeFindings(*root)...)
 		all = append(all, behaviorFindings(*root, *base)...)
-		return report(append(all, eventFindings(*root, *base)...))
+		all = append(all, eventFindings(*root, *base)...)
+		return report(append(all, constraintFindings(*root, *base)...))
 	}
 	f := flag.NewFlagSet(command, flag.ContinueOnError)
 	root := f.String("root", ".", "application root")
@@ -371,7 +372,7 @@ const behaviorDir = "internal/procurement/behavior"
 
 // behaviorHarness are the files the frozen cases depend on for execution and
 // comparison.
-var behaviorHarness = []string{behaviorDir + "/behavior_test.go", "kernel/pg/pgtest/pgtest.go", eventsDir + "/events_test.go"}
+var behaviorHarness = []string{behaviorDir + "/behavior_test.go", "kernel/pg/pgtest/pgtest.go", eventsDir + "/events_test.go", constraintsDir + "/constraints_test.go"}
 
 // behaviorFindings requires a behavior file for every registered operation
 // version (BEHAVIOR_MISSING) and, with base, that every file published there
@@ -498,6 +499,74 @@ func eventFindings(root, base string) []Finding {
 		}
 		if now, err := os.ReadFile(filepath.Join(root, path)); err != nil || string(now) != string(old) {
 			findings = append(findings, Finding{"EVENT_CONTRACT_CHANGED", path, "published event contract changed or removed; publish a new event version and keep consuming this one"})
+		}
+	}
+	return findings
+}
+
+// constraintsDir holds one frozen constraint file per table,
+// <schema>.<table>.json, run by constraints/constraints_test.go.
+const constraintsDir = "internal/procurement/constraints"
+
+// constraintFindings allows no other Go file next to the harness and, with
+// base, keeps published case files append-only (CONSTRAINT_CASES_CHANGED): a
+// file may change only by adding cases after the published ones, which must
+// stay equal as JSON values and in order. Coverage (a refusal case for every
+// granted column) is checked by the harness, which needs a database. The
+// harness itself is frozen via behaviorHarness.
+func constraintFindings(root, base string) []Finding {
+	var findings []Finding
+	entries, _ := os.ReadDir(filepath.Join(root, constraintsDir))
+	for _, e := range entries {
+		if path := constraintsDir + "/" + e.Name(); !strings.HasSuffix(e.Name(), ".json") && path != constraintsDir+"/constraints_test.go" {
+			findings = append(findings, Finding{"BEHAVIOR_HARNESS_BYPASS", path, "only <schema>.<table>.json files and constraints_test.go may live in " + constraintsDir})
+		}
+	}
+	if base == "" {
+		return findings
+	}
+	if _, err := git(root, "rev-parse", "--verify", base+"^{commit}"); err != nil {
+		return append(findings, Finding{"BASE_INVALID", base, err.Error()})
+	}
+	listed, err := git(root, "ls-tree", "-r", "--name-only", base, "--", constraintsDir)
+	if err != nil {
+		return append(findings, Finding{"BASE_READ", constraintsDir, err.Error()})
+	}
+	type file struct {
+		Cases []json.RawMessage
+		Rest  map[string]json.RawMessage
+	}
+	parse := func(b []byte) (f file, ok bool) {
+		if json.Unmarshal(b, &f.Rest) != nil || json.Unmarshal(f.Rest["cases"], &f.Cases) != nil {
+			return f, false
+		}
+		delete(f.Rest, "cases")
+		return f, true
+	}
+	for _, path := range strings.Fields(string(listed)) {
+		if !strings.HasSuffix(path, ".json") {
+			continue
+		}
+		old, err := git(root, "show", base+":"+path)
+		if err != nil {
+			findings = append(findings, Finding{"BASE_READ", path, err.Error()})
+			continue
+		}
+		now, err := os.ReadFile(filepath.Join(root, path))
+		if err == nil && string(now) == string(old) {
+			continue
+		}
+		was, okWas := parse(old)
+		is, okIs := parse(now)
+		appended := err == nil && okWas && okIs && len(is.Cases) >= len(was.Cases) && len(is.Rest) == len(was.Rest)
+		for k, v := range was.Rest {
+			appended = appended && jsonEqual(v, is.Rest[k])
+		}
+		for i := range was.Cases {
+			appended = appended && jsonEqual(was.Cases[i], is.Cases[i])
+		}
+		if !appended {
+			findings = append(findings, Finding{"CONSTRAINT_CASES_CHANGED", path, "published constraint cases are append-only; keep every published case unchanged and in order and add new ones at the end"})
 		}
 	}
 	return findings

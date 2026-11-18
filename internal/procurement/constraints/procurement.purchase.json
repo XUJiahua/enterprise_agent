@@ -1,0 +1,33 @@
+{
+  "table": "procurement.purchase",
+  "cases": [
+    {"name": "insert valid", "actor": "ann", "sql": "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount) VALUES ('t1','n1','ann','chair',1)", "allowed": true},
+    {"name": "insert other tenant", "actor": "ann", "sql": "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount) VALUES ('t2','n1','ann','chair',1)", "allowed": false, "refusedBy": "rls:tenant_floor"},
+    {"name": "insert duplicate id", "actor": "ann", "sql": "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount) VALUES ('t1','s1','ann','chair',1)", "allowed": false, "refusedBy": "purchase_pkey"},
+    {"name": "insert empty id", "actor": "ann", "sql": "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount) VALUES ('t1','','ann','chair',1)", "allowed": false, "refusedBy": "purchase_id_charset"},
+    {"name": "insert id with space", "actor": "ann", "sql": "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount) VALUES ('t1','n 1','ann','chair',1)", "allowed": false, "refusedBy": "purchase_id_charset"},
+    {"name": "insert id with non-ASCII letter", "actor": "ann", "sql": "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount) VALUES ('t1','né','ann','chair',1)", "allowed": false, "refusedBy": "purchase_id_charset"},
+    {"name": "insert id letters digits dash underscore", "actor": "ann", "sql": "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount) VALUES ('t1','Az09-_','ann','chair',1)", "allowed": true},
+    {"name": "insert id 100 chars", "actor": "ann", "sql": "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount) VALUES ('t1','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','ann','chair',1)", "allowed": true},
+    {"name": "insert id 101 chars", "actor": "ann", "sql": "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount) VALUES ('t1','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','ann','chair',1)", "allowed": false, "refusedBy": "purchase_id_check"},
+    {"name": "insert null created_by", "actor": "ann", "sql": "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount) VALUES ('t1','n1',NULL,'chair',1)", "allowed": false, "refusedBy": "not_null:created_by"},
+    {"name": "insert empty title", "actor": "ann", "sql": "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount) VALUES ('t1','n1','ann','',1)", "allowed": false, "refusedBy": "purchase_title_check"},
+    {"name": "insert spaces title", "actor": "ann", "sql": "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount) VALUES ('t1','n1','ann','   ',1)", "allowed": false, "refusedBy": "purchase_title_not_blank"},
+    {"name": "insert Go whitespace title", "actor": "ann", "sql": "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount) VALUES ('t1','n1','ann',E'\\t\\n\\u000B\\f\\r \\u0085\\u00A0\\u3000',1)", "allowed": false, "refusedBy": "purchase_title_not_blank"},
+    {"name": "insert zero-width space title", "actor": "ann", "sql": "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount) VALUES ('t1','n1','ann',E'\\u200B',1)", "allowed": true},
+    {"name": "insert title 200 chars", "actor": "ann", "sql": "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount) VALUES ('t1','n1','ann','界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界',1)", "allowed": true},
+    {"name": "insert title 201 chars", "actor": "ann", "sql": "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount) VALUES ('t1','n1','ann','界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界',1)", "allowed": false, "refusedBy": "purchase_title_check"},
+    {"name": "insert amount 0", "actor": "ann", "sql": "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount) VALUES ('t1','n1','ann','chair',0)", "allowed": false, "refusedBy": "purchase_amount_check"},
+    {"name": "insert amount 1e12", "actor": "ann", "sql": "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount) VALUES ('t1','n1','ann','chair',1000000000000)", "allowed": true},
+    {"name": "insert amount above 1e12", "actor": "ann", "sql": "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount) VALUES ('t1','n1','ann','chair',1000000000001)", "allowed": false, "refusedBy": "purchase_amount_max"},
+    {"name": "approve by another actor", "actor": "bob", "sql": "UPDATE procurement.purchase SET status='approved' WHERE id='s1'", "allowed": true},
+    {"name": "approve by creator", "actor": "ann", "sql": "UPDATE procurement.purchase SET status='approved' WHERE id='s1'", "allowed": false, "refusedBy": "trigger:procurement.purchase_guard"},
+    {"name": "approve without bound actor", "actor": "", "sql": "UPDATE procurement.purchase SET status='approved' WHERE id='s1'", "allowed": false, "refusedBy": "trigger:procurement.purchase_guard"},
+    {"name": "close submitted", "actor": "bob", "sql": "UPDATE procurement.purchase SET status='closed' WHERE id='s1'", "allowed": false, "refusedBy": "trigger:procurement.purchase_guard"},
+    {"name": "close below amount", "actor": "bob", "sql": "UPDATE procurement.purchase SET status='closed' WHERE id='a1'", "allowed": false, "refusedBy": "trigger:procurement.purchase_guard"},
+    {"name": "close covered", "actor": "bob", "seed": ["INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','a1',60,'ann')"], "sql": "UPDATE procurement.purchase SET status='closed' WHERE id='a1'", "allowed": true},
+    {"name": "reopen closed", "actor": "bob", "sql": "UPDATE procurement.purchase SET status='approved' WHERE id='c1'", "allowed": false, "refusedBy": "trigger:procurement.purchase_guard"},
+    {"name": "back to submitted", "actor": "bob", "sql": "UPDATE procurement.purchase SET status='submitted' WHERE id='a1'", "allowed": false, "refusedBy": "trigger:procurement.purchase_guard"},
+    {"name": "unknown status", "actor": "bob", "sql": "UPDATE procurement.purchase SET status='rejected' WHERE id='s1'", "allowed": false, "refusedBy": "trigger:procurement.purchase_guard"}
+  ]
+}

@@ -216,7 +216,7 @@ func TestReceiveBeforeCloseCountsReceipt(t *testing.T) {
 
 func TestMigrateIsRepeatableAndRefusesDirty(t *testing.T) {
 	d, _ := setup(t)
-	if v, applied, err := procurement.Migrate(d.AdminURL); err != nil || applied || v != 7 {
+	if v, applied, err := procurement.Migrate(d.AdminURL); err != nil || applied || v != 8 {
 		t.Fatal("second run:", v, applied, err)
 	}
 	d.Exec(t, `UPDATE procurement_schema_migrations SET dirty = true`)

@@ -2,16 +2,24 @@ package procurement_test
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"io/fs"
 	"net/url"
 	"slices"
+	"strconv"
+	"strings"
 	"testing"
+	"testing/fstest"
+	"unicode"
 
 	"github.com/XUJiahua/enterprise_agent/internal/procurement"
 	"github.com/XUJiahua/enterprise_agent/kernel"
 	"github.com/XUJiahua/enterprise_agent/kernel/pg"
 	"github.com/XUJiahua/enterprise_agent/kernel/pg/pgtest"
+	"github.com/golang-migrate/migrate/v4"
+	migratepgx "github.com/golang-migrate/migrate/v4/database/pgx/v5"
+	"github.com/golang-migrate/migrate/v4/source/iofs"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -28,6 +36,81 @@ func TestKernelMigrationsAreVerbatimSchema(t *testing.T) {
 	}
 }
 
+// TestSpaceTrimMatchesGo checks that procurement.space_trim (migration 0008,
+// used by the blank-title CHECK) strips exactly the code points Go's
+// strings.TrimSpace strips, so the database refuses a title iff Normalize does.
+func TestSpaceTrimMatchesGo(t *testing.T) {
+	d, _ := setup(t)
+	var want []string
+	for r := rune(1); r <= unicode.MaxRune; r++ {
+		if unicode.IsSpace(r) {
+			want = append(want, strconv.Itoa(int(r)))
+		}
+	}
+	got := d.Strings(t, `SELECT coalesce(string_agg(i::text, ',' ORDER BY i), '') FROM generate_series(1, 1114111) i
+	 WHERE i NOT BETWEEN 55296 AND 57343 AND procurement.space_trim(chr(i)) = ''`)
+	if got[0] != strings.Join(want, ",") {
+		t.Fatalf("space_trim strips %s, Go TrimSpace strips %s", got[0], strings.Join(want, ","))
+	}
+}
+
+// TestValueChecksUpgradeOverOffendingRows: migration 0008 adds its checks NOT
+// VALID, so a version-7 database holding rows that break them (written by raw
+// SQL) still upgrades, new offending writes are refused at once, and the
+// operator's VALIDATE CONSTRAINT succeeds only after the rows are fixed.
+func TestValueChecksUpgradeOverOffendingRows(t *testing.T) {
+	d := pgtest.New(t)
+	d.Exec(t, `DO $$ BEGIN CREATE ROLE enterprise_runtime NOLOGIN; EXCEPTION WHEN duplicate_object THEN NULL; END $$`)
+	d.Exec(t, `DO $$ BEGIN CREATE ROLE enterprise_consumer NOLOGIN; EXCEPTION WHEN duplicate_object THEN NULL; END $$`)
+	v7 := fstest.MapFS{}
+	files, _ := fs.Glob(procurement.Migrations, "migrations/000[1-7]_*.up.sql")
+	for _, f := range files {
+		b, _ := fs.ReadFile(procurement.Migrations, f)
+		v7[f] = &fstest.MapFile{Data: b}
+	}
+	db, err := sql.Open("pgx", d.AdminURL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	src, _ := iofs.New(v7, "migrations")
+	drv, err := migratepgx.WithInstance(db, &migratepgx.Config{MigrationsTable: "procurement_schema_migrations"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	m, _ := migrate.NewWithInstance("iofs", src, "pgx5", drv)
+	if err = m.Up(); err != nil || len(files) != 7 {
+		t.Fatal("migrate to 7:", len(files), err)
+	}
+	d.Exec(t, `INSERT INTO procurement.purchase (tenant_id, id, created_by, title, amount, status) VALUES
+	 ('t1','blank','ann','   ',5,'submitted'), ('t1','bad id','ann','ok',5,'submitted'), ('t1','big','ann','ok',2000000000000,'approved')`)
+	d.Exec(t, `INSERT INTO procurement.receipt (tenant_id, purchase_id, amount, received_by) VALUES ('t1','big',2000000000000,'ann')`)
+	if v, applied, err := procurement.Migrate(d.AdminURL); err != nil || !applied || v != 8 {
+		t.Fatal("upgrade over offending rows:", v, applied, err)
+	}
+	refused := func(sql string) {
+		t.Helper()
+		if _, err := d.Admin.Exec(context.Background(), sql); err == nil || !strings.Contains(err.Error(), "23514") {
+			t.Errorf("%s: want check_violation, got %v", sql, err)
+		}
+	}
+	refused(`INSERT INTO procurement.purchase (tenant_id, id, created_by, title, amount) VALUES ('t1','n1','ann',' ',5)`)
+	refused(`INSERT INTO procurement.purchase (tenant_id, id, created_by, title, amount) VALUES ('t1','n 1','ann','x',5)`)
+	refused(`INSERT INTO procurement.purchase (tenant_id, id, created_by, title, amount) VALUES ('t1','n1','ann','x',1000000000001)`)
+	refused(`INSERT INTO procurement.receipt (tenant_id, purchase_id, amount, received_by) VALUES ('t1','big',1000000000001,'ann')`)
+	refused(`UPDATE procurement.purchase SET status='approved' WHERE id='blank'`) // an old offending row cannot move on
+	validate := `ALTER TABLE procurement.purchase VALIDATE CONSTRAINT purchase_title_not_blank, VALIDATE CONSTRAINT purchase_id_charset, VALIDATE CONSTRAINT purchase_amount_max`
+	refused(validate)
+	refused(`ALTER TABLE procurement.receipt VALIDATE CONSTRAINT receipt_amount_max`)
+	// The operator's query from the migration header finds exactly the offending rows.
+	want(t, "offending purchases", d.Strings(t, `SELECT id FROM procurement.purchase
+	 WHERE procurement.space_trim(title) = '' OR id !~ '^[A-Za-z0-9_-]+$' OR amount > 1000000000000 ORDER BY id`), "bad id", "big", "blank")
+	d.Exec(t, `DELETE FROM procurement.receipt`)
+	d.Exec(t, `DELETE FROM procurement.purchase`)
+	d.Exec(t, validate)
+	d.Exec(t, `ALTER TABLE procurement.receipt VALIDATE CONSTRAINT receipt_amount_max`)
+}
+
 // setup applies the product migrations to an empty database and seeds t1/t2.
 func setup(t *testing.T, beforeSeed ...string) (*pgtest.DB, *pg.Runner) {
 	d := pgtest.New(t)
@@ -36,7 +119,7 @@ func setup(t *testing.T, beforeSeed ...string) (*pgtest.DB, *pg.Runner) {
 	d.Exec(t, `DO $$ BEGIN CREATE ROLE enterprise_consumer NOLOGIN; EXCEPTION WHEN duplicate_object THEN NULL; END $$`)
 	d.Exec(t, `DO $$ BEGIN CREATE ROLE `+consumerRole+` LOGIN PASSWORD 'test-only' NOSUPERUSER NOBYPASSRLS; EXCEPTION WHEN duplicate_object THEN NULL; END $$`)
 	d.Exec(t, `GRANT enterprise_consumer TO `+consumerRole+` WITH INHERIT TRUE`)
-	if v, applied, err := procurement.Migrate(d.AdminURL); err != nil || !applied || v != 7 {
+	if v, applied, err := procurement.Migrate(d.AdminURL); err != nil || !applied || v != 8 {
 		t.Fatal("migrate:", v, applied, err)
 	}
 	for _, sql := range beforeSeed {
