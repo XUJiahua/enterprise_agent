@@ -82,7 +82,7 @@ func TestFrozenConstraints(t *testing.T) {
 				s, err := parse(c.SQL)
 				switch {
 				case err != nil:
-					t.Fatalf("unsupported statement (%v); write INSERT INTO <table> (<columns>) VALUES|SELECT ... or UPDATE <table> SET <column> = ...[, ...] [WHERE ...]", err)
+					t.Fatalf("unsupported statement (%v); write INSERT INTO <table> (<columns>) VALUES (<literal>, ...) or UPDATE <table> SET <column> = <literal>[, ...] [WHERE ...]; a literal is a number, string, TRUE, FALSE or NULL with an optional ::type", err)
 				case s.table != cf.Table:
 					t.Fatalf("writes %s; cases in %s.json must write %s", s.table, cf.Table, cf.Table)
 				case c.Allowed == (c.RefusedBy != ""):
@@ -125,7 +125,7 @@ func TestFrozenConstraints(t *testing.T) {
 			ok = ok || err == nil && !c.Allowed && s.priv == g.priv && credited(s, c.RefusedBy, g.column, byTable[g.table])
 		}
 		if !ok {
-			t.Errorf("%s.%s %s: %s may write it; add a case to constraints/%s.json: a %s that writes %s, \"allowed\": false, and \"refusedBy\" a rule on %s (a constraint, not_null, row-level security policy or trigger function reading NEW.%s)",
+			t.Errorf("%s.%s %s: %s may write it; add a case to constraints/%s.json: a %s that writes %s, \"allowed\": false, and \"refusedBy\" a rule on %s (a constraint on it, its NOT NULL, or a trigger function reading NEW.%s; row-level security does not count)",
 				g.table, g.column, g.priv, appRole, g.table, g.priv, g.column, g.column, g.column)
 		}
 	}
@@ -134,8 +134,9 @@ func TestFrozenConstraints(t *testing.T) {
 // rules maps a refusal (as refusal() names it) to the columns it is about.
 type rules map[string]map[string]bool
 
-// tableRules reads the constraints, row-level security policies and trigger
-// functions of table and the columns each one refers to.
+// tableRules reads, on the migrated schema with the standard seed only (no
+// case seed), the constraints, NOT NULL columns and trigger functions of
+// table and the columns each one refers to.
 func tableRules(t *testing.T, d *pgtest.DB, table string) rules {
 	r := rules{}
 	add := func(rule, column string) {
@@ -150,17 +151,12 @@ func tableRules(t *testing.T, d *pgtest.DB, table string) rules {
 		add(f[0], f[1])
 	}
 	cols := d.Strings(t, `SELECT attname FROM pg_attribute WHERE attrelid = $1::regclass AND attnum > 0 AND NOT attisdropped`, table)
-	for _, c := range cols {
+	for _, c := range d.Strings(t, `SELECT attname FROM pg_attribute WHERE attrelid = $1::regclass AND attnum > 0 AND NOT attisdropped AND attnotnull`, table) {
 		add("not_null:"+c, c)
 	}
-	for _, row := range d.Strings(t, `SELECT polname, pg_get_expr(coalesce(polwithcheck, polqual), polrelid) FROM pg_policy WHERE polrelid = $1::regclass`, table) {
-		name, expr, _ := strings.Cut(row, " ")
-		for _, c := range cols {
-			if regexp.MustCompile(`\b` + regexp.QuoteMeta(c) + `\b`).MatchString(expr) {
-				add("rls:"+name, c)
-			}
-		}
-	}
+	// Row-level security policies are deliberately absent: they are the
+	// tenant floor, not a rule about a column, so an rls:<policy> refusal is
+	// allowed as refusedBy but never covers a column.
 	for _, row := range d.Strings(t, `SELECT n.nspname||'.'||p.proname, p.prosrc FROM pg_trigger tg
 	  JOIN pg_proc p ON p.oid = tg.tgfoid JOIN pg_namespace n ON n.oid = p.pronamespace
 	 WHERE tg.tgrelid = $1::regclass AND NOT tg.tgisinternal`, table) {
@@ -176,10 +172,10 @@ func tableRules(t *testing.T, d *pgtest.DB, table string) rules {
 
 // credited reports whether a refused case s counts as covering column: s
 // assigns column, and the declared (and, by runCase, observed) refusal is a
-// rule that refers to column: a constraint on it, its not-null, a row-level
-// security policy whose expression names it, or a trigger function that reads
-// NEW.<column>. A refusal by some other rule (a foreign key, a status check
-// in a trigger) says nothing about the column.
+// rule that refers to column: a constraint on it, its NOT NULL, or a trigger
+// function that reads NEW.<column>. A refusal by some other rule (a foreign
+// key, a status check in a trigger, row-level security) says nothing about
+// the column.
 func credited(s statement, refusedBy, column string, r rules) bool {
 	return slices.Contains(s.columns, column) && r[refusedBy][column]
 }
@@ -192,11 +188,13 @@ type statement struct {
 	columns     []string
 }
 
-// parse accepts only `INSERT INTO t (c, ...) VALUES|SELECT ...` and
-// `UPDATE t SET c = expr [, ...] [WHERE|FROM|RETURNING ...]`, after removing
-// comments and string literals, and refuses anything else (CTEs, aliases,
-// multi-column assignment, dollar quoting, several statements) so a case
-// cannot be credited for a column it does not assign.
+// parse accepts only `INSERT INTO t (c, ...) VALUES (lit, ...)` (one row)
+// and `UPDATE t SET c = lit [, ...] [WHERE ...]`, where lit is a number,
+// string, TRUE, FALSE or NULL with an optional ::type, after removing
+// comments. Anything else (expressions, function calls, SELECT, CTEs,
+// aliases, FROM, multi-column assignment, dollar quoting, several statements)
+// is refused, so the assigned columns are exactly the ones named before each
+// literal and a case cannot be credited for a column it does not assign.
 func parse(sql string) (statement, error) {
 	toks, err := tokenize(sql)
 	if err != nil {
@@ -224,6 +222,23 @@ func parse(sql string) (statement, error) {
 			return "", errors.New("expected a table name after the schema")
 		}
 		return a + "." + b, nil
+	}
+	// literal consumes a number, string, TRUE, FALSE or NULL, optionally
+	// signed and optionally followed by ::<type name>.
+	literal := func() bool {
+		word("-")
+		t := next()
+		if t != "'" && t != "true" && t != "false" && t != "null" && !regexp.MustCompile(`^[0-9][0-9.e]*$`).MatchString(t) {
+			return false
+		}
+		if word(":") { // tokenize splits "::" into two ":" tokens
+			if !word(":") {
+				return false
+			}
+			_, ok := ident(next())
+			return ok
+		}
+		return true
 	}
 	if slices.Contains(toks, ";") {
 		return statement{}, errors.New("one statement per case")
@@ -254,8 +269,22 @@ func parse(sql string) (statement, error) {
 				return s, errors.New("expected , or ) in the column list")
 			}
 		}
-		if !word("values") && !word("select") {
-			return s, errors.New("expected VALUES or SELECT after the column list")
+		if !word("values") || !word("(") {
+			return s, errors.New("expected VALUES ( after the column list")
+		}
+		for n := 0; ; n++ {
+			if !literal() {
+				return s, errors.New("each VALUES item must be a literal, optionally ::type")
+			}
+			if word(")") {
+				if n+1 != len(s.columns) || i != len(toks) {
+					return s, errors.New("need one row with one value per column, and nothing after it")
+				}
+				break
+			}
+			if !word(",") {
+				return s, errors.New("expected , or ) in VALUES")
+			}
 		}
 	case word("update"):
 		s.priv = "UPDATE"
@@ -271,21 +300,16 @@ func parse(sql string) (statement, error) {
 				return s, errors.New("each SET item must be <column> = <expression>")
 			}
 			s.columns = append(s.columns, c)
-			depth := 0
-			for ; i < len(toks); i++ {
-				switch t := toks[i]; {
-				case t == "(":
-					depth++
-				case t == ")":
-					depth--
-				case depth == 0 && (t == "," || t == "where" || t == "from" || t == "returning"):
-					goto item
-				}
+			if !literal() {
+				return s, errors.New("each SET value must be a literal, optionally ::type")
 			}
-		item:
-			if !word(",") {
-				break
+			if word(",") {
+				continue
 			}
+			if i != len(toks) && !word("where") {
+				return s, errors.New("expected , WHERE or the end after a SET item")
+			}
+			break
 		}
 	default:
 		return s, errors.New("only INSERT and UPDATE are supported")
@@ -372,27 +396,35 @@ func tokenize(sql string) ([]string, error) {
 // forms that must not be credited.
 func TestStatementParser(t *testing.T) {
 	for sql, want := range map[string]string{
-		`INSERT INTO procurement.purchase (tenant_id,id,title) VALUES ('t1','x','a')`:                          "INSERT procurement.purchase tenant_id,id,title",
-		`insert into procurement.purchase ("title", amount) select 'a', 1`:                                     "INSERT procurement.purchase title,amount",
-		`UPDATE procurement.purchase SET title = '   ' WHERE id='s1'`:                                          "UPDATE procurement.purchase title",
-		`UPDATE procurement.purchase SET status = coalesce(NULL, 'x'), "title"=E'it\'s, title=' WHERE id='s1'`: "UPDATE procurement.purchase status,title",
-		// reads, strings and comments mentioning title= are not assignments
-		`UPDATE procurement.purchase SET status=CASE WHEN title='pen' THEN 'closed' ELSE 'closed' END WHERE id='s1'`:       "UPDATE procurement.purchase status",
-		`UPDATE procurement.purchase SET status='title=x' WHERE title='a'`:                                                 "UPDATE procurement.purchase status",
-		`UPDATE procurement.purchase SET status='closed' /* title='x' */ -- , title='y'` + "\n WHERE id='s1'":              "UPDATE procurement.purchase status",
-		`UPDATE procurement.purchase SET status=(SELECT 'closed' FROM procurement.purchase WHERE title='x') WHERE id='s1'`: "UPDATE procurement.purchase status",
-		`UPDATE procurement.purchase SET status='closed' FROM procurement.receipt r WHERE r.amount=1`:                      "UPDATE procurement.purchase status",
-		// unsupported forms are refused, not guessed
-		`WITH x AS (SELECT 1) UPDATE procurement.purchase SET title='a'`: "error",
-		`UPDATE procurement.purchase p SET title='a'`:                    "error",
-		`UPDATE ONLY procurement.purchase SET title='a'`:                 "error",
-		`UPDATE procurement.purchase SET (title, status) = ('a', 'b')`:   "error",
-		`UPDATE procurement.purchase SET title=$$a$$`:                    "error",
-		`INSERT INTO procurement.purchase VALUES ('t1')`:                 "error",
-		`INSERT INTO procurement.purchase (title) DEFAULT VALUES`:        "error",
-		`UPDATE procurement.purchase SET title='a'; SELECT 1`:            "error",
-		`UPDATE procurement.purchase SET title='a`:                       "error",
-		`DELETE FROM procurement.purchase`:                               "error",
+		`INSERT INTO procurement.purchase (tenant_id,id,title) VALUES ('t1','x','a')`:                         "INSERT procurement.purchase tenant_id,id,title",
+		`insert into procurement.purchase ("title", amount, note) values (E'it\'s', -1, NULL::text)`:          "INSERT procurement.purchase title,amount,note",
+		`UPDATE procurement.purchase SET title = '   ' WHERE id='s1'`:                                         "UPDATE procurement.purchase title",
+		`UPDATE procurement.purchase SET status = 'x', "title"=E'it\'s, title=', amount=1e12 WHERE id='s1'`:   "UPDATE procurement.purchase status,title,amount",
+		`UPDATE procurement.purchase SET status='title=x', flag=TRUE::boolean WHERE title='a'`:                "UPDATE procurement.purchase status,flag",
+		`UPDATE procurement.purchase SET status='closed' /* title='x' */ -- , title='y'` + "\n WHERE id='s1'": "UPDATE procurement.purchase status",
+		`UPDATE procurement.purchase SET status='closed' WHERE id=(SELECT 'a' WHERE title='x')`:               "UPDATE procurement.purchase status",
+		// values that are not a single literal are refused, not guessed
+		`UPDATE procurement.purchase SET status=CASE WHEN title='pen' THEN 'closed' ELSE 'closed' END WHERE id='s1'`: "error",
+		`UPDATE procurement.purchase SET status=ARRAY[amount=1, amount=2]::text WHERE id='s1'`:                       "error",
+		`UPDATE procurement.purchase SET status=coalesce(NULL, 'x') WHERE id='s1'`:                                   "error",
+		`UPDATE procurement.purchase SET status=(SELECT 'closed') WHERE id='s1'`:                                     "error",
+		`UPDATE procurement.purchase SET status='closed' FROM procurement.receipt r WHERE r.amount=1`:                "error",
+		`UPDATE procurement.purchase SET status='a' || 'b'`:                                                          "error",
+		`INSERT INTO procurement.purchase (title, amount) VALUES (repeat('a', 2), 1)`:                                "error",
+		`INSERT INTO procurement.purchase (title, amount) VALUES ('a', 1), ('b', 2)`:                                 "error",
+		`INSERT INTO procurement.purchase (title, amount) VALUES ('a')`:                                              "error",
+		`INSERT INTO procurement.purchase (title, amount) VALUES ('a', 1) RETURNING id`:                              "error",
+		`insert into procurement.purchase ("title", amount) select 'a', 1`:                                           "error",
+		`WITH x AS (SELECT 1) UPDATE procurement.purchase SET title='a'`:                                             "error",
+		`UPDATE procurement.purchase p SET title='a'`:                                                                "error",
+		`UPDATE ONLY procurement.purchase SET title='a'`:                                                             "error",
+		`UPDATE procurement.purchase SET (title, status) = ('a', 'b')`:                                               "error",
+		`UPDATE procurement.purchase SET title=$$a$$`:                                                                "error",
+		`INSERT INTO procurement.purchase VALUES ('t1')`:                                                             "error",
+		`INSERT INTO procurement.purchase (title) DEFAULT VALUES`:                                                    "error",
+		`UPDATE procurement.purchase SET title='a'; SELECT 1`:                                                        "error",
+		`UPDATE procurement.purchase SET title='a`:                                                                   "error",
+		`DELETE FROM procurement.purchase`:                                                                           "error",
 	} {
 		s, err := parse(sql)
 		got := s.priv + " " + s.table + " " + strings.Join(s.columns, ",")
@@ -414,7 +446,9 @@ func TestStatementParser(t *testing.T) {
 		{`UPDATE procurement.purchase SET title='  ' WHERE id='s1'`, "purchase_title_not_blank", "title", true},
 		{`UPDATE procurement.purchase SET status='closed' WHERE id='s1'`, "trigger:procurement.purchase_guard", "status", true},
 		// the status trigger refuses; title is not what it refused
-		{`UPDATE procurement.purchase SET status=CASE WHEN title='pen' THEN 'closed' END WHERE id='s1'`, "trigger:procurement.purchase_guard", "title", false},
+		{`UPDATE procurement.purchase SET status='closed' WHERE title='pen'`, "trigger:procurement.purchase_guard", "title", false},
+		// row-level security never covers a column, whatever its expression mentions
+		{`INSERT INTO procurement.purchase (tenant_id,title) VALUES ('t2','x')`, "rls:tenant_floor", "tenant_id", false},
 		{`UPDATE procurement.purchase SET title='ok', status='closed' WHERE id='s1'`, "trigger:procurement.purchase_guard", "title", false},
 		{`UPDATE procurement.purchase SET title='  ' WHERE id='s1'`, "trigger:procurement.purchase_guard", "title", false},
 		{`INSERT INTO procurement.receipt (tenant_id,purchase_id,amount) VALUES ('t1','s1',1)`, "trigger:procurement.receipt_guard", "purchase_id", true},
