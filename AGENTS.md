@@ -17,7 +17,7 @@
 2. 加入 `Registry()`。改动已发布操作的语义（请求字段、校验、规则、事件）时，发布新的 `Version`，不要原地修改。这条也适用于你为了新功能而顺带改动的**其他**操作或事件：例如改变 close 判断"验收是否覆盖金额"的算法，或改变事件载荷字段的含义，都要给那个操作或事件升版本。
    - 事件载荷允许的取值变了，也算含义变化。例如 closed 事件的 `received` 以前一定不小于 `amount`，现在可以更小，就要发布新的事件版本；消费者要继续处理旧版本，因为队列里可能还有旧事件。
    - 数值上下限只按需求写。不要从相邻操作复制 `1e12` 之类的上限；需要上限时，同时在数据库加 `CHECK`，让直接 SQL 也受同样限制。
-3. 需要事件时实现 `pg.Consumer`，在 `Handle` 中严格校验载荷，写入投影表时以 `event_id` 去重。
+3. 需要事件时实现 `pg.Consumer`，在 `Handle` 中严格校验载荷，写入投影表时以 `event_id` 去重。消费者处理的每个事件版本都要有 `internal/procurement/events/<consumer>_<type>@<version>.json`（格式参照已有文件），写明消费者必须接受哪些载荷、投影出什么，以及必须拒绝哪些载荷。已发布的事件契约不能修改或删除。载荷的含义或允许的取值要变，就发布新的事件版本，并让消费者同时继续处理旧版本。
 4. `Normalize` 里的规范化和校验（去空白后非空、长度、取值范围），只要对应字段能通过你新增的 UPDATE 授权写入，就要在数据库里用 `CHECK` 或触发器做同样的检查，这样直接 SQL 也写不进去。
 5. 数据库变化只能新增 `internal/procurement/migrations/NNNN_name.up.sql`，编号接在最后一个之后。已发布的 migration 不可修改。新表必须 `FORCE ROW LEVEL SECURITY`，加 `RESTRICTIVE` 租户策略，并且只授予需要的列权限。
 6. 运行 `go build -o bin/appctl ./cmd/appctl && bin/appctl describe > internal/procurement/contract.json`。
@@ -33,7 +33,7 @@
 
 - 修改 `kernel/`，除非任务明确要求。
 - 在 `internal/procurement` 之外写 `procurement.*` 或 `kernel.*` 表；在领域代码中写 `kernel.*` 表、开连接或开事务（`pgxpool`、`database/sql`、`Begin`），或改动测试运行环境（`testing`、`flag`、`os.Args`、`os.Chdir`、`os.Setenv`、`os.Exit`）。`appctl validate` 静态检查这些（只看字符串字面量；SQL 不要在运行时拼接表名）。
-- 修改历史目录、已发布的 migration、`contract.json` 里已发布的版本定义、已发布的 `behavior/*.json`。
+- 修改历史目录、已发布的 migration、`contract.json` 里已发布的版本定义、已发布的 `behavior/*.json` 或 `events/*.json`。
 - 直接 push main。
 
 ## 完成前必须通过

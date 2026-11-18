@@ -83,3 +83,56 @@ func TestBehaviorFindings(t *testing.T) {
 		t.Fatalf("%+v", f)
 	}
 }
+
+func TestEventFindings(t *testing.T) {
+	c, err := pg.Describe(procurement.Registry())
+	if err != nil {
+		t.Fatal(err)
+	}
+	root := t.TempDir()
+	dir := filepath.Join(root, eventsDir)
+	_ = os.MkdirAll(dir, 0o755)
+	var files []string
+	for _, cc := range c.Consumers {
+		for _, e := range cc.Events {
+			files = append(files, cc.Name+"_"+e.String()+".json")
+		}
+	}
+	for _, f := range files {
+		_ = os.WriteFile(filepath.Join(dir, f), []byte("{}"), 0o644)
+	}
+	git := func(args ...string) {
+		t.Helper()
+		if out, err := exec.Command("git", append([]string{"-C", root, "-c", "user.email=t@t", "-c", "user.name=t"}, args...)...).CombinedOutput(); err != nil {
+			t.Fatalf("%v: %s", err, out)
+		}
+	}
+	codes := func(base string) string {
+		var out []string
+		for _, f := range eventFindings(root, base) {
+			out = append(out, f.Code+" "+filepath.Base(f.Path))
+		}
+		return strings.Join(out, ",")
+	}
+	git("init", "-q")
+	git("add", ".")
+	git("commit", "-qm", "base")
+	if got := codes("HEAD"); got != "" {
+		t.Fatal("unchanged:", got)
+	}
+	_ = os.WriteFile(filepath.Join(dir, files[0]), []byte(`{"x":1}`), 0o644)
+	if got := codes("HEAD"); got != "EVENT_CONTRACT_CHANGED "+files[0] {
+		t.Fatal("edited contract:", got)
+	}
+	_ = os.Remove(filepath.Join(dir, files[0]))
+	if got := codes("HEAD"); got != "EVENT_CONTRACT_MISSING "+files[0]+",EVENT_CONTRACT_CHANGED "+files[0] {
+		t.Fatal("removed contract:", got)
+	}
+	_ = os.WriteFile(filepath.Join(dir, "hook_test.go"), []byte("package events_test\n"), 0o644)
+	if got := codes(""); !strings.Contains(got, "BEHAVIOR_HARNESS_BYPASS hook_test.go") {
+		t.Fatal("extra Go file:", got)
+	}
+	if f := eventFindings("../..", ""); len(f) != 0 {
+		t.Fatalf("repository: %+v", f)
+	}
+}

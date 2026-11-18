@@ -65,13 +65,14 @@ type ConsumerContract struct {
 	Events []kernel.EventType `json:"events"`
 }
 
-// Describe validates reg (definitions, unique refs and consumer names, and an
-// exact match between declared events and consumers) and returns its sorted
-// contract.
+// Describe validates reg (definitions, unique refs and consumer names; every
+// declared event has a consumer; a consumer handles only declared events or
+// older versions of a declared event type) and returns its sorted contract.
 func Describe(reg Registry) (Contract, error) {
 	var c Contract
 	refs := map[kernel.Ref]bool{}
 	declared := map[kernel.EventType]bool{}
+	newest := map[string]int{} // newest declared version per event type
 	for _, op := range reg.Operations {
 		def := op.Definition().Clone()
 		if err := def.Validate(); err != nil {
@@ -83,6 +84,7 @@ func Describe(reg Registry) (Contract, error) {
 		refs[def.Ref] = true
 		for _, e := range def.Events {
 			declared[e] = true
+			newest[e.Type] = max(newest[e.Type], e.Version)
 		}
 		c.Operations = append(c.Operations, def)
 	}
@@ -99,8 +101,10 @@ func Describe(reg Registry) (Contract, error) {
 		}
 		names[cc.Name] = true
 		for _, e := range cc.Events {
-			if !declared[e] {
-				return Contract{}, fmt.Errorf("pg: consumer %q handles %s, which no registered operation declares", cc.Name, e)
+			// An older version of a declared type is allowed: events of that
+			// version may still be queued after the operation moved on.
+			if !declared[e] && !(newest[e.Type] > e.Version) {
+				return Contract{}, fmt.Errorf("pg: consumer %q handles %s, which no registered operation declares (nor a newer version of it)", cc.Name, e)
 			}
 			consumed[e] = true
 		}
