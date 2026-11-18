@@ -54,7 +54,7 @@ def bad(tokens):
             if options and re.fullmatch(r"-\d+", a) and j == 0:
                 continue  # `kill -9 pid`: a numeric signal comes first
             options = False
-            if a == "0" or a.startswith("-"):
+            if re.fullmatch(r"0+", a) or a.startswith("-"):
                 return True
     return False
 
@@ -77,7 +77,7 @@ def scan(path):
 
 BAD = ["kill 0", "kill -TERM 0", "kill -- -$pgid", 'kill -- "-$pgid"', "kill -9 -123", "kill -TERM -$p",
        "kill ${pid:-0}", "trap 'kill 0' EXIT", "kill 0; echo done", "x && kill 0", 'trap "kill ${pid:-0} || true" EXIT',
-       "/bin/kill 0", "kill -9 -9", "command kill 0"]
+       "/bin/kill 0", "kill -9 -9", "command kill 0", "kill 00"]
 GOOD = ['kill "$pid"', "kill -9 $pid", 'kill -TERM "$pid"', 'kill -9 "$pid"',
         """trap '[ -n "${pid:-}" ] && kill "$pid" 2>/dev/null || true; psql -c "DROP"' EXIT""",
         'stop() { kill "$pid"; wait "$pid" 2>/dev/null || true; }', "echo skill 0", "# kill 0 in a comment"]
