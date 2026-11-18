@@ -19,6 +19,11 @@ const domainDir = "internal/procurement"
 // (\n, \") are already resolved.
 var sqlWrite = regexp.MustCompile(`(?is)\b(insert\s+into|update|delete\s+from|truncate(\s+table)?|merge\s+into)\s+(only\s+)?"?(procurement|kernel)"?\s*\.`)
 
+// tamperImports and tamperCalls would let domain code change how its own
+// tests run (filters, working directory) instead of being judged by them.
+var tamperImports = map[string]bool{"testing": true, "flag": true}
+var tamperCalls = map[string]bool{"os.Args": true, "os.Chdir": true, "os.Setenv": true, "os.Exit": true}
+
 // bypassImports would let domain code open its own connection or transaction
 // instead of using the runner's Session. migrate.go (admin tool) is exempt.
 var bypassImports = map[string]bool{
@@ -77,6 +82,9 @@ func writeFindings(root string) []Finding {
 					pgxName = imp.Name.Name
 				}
 			}
+			if inDomain && tamperImports[p] {
+				findings = append(findings, Finding{"DOMAIN_TAMPERS_TESTS", at(imp), "domain code imports " + p})
+			}
 			if inDomain && !exempt && bypassImports[p] {
 				findings = append(findings, Finding{"DOMAIN_BYPASSES_SESSION", at(imp), "imports " + p + "; use the pg.Session passed to Execute/Handle"})
 			}
@@ -103,6 +111,9 @@ func writeFindings(root string) []Finding {
 					}
 				}
 			case *ast.SelectorExpr:
+				if id, ok := x.X.(*ast.Ident); ok && inDomain && tamperCalls[id.Name+"."+x.Sel.Name] {
+					findings = append(findings, Finding{"DOMAIN_TAMPERS_TESTS", at(x), "domain code uses " + id.Name + "." + x.Sel.Name})
+				}
 				if inDomain && !exempt {
 					if id, ok := x.X.(*ast.Ident); ok && (pgxName != "" && id.Name == pgxName && strings.HasPrefix(x.Sel.Name, "Connect") || x.Sel.Name == "Begin" || x.Sel.Name == "BeginTx" || x.Sel.Name == "BeginFunc") {
 						findings = append(findings, Finding{"DOMAIN_BYPASSES_SESSION", at(x), "calls " + id.Name + "." + x.Sel.Name + "; the runner owns the transaction"})

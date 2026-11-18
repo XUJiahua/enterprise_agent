@@ -6,8 +6,9 @@ package behavior_test
 
 import (
 	"context"
+	"embed"
 	"encoding/json"
-	"os"
+	"io/fs"
 	"path/filepath"
 	"reflect"
 	"strings"
@@ -42,6 +43,13 @@ type behaviorCheck struct {
 	Want []string `json:"want"`
 }
 
+// frozen holds the case files, embedded at compile time from this directory,
+// so nothing at run time (working directory, environment) can substitute
+// other fixtures.
+//
+//go:embed *.json
+var frozen embed.FS
+
 var behaviorPrincipals = map[string]kernel.Principal{
 	"ann": {Tenant: "t1", Actor: "ann", Roles: []string{procurement.Requester}},
 	"bob": {Tenant: "t1", Actor: "bob", Roles: []string{procurement.Approver}},
@@ -58,10 +66,10 @@ var behaviorPrincipals = map[string]kernel.Principal{
 // comparisons) and appctl validate refuses edits to it once published, so the
 // harness cannot be weakened alongside a behavior change.
 func TestFrozenBehavior(t *testing.T) {
-	files, _ := filepath.Glob("*.json")
+	files, _ := fs.Glob(frozen, "*.json")
 	have := map[kernel.Ref]bool{}
 	for _, f := range files {
-		raw, err := os.ReadFile(f)
+		raw, err := frozen.ReadFile(f)
 		if err != nil {
 			t.Fatal(err)
 		}

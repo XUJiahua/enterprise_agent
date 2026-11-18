@@ -30,7 +30,7 @@
 ## 禁止
 
 - 修改 `kernel/`，除非任务明确要求。
-- 在 `internal/procurement` 之外写 `procurement.*` 或 `kernel.*` 表；在领域代码中写 `kernel.*` 表、开连接或开事务（`pgxpool`、`database/sql`、`Begin`）。`appctl validate` 静态检查这些（只看字符串字面量；SQL 不要在运行时拼接表名）。
+- 在 `internal/procurement` 之外写 `procurement.*` 或 `kernel.*` 表；在领域代码中写 `kernel.*` 表、开连接或开事务（`pgxpool`、`database/sql`、`Begin`），或改动测试运行环境（`testing`、`flag`、`os.Args`、`os.Chdir`、`os.Setenv`、`os.Exit`）。`appctl validate` 静态检查这些（只看字符串字面量；SQL 不要在运行时拼接表名）。
 - 修改历史目录、已发布的 migration、`contract.json` 里已发布的版本定义、已发布的 `behavior/*.json`。
 - 直接 push main。
 
@@ -38,7 +38,8 @@
 
 ```bash
 export KERNEL_TEST_ADMIN_URL='postgres://postgres:postgres@127.0.0.1:5432/postgres?sslmode=disable' KERNEL_REQUIRE_DB=1
-go vet ./... && go test -race -count=1 ./kernel/... ./internal/procurement/ ./cmd/appctl/
+go vet ./... && go test -race -count=1 ./kernel/... ./internal/procurement/... ./cmd/appctl/
+python3 scripts/run_frozen_behavior.py
 make build && bin/appctl validate --base origin/main
 ```
 

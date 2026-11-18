@@ -244,7 +244,7 @@ jobs:
       - name: v0.1 kernel, kernel/pg, procurement and appctl on PostgreSQL 17 (no skips)
         run: |
           mkdir -p reports
-          go test -race -count=1 -v ./kernel/... ./internal/procurement/ ./cmd/appctl/ | tee reports/kernel-db.txt
+          go test -race -count=1 -v ./kernel/... ./internal/procurement/... ./cmd/appctl/ | tee reports/kernel-db.txt
           ! grep -E -- '--- SKIP' reports/kernel-db.txt
         shell: bash
       - name: External module imports the kernel and runs it as a non-owner role

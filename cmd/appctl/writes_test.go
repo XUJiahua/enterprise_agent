@@ -27,6 +27,7 @@ func TestWriteFindings(t *testing.T) {
 	put("internal/other/read.go", "package other\nconst q = `SELECT * FROM procurement.purchase`\n")
 	put("internal/other/quoted.go", "package other\nconst q = \"UPDATE \\\"procurement\\\".purchase\\nSET x=1\"\n")
 	put("internal/procurement/multi.go", "package procurement\nconst q = `UPDATE procurement.purchase SET a=1; INSERT INTO kernel.audit (x) VALUES (1)`\n")
+	put("internal/procurement/tamper.go", "package procurement\nimport \"os\"\nfunc init() { _ = os.Chdir(\"/\"); os.Args = nil }\n")
 	put("internal/procurement/alias.go", "package procurement\nimport driver \"github.com/jackc/pgx/v5\"\nvar _ = driver.Connect\n")
 	var got []string
 	for _, f := range writeFindings(root) {
@@ -37,6 +38,8 @@ func TestWriteFindings(t *testing.T) {
 		"DOMAIN_BYPASSES_SESSION internal/procurement/alias.go",
 		"DOMAIN_BYPASSES_SESSION internal/procurement/pool.go",
 		"DOMAIN_BYPASSES_SESSION internal/procurement/pool.go",
+		"DOMAIN_TAMPERS_TESTS internal/procurement/tamper.go",
+		"DOMAIN_TAMPERS_TESTS internal/procurement/tamper.go",
 		"KERNEL_TABLE_WRITE internal/procurement/audit.go",
 		"KERNEL_TABLE_WRITE internal/procurement/multi.go",
 		"WRITE_OUTSIDE_DOMAIN cmd/product/main.go",
