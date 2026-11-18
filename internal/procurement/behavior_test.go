@@ -12,6 +12,7 @@ import (
 	"github.com/XUJiahua/enterprise_agent/internal/procurement"
 	"github.com/XUJiahua/enterprise_agent/kernel"
 	"github.com/XUJiahua/enterprise_agent/kernel/pg"
+	"github.com/XUJiahua/enterprise_agent/kernel/pg/pgtest"
 )
 
 // behaviorFile is the frozen behavior of one published operation version.
@@ -38,7 +39,8 @@ type behaviorCheck struct {
 }
 
 var behaviorPrincipals = map[string]kernel.Principal{
-	"ann": ann, "bob": bob,
+	"ann": {Tenant: "t1", Actor: "ann", Roles: []string{procurement.Requester}},
+	"bob": {Tenant: "t1", Actor: "bob", Roles: []string{procurement.Approver}},
 	"amy": {Tenant: "t1", Actor: "amy", Roles: []string{procurement.Requester}},
 	"cat": {Tenant: "t1", Actor: "cat", Roles: []string{procurement.Approver}},
 	"zed": {Tenant: "t2", Actor: "zed", Roles: []string{procurement.Approver}},
@@ -47,6 +49,10 @@ var behaviorPrincipals = map[string]kernel.Principal{
 // TestFrozenBehavior runs every behaviorFile against a fresh database. Each
 // registered operation version must have one (appctl validate checks this
 // too); each case runs in its own database.
+//
+// This file is self-contained (its own roles, seed, principals and
+// comparisons) and appctl validate refuses edits to it once published, so the
+// harness cannot be weakened alongside a behavior change.
 func TestFrozenBehavior(t *testing.T) {
 	files, _ := filepath.Glob("behavior/*.json")
 	have := map[kernel.Ref]bool{}
@@ -67,7 +73,7 @@ func TestFrozenBehavior(t *testing.T) {
 		have[b.Ref] = true
 		for _, c := range b.Cases {
 			t.Run(b.Ref.String()+"/"+c.Name, func(t *testing.T) {
-				d, r := setup(t)
+				d, r := behaviorSetup(t)
 				for _, sql := range c.Seed {
 					d.Exec(t, sql)
 				}
@@ -83,7 +89,9 @@ func TestFrozenBehavior(t *testing.T) {
 					t.Fatalf("result %s, want %s", res.Body, c.Result)
 				}
 				for _, ch := range c.Check {
-					want(t, ch.SQL, d.Strings(t, ch.SQL), ch.Want...)
+					if got := d.Strings(t, ch.SQL); !reflect.DeepEqual(append([]string{}, got...), append([]string{}, ch.Want...)) {
+						t.Fatalf("%s:\n got  %q\n want %q", ch.SQL, got, ch.Want)
+					}
 				}
 			})
 		}
@@ -97,6 +105,30 @@ func TestFrozenBehavior(t *testing.T) {
 			t.Errorf("%s has no behavior/%s.json", op.Ref, op.Ref)
 		}
 	}
+}
+
+// behaviorSetup migrates a fresh database and loads the frozen seed.
+func behaviorSetup(t *testing.T) (*pgtest.DB, *pg.Runner) {
+	d := pgtest.New(t)
+	for _, sql := range []string{
+		`DO $$ BEGIN CREATE ROLE enterprise_runtime NOLOGIN; EXCEPTION WHEN duplicate_object THEN NULL; END $$`,
+		`DO $$ BEGIN CREATE ROLE enterprise_consumer NOLOGIN; EXCEPTION WHEN duplicate_object THEN NULL; END $$`,
+		`GRANT enterprise_runtime TO ` + pgtest.Runtime + ` WITH INHERIT TRUE`,
+	} {
+		d.Exec(t, sql)
+	}
+	if _, _, err := procurement.Migrate(d.AdminURL); err != nil {
+		t.Fatal("migrate:", err)
+	}
+	d.Exec(t, `INSERT INTO procurement.purchase (tenant_id, id, created_by, title, amount, status, internal_note) VALUES
+	 ('t1','p1','ann','laptop',900,'submitted','bank-1'), ('t1','p2','ann','desk',300,'submitted','bank-2'),
+	 ('t1','own','bob','chair',50,'submitted',''), ('t1','done','ann','pen',5,'approved',''),
+	 ('t2','x1','zed','server',5000,'submitted','secret')`)
+	r, err := pg.New(context.Background(), d.Pool(t), procurement.Registry())
+	if err != nil {
+		t.Fatal(err)
+	}
+	return d, r
 }
 
 func jsonEqual(a, b json.RawMessage) bool {

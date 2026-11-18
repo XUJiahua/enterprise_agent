@@ -107,14 +107,28 @@
       ]
     },
     {
-      "name": "requester",
-      "as": "ann",
+      "name": "requester on an otherwise eligible purchase",
+      "as": "amy",
       "request": {
         "ids": [
           "p1"
         ]
       },
-      "code": "denied"
+      "code": "denied",
+      "check": [
+        {
+          "sql": "SELECT id, status FROM procurement.purchase WHERE id IN ('p1') ORDER BY id COLLATE \"C\"",
+          "want": [
+            "p1 submitted"
+          ]
+        },
+        {
+          "sql": "SELECT count(*) FROM kernel.request",
+          "want": [
+            "0"
+          ]
+        }
+      ]
     },
     {
       "name": "reason 200 bytes",

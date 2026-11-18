@@ -21,6 +21,18 @@
           "want": [
             "done 5 ann"
           ]
+        },
+        {
+          "sql": "SELECT target_id, actor_id, change::text FROM kernel.audit",
+          "want": [
+            "done ann {\"receipt\": {\"amount\": 5}}"
+          ]
+        },
+        {
+          "sql": "SELECT count(*) FROM kernel.outbox",
+          "want": [
+            "0"
+          ]
         }
       ]
     },
@@ -90,7 +102,15 @@
         "purchaseId": "done",
         "amount": 1
       },
-      "code": "denied"
+      "code": "denied",
+      "check": [
+        {
+          "sql": "SELECT count(*) FROM procurement.receipt",
+          "want": [
+            "0"
+          ]
+        }
+      ]
     }
   ]
 }

@@ -63,6 +63,21 @@ func TestBehaviorFindings(t *testing.T) {
 	if got := codes("no-such-ref"); !strings.Contains(got, "BASE_INVALID") {
 		t.Fatal("invalid base:", got)
 	}
+	// Harness files published at base are frozen; a TestMain is refused.
+	harness := filepath.Join(root, behaviorHarness[0])
+	_ = os.WriteFile(harness, []byte("package procurement_test\n"), 0o644)
+	put(first, "{}")
+	git("add", ".")
+	git("commit", "-qm", "harness")
+	_ = os.WriteFile(harness, []byte("package procurement_test\n// weakened\n"), 0o644)
+	if got := codes("HEAD"); got != "BEHAVIOR_HARNESS_CHANGED behavior_test.go" {
+		t.Fatal("edited harness:", got)
+	}
+	_ = os.WriteFile(harness, []byte("package procurement_test\n"), 0o644)
+	_ = os.WriteFile(filepath.Join(root, "internal/procurement/main_test.go"), []byte("package procurement_test\nfunc TestMain(m *testing.M) {}\n"), 0o644)
+	if got := codes(""); got != "BEHAVIOR_HARNESS_BYPASS main_test.go" {
+		t.Fatal("TestMain:", got)
+	}
 	// The repository has a file for every registered version.
 	if f := behaviorFindings("../..", ""); len(f) != 0 {
 		t.Fatalf("%+v", f)

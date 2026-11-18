@@ -22,6 +22,18 @@
           "want": [
             "t1 ann desk 10 submitted"
           ]
+        },
+        {
+          "sql": "SELECT target_id, actor_id, change::text FROM kernel.audit",
+          "want": [
+            "n1 ann {\"created\": {\"title\": \"desk\", \"amount\": 10, \"status\": \"submitted\"}}"
+          ]
+        },
+        {
+          "sql": "SELECT count(*) FROM kernel.outbox",
+          "want": [
+            "0"
+          ]
         }
       ]
     },

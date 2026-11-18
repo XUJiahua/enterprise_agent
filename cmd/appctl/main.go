@@ -368,6 +368,10 @@ func jsonEqual(a, b json.RawMessage) bool {
 // (internal/procurement/behavior_test.go runs them).
 const behaviorDir = "internal/procurement/behavior"
 
+// behaviorHarness are the files the frozen cases depend on for execution and
+// comparison.
+var behaviorHarness = []string{"internal/procurement/behavior_test.go", "kernel/pg/pgtest/pgtest.go"}
+
 // behaviorFindings requires a behavior file for every registered operation
 // version (BEHAVIOR_MISSING) and, with base, that every file published there
 // is unchanged (BEHAVIOR_CHANGED). A behavior change of a published version
@@ -386,11 +390,28 @@ func behaviorFindings(root, base string) []Finding {
 			findings = append(findings, Finding{"BEHAVIOR_MISSING", path, op.Ref.String() + " has no frozen behavior file"})
 		}
 	}
+	// A TestMain in the package could exit before the frozen cases run.
+	tests, _ := filepath.Glob(filepath.Join(root, "internal/procurement/*_test.go"))
+	for _, f := range tests {
+		if b, err := os.ReadFile(f); err == nil && strings.Contains(string(b), "func TestMain(") {
+			findings = append(findings, Finding{"BEHAVIOR_HARNESS_BYPASS", "internal/procurement/" + filepath.Base(f), "TestMain is not allowed in internal/procurement; it can skip the frozen behavior cases"})
+		}
+	}
 	if base == "" {
 		return findings
 	}
 	if _, err := git(root, "rev-parse", "--verify", base+"^{commit}"); err != nil {
 		return append(findings, Finding{"BASE_INVALID", base, err.Error()})
+	}
+	// The harness that runs the cases is frozen like the cases themselves.
+	for _, path := range behaviorHarness {
+		old, err := git(root, "show", base+":"+path)
+		if err != nil {
+			continue // not published at base yet
+		}
+		if now, err := os.ReadFile(filepath.Join(root, path)); err != nil || string(now) != string(old) {
+			findings = append(findings, Finding{"BEHAVIOR_HARNESS_CHANGED", path, "the frozen behavior harness is protected; changing it needs owner review outside appctl"})
+		}
 	}
 	listed, err := git(root, "ls-tree", "-r", "--name-only", base, "--", behaviorDir)
 	if err != nil {
