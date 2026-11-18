@@ -227,6 +227,8 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
+      - name: Every frozen behavior case ran and passed
+        run: python3 scripts/run_frozen_behavior.py
       - name: Scripts never signal their whole process group
         # `kill 0` (or an unset pid defaulting to 0) also kills whatever runs
         # the script in the same group, e.g. an agent supervisor.
@@ -242,7 +244,7 @@ jobs:
       - name: v0.1 kernel, kernel/pg, procurement and appctl on PostgreSQL 17 (no skips)
         run: |
           mkdir -p reports
-          go test -race -count=1 -v ./kernel/... ./internal/procurement/ ./cmd/appctl/ | tee reports/kernel-db.txt
+          go test -race -count=1 -v ./kernel/... ./internal/procurement/... ./cmd/appctl/ | tee reports/kernel-db.txt
           ! grep -E -- '--- SKIP' reports/kernel-db.txt
         shell: bash
       - name: External module imports the kernel and runs it as a non-owner role

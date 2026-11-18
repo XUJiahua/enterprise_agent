@@ -1,0 +1,105 @@
+{
+  "ref": {
+    "name": "procurement.create",
+    "version": 1
+  },
+  "cases": [
+    {
+      "name": "create",
+      "as": "ann",
+      "request": {
+        "id": "n1",
+        "title": " desk ",
+        "amount": 10
+      },
+      "result": {
+        "id": "n1",
+        "status": "submitted"
+      },
+      "check": [
+        {
+          "sql": "SELECT tenant_id, created_by, title, amount, status FROM procurement.purchase WHERE id='n1'",
+          "want": [
+            "t1 ann desk 10 submitted"
+          ]
+        },
+        {
+          "sql": "SELECT target_id, actor_id, change::text FROM kernel.audit",
+          "want": [
+            "n1 ann {\"created\": {\"title\": \"desk\", \"amount\": 10, \"status\": \"submitted\"}}"
+          ]
+        },
+        {
+          "sql": "SELECT count(*) FROM kernel.outbox",
+          "want": [
+            "0"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "amount 1e12",
+      "as": "ann",
+      "request": {
+        "id": "n1",
+        "title": "t",
+        "amount": 1000000000000
+      },
+      "result": {
+        "id": "n1",
+        "status": "submitted"
+      }
+    },
+    {
+      "name": "amount above 1e12",
+      "as": "ann",
+      "request": {
+        "id": "n1",
+        "title": "t",
+        "amount": 1000000000001
+      },
+      "code": "invalid"
+    },
+    {
+      "name": "id taken",
+      "as": "ann",
+      "request": {
+        "id": "p1",
+        "title": "t",
+        "amount": 1
+      },
+      "code": "denied"
+    },
+    {
+      "name": "bad id",
+      "as": "ann",
+      "request": {
+        "id": "a b",
+        "title": "t",
+        "amount": 1
+      },
+      "code": "invalid"
+    },
+    {
+      "name": "status in body",
+      "as": "ann",
+      "request": {
+        "id": "n1",
+        "title": "t",
+        "amount": 1,
+        "status": "approved"
+      },
+      "code": "invalid"
+    },
+    {
+      "name": "approver",
+      "as": "bob",
+      "request": {
+        "id": "n1",
+        "title": "t",
+        "amount": 1
+      },
+      "code": "denied"
+    }
+  ]
+}

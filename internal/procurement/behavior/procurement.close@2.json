@@ -1,0 +1,149 @@
+{
+  "ref": {
+    "name": "procurement.close",
+    "version": 2
+  },
+  "cases": [
+    {
+      "name": "close when receipts cover amount",
+      "seed": [
+        "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount,status) VALUES ('t1','c1','ann','x',100,'approved')",
+        "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','c1',60,'ann')",
+        "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','c1',40,'ann')"
+      ],
+      "as": "bob",
+      "request": {
+        "ids": [
+          "c1"
+        ],
+        "reason": "done"
+      },
+      "result": {
+        "closedIds": [
+          "c1"
+        ]
+      },
+      "check": [
+        {
+          "sql": "SELECT id, status FROM procurement.purchase WHERE id IN ('c1') ORDER BY id COLLATE \"C\"",
+          "want": [
+            "c1 closed"
+          ]
+        },
+        {
+          "sql": "SELECT target_id, change->>'received', change->>'reason' FROM kernel.audit",
+          "want": [
+            "c1 100 done"
+          ]
+        },
+        {
+          "sql": "SELECT event_type, event_version, payload::text FROM kernel.outbox",
+          "want": [
+            "procurement.purchase.closed 1 {\"id\": \"c1\", \"amount\": 100, \"received\": 100}"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "received above amount is reported as summed",
+      "seed": [
+        "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount,status) VALUES ('t1','c1','ann','x',100,'approved')",
+        "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','c1',150,'ann')"
+      ],
+      "as": "bob",
+      "request": {
+        "ids": [
+          "c1"
+        ],
+        "reason": "done"
+      },
+      "result": {
+        "closedIds": [
+          "c1"
+        ]
+      },
+      "check": [
+        {
+          "sql": "SELECT payload->>'received' FROM kernel.outbox",
+          "want": [
+            "150"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "one short in batch",
+      "seed": [
+        "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount,status) VALUES ('t1','c1','ann','x',100,'approved')",
+        "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','c1',100,'ann')",
+        "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount,status) VALUES ('t1','c2','ann','x',100,'approved')",
+        "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','c2',99,'ann')"
+      ],
+      "as": "bob",
+      "request": {
+        "ids": [
+          "c1",
+          "c2"
+        ],
+        "reason": "done"
+      },
+      "code": "denied",
+      "check": [
+        {
+          "sql": "SELECT id, status FROM procurement.purchase WHERE id IN ('c1','c2') ORDER BY id COLLATE \"C\"",
+          "want": [
+            "c1 approved",
+            "c2 approved"
+          ]
+        },
+        {
+          "sql": "SELECT count(*) FROM kernel.request",
+          "want": [
+            "0"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "reason required",
+      "seed": [
+        "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount,status) VALUES ('t1','c1','ann','x',100,'approved')",
+        "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','c1',100,'ann')"
+      ],
+      "as": "bob",
+      "request": {
+        "ids": [
+          "c1"
+        ],
+        "reason": "  "
+      },
+      "code": "invalid"
+    },
+    {
+      "name": "submitted",
+      "as": "bob",
+      "request": {
+        "ids": [
+          "p1"
+        ],
+        "reason": "done"
+      },
+      "code": "denied"
+    },
+    {
+      "name": "requester",
+      "seed": [
+        "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount,status) VALUES ('t1','c1','ann','x',100,'approved')",
+        "INSERT INTO procurement.receipt (tenant_id,purchase_id,amount,received_by) VALUES ('t1','c1',100,'ann')"
+      ],
+      "as": "ann",
+      "request": {
+        "ids": [
+          "c1"
+        ],
+        "reason": "done"
+      },
+      "code": "denied"
+    }
+  ]
+}
