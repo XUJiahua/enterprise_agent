@@ -19,6 +19,7 @@
 3. 需要事件时实现 `pg.Consumer`，在 `Handle` 中严格校验载荷，写入投影表时以 `event_id` 去重。
 4. 数据库变化只能新增 `internal/procurement/migrations/NNNN_name.up.sql`，编号接在最后一个之后。已发布的 migration 不可修改。新表必须 `FORCE ROW LEVEL SECURITY`，加 `RESTRICTIVE` 租户策略，并且只授予需要的列权限。
 5. 运行 `go build -o bin/appctl ./cmd/appctl && bin/appctl describe > internal/procurement/contract.json`。
+   新操作版本还要新增 `internal/procurement/behavior/<name>@<version>.json`（格式参照已有文件），写入这个版本的冻结行为用例：正向、每种拒绝、数值边界，以及结果、状态、审计、事件载荷。已发布的 behavior 文件不能修改；改动后如果任何已发布版本的用例失败，说明它的行为变了，要发布新版本，而不是改用例。
 6. 在 `internal/procurement/*_test.go` 补测试：正向用例、每种拒绝情况零写入、幂等重放，以及需求中每个数值边界（刚好允许、刚好超出）。
 7. 新增状态、通知类型或改变规则时，同步更新 `docs/kernel.md` 的操作表与"数据库不变量"段落，以及 `apps/web/app/procurement/page.tsx` 中的状态和通知文案（`statusLabel`、通知列表）；新操作要在界面上可用时，还要加入 `apps/web/app/api/product/[...path]/route.ts` 的 `operations` 允许列表。
 
@@ -30,7 +31,7 @@
 
 - 修改 `kernel/`，除非任务明确要求。
 - 在 `internal/procurement` 之外写 `procurement.*` 或 `kernel.*` 表；在领域代码中写 `kernel.*` 表、开连接或开事务（`pgxpool`、`database/sql`、`Begin`）。`appctl validate` 静态检查这些（只看字符串字面量；SQL 不要在运行时拼接表名）。
-- 修改历史目录、已发布的 migration、`contract.json` 里已发布的版本定义。
+- 修改历史目录、已发布的 migration、`contract.json` 里已发布的版本定义、已发布的 `behavior/*.json`。
 - 直接 push main。
 
 ## 完成前必须通过

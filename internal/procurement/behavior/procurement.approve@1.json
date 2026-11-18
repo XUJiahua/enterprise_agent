@@ -1,0 +1,146 @@
+{
+  "ref": {
+    "name": "procurement.approve",
+    "version": 1
+  },
+  "cases": [
+    {
+      "name": "approve batch",
+      "as": "bob",
+      "request": {
+        "ids": [
+          "p2",
+          "p1"
+        ],
+        "reason": "ok"
+      },
+      "result": {
+        "approvedIds": [
+          "p1",
+          "p2"
+        ]
+      },
+      "check": [
+        {
+          "sql": "SELECT id, status FROM procurement.purchase WHERE id IN ('p1','p2') ORDER BY id COLLATE \"C\"",
+          "want": [
+            "p1 approved",
+            "p2 approved"
+          ]
+        },
+        {
+          "sql": "SELECT target_id, change->'status'->>'to', change->>'reason' FROM kernel.audit ORDER BY 1",
+          "want": [
+            "p1 approved ok",
+            "p2 approved ok"
+          ]
+        },
+        {
+          "sql": "SELECT count(*) FROM kernel.outbox",
+          "want": [
+            "0"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "own purchase in batch",
+      "as": "bob",
+      "request": {
+        "ids": [
+          "p1",
+          "own"
+        ]
+      },
+      "code": "denied",
+      "check": [
+        {
+          "sql": "SELECT id, status FROM procurement.purchase WHERE id IN ('own','p1') ORDER BY id COLLATE \"C\"",
+          "want": [
+            "own submitted",
+            "p1 submitted"
+          ]
+        },
+        {
+          "sql": "SELECT count(*) FROM kernel.request",
+          "want": [
+            "0"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "not submitted",
+      "as": "bob",
+      "request": {
+        "ids": [
+          "done"
+        ]
+      },
+      "code": "denied",
+      "check": [
+        {
+          "sql": "SELECT count(*) FROM kernel.request",
+          "want": [
+            "0"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "other tenant",
+      "as": "bob",
+      "request": {
+        "ids": [
+          "p1",
+          "x1"
+        ]
+      },
+      "code": "denied",
+      "check": [
+        {
+          "sql": "SELECT count(*) FROM kernel.request",
+          "want": [
+            "0"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "requester",
+      "as": "ann",
+      "request": {
+        "ids": [
+          "p1"
+        ]
+      },
+      "code": "denied"
+    },
+    {
+      "name": "reason 200 bytes",
+      "as": "bob",
+      "request": {
+        "ids": [
+          "p1"
+        ],
+        "reason": "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"
+      },
+      "result": {
+        "approvedIds": [
+          "p1"
+        ]
+      }
+    },
+    {
+      "name": "reason 201 bytes",
+      "as": "bob",
+      "request": {
+        "ids": [
+          "p1"
+        ],
+        "reason": "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"
+      },
+      "code": "invalid"
+    }
+  ]
+}

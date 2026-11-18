@@ -1,0 +1,96 @@
+{
+  "ref": {
+    "name": "procurement.receive",
+    "version": 1
+  },
+  "cases": [
+    {
+      "name": "receive on approved",
+      "as": "ann",
+      "request": {
+        "purchaseId": "done",
+        "amount": 5
+      },
+      "result": {
+        "amount": 5,
+        "purchaseId": "done"
+      },
+      "check": [
+        {
+          "sql": "SELECT purchase_id, amount, received_by FROM procurement.receipt",
+          "want": [
+            "done 5 ann"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "amount 1e12",
+      "as": "ann",
+      "request": {
+        "purchaseId": "done",
+        "amount": 1000000000000
+      },
+      "result": {
+        "amount": 1000000000000,
+        "purchaseId": "done"
+      }
+    },
+    {
+      "name": "amount above 1e12",
+      "as": "ann",
+      "request": {
+        "purchaseId": "done",
+        "amount": 1000000000001
+      },
+      "code": "invalid"
+    },
+    {
+      "name": "zero",
+      "as": "ann",
+      "request": {
+        "purchaseId": "done",
+        "amount": 0
+      },
+      "code": "invalid"
+    },
+    {
+      "name": "submitted",
+      "as": "ann",
+      "request": {
+        "purchaseId": "p1",
+        "amount": 1
+      },
+      "code": "denied",
+      "check": [
+        {
+          "sql": "SELECT count(*) FROM procurement.receipt",
+          "want": [
+            "0"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "closed",
+      "seed": [
+        "INSERT INTO procurement.purchase (tenant_id,id,created_by,title,amount,status) VALUES ('t1','cl','ann','x',1,'closed')"
+      ],
+      "as": "ann",
+      "request": {
+        "purchaseId": "cl",
+        "amount": 1
+      },
+      "code": "denied"
+    },
+    {
+      "name": "approver",
+      "as": "bob",
+      "request": {
+        "purchaseId": "done",
+        "amount": 1
+      },
+      "code": "denied"
+    }
+  ]
+}

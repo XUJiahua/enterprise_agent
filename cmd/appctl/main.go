@@ -51,7 +51,8 @@ func run() int {
 		if f.Parse(os.Args[2:]) != nil {
 			return 1
 		}
-		return report(append(append([]Finding{}, contractFindings(*root, *base)...), writeFindings(*root)...))
+		all := append(append([]Finding{}, contractFindings(*root, *base)...), writeFindings(*root)...)
+		return report(append(all, behaviorFindings(*root, *base)...))
 	}
 	f := flag.NewFlagSet(command, flag.ContinueOnError)
 	root := f.String("root", ".", "application root")
@@ -361,4 +362,60 @@ func contractFindings(root, base string) []Finding {
 func jsonEqual(a, b json.RawMessage) bool {
 	var x, y any
 	return json.Unmarshal(a, &x) == nil && json.Unmarshal(b, &y) == nil && reflect.DeepEqual(x, y)
+}
+
+// behaviorDir holds one frozen behavior file per operation version
+// (internal/procurement/behavior_test.go runs them).
+const behaviorDir = "internal/procurement/behavior"
+
+// behaviorFindings requires a behavior file for every registered operation
+// version (BEHAVIOR_MISSING) and, with base, that every file published there
+// is unchanged (BEHAVIOR_CHANGED). A behavior change of a published version
+// therefore has to ship as a new version with its own file. The cases only
+// see what they exercise: a change visible only in new scenarios (e.g. a new
+// kind of row the old cases never create) is not detected.
+func behaviorFindings(root, base string) []Finding {
+	c, err := pg.Describe(procurement.Registry())
+	if err != nil {
+		return nil // reported by contractFindings
+	}
+	var findings []Finding
+	for _, op := range c.Operations {
+		path := behaviorDir + "/" + op.Ref.String() + ".json"
+		if _, err := os.Stat(filepath.Join(root, path)); err != nil {
+			findings = append(findings, Finding{"BEHAVIOR_MISSING", path, op.Ref.String() + " has no frozen behavior file"})
+		}
+	}
+	if base == "" {
+		return findings
+	}
+	if _, err := git(root, "rev-parse", "--verify", base+"^{commit}"); err != nil {
+		return append(findings, Finding{"BASE_INVALID", base, err.Error()})
+	}
+	listed, err := git(root, "ls-tree", "-r", "--name-only", base, "--", behaviorDir)
+	if err != nil {
+		return append(findings, Finding{"BASE_READ", behaviorDir, err.Error()})
+	}
+	for _, path := range strings.Fields(string(listed)) {
+		old, err := git(root, "show", base+":"+path)
+		if err != nil {
+			findings = append(findings, Finding{"BASE_READ", path, err.Error()})
+			continue
+		}
+		now, err := os.ReadFile(filepath.Join(root, path))
+		if err == nil && string(now) == string(old) {
+			continue
+		}
+		// A retired version may lose its file only together with its registration.
+		ref := strings.TrimSuffix(filepath.Base(path), ".json")
+		registered := false
+		for _, op := range c.Operations {
+			registered = registered || op.Ref.String() == ref
+		}
+		if err != nil && !registered {
+			continue
+		}
+		findings = append(findings, Finding{"BEHAVIOR_CHANGED", path, ref + " is published; changed behavior needs a new version"})
+	}
+	return findings
 }
